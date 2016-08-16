@@ -1,0 +1,88 @@
+var stCustomer, endCustomer, Query;
+var newDialogDiv = jQuery(document.createElement('div'));
+var displayName = '';
+var data1 = '';
+var email = '';
+var rxMasterID = '';
+var stIndex=0;
+var endIndex=0;
+//var rxMasterIds = [];
+
+jQuery(document).ready(function() {
+	$("#search").hide();
+	$('#statementDate').datepicker().datepicker("setDate", new Date());
+	$("#exclusionDate").datepicker().datepicker("setDate", new Date());
+	$('#emailSubmit').click(function() {
+		email = $('#mailId').val();
+		setTimeout($.unblockUI, 100);
+		emailStatement(null);
+	});
+	$('#cancelSubmit').click(function() {
+		setTimeout($.unblockUI, 100);
+	});
+	
+	$('#stCustomerID').change(function(){
+		
+		$('#endCustomerID').val($('#stCustomerID option:selected').val());
+	})
+	
+	
+	
+	
+});
+
+function openUrl(url) {
+	window.open(url);
+	setTimeout('', 30000);
+}
+$('#stCustomerID').on('change', function() {
+	stCustomer = $(this).find('option:selected').text();
+	stIndex = $("#stCustomerID")[0].selectedIndex;
+});
+$('#endCustomerID').on('change', function() {
+	endCustomer = $(this).find('option:selected').text();
+	endIndex = $("#endCustomerID")[0].selectedIndex;
+});
+
+
+function printTrigger(elementId) {
+	var getMyFrame = document.getElementById(elementId);
+	getMyFrame.focus();
+	getMyFrame.contentWindow.print();
+}
+function emailStatement(obj) {
+	var statementDate = $('#statementDate').val();
+	if (obj != null) {
+		var emailAndrxMasterID = obj.id;
+		var split = emailAndrxMasterID.split("rxMasterID=");
+		email = split[0];
+		rxMasterID = split[1];
+	}
+	if (email == '' || email == null) {
+		$.blockUI({
+			message : $('#emailForm')
+		});
+	}
+	if (email != null || email != '') {
+		$
+				.ajax({
+					url : './customerList/emailStatement?filename='
+							+ rxMasterID + '_statements.pdf&rxMasterID='
+							+ rxMasterID + "&toEmailaddress=" + email
+							+ "&StatementDate=" + statementDate,
+					type : "GET",
+					success : function(data) {
+						filePath = data;
+						msgOnAjax("Generated the PDF", "green", 2000);
+						setTimeout(
+								'msgOnAjax("email Sent successfully", "green", 2000)',
+								3000);
+					},
+					error : function(data) {
+						msgOnAjax(
+								"Unable to send the mail. Please check the email server port and server host names.",
+								"red", 4000);
+					}
+				});
+	}
+}
