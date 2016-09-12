@@ -1955,9 +1955,10 @@ jQuery(function() {
 					{
 						autoOpen : false,
 						closeOnEscape: false,
-						height : 1000,
+						resizable:false,
+						height : 1100.12,
 						width : dialogWidth,
-						top : 1000,
+						//top : 1000,
 						position : [
 								($(window).width() / 2) - (dialogWidth / 2),
 								190 ],
@@ -2162,8 +2163,8 @@ function editQuoteDetails(editorCopy) {
 	aGlobalConstant = "edit";
 
 	isquoteAddnew = "no";
-	var editQuotesView = '<input type="button" id="SaveQuoteButtonID" class="savehoverbutton turbo-tan" value="Save" onclick="saveANDcloseQuote()" style=" width:125px;">&nbsp;'
-			+ '<input type="button" id="CloseQuoteButtonID" class="cancelhoverbutton turbo-tan"  value="Close" onclick="cancelEditQuote()" style="width:80px;">';
+	var editQuotesView = '<input type="button" id="SaveQuoteButtonID" class="savehoverbutton turbo-tan" value="Save" onclick="saveANDcloseQuote()" style=" width:100px;">&nbsp;'
+			+ '<input type="button" id="CloseQuoteButtonID" class="cancelhoverbutton turbo-tan"  value="Close" onclick="cancelEditQuote()" style="width:100px;">';
 	$("#addQuotesView").empty();
 	$("#copyQuotesView").empty();
 	$("#editQuotesView").empty();
@@ -2241,8 +2242,8 @@ function onDoubleClickEditQuoteDetails(theRowID) {
 	aGlobalVariable = "edit";
 	aGlobalConstant = "edit";
 	isquoteAddnew = "no";
-	var editQuotesView = '<input type="button" id="SaveQuoteButtonID" class="savehoverbutton turbo-tan" value="Save" onclick="saveANDcloseQuote()" style=" width:125px;">&nbsp;'
-			+ '<input type="button" id="CloseQuoteButtonID" class="cancelhoverbutton turbo-tan"  value="Close" onclick="cancelEditQuote()" style="width:80px;">';
+	var editQuotesView = '<input type="button" id="SaveQuoteButtonID" class="savehoverbutton turbo-tan" value="Save" onclick="saveANDcloseQuote()" style=" width:100px;">&nbsp;'
+			+ '<input type="button" id="CloseQuoteButtonID" class="cancelhoverbutton turbo-tan"  value="Close" onclick="cancelEditQuote()" style="width:100px;">';
 	$("#addQuotesView").empty();
 	$("#copyQuotesView").empty();
 	$("#editQuotesView").empty();

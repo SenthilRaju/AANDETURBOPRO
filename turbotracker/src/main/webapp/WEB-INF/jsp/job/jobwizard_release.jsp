@@ -117,6 +117,7 @@ img.tooltip span b {
 </tr>
 </table>
 <br>
+<input type="hidden" id="custInvCloseSaveHidden" value=''/>
 <table>
 	<tr>
 		<td>
@@ -497,7 +498,26 @@ img.tooltip span b {
 		</table>
 	</form>
 </div>
-
+<!-- <div id= "cuInvLineItemNote_In" >
+	<form action="" id="cuInvLineItemNoteFormInside">
+		<table align="right">
+			<tr>
+			 	<td>
+	   				<textarea cols="70" id="lineItemNoteID_cuInvIn" name="lineItemNoteNamecuInvIn" style="height: 252px; width:570px;"></textarea>
+	   				<input id="lineItemNoteLabelID" style="display: none;">
+	   			</td>
+			</tr>
+		</table>
+		<table align="right">
+			<tr>
+			 	<td>
+	   				<input type="button" class="savehoverbutton turbo-tan" id= "SaveInlineNoteID_cuInvIn" value="Save" onclick="SaveCuInvLineItemNote_In()" style=" width:80px;display:inline-block;">
+					<input type="button" class="cancelhoverbutton turbo-tan"  value="Cancel" onclick="cuInvCancelInLineNote_In()" style="width:80px;">
+	   			</td>
+			</tr>
+		</table>
+	</form>
+</div>  -->
 <div><jsp:include page="../PoRelease.jsp"></jsp:include></div>
 <div><jsp:include page="../salesOrder.jsp"></jsp:include></div>
 <div style="display: none;">
@@ -544,12 +564,12 @@ img.tooltip span b {
 	</form>
 </div>
 
-<div id= "veInvLineItemNote">
-	<form action="" id="veInvLineItemNoteForm">
+<div id= "veInvLineItemNote_In">
+	<form action="" id="veInvLineItemNoteFormInside">
 		<table align="right">
 			<tr>
 			 	<td>
-	   				<textarea cols="70" id="lineItemNoteID" name="lineItemNoteName" style="height: 252px; width:570px;"></textarea>
+	   				<textarea cols="70" id="lineItemNoteID_veInvIn" name="lineItemNoteNameVeInvIn" style="height: 252px; width:570px;"></textarea>
 	   				<input id="lineItemNoteLabelID" style="display: none;">
 	   			</td>
 			</tr>
@@ -557,8 +577,8 @@ img.tooltip span b {
 		<table align="right">
 			<tr>
 			 	<td>
-	   				<input type="button" class="savehoverbutton turbo-tan" id= "SaveInlineNoteID" value="Save" onclick="SaveSoLineItemNote()" style=" width:80px;display:inline-block;">
-					<input type="button" class="cancelhoverbutton turbo-tan"  value="Cancel" onclick="SoCancelInLineNote()" style="width:80px;">
+	   				<input type="button" class="savehoverbutton turbo-tan" id= "SaveInlineNoteID_veInvIn" value="Save" onclick="SaveVeInvLineItemNote_In()" style=" width:80px;display:inline-block;">
+					<input type="button" class="cancelhoverbutton turbo-tan"  value="Cancel" onclick="veInvCancelInLineNote_out()" style="width:80px;">
 	   			</td>
 			</tr>
 		</table>

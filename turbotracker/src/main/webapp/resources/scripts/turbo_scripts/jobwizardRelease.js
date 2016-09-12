@@ -1,7 +1,7 @@
 /** document ready Function for Release Tab **/
 //callvendorinvoicesave();
 var deleteveBillDetailIDDetailId=new Array();
-
+var cuInv_LineItemsToBeDeleted = new Array();
 var salesOrderFlag='';
 var shipViaInvoiceID;
 var invoiceFreightAmount;
@@ -27,9 +27,9 @@ var _globalvarvenodorinvoiceform;
 var _globalvarvenodorinvoicegrid;
 
 
-var _globaloldcustomerInvoiceform;
-var _globaloldcustomerInvoicegrid;
-var _globaloldcustomerInvoiceformTotal;
+var _globaloldcustomerInvoiceform=null;
+var _globaloldcustomerInvoicegrid=null;
+var _globaloldcustomerInvoiceformTotal=null;
 var globalTaxTerritory=null;
 var SplitCommissionID;
 var _global_override_taxTerritory=false;
@@ -745,8 +745,8 @@ afterSubmit:function(response,postData){
 			var freight = $('#customerInvoice_frightID').val();
 			freight = parseFloat(freight.replace(/[^0-9-.]/g, ''));
 			var cusoid = $('#Cuso_ID').text();
-			var id = jQuery("#SOlineItemGrid").jqGrid('getGridParam','selrow');
-			var key = jQuery("#SOlineItemGrid").getCell(id, 9);
+			var id = jQuery("#customerInvoice_lineitems").jqGrid('getGridParam','selrow');
+			var key = jQuery("#customerInvoice_lineitems").getCell(id, 9);
 			return { 'cuSodetailId' : key, 'operForAck' : '','taxRate':taxRate,'freight':freight,'cuSoid':cusoid};
 		 	
 		},
@@ -1265,7 +1265,9 @@ jQuery(function(){
 		open: function(event, ui) { //$(".ui-dialog-titlebar-close").hide(); 
 		deleteveBillDetailIDDetailId=new Array();
 		},
-		close:function(){ $("#release").trigger("reloadGrid"); return true;}	
+		close:function(){ $("#release").trigger("reloadGrid");
+		$('#vendorinvoice1').jqGrid('GridUnload');
+		return true;}	
 	});
 }); ;
 	
@@ -4490,7 +4492,6 @@ function loadVendorInvoiceLineItems(aVeBillId, aJoReleaseDetailsID, aVePOID, inv
 */
 var posit_job_vendorInvoice2=0;
 function loadVendorInvoiceLineItems(aVeBillId, aJoReleaseDetailsID, aVePOID, invoiceType){
-	
 	$("#vendorinvoice1").jqGrid('GridUnload');
 	$("#vendorinvoice1").jqGrid({
 		datatype: 'JSON',
@@ -4957,9 +4958,9 @@ function loadVendorInvoiceLineItems(aVeBillId, aJoReleaseDetailsID, aVePOID, inv
 					var candoidrownum=Number(veaccrrowid)+1;
 					$("#canDoID_new_row").attr("id", "canDoID_"+candoidrownum);
 					$("#canDoVIID_new_row").attr("id","canDoVIID_"+candoidrownum);
-					$("#noteImageIcon_new_row").attr("id","noteImageIcon_"+candoidrownum);
-					$("#canDoVIID_"+candoidrownum).attr("onclick","deleteRowFromJqGrid('"+candoidrownum+"');");
-					$("#noteImageIcon_"+candoidrownum).attr("onclick","ShowNote('"+candoidrownum+"');");
+					$("#veInvnoteImageIcon_new_row").attr("id","veInvnoteImageIcon_"+candoidrownum);
+					$("#canDoVIID_"+candoidrownum).attr("onclick","deleteRowFromJqGrid_VeInv('"+candoidrownum+"');");
+					$("#veInvnoteImageIcon_"+candoidrownum).attr("onclick","ShowVeInvLineNote('"+candoidrownum+"');");
 					}
 					
 					
@@ -5024,9 +5025,9 @@ function loadVendorInvoiceLineItems(aVeBillId, aJoReleaseDetailsID, aVePOID, inv
 				var candoidrownum=Number(veaccrrowid)+1;
 				$("#canDoID_new_row").attr("id", "canDoID_"+candoidrownum);
 				$("#canDoVIID_new_row").attr("id","canDoVIID_"+candoidrownum);
-				$("#noteImageIcon_new_row").attr("id","noteImageIcon_"+candoidrownum);
-				$("#canDoVIID_"+candoidrownum).attr("onclick","deleteRowFromJqGrid('"+candoidrownum+"');");
-				$("#noteImageIcon_"+candoidrownum).attr("onclick","ShowNote('"+candoidrownum+"');");
+				$("#veInvnoteImageIcon_new_row").attr("id","veInvnoteImageIcon_"+candoidrownum);
+				$("#canDoVIID_"+candoidrownum).attr("onclick","deleteRowFromJqGrid_VeInv('"+candoidrownum+"');");
+				$("#veInvnoteImageIcon_"+candoidrownum).attr("onclick","ShowVeInvLineNote('"+candoidrownum+"');");
 			}
 			
 			setgridtotal();
@@ -5106,8 +5107,7 @@ function loadVendorInvoice(vePOID){
 					                	var product = ui.item.label;
 					                	$("#"+aSelectedRowId+"_prMasterId").val(id);
 					                	$("#new_row_prMasterId").val(id);
-					                	
-					                	var myGrid = $('#vePOID'),
+					                	var myGrid = $('#vePOID');
 					                    celValue = myGrid.val();
 //					                	alert(celValue);
 					                	
@@ -5346,7 +5346,8 @@ function loadVendorInvoice(vePOID){
 			{name:'upAndDown',index:'upAndDown',align:'left',width:40, hidden: true,editable:true},
 			{name:'validatequantity', index:'validatequantity', align:'center', width:15,hidden:true,editable:true},
 			{name:'subtractedquantity', index:'subtractedquantity', align:'center', width:15,hidden:true,editable:true},
-			{name:'note',index:'note',align:'left',width:70,editable:true,hidden: true, edittype:'text', editoptions:{size:30},editrules:{edithidden:false,required:false}},
+			//{name:'note',index:'note',align:'left',width:70,editable:false,hidden: true, edittype:'text', editoptions:{size:30},editrules:{edithidden:false,required:false}},
+			{name:'note', index:'note', align:'right', width:10,hidden:true, editable:false, editoptions:{size:15, alignText:'right'},editrules:{edithidden:true}},
 			{name:'canDoVI', index:'canDoVI', align:'center',  width:20, hidden:false, editable:false, formatter:canDocheckboxFormatterVIPO,   editrules:{edithidden:true}}
 			],
 		rowNum: 0, pgbuttons: false, recordtext: '', rowList: [], pgtext: null, viewrecords: false,
@@ -5473,10 +5474,11 @@ function loadVendorInvoice(vePOID){
 						var candoidrownum=Number(veaccrrowid)+1;
 						$("#canDoID_new_row").attr("id", "canDoID_"+candoidrownum);
 						$("#canDoVIID_new_row").attr("id","canDoVIID_"+candoidrownum);
-						$("#noteImageIcon_new_row").attr("id","noteImageIcon_"+candoidrownum);
-						$("#canDoVIID_"+candoidrownum).attr("onclick","deleteRowFromJqGrid("+candoidrownum+");");
-						$("#noteImageIcon_"+candoidrownum).attr("onclick","ShowNote('"+candoidrownum+"');");
+						$("#veInvnoteImageIcon_new_row").attr("id","veInvnoteImageIcon_"+candoidrownum);
+						$("#canDoVIID_"+candoidrownum).attr("onclick","deleteRowFromJqGrid_VeInv("+candoidrownum+");");
+						$("#veInvnoteImageIcon_"+candoidrownum).attr("onclick","ShowVeInvLineNote('"+candoidrownum+"');");
 						}
+						
 						setgridtotal();
 						setTimeout(function(){
 							 $("#vendorinvoice1").jqGrid('resetSelection');
@@ -5536,9 +5538,9 @@ function loadVendorInvoice(vePOID){
 				var candoidrownum=Number(veaccrrowid)+1;
 				$("#canDoID_new_row").attr("id", "canDoID_"+candoidrownum);
 				$("#canDoVIID_new_row").attr("id","canDoVIID_"+candoidrownum);
-				$("#noteImageIcon_new_row").attr("id","noteImageIcon_"+candoidrownum);
-				$("#canDoVIID_"+candoidrownum).attr("onclick","deleteRowFromJqGrid('"+candoidrownum+"');");
-				$("#noteImageIcon_"+candoidrownum).attr("onclick","ShowNote('"+candoidrownum+"');");
+				$("#veInvnoteImageIcon_new_row").attr("id","veInvnoteImageIcon_"+candoidrownum);
+				$("#canDoVIID_"+candoidrownum).attr("onclick","deleteRowFromJqGrid_VeInv('"+candoidrownum+"');");
+				$("#veInvnoteImageIcon_"+candoidrownum).attr("onclick","ShowVeInvLineNote('"+candoidrownum+"');");
 				
 			}
 			
@@ -5571,6 +5573,8 @@ function loadVendorInvoice(vePOID){
 		setTimeout(function(){$("#info_dialog").css("z-index", "12345");
 		},100);
 		});
+	
+   
 	/*var custombuttonthereornot=document.getElementById("deleteveinvoicecustombutton");
     if(custombuttonthereornot == null){
 		$("#vendorinvoice1").navButtonAdd('#vendorinvoicepager',
@@ -5657,45 +5661,45 @@ function loadVendorInvoice(vePOID){
  */
 function veInvinlineNoteImage(cellValue, options, rowObject){
 	var element = '';
-	var id="noteImageIcon_"+options.rowId;
+	var id="veInvnoteImageIcon_"+options.rowId;
 	var test=""+options.rowId;
    if(cellValue !== '' && cellValue !== null && cellValue != undefined){
-	   element = "<div><div align='center'><img src='./../resources/images/inline_jqGrid1.png' style='vertical-align: middle;' id='"+id+"' onclick=\"ShowNote('"+test+"')\"/></div></div>";	   
+	   element = "<div><div align='center'><img src='./../resources/images/inline_jqGrid1.png' style='vertical-align: middle;' id='"+id+"' onclick=\"ShowVeInvLineNote('"+test+"')\"/></div></div>";	   
    }else{
-	   element = "<div><div align='center'><img src='./../resources/images/inline_jqGrid.png' style='vertical-align: middle;' id='"+id+"' onclick=\"ShowNote('"+test+"')\"/></div></div>";
+	   element = "<div><div align='center'><img src='./../resources/images/inline_jqGrid.png' style='vertical-align: middle;' id='"+id+"' onclick=\"ShowVeInvLineNote('"+test+"')\"/></div></div>";
    }
    return element;
 } 
 
-function ShowNote(row){
+function ShowVeInvLineNote(row){
 	/*try{
 		*/
 		var jobStatus=$('#jobStatusList').val();
 		console.log("JobStatus"+jobStatus);
 		/*if(typeof(jobStatus) != "undefined")
 		{*/
-		if(CKEDITOR.instances["lineItemNoteID"]!=undefined)			
-		{CKEDITOR.instances["lineItemNoteID"].destroy(true);}
-		CKEDITOR.replace('lineItemNoteID', ckEditorconfigforinline);
+		if(CKEDITOR.instances["lineItemNoteID_veInvIn"]!=undefined)			
+		{CKEDITOR.instances["lineItemNoteID_veInvIn"].destroy(true);}
+		CKEDITOR.replace('lineItemNoteID_veInvIn', ckEditorconfigforinline);
 		/*}
 		else
 		{
 		CKEDITOR.replace('lineItemNoteID', ckEditorconfig);
 		}*/
 		
-		//var rows = jQuery("#SOlineItemGrid").getDataIDs();
-		//var id = jQuery("#SOlineItemGrid").jqGrid('getGridParam',row);
-		$("#SaveInlineNoteID").attr("onclick","SaveVeInvLineItemNote('"+row+"');");
+		//var rows = jQuery("#customerInvoice_lineitems").getDataIDs();
+		//var id = jQuery("#customerInvoice_lineitems").jqGrid('getGridParam',row);
+		$("#SaveInlineNoteID_veInvIn").attr("onclick","SaveVeInvLineItemNote_In('"+row+"');");
 		var notes = jQuery("#vendorinvoice1").jqGrid ('getCell', row, 'note');	  
-			CKEDITOR.instances['lineItemNoteID'].setData(notes);
+			CKEDITOR.instances['lineItemNoteID_veInvIn'].setData(notes);
 			
 			if($('#jobStatusList').val()== 4){
-				$("#SaveInlineNoteID").css("display", "none");
+				$("#SaveInlineNoteID_veInvIn").css("display", "none");
 			}else{
-				$("#SaveInlineNoteID").css("display", "inline-block");
+				$("#SaveInlineNoteID_veInvIn").css("display", "inline-block");
 			}
 			
-			jQuery("#veInvLineItemNote").dialog("open");
+			jQuery("#veInvLineItemNote_In").dialog("open");
 		//	$(".nicEdit-main").focus();
 			return true;
 		/*}catch(err){
@@ -5704,12 +5708,12 @@ function ShowNote(row){
 		}*/
 	}
 
-	function SaveVeInvLineItemNote(row){
-		var inlineText=  CKEDITOR.instances["lineItemNoteID"].getData(); 
+	function SaveVeInvLineItemNote_In(row){
+		var inlineText=  CKEDITOR.instances["lineItemNoteID_veInvIn"].getData(); 
 		
-		//var rows = jQuery("#SOlineItemGrid").getDataIDs();
-		//var id = jQuery("#SOlineItemGrid").jqGrid('getGridParam','selrow');
-//		row=jQuery("#SOlineItemGrid").getRowData(rows[id-1]);
+		//var rows = jQuery("#customerInvoice_lineitems").getDataIDs();
+		//var id = jQuery("#customerInvoice_lineitems").jqGrid('getGridParam','selrow');
+//		row=jQuery("#customerInvoice_lineitems").getRowData(rows[id-1]);
 		  /*var notes = row['note'];
 		  var cuSodetailId = row['cuSodetailId'];*/
 		  //var aLineItem = new Array();
@@ -5729,8 +5733,8 @@ function ShowNote(row){
 //		  }
 		  
 		  
-		  jQuery("#veInvLineItemNote").dialog("close");
-		  CKEDITOR.instances['lineItemNoteID'].destroy();
+		  jQuery("#veInvLineItemNote_In").dialog("close");
+		  CKEDITOR.instances['lineItemNoteID_veInvIn'].destroy();
 		 
 		  //aLineItem.push(cuSodetailId);
 		/*$.ajax({
@@ -5739,19 +5743,19 @@ function ShowNote(row){
 			data : {'lineItem' : aLineItem},
 			success: function(data) {
 				jQuery("#SoLineItemNote").dialog("close");
-				$("#SOlineItemGrid").trigger("reloadGrid");
+				$("#customerInvoice_lineitems").trigger("reloadGrid");
 			}
 			});*/
 	}
 
-	function SoCancelInLineNote(){
-		jQuery("#veInvLineItemNote").dialog("close");
-		 CKEDITOR.instances['lineItemNoteID'].destroy();
+	function veInvCancelInLineNote_out(){
+		jQuery("#veInvLineItemNote_In").dialog("close");
+		 CKEDITOR.instances['lineItemNoteID_veInvIn'].destroy();
 		return false;
 	}
 
 	jQuery(function(){
-		jQuery("#veInvLineItemNote").dialog({
+		jQuery("#veInvLineItemNote_In").dialog({
 				autoOpen : false,
 				modal : true,
 				title:"InLine Note",
@@ -5765,7 +5769,124 @@ function ShowNote(row){
 	});
 
 
+/*
+ * Added By Aravind
+ * ID 570
+ */
+	
+	function cuInvinlineNoteImage(cellValue, options, rowObject){
+		var element = '';
+		var id="CuInvNoteImageIcon_"+options.rowId;
+		var test=""+options.rowId;
+	   if(cellValue !== '' && cellValue !== null && cellValue != undefined){
+		   element = "<div><div align='center'><img src='./../resources/images/inline_jqGrid1.png' style='vertical-align: middle;' id='"+id+"' onclick=\"ShowcuInvLineNote('"+test+"')\"/></div></div>";	   
+	   }else{
+		   element = "<div><div align='center'><img src='./../resources/images/inline_jqGrid.png' style='vertical-align: middle;' id='"+id+"' onclick=\"ShowcuInvLineNote('"+test+"')\"/></div></div>";
+	   }
+	   return element;
+	} 
 
+	function ShowcuInvLineNote(row){
+		/*try{
+			*/
+			var jobStatus=$('#jobStatusList').val();
+			console.log("JobStatus"+jobStatus);
+			/*if(typeof(jobStatus) != "undefined")
+			{*/
+			if(CKEDITOR.instances["lineItemNoteID_cuInvIn"]!=undefined)			
+			{CKEDITOR.instances["lineItemNoteID_cuInvIn"].destroy(true);}
+			CKEDITOR.replace('lineItemNoteID_cuInvIn', ckEditorconfigforinline);
+			/*}
+			else
+			{
+			CKEDITOR.replace('lineItemNoteID', ckEditorconfig);
+			}*/
+			
+			//var rows = jQuery("#customerInvoice_lineitems").getDataIDs();
+			//var id = jQuery("#customerInvoice_lineitems").jqGrid('getGridParam',row);
+			$("#SaveInlineNoteID_cuInvIn").attr("onclick","SaveCuInvLineItemNote_In('"+row+"');");
+			var notes = jQuery("#customerInvoice_lineitems").jqGrid ('getCell', row, 'note');	  
+				CKEDITOR.instances['lineItemNoteID_cuInvIn'].setData(notes);
+				
+				if($('#jobStatusList').val()== 4){
+					$("#SaveInlineNoteID_cuInvIn").css("display", "none");
+				}else{
+					$("#SaveInlineNoteID_cuInvIn").css("display", "inline-block");
+				}
+				
+				jQuery("#cuInvLineItemNote_In").dialog("open");
+			//	$(".nicEdit-main").focus();
+				return true;
+			/*}catch(err){
+				console.log(err.message);
+				alert(err.message);
+			}*/
+		}
+
+		function SaveCuInvLineItemNote_In(row){
+			var inlineText=  CKEDITOR.instances["lineItemNoteID_cuInvIn"].getData(); 
+			
+			//var rows = jQuery("#customerInvoice_lineitems").getDataIDs();
+			//var id = jQuery("#customerInvoice_lineitems").jqGrid('getGridParam','selrow');
+//			row=jQuery("#customerInvoice_lineitems").getRowData(rows[id-1]);
+			  /*var notes = row['note'];
+			  var cuSodetailId = row['cuSodetailId'];*/
+			  //var aLineItem = new Array();
+			  //aLineItem.push(inlineText);
+			  var image="<img src='./../resources/images/lineItem_new.png' style='vertical-align: middle;'>";
+			  if(inlineText==null || inlineText==undefined || inlineText==""){
+				  image=undefined;
+				  inlineText=undefined;
+			  }
+//			  if(isNaN(row)==true || row==undefined){
+//				  $("#new_row_noteImage").val(image);
+//				  $("#new_row_note").val(inlineText);
+//			  }else{
+			  	$("#customerInvoice_lineitems").jqGrid('setCell',row,'note', inlineText);  
+				  $("#customerInvoice_lineitems").jqGrid('setCell',row,'noteImage', image);
+				  
+//			  }
+			  
+			  
+			  jQuery("#cuInvLineItemNote_In").dialog("close");
+			  CKEDITOR.instances['lineItemNoteID_cuInvIn'].destroy();
+			 
+			  //aLineItem.push(cuSodetailId);
+			/*$.ajax({
+				url: "./salesOrderController/saveLineItemNote",
+				type: "POST",
+				data : {'lineItem' : aLineItem},
+				success: function(data) {
+					jQuery("#SoLineItemNote").dialog("close");
+					$("#customerInvoice_lineitems").trigger("reloadGrid");
+				}
+				});*/
+		}
+
+		function cuInvCancelInLineNote_In(){
+			jQuery("#cuInvLineItemNote_In").dialog("close");
+			 CKEDITOR.instances['lineItemNoteID_cuInvIn'].destroy();
+			return false;
+		}
+
+		/*jQuery(function(){
+			jQuery("#cuInvLineItemNote_In").dialog({
+					autoOpen : false,
+					modal : true,
+					title:"InLine Note",
+					height: 390,
+					width: 635,
+					buttons : {  },
+					close:function(){
+						//return true;
+					}	
+			});
+		});*/
+
+
+	
+	
+	
 function check_serialNo( value, colname ) {
 	 var validateqty =$("#vendorinvoice1").jqGrid ('getCell', vendorinvoice1rowid, 'validatequantity');
 	 var result = null;
@@ -6362,13 +6483,19 @@ var updateVendorInvoiceDetails = function(aVendorInvoiceDetails){
 			autoOpen:false,
 			closeOnEscape: false,
 			width:850,
+			resizable:false,
 			title:"Customer Invoice",
 			modal:true,
 			open: function(){
+				cuInv_LineItemsToBeDeleted = new Array();
 				 loadshiptostateautocmpte("#CI_Shipto");
 				//GlobalPage_Validation=3;
 			},
 			close:function(){
+				$('#cusinvoicetab').tabs({
+					active : 0
+				});
+				$('#cusinvoicetab').tabs({ selected: 0 });
 				return true;
 			}
 		});
@@ -6456,6 +6583,15 @@ function invoicebillToAddress(){
 }
 var transaction = "";
  function savecustomerinvoice(operation) {
+	 var itemCode=$("#new_row_itemCode").val();
+	 var cuinvId = $('#cuinvoiceIDhidden').val();
+	 
+		if(operation=='closedialog'){
+			$('#custInvCloseSaveHidden').val("closeCusinvoiceGrid");
+		}
+//	 if(itemCode.length==0){
+/*	 if((itemCode == "" && operation == "close" )   ){*/
+	if(itemCode!=undefined ||  (cuinvId == null || cuinvId == '' || cuinvId == 0)  ){
 	 var customerInvoice_TaxTerritory=$("#customerInvoice_TaxTerritory").val();
 	 
 	 if(operation!='closedialog' && (customerInvoice_TaxTerritory==null || customerInvoice_TaxTerritory=="" ||customerInvoice_TaxTerritory.length==0)){
@@ -6493,6 +6629,9 @@ var transaction = "";
  	var invoiceGridDetails =  JSON.stringify(gridRows)+$("#customerInvoice_invoiceDateID").val();
  	console.log(_globaloldcustomerInvoicegrid+" ========== "+invoiceGridDetails);
 	console.log("=======================================================================");
+	var aInvoiceDetailsTotal=generatecustoemrInvoiceFormTotalIDSeriallize();
+	var generalTabFormval= CIGeneralTabSeriallize();
+	
 	
 	var aSubTotal = $("#customerInvoice_subTotalID").val().replace(/[^0-9\.-]+/g,"");
 	var aFreight = $("#customerInvoice_frightIDcu").val().replace(/[^0-9\.-]+/g,"");
@@ -6576,11 +6715,7 @@ var transaction = "";
 	+"&transaction="+transaction+"&customerInvoie_doNotMailID="+customerInvoie_doNotMailID+"&customerInvoice_taxIdcuname="+taxAmountField+"&CIjoMasterID="+$("#joMasterHiddenID").val()
 	+"&CIrxShiptoid="+ $("#CI_Shipto").contents().find("#shiptoaddrhiddenfromuiid").val()+"&CIrxShiptomodevalue="+ $("#CI_Shipto").contents().find("#shiptomoderhiddenid").val()+"&taxfreight="+taxfreight;
 	//"&rxShiptoAddressID="+shipToAddressIDs+"&shipToMode="+shipToModeIn+
-/*
-	if(operation=='closedialog'){
-		cancelcustomerinvoice();
-	}
-	 */
+	 
 	if(operation != "closedialog"){
 		$('#CuInvoiceSaveID').css('background','-webkit-gradient(linear, left top, left bottom, from(#FFD499), to(#8E6433))');
 		$('#CuInvoiceSaveCloseID').css('background','-webkit-gradient(linear, left top, left bottom, from(#FFD499), to(#8E6433))');
@@ -6598,20 +6733,20 @@ var transaction = "";
 		/*if(_globalold_cIlineitemform == "{}")
 		_globalold_cIlineitemform = _globalold_cIlineitemform.replace('{}', '[]');*/
 		//var aInvoiceDetailsTotal=$("#custoemrInvoiceFormTotalID").serialize();
-		var aInvoiceDetailsTotal=generatecustoemrInvoiceFormTotalIDSeriallize();
-		var generalTabFormval= CIGeneralTabSeriallize();
-		//if(_globaloldcustomerInvoiceform != aInvoiceDetails ){
-			console.log("_globaloldcustomerInvoiceform=="+_globaloldcustomerInvoiceform);
-			console.log("_globalnewcustomerInvoiceform=="+generalTabFormval);
-		//}
-		//if(_globaloldcustomerInvoicegrid != invoiceGridDetails){
-			console.log("_globaloldcustomerInvoicegrid=="+_globaloldcustomerInvoicegrid);
-			console.log("invoiceGridDetails=="+invoiceGridDetails);
-		//}
-		//if(_globaloldcustomerInvoiceformTotal != aInvoiceDetailsTotal){
-			console.log("_globaloldcustomerInvoiceformTotal=="+_globaloldcustomerInvoiceformTotal);
-			console.log("aInvoiceDetailsTotal=="+aInvoiceDetailsTotal);
-			//	}
+		
+		if(_globaloldcustomerInvoiceform != generalTabFormval ){
+				console.log("ERROR:::_globaloldcustomerInvoiceform=="+_globaloldcustomerInvoiceform);
+				console.log("ERROR:::_globalnewcustomerInvoiceform=="+generalTabFormval);
+			}
+			if(_globaloldcustomerInvoicegrid != invoiceGridDetails){
+				console.log("ERROR:::_globaloldcustomerInvoicegrid=="+_globaloldcustomerInvoicegrid);
+				console.log("ERROR:::_invoiceGridDetails=="+invoiceGridDetails);
+			}
+			if(_globaloldcustomerInvoiceformTotal != aInvoiceDetailsTotal){
+				console.log("ERROR:::_globaloldcustomerInvoiceformTotal=="+_globaloldcustomerInvoiceformTotal);
+				console.log("ERROR:::_aInvoiceDetailsTotal=="+aInvoiceDetailsTotal);
+			}
+				
 			
 		if(_globaloldcustomerInvoiceform != generalTabFormval || _globaloldcustomerInvoicegrid != invoiceGridDetails || _globaloldcustomerInvoiceformTotal != aInvoiceDetailsTotal)
 		{
@@ -6719,7 +6854,7 @@ var transaction = "";
 		if(operation =="closedialog"){
 
 			 
-			if(cusoId!==null && cusoId !==""){
+			if(cusoId!==null && cusoId !=="" && $('#cuinvoiceIDhidden').val()!=""){
 			if(releasType=='Stock Order'||releasType=='Bill Only'||releasType=='Service'){
 			var rowId = $("#release").jqGrid('getGridParam', 'selrow');
 			var transStatus = $("#release").jqGrid('getCell', rowId,'transactionStatus');
@@ -6768,6 +6903,8 @@ var transaction = "";
 			}else{
 				cancelcustomerinvoice();
 			}
+			}else{
+				cancelcustomerinvoice();
 			}
 			return true;
 		}
@@ -6792,7 +6929,7 @@ var transaction = "";
 					yearid = data.cofiscalperiod.coFiscalYearId;
 					
 					var rows = jQuery("#customerInvoice_lineitems").getDataIDs();
-					deleteinvoiceDetailId=new Array();
+					/*deleteinvoiceDetailId=new Array();
 		 			 for(var a=0;a<rows.length;a++)
 		 			 {
 		 			    row=jQuery("#customerInvoice_lineitems").getRowData(rows[a]);
@@ -6805,7 +6942,7 @@ var transaction = "";
 			 				 	}
 			 				 $('#customerInvoice_lineitems').jqGrid('delRowData',rows[a]);
 			 			   }
-		 			   }
+		 			   }*/
 		 			 console.log("I am in create=="+aCustomerInvoiceDetails);
 		 			var gridRows = $('#customerInvoice_lineitems').getRowData();
 					var dataToSend = JSON.stringify(gridRows);
@@ -6815,8 +6952,9 @@ var transaction = "";
 							data : {'customerInvoiceShipToAddressName':add1,'customerInvoiceShipToAddress1':add2,
 								'customerInvoiceShipToAddress2':add3,'customerInvoiceShipToCity':city,
 								'customerInvoiceShipToState':state,'customerInvoiceShipToZip':zip,
-								'coFiscalPeriodId':periodid,'coFiscalYearId':yearid,'gridData':dataToSend,'delData':deleteinvoiceDetailId},
+								'coFiscalPeriodId':periodid,'coFiscalYearId':yearid,'gridData':dataToSend,'delData':cuInv_LineItemsToBeDeleted},
 							success: function(data) {
+								cuInv_LineItemsToBeDeleted = new Array();
 								transaction="";
 								$('#operationID').val('edit');
 								$('#ciOpenStatusID').val(data.cIopenStatus);
@@ -6920,6 +7058,9 @@ var transaction = "";
 								if(title === 'New Customer Invoice' && transaction == 'save'){
 									$('#cusinvoicetab').dialog('option', 'title','Customer Invoice');	
 								}
+												 $('#loadingDivForCIGeneralTab').css({
+						"display": "block"
+					}); 
 								
 								setTimeout(function(){
 									//updateTaxableLines();
@@ -6927,10 +7068,15 @@ var transaction = "";
 									$('#showMessageCuInvoiceLine').html("");
 									//_globaloldcustomerInvoiceformTotal= $("#custoemrInvoiceFormTotalID").serialize();
 									_globaloldcustomerInvoiceformTotal=generatecustoemrInvoiceFormTotalIDSeriallize();
-									_globaloldcustomerInvoiceform =  $("#custoemrInvoiceFormID").serialize();
+									_globaloldcustomerInvoiceform =  CIGeneralTabSeriallize();
 								 	var gridRows = $('#customerInvoice_lineitems').getRowData();
 								 	_globaloldcustomerInvoicegrid =  JSON.stringify(gridRows)+$("#customerInvoice_invoiceDateID").val();
-									},3000);
+								console.log("setglobe");
+									$('#loadingDivForCIGeneralTab').css({
+							"display": "none"
+						});	
+								},2500);
+								
 								getCustomerInvoiceDetailsforpopup(data.cuInvoiceId);
 								
 								
@@ -6964,6 +7110,23 @@ var transaction = "";
    				}
    			});
 		}
+	
+	 }
+	 else{
+		 var newDialogDiv = jQuery(document.createElement('div'));
+			jQuery(newDialogDiv).html('<span><b style="color:Green;">You have made changes, please save prior to continuing.</b></span>');
+			jQuery(newDialogDiv).dialog({modal: true, width:300, height:150, title:"Information.", 
+			closeOnEscape: false,
+			open: function(event, ui) { $(".ui-dialog-titlebar-close").hide(); },
+			buttons:{
+				"OK": function(){
+					jQuery(this).dialog("close");
+					//$( "#salesreleasetab ul li:nth-child(2)" ).addClass("ui-state-disabled");
+					//$("#new_row_quantityOrdered").focus();
+				   // return false;
+				}}}).dialog("open");
+	 }
+	
 }
 
  function settotal(){
@@ -7015,7 +7178,7 @@ var transaction = "";
 		document.getElementById("CuInvoiceSaveCloseID").disabled = false;
 		$('#CuInvoiceSaveID').css('background','-webkit-gradient(linear, left top, left bottom, from(#b47015), to(#6f4c23))');
 		$('#CuInvoiceSaveCloseID').css('background','-webkit-gradient(linear, left top, left bottom, from(#b47015), to(#6f4c23))');
-		
+		$('#custoemrInvoiceFormTotalID').find("#costdetails").css('display','none');
 	 	$('#paidCommissionID').css('display','none');
 	 	$('#paymentDate').text('');
 	 	$('#checkRefs').css('display','none');
@@ -7305,12 +7468,30 @@ var transaction = "";
 									
 								 }
 							}
-							
+							 $('#loadingDivForCIGeneralTab').css({
+									"display": "block"
+								}); 
+											
+											setTimeout(function(){
+												//updateTaxableLines();
+												//_globaloldcustomerInvoiceformTotal= $("#custoemrInvoiceFormTotalID").serialize();
+												_globaloldcustomerInvoiceformTotal=generatecustoemrInvoiceFormTotalIDSeriallize();
+												_globaloldcustomerInvoiceform =  CIGeneralTabSeriallize();
+											 	var gridRows = $('#customerInvoice_lineitems').getRowData();
+											 	_globaloldcustomerInvoicegrid =  JSON.stringify(gridRows)+$("#customerInvoice_invoiceDateID").val();
+											console.log("setglobe");
+												$('#loadingDivForCIGeneralTab').css({
+										"display": "none"
+									});	
+											},2500);
+											$('#custoemrInvoiceFormTotalID').find("#costdetails").css('display','none');	
 						},
 					"No": function ()	{
 						jQuery(this).dialog("close");
 					}
 				}}).dialog("open");
+					
+				
 			}else{
 				$('#imgInvoicePDF').empty();
 		 		$('#imgInvoicePDF').append('<input type="image" src="./../resources/Icons/PDF_new.png" title="View CuInvoice" onclick="viewCuInvoicePDF(); return false;"	style="background: #EEDEBC;">');
@@ -7560,15 +7741,20 @@ var transaction = "";
 				 $("a.ui-dialog-titlebar-close.ui-corner-all").css("display", "none");
 				 $( "#cusinvoicetab ul li:nth-child(2)" ).removeClass("ui-state-disabled");
 				 
-				 
+				 $('#loadingDivForCIGeneralTab').css({
+						"display": "block"
+					}); 
 				 setTimeout(function(){
 					 	//_globaloldcustomerInvoiceformTotal=$("#custoemrInvoiceFormTotalID").serialize();
 					 _globaloldcustomerInvoiceformTotal=generatecustoemrInvoiceFormTotalIDSeriallize();
 					 	_globaloldcustomerInvoiceform = CIGeneralTabSeriallize();
 					 	var gridRows = $('#customerInvoice_lineitems').getRowData();
 					 	_globaloldcustomerInvoicegrid =  JSON.stringify(gridRows)+$("#customerInvoice_invoiceDateID").val();
-						},3000);
-				
+					 	$('#loadingDivForCIGeneralTab').css({
+							"display": "none"
+						}); 
+						},2500);
+				 
 			}
 		 	 
 		 	 
@@ -9331,7 +9517,14 @@ function calculatePrice(){
 
 
 function customCurrencyFormatterWithoutDollar(cellValue, options, rowObject) {
-	return cellValue;
+	console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"+cellValue);
+	var multiplier=cellValue;
+	 if(isNaN(multiplier)||multiplier==""||multiplier==0 ||multiplier==undefined){
+		 multiplier=0;
+		}else{
+			multiplier=Round_priceMultiplier(multiplier);
+			 }
+	return multiplier;
 }
 
 function customTotalFomatter(cellValue, options, rowObject) {
@@ -9359,7 +9552,6 @@ function customTotalFomatter(cellValue, options, rowObject) {
 		}else{
 			multiplier=Round_priceMultiplier(multiplier);
 		}
-		
 		if(multiplier==0){
 			multiplier=1;
 		}
@@ -10250,18 +10442,38 @@ jQuery( "#invreasondialog" ).dialog({
 			}else{
 				$("#inverrordivreason").empty();
 				Savecustomerinvoicewithreasonboxfminsidejob($cudlgObj.data('aCustomerInvoiceDetails'),$cudlgObj.data('transaction'),$("#invreasonttextid").val(),$cudlgObj.data('cusoId'),$cudlgObj.data('releasType'),$cudlgObj.data('title'),$cudlgObj.data('joReleaseID'));
-				setTimeout(function(){
-					loadShipingGrid($cudlgObj.data('joReleaseID'),$cudlgObj.data('releasType'))
-					},300);
 				jQuery(this).dialog("close");
-				$("#invreasonttextid").val('');
-				$("#shiping").trigger("reloadGrid");
+				var closeOrNot=$('#custInvCloseSaveHidden').val();
+				
+				document.getElementById("CuInvoiceSaveID").disabled = false;
+				document.getElementById("CuInvoiceSaveCloseID").disabled = false;
+				$('#CuInvoiceSaveID').css('background','-webkit-gradient(linear, left top, left bottom, from(#b47015), to(#6f4c23))');
+				$('#CuInvoiceSaveCloseID').css('background','-webkit-gradient(linear, left top, left bottom, from(#b47015), to(#6f4c23))');
+				
+				//setTimeout(function(){
+					_globaloldcustomerInvoiceformTotal=generatecustoemrInvoiceFormTotalIDSeriallize();
+					_globaloldcustomerInvoiceform =  CIGeneralTabSeriallize();
+				 	var gridRows = $('#customerInvoice_lineitems').getRowData();
+				 	_globaloldcustomerInvoicegrid =  JSON.stringify(gridRows)+$("#customerInvoice_invoiceDateID").val();
+				//console.log("setglobe");
+				//},2500);
+				
+				if(closeOrNot == "closeCusinvoiceGrid"){
+					$('#cusinvoicetab').dialog("close");
+					}
+					$("#invreasonttextid").val('');
+					$('#custInvCloseSaveHidden').val('');
+				/*setTimeout(function(){
+					loadShipingGrid($cudlgObj.data('joReleaseID'),$cudlgObj.data('releasType'))
+					},300);*/
+			//	$("#shiping").trigger("reloadGrid");
 			}
 			
 		}
 	},
 	close: function () {
 		$("#invreasonttextid").val('');
+		//$('#custInvCloseSaveHidden').val('');
 		$('#invreasondialog').validationEngine('hideAll');
 		return true;
 	}
@@ -10309,7 +10521,7 @@ function Savecustomerinvoicewithreasonboxfminsidejob(aCustomerInvoiceDetails,ope
 
 				
 				var rows = jQuery("#customerInvoice_lineitems").getDataIDs();
-				deleteinvoiceDetailId=new Array();
+				/*deleteinvoiceDetailId=new Array();
 	 			 for(var a=0;a<rows.length;a++)
 	 			 {
 	 			    row=jQuery("#customerInvoice_lineitems").getRowData(rows[a]);
@@ -10322,7 +10534,7 @@ function Savecustomerinvoicewithreasonboxfminsidejob(aCustomerInvoiceDetails,ope
 		 				 	}
 		 				 $('#customerInvoice_lineitems').jqGrid('delRowData',rows[a]);
 		 			   }
-	 			   }
+	 			   }*/
 	 			var gridRows = $('#customerInvoice_lineitems').getRowData();
 				var dataToSend = JSON.stringify(gridRows);
 				
@@ -10333,9 +10545,9 @@ function Savecustomerinvoicewithreasonboxfminsidejob(aCustomerInvoiceDetails,ope
 						type: "POST",
 						data : {'customerInvoiceShipToAddressName':add1,'customerInvoiceShipToAddress1':add2,
 							'customerInvoiceShipToAddress2':add3,'customerInvoiceShipToCity':city,
-							'customerInvoiceShipToState':state,'customerInvoiceShipToZip':zip,'coFiscalPeriodId':periodid,'coFiscalYearId':yearid,'gridData':dataToSend,'delData':deleteinvoiceDetailId},
+							'customerInvoiceShipToState':state,'customerInvoiceShipToZip':zip,'coFiscalPeriodId':periodid,'coFiscalYearId':yearid,'gridData':dataToSend,'delData':cuInv_LineItemsToBeDeleted},
 						success: function(data) {
-							
+							cuInv_LineItemsToBeDeleted = new Array();
 							if(operation=='close'){
 								//alert('#'+cusoId+'#');
 								if(cusoId!==null && cusoId !==""){
@@ -10440,7 +10652,6 @@ function Savecustomerinvoicewithreasonboxfminsidejob(aCustomerInvoiceDetails,ope
 				console.log('error');
 				}
 			});
-	$('#cusinvoicetab').dialog("close");
 	
 }
 
@@ -10634,7 +10845,7 @@ function setcustomerInvoicelineitemtotal(selrowid){
 	amount=Number(amount)*Number(unitCost);
 	amount=Number(floorFigureoverall(amount,2));
 	
-	 $("#"+selrowid+"_quantityBilled" ).val(/*formatCurrency(*/quantity/*)*/);
+	 $("#"+selrowid+"_quantityBilled" ).val(/*formatCurrency(*/quantityBilled/*)*/);
 	 $("#"+selrowid+"_unitCost").val(/*formatCurrency(*/unitCost/*)*/);
 	 $("#"+selrowid+"_priceMultiplier" ).val(/*formatCurrency(*/pmult/*)*/);
 	$("#"+selrowid+"_amount").val(formatCurrency(amount));
@@ -10647,24 +10858,17 @@ function setoverallcustomerinvoicetotal(){
 		var taxsubtotal=0;
 		 for(a=0;a<rows.length;a++)
 		 {
+			 if(rows[a]!='new_row'){
 		    row=jQuery("#customerInvoice_lineitems").getRowData(rows[a]);
-//		    var quantityBilled = row['quantityBilled'];
-//		    var unitCost = row['unitCost'].replace(/[^0-9\.]+/g,"");
-//		    var priceMultiplier = row['priceMultiplier'];
-//		    if(priceMultiplier==='0'){
-//		    	priceMultiplier=1;
-//		    }
-		    var id="#canDoID_"+rows[a];
-		    var canDo=$(id).is(':checked');
 		    var total=row['amount'].replace(/[^0-9\-.]+/g,"");
-		      if(!isNaN(total) && !canDo){
+		      if(!isNaN(total)){
 		    	grandTotal+=Number(floorFigureoverall(total,2));
 		    	}
 		      var taxid=row["taxable"];
-			     if(!isNaN(total)&& !canDo && taxid==1){
+			     if(!isNaN(total)&& taxid==1){
 			    	taxsubtotal=Number(taxsubtotal)+Number(floorFigureoverall(total,2));
 	 			    	}
-		      
+		 			}
 		      }
 		 var freight = $('#customerInvoice_frightIDcu').val().replace('$','');
 		 freight =freight.replace(',','');
@@ -10727,10 +10931,18 @@ function setoverallcustomerinvoicetotal(){
 		 }
 }
 
-function canDocheckboxFormatter(cellValue, options, rowObject){
+/*function canDocheckboxFormatter(cellValue, options, rowObject){
 	var id="canDoID_"+options.rowId;
 	var element = "<input type='checkbox' id='"+id+"' onclick='setoverallcustomerinvoicetotal();clickcheckboxChanges(this.id)'>";
-return element;
+	var element = "<img src='./../resources/images/delete_jqGrid.png' style='vertical-align: middle;' id='"+id+"' onclick='setoverallcustomerinvoicetotal();deleteRowFromJqGrid_VeInv("+options.rowId+")'>";
+	
+	return element;
+}*/
+function canDeleteCuInvCheckboxFormatter(cellValue, options, rowObject){
+	var id="canDeleteCuInvID_"+options.rowId;
+	//deleteSOCheckboxChanges(this.id);
+	var element = "<img src='./../resources/images/delete_jqGrid.png' style='vertical-align: middle;' id='"+id+"' onclick='deleteRowFrom_cuInvLineItemsJqGrid("+options.rowId+");'>";
+	return element;
 }
 function clickcheckboxChanges(id){
 	id="#"+id;
@@ -10745,7 +10957,7 @@ function clickcheckboxChanges(id){
 
 var posit_job_customerInvoice=0;
 var CuInvoiceDetailrowid;
-
+var cuLines_selectRow;
 function loadCustomerInvoice(){
 	$("#customerInvoice_lineitems").jqGrid('GridUnload');
 	var id = $('#cuinvoiceIDhidden').val();
@@ -10755,7 +10967,7 @@ function loadCustomerInvoice(){
 	
 	$("#customerInvoice_lineitems").jqGrid({
 		datatype: 'JSON',
-		postData: {'cuInvoiceID':function () { return id; }},
+		postData: {'cuInvoiceID':function () { id = $('#cuinvoiceIDhidden').val(); return id; }},
 		mtype: 'POST',
 		url: './salesOrderController/cuInvlineitemGrid',
 		pager:jQuery('#customerInvoice_lineitemspager'),
@@ -10763,14 +10975,34 @@ function loadCustomerInvoice(){
 		colNames:['Product No','', 'Description','Qty','Price Each', 'Mult.', 'Tax', 'Amount','Notes', 'Manu. ID','cuSodetailId', 'prMasterID','WhCost','<img src="./../resources/images/delete.png" style="vertical-align: middle;">'],
 	   	colModel:[{name:'itemCode',index:'itemCode',align:'left',width:90,editable:true,hidden:false, edittype:'text', editoptions:{size:17,
 	   		dataEvents: [
- 		       			  { type: 'focus', data: { i: 7 }, fn: function(e) { e.target.select(); } },
- 		    			  { type: 'click', data: { i: 7 }, fn: function(e) { e.target.select(); } }
+ 		       			  { type: 'focus', data: { i: 7 }, fn: function(e) {
+ 		       				var rowobji=$(e.target).closest('tr.jqgrow');
+  	  	   		       		var textboxid=rowobji.attr('id');
+  		   		       		jQuery("#customerInvoice_lineitems").jqGrid('setSelection',textboxid, true);
+  		   		       		e.target.select();
+ 		       			  } },
+ 		    			  { type: 'click', data: { i: 7 }, fn: function(e) {
+ 		    				 var rowobji=$(e.target).closest('tr.jqgrow');
+	  	  	   		       		var textboxid=rowobji.attr('id');
+	  		   		       		jQuery("#customerInvoice_lineitems").jqGrid('setSelection',textboxid, true);
+	  		   		       		e.target.select();
+ 		    				  
+ 		    			  } },
+	   		    			 { type: 'keypress', data: { i: 7 }, fn: function(e) {
+		   		    				var key = e.which;
+		                    		 if(key == 13)  // the enter key code
+		                    		  {
+		                    			 $("#customerInvoice_lineitems_ilsave").trigger("click");
+//			                 			    $( "#vendorinvoice1_iladd" ).trigger( "click" );
+			                    		    return false;  
+		                    		  }} 
+		   		    			 }
  		    			  ],
 				dataInit : function(elem) {
 						$(elem).autocomplete(
 									{
 										source : 'jobtabs3/productCodeWithNameList',
-										minLength : 1,
+										minLength: 1,timeout :1000,autoFocus: true,
 										select : function(event, ui) {
 											var selrowid=$("#customerInvoice_lineitems").jqGrid('getGridParam', 'selrow');
 											 var ID = ui.item.id; var product = ui.item.label; $("#"+selrowid+"_prMasterId").val(ID);
@@ -10837,55 +11069,220 @@ function loadCustomerInvoice(){
 				}
 	   		
 	   	},editrules:{edithidden:false,required: true}},
-	   	   	{name:'noteImage',index:'noteImage', align:'right', width:10,hidden:false, editable:false, formatter:noteImage, editoptions:{size:15, alignText:'right'},editrules:{edithidden:true}},
+	   	   	{name:'noteImage',index:'noteImage', align:'right', width:10,hidden:false, editable:false, formatter:cuInvinlineNoteImage, editoptions:{size:15, alignText:'right'},editrules:{edithidden:true}},
 	   		{name:'description', index:'description', align:'left', width:150, editable:true,hidden:false, edittype:'text', editoptions:{size:28,
 	   			dataEvents: [
-     		       			  { type: 'focus', data: { i: 7 }, fn: function(e) { e.target.select(); } },
-     		    			  { type: 'click', data: { i: 7 }, fn: function(e) { e.target.select(); } }
+     		       			  { type: 'focus', data: { i: 7 }, fn: function(e) { 
+     		       				var rowobji=$(e.target).closest('tr.jqgrow');
+     		       				var textboxid=rowobji.attr('id');
+   		    			  		 cuLines_selectRow=textboxid;
+   		    			  			//jQuery("#customerInvoice_lineitems").jqGrid('resetSelection');
+   			    			  		jQuery("#customerInvoice_lineitems").jqGrid('setSelection',cuLines_selectRow, true);
+     		       				  e.target.select(); }
+     		       			  },
+     		    			  { type: 'click', data: { i: 7 }, fn: function(e) { 
+     		    				 var rowobji=$(e.target).closest('tr.jqgrow');
+     				    		  var textboxid=rowobji.attr('id');
+     			    			  cuLines_selectRow=textboxid;
+     			    			  //jQuery("#customerInvoice_lineitems").jqGrid('resetSelection');
+     				    			jQuery("#customerInvoice_lineitems").jqGrid('setSelection',cuLines_selectRow, true);
+     				    			e.target.select();
+     			    				changePosition(cuLines_selectRow);
+     		    				   }
+     		    			  },
+     		    			 {
+  		    				  	/*
+  								 * Added by Aravind
+  								 * Reason for Adding : ID#570
+  								 */
+  		                         type: 'keypress',
+  		                         fn: function(e) {
+  		                        	 var key = e.which;
+  		                    		 if(key == 13)  // the enter key code
+  		                    		  {
+  		                    			 searchPrMasterId=null;
+  		                 			     searchProduct=null;
+  		                    			 setcustomerInvoicelineitemtotal(cuLines_selectRow);
+  		                    			 $("#customerInvoice_lineitems_ilsave").trigger("click");
+  		                 			 //   $( "#customerInvoice_lineitems_iladd" ).trigger( "click" );
+  		                    		    return false;  
+  		                    		  }
+  		                         }
+  		                        }
+     		    			  
      		    			  ]
 	   		},editrules:{edithidden:false},  
 	   			cellattr: function (rowId, tv, rawObject, cm, rdata)	 {return 'style="white-space: normal" ';}},
 	   		{name:'quantityBilled', index:'quantityBilled', align:'center', width:15,hidden:false, editable:true, editoptions:{size:17, alignText:'left'
 	   			, dataEvents: [
-    			  { type: 'focus', data: { i: 7 }, fn: function(e) { e.target.select(); } },
-    			  { type: 'click', data: { i: 7 }, fn: function(e) { e.target.select(); } },
-	                        {
-	                         type: 'keyup',
-	                         fn: function(e) {
-	                        	 var selrowid=$("#customerInvoice_lineitems").jqGrid('getGridParam', 'selrow');
-	                        	setcustomerInvoicelineitemtotal(selrowid);
-	                         }
-	                        }]	
+    			  { type: 'focus', data: { i: 7 }, fn: function(e) {
+		  				 var rowobji=$(e.target).closest('tr.jqgrow');
+			    		  var textboxid=rowobji.attr('id');
+		    			  cuLines_selectRow=textboxid;
+		    			  //jQuery("#customerInvoice_lineitems").jqGrid('resetSelection');
+			    			jQuery("#customerInvoice_lineitems").jqGrid('setSelection',cuLines_selectRow, true);
+		  			  setcustomerInvoicelineitemtotal(cuLines_selectRow);  
+		  			  console.log("test target select");
+		  			  e.target.select();
+		  			  } },
+					  { type: 'click', data: { i: 7 }, fn: function(e) {  
+						  setcustomerInvoicelineitemtotal(cuLines_selectRow);
+						  var rowobji=$(e.target).closest('tr.jqgrow');
+			    		  var textboxid=rowobji.attr('id');
+		    			  cuLines_selectRow=textboxid;
+		    			  //jQuery("#customerInvoice_lineitems").jqGrid('resetSelection');
+			    			jQuery("#customerInvoice_lineitems").jqGrid('setSelection',cuLines_selectRow, true);
+	    				  //changePosition(cuLines_selectRow);
+					  console.log("test target  click");
+					  e.target.select();
+	    			  } },
+                 {
+                  type: 'change',
+                  fn: function(e) {
+                        setcustomerInvoicelineitemtotal(cuLines_selectRow);
+                        	/*
+							 * Added by Aravind	
+							 * Reason for Adding : ID#570
+							 */
+                        //changePosition(cuLines_selectRow);
+                  }
+                 },
+                 {
+                 	/*
+						 * Added by Simon
+						 * Reason for Adding : ID#567
+						 */
+                      type: 'keypress',
+                      fn: function(e) {
+                     	 var key = e.which;
+                 		 if(key == 13)  // the enter key code
+                 		  {
+                 			 searchPrMasterId=null;
+              			     searchProduct=null;
+                 			 setcustomerInvoicelineitemtotal(cuLines_selectRow);
+                 			 $("#customerInvoice_lineitems_ilsave").trigger("click");
+              			 //   $( "#customerInvoice_lineitems_iladd" ).trigger( "click" );
+                 		    return false;  
+                 		  }
+                      }
+                     }
+    			  ],decimalPlaces: 2	
 	   		},editrules:{edithidden:true,required: false}},
 	   		{name:'unitCost', index:'unitCost', align:'right', width:50,hidden:false, editable:true, formatter:customCurrencyFormatter, editoptions:{size:17, alignText:'right'
 	   			, dataEvents: [
-								{ type: 'focus', data: { i: 7 }, fn: function(e) { e.target.select(); } },
-								{ type: 'click', data: { i: 7 }, fn: function(e) { e.target.select(); } },
-		                        {
-		                         type: 'keyup',
+								 { type: 'focus', data: { i: 7 }, fn: function(e) { 
+			            	 var rowobji=$(e.target).closest('tr.jqgrow');
+				    		  var textboxid=rowobji.attr('id');
+			    			  cuLines_selectRow=textboxid;
+			    			  //jQuery("#customerInvoice_lineitems").jqGrid('resetSelection');
+				    			jQuery("#customerInvoice_lineitems").jqGrid('setSelection',cuLines_selectRow, true);
+		    				 // changePosition(cuLines_selectRow);
+			             setcustomerInvoicelineitemtotal(cuLines_selectRow);
+			             e.target.select(); 
+			             } },
+						  { type: 'click', data: { i: 7 }, fn: function(e) { 
+							  setcustomerInvoicelineitemtotal(cuLines_selectRow);
+							  var rowobji=$(e.target).closest('tr.jqgrow');
+				    		  var textboxid=rowobji.attr('id');
+			    			  cuLines_selectRow=textboxid;
+			    			  //jQuery("#customerInvoice_lineitems").jqGrid('resetSelection');
+				    			jQuery("#customerInvoice_lineitems").jqGrid('setSelection',cuLines_selectRow, true);
+		    				 // changePosition(cuLines_selectRow);
+		    			  e.target.select();
+		    			  } },
+	                        {
+	                         type: 'change',
+	                         fn: function(e) {
+	                               setcustomerInvoicelineitemtotal(cuLines_selectRow);
+	                         }
+	                        },
+	                        {
+	                        	/*
+								 * Added by Aravind
+								 * Reason for Adding : ID#570
+								 */
+		                         type: 'keypress',
 		                         fn: function(e) {
-		                        	 var selrowid=$("#customerInvoice_lineitems").jqGrid('getGridParam', 'selrow');
-		                        	setcustomerInvoicelineitemtotal(selrowid);
+		                        	 var key = e.which;
+		                    		 if(key == 13)  // the enter key code
+		                    		  {
+		                    			 searchPrMasterId=null;
+		                 			    searchProduct=null;
+		                    			 setcustomerInvoicelineitemtotal(cuLines_selectRow);
+		                    			 $("#customerInvoice_lineitems_ilsave").trigger("click");
+		                 			  //  $( "#customerInvoice_lineitems_iladd" ).trigger( "click" );
+		                    		    return false;  
+		                    		  }
 		                         }
-		                        }]	
+		                        }],decimalPlaces: 2	
 	   		},editrules:{edithidden:true}},
 	   		{name:'priceMultiplier', index:'priceMultiplier', align:'right', width:50,hidden:false, editable:true, editoptions:{size:17, alignText:'right'
 	   			, dataEvents: [
-								{ type: 'focus', data: { i: 7 }, fn: function(e) { e.target.select(); } },
-								{ type: 'click', data: { i: 7 }, fn: function(e) { e.target.select(); } },
-		                        {
-		                         type: 'keyup',
+								{ type: 'focus', data: { i: 7 }, fn: function(e) { 
+			             setcustomerInvoicelineitemtotal(cuLines_selectRow);
+			             var rowobji=$(e.target).closest('tr.jqgrow');
+			    		  var textboxid=rowobji.attr('id');
+		    			  cuLines_selectRow=textboxid;
+		    			  //jQuery("#customerInvoice_lineitems").jqGrid('resetSelection');
+			    			jQuery("#customerInvoice_lineitems").jqGrid('setSelection',cuLines_selectRow, true);
+		    			  e.target.select();
+		    			  } },
+						  { type: 'click', data: { i: 7 }, fn: function(e) {
+							  
+							  var rowobji=$(e.target).closest('tr.jqgrow');
+				    		  var textboxid=rowobji.attr('id');
+			    			  cuLines_selectRow=textboxid;
+			    			  //jQuery("#customerInvoice_lineitems").jqGrid('resetSelection');
+				    			jQuery("#customerInvoice_lineitems").jqGrid('setSelection',cuLines_selectRow, true);
+							  setcustomerInvoicelineitemtotal(cuLines_selectRow);
+		    				  //changePosition(cuLines_selectRow);
+						  e.target.select(); 
+						  }},
+	                        {
+	                         type: 'change',
+	                         fn: function(e) {
+	                               setcustomerInvoicelineitemtotal(cuLines_selectRow);
+	                         }
+	                        },
+	                        /*
+							 * Added by Aravind	
+							 * Reason for Adding : ID#570
+							 */
+	                        {
+		                         type: 'keypress',
 		                         fn: function(e) {
-		                        	 var selrowid=$("#customerInvoice_lineitems").jqGrid('getGridParam', 'selrow');
-		                        	setcustomerInvoicelineitemtotal(selrowid);
+		                        	 var key = e.which;
+		                    		 if(key == 13)  // the enter key code
+		                    		  {
+		                    			searchPrMasterId=null;
+		                 			    searchProduct=null;
+		                    			 setcustomerInvoicelineitemtotal(cuLines_selectRow);
+		                    			 $("#customerInvoice_lineitems_ilsave").trigger("click");
+		                 			  //  $( "#customerInvoice_lineitems_iladd" ).trigger( "click" );
+		                    		    return false;  
+		                    		  }
 		                         }
-		                        }]		
-	   		}/*, formatter:customCurrencyFormatterWithoutDollar*/, editrules:{edithidden:true}},
+		                        }],decimalPlaces: 4		
+	   		}, formatter:customCurrencyFormatterWithoutDollar, editrules:{edithidden:true}},
 	   		{name:'taxable', index:'taxable', align:'center',  width:20, hidden:false, editable:true, formatter:'checkbox', edittype:'checkbox',editoptions:{value:'1:0'},editrules:{edithidden:true}},
 	   		{name:'amount', index:'amount', align:'right', width:50,hidden:false, editable:true,editoptions:{size:15, alignText:'right',readonly: 'readonly',
 	   			dataEvents: [
-    		       			  { type: 'focus', data: { i: 7 }, fn: function(e) { e.target.select(); } },
-    		    			  { type: 'click', data: { i: 7 }, fn: function(e) { e.target.select(); } }
+	   			          { type: 'focus', data: { i: 7 }, fn: function(e) {
+			       				 var rowobji=$(e.target).closest('tr.jqgrow');
+					    		  var textboxid=rowobji.attr('id');
+				    			  cuLines_selectRow=textboxid;
+				    			  //jQuery("#customerInvoice_lineitems").jqGrid('resetSelection');
+					    			jQuery("#customerInvoice_lineitems").jqGrid('setSelection',cuLines_selectRow, true);
+			       				  e.target.select();
+			       				  } },
+			    			  { type: 'click', data: { i: 7 }, fn: function(e) {
+			    				  var rowobji=$(e.target).closest('tr.jqgrow');
+					    		  var textboxid=rowobji.attr('id');
+				    			  cuLines_selectRow=textboxid;
+				    			  //jQuery("#customerInvoice_lineitems").jqGrid('resetSelection');
+					    			jQuery("#customerInvoice_lineitems").jqGrid('setSelection',cuLines_selectRow, true);
+			    				  e.target.select(); 
+			    				  } }
     		    			  ]
 	   		},editrules:{edithidden:true},formatter:customTotalFomatter},
 	   		{name:'note', index:'note', align:'right', width:10,hidden:true, editable:false, editoptions:{size:15, alignText:'right'},editrules:{edithidden:true}},
@@ -10893,14 +11290,14 @@ function loadCustomerInvoice(){
 	   		{name:'cuInvoiceDetailId', index:'cuInvoiceDetailId', align:'right', width:50,hidden:true, editable:true, editoptions:{size:17, alignText:'right'},editrules:{edithidden:false}},
 	   		{name:'prMasterId', index:'prMasterId', align:'right', width:50,hidden:true, editable:true, editoptions:{size:17, alignText:'right'},editrules:{edithidden:false}},
 	   		{name:'whseCost',index:'whseCost',align:'right', width:50,hidden:true, editable:true, editoptions:{size:15, alignText:'right'},editrules:{edithidden:true}},
-	   		{name:'canDo', index:'canDo', align:'center',  width:20, hidden:false, editable:false, formatter:canDocheckboxFormatter,   editrules:{edithidden:true}}
+	   		{name:'canDo', index:'canDo', align:'center',  width:20, hidden:false, editable:false, formatter:canDeleteCuInvCheckboxFormatter,   editrules:{edithidden:true}}
 	   		//{name:'',index:'', width:10,editable:false, hidden:false,formatter:DeleteImageFormatter,editrules:{required:false}, editoptions:{size:10}},
 	   		],
 		 altRows:true,
 		 altclass:'myAltRowClass',
 		 cellsubmit: 'clientArray',
 		 editurl: 'clientArray',
-		 height:200,
+		 height:482.5,
 		 imgpath:'themes/basic/images',
 		 rowNum: 0,
 		 sortname:' ',
@@ -10920,99 +11317,72 @@ function loadCustomerInvoice(){
 	     gridComplete: function () {
 	    	 jQuery("#customerInvoice_lineitems").closest(".ui-jqgrid-bdiv").scrollTop(posit_job_customerInvoice);
 	            posit_job_customerInvoice=0;
-	            var gridRows = $('#customerInvoice_lineitems').getRowData();
-			 	_globaloldcustomerInvoicegrid =  JSON.stringify(gridRows)+$("#customerInvoice_invoiceDateID").val();
+//	            var gridRows = $('#customerInvoice_lineitems').getRowData();
+//			 	_globaloldcustomerInvoicegrid =  JSON.stringify(gridRows)+$("#customerInvoice_invoiceDateID").val();
 	     },
 			loadBeforeSend: function(xhr) {
 				posit_job_customerInvoice= jQuery("#customerInvoice_lineitems").closest(".ui-jqgrid-bdiv").scrollTop();
 			},
 	     loadComplete: function () 
-	    	 {
-	    			
-	 			var ids = $('#customerInvoice_lineitems').jqGrid('getDataIDs');
-	 			$('#customerInvoice_lineitems_noteImage').removeClass("ui-state-default ui-th-column ui-th-ltr");			
-	 		    if (ids) {
-	 		        var sortName = $('#customerInvoice_lineitems').jqGrid('getGridParam','noteImage');
-	 		        var sortOrder = $('#customerInvoice_lineitems').jqGrid('getGridParam','description');
-	 		        for (var i=0;i<ids.length;i++) {
-	 		        	
-	 		        	$('#customerInvoice_lineitems').jqGrid('setCell', ids[i], 'noteImage', '', '',
-	 		                        {style:'border-right-color: transparent !important;'});
-	 		        	$('#customerInvoice_lineitems').jqGrid('setCell', ids[i], 'description', '', '',
-	 	                        {style:'border-left-color: transparent !important;'});
-	 		        }
-	 		    }
-	 			
-	 			var rows = jQuery("#customerInvoice_lineitems").getDataIDs();
-	 			var grandTotal = 0;
-	 			var taxsubtotal=0;
-	 			 for(a=0;a<rows.length;a++)
-	 			 {
-	 			    row=jQuery("#customerInvoice_lineitems").getRowData(rows[a]);
-	 			    var total=row['amount'].replace(/[^0-9\-.]+/g,"");
-	 			    var id="#canDoID_"+rows[a];
-	 			    var canDo=$(id).is(':checked');
-	 			      if(!isNaN(total)&& !canDo){
-	 			    	grandTotal=Number(grandTotal)+Number(floorFigureoverall(total,2));
-	 			    	}
-	 			      
-	 			     var taxid=row['taxable'];
-	 			     if(!isNaN(total)&& !canDo && taxid==1){
-	 			    	taxsubtotal=Number(taxsubtotal)+Number(floorFigureoverall(total,2));
-		 			    	}
-	 			     
-	 			      }
-	 			 var freight = $('#customerInvoice_frightIDcu').val().replace('$','');
-	 			 freight =freight.replace(',','');
-	 		     var taxrate = $('#customerInvoice_taxIdcu').val().replace('$','');
-	 			 taxrate =taxrate.replace(',','');
-	 			 
-	 			 if(isNaN(freight)){
-	 				 freight = 0;
-	 				 }
-	 			 if(isNaN(taxrate )){ 
-	 				 taxrate = 0;
-	 				 }
-	 			 var count = $("#customerInvoice_lineitems").getGridParam("reccount");
-	 			 
-	 			 if(count!=null && count>0){
-	 			  grandTotal=Number(floorFigureoverall(grandTotal,2));
-	 			  
-	 			  var taxrate = 0;
-	 			 var allowfreightinTax=false; 
-	 			 var allowreqcheckfreightintax=$('#CI_taxfreight').val();
-	 			if(allowreqcheckfreightintax!=null && allowreqcheckfreightintax==1){
-	 						allowfreightinTax=true;
-	 					}
-	 				 if(allowfreightinTax){
-	 					 taxrate = (Number(floorFigureoverall(taxsubtotal,2))+parseFloat(freight))*Number($('#customerInvoice_generaltaxId').val())/100;
-	 				 }else{
-	 					 taxrate = Number(floorFigureoverall(taxsubtotal,2))*Number($('#customerInvoice_generaltaxId').val())/100;
-	 				 }
-	 				 
-	 				 
-	 			 var total = (Number(floorFigureoverall(grandTotal,2))+Number(freight)+Number(floorFigureoverall(taxrate,2)));
-	 			// $('#customerInvoice_linesubTotalID').val(formatCurrency(grandTotal));
-	 			 $('#customerInvoice_subTotalID').val(formatCurrency(grandTotal));	
-	 			// $('#cuGeneral_taxvalue').val(formatCurrency(taxrate));
-	 			 $('#customerInvoice_taxIdcu').val(formatCurrency(taxrate));
-	 			 
-	 			// $('#customerInvoice_linetotalID').val(formatCurrency(total));
-	 			 $('#customerInvoice_totalID').val(formatCurrency(total));
-	 			 }
-	 			 var cuinvoiceid = $('#cuinvoiceIDhidden').val();
-	 			 $("#customerInvoice_lineitems").setSelection(1, true);
-	 			 
-	 			
+	     {
+
+
+	    	 $("#customerInvoice_lineitems").setSelection(1, true);
+				var allRowsInGrid = $('#customerInvoice_lineitems').jqGrid('getRowData');
+
+				var aVal = new Array(); 
+				var aTax = new Array();
+				var sum = 0;
+				var taxAmount = 0;
+				var aTotal = 0;
+				$.each(allRowsInGrid, function(index, value) { 
+					aVal[index] = value.quantityBilled;
+					var number1 = aVal[index].replace(/[^0-9\.-]+/g,"");
+					sum = Number(sum) + Number(number1); 
+				});
+				$('#subtotal_ID').val(formatCurrency(sum));
+				var taxValue = $('#tax_ID').val().replace(/[^0-9\.-]+/g,"");
+				var taxpercent=$('#dropshipTaxID_release').val();
+				
+				$.each(allRowsInGrid, function(index, value) { 
+					aVal[index] = value.taxable;
+					if (aVal[index] === 'Yes'){
+						aTax[index] = value.quantityBilled;
+						var number1 = aTax[index].replace(/[^0-9\.-]+/g,"");
+						taxAmount = taxAmount + Number(number1)*(taxpercent/100);
+					}
+				});
+				var freightLineVal= $('#freight_ID').val();
+				var number1 = '';
+				if(freightLineVal !== ''){
+					number1 = freightLineVal.replace(/[^0-9\.-]+/g,"");
+				}
+				$( "#customerInvoice_lineitems_iladd" ).trigger( "click" );
+				var allRowsInGridwithnewrow = $('#customerInvoice_lineitems').jqGrid('getRowData');
+				_globaloldcustomerInvoicegrid = JSON.stringify(allRowsInGridwithnewrow)+$("#customerInvoice_invoiceDateID").val();
+				console.log("_globaloldcustomerInvoicegrid=="+_globaloldcustomerInvoicegrid); 
+				_globaloldcustomerInvoiceformTotal=generatecustoemrInvoiceFormTotalIDSeriallize();
+				//_globaloldcustomerInvoiceform =  $("#custoemrInvoiceFormID").serialize();
+	             
+	            
 	    	 
 	     },
 		onSelectRow : function(id) {
 			CuInvoiceDetailrowid=id;
-			$("#salesorder_cost").val("$0.00");
-			$("#salesorder_order").val("$0.00");
-			$("#salesorder_total").val("$0.00");
-			setshowWHCost(id);
+			setshowWarehouseCost_cuInv(id);
+			posit_job_salesorder= jQuery("#customerInvoice_lineitems").closest(".ui-jqgrid-bdiv").scrollTop();
+			
 		},
+		ondblClickRow: function(rowid) {
+
+			 if(rowid=="new_row"){
+				 
+			 }else{
+				 posit_job_salesorder= jQuery("#customerInvoice_lineitems").closest(".ui-jqgrid-bdiv").scrollTop();
+				 $("#customerInvoice_lineitems_ilcancel").trigger("click");
+			     $("#customerInvoice_lineitems_iledit").trigger("click");
+			 }
+		   },
 		jsonReader:{
 			root:"rows",
 			page:"page",
@@ -11023,37 +11393,35 @@ function loadCustomerInvoice(){
 			id:"id",
 			userdata:"userdata"
     	}
-	}).navGrid("#customerInvoice_lineitemspager", {
+	});
+	$("#customerInvoice_lineitems").jqGrid("navGrid","#customerInvoice_lineitemspager", {
 		add : false,
 		edit : false,
 		del : false,
-		search : false,
-		refresh : false,
-		pager : false,
-	});
+		search:false,refresh:false}
+	);
 	$("#customerInvoice_lineitems").jqGrid(
 			'inlineNav',
 			'#customerInvoice_lineitemspager',{
-				edit : true,
-				edittext : "Edit",
 				add : true,
-				addtext : "Add",
-				cancel : true,
-				canceltext :"Cancel",
-				savetext : "Save",
-				refresh : true,
+				edit : true,
+				refresh : false,
+				cloneToTop : true,
+				alertzIndex : 1234,
 				alertzIndex : 10000,
 				addParams : {
+					position: "last",
 					addRowParams : {
+								
 								keys : false,
 								oneditfunc : function() {
 									$("#new_row_amount").val(formatCurrency(0));
-									  $('#imgInvoicePDF').empty();
+									 /* $('#imgInvoicePDF').empty();
 									  $('#imgInvoicePDF').append('<input type="image" src="./../resources/Icons/PDF_new_disabled.png" title="View CuInvoice" return false;" style="background: #EEDEBC;cursor:default;">');
 
 									  $('#imgInvoiceEmail').empty();
 									  $('#imgInvoiceEmail').append('<input id="contactEmailID" type="image" src="./../resources/Icons/mail_new_disabled.png" title="Email Customer Invoice" style="background: #EEDEBC;cursor:default;" return false;">');
-
+*/
 								},
 								successfunc : function(response) {
 									console.log(response);
@@ -11075,11 +11443,19 @@ function loadCustomerInvoice(){
 										cuinvrowid= idd;
 									}
 									if(CuInvoiceDetailrowid=="new_row"){
-										var newid=Number(cuinvrowid)+1;
-									$("#" + CuInvoiceDetailrowid).attr("id", newid);
-									//$("#taxableID_new_row").attr("id", "taxableID_"+newid);
+										$("#" + CuInvoiceDetailrowid).attr("id", Number(cuinvrowid)+1);
+										var candoidrownum=Number(cuinvrowid)+1;
+										$("#canDoID_new_row").attr("id", "canDoID_"+candoidrownum);
+										$("#canDoVIID_new_row").attr("id","canDoVIID_"+candoidrownum);
+										$("#CuInvNoteImageIcon_new_row").attr("id","CuInvNoteImageIcon_"+candoidrownum);
+										$("#canDeleteCuInvID_new_row").attr("id","canDeleteCuInvID_"+candoidrownum);
+										$("#canDeleteCuInvID_"+candoidrownum).attr("onclick","deleteRowFrom_cuInvLineItemsJqGrid('"+candoidrownum+"');");
+										$("#CuInvNoteImageIcon_"+candoidrownum).attr("onclick","ShowcuInvLineNote('"+candoidrownum+"');");
+										setshowWarehouseCost_cuInv(Number(cuinvrowid)+1);
+									}else{
+										
+										setshowWarehouseCost_cuInv(CuInvoiceDetailrowid);
 									}
-									
 									var grid=$("#customerInvoice_lineitems");
 									grid.jqGrid('resetSelection');
 								    var dataids = grid.getDataIDs();
@@ -11091,12 +11467,28 @@ function loadCustomerInvoice(){
 									//formatCurrency(sum)
 								
 									setoverallcustomerinvoicetotal();
+									//alert("insidee");
+									setTimeout(function(){
+									 $("#customerInvoice_lineitems").jqGrid('resetSelection');
+									 var grid=$("#customerInvoice_lineitems");
+										grid.jqGrid('resetSelection');
+									    var dataids = grid.getDataIDs();
+									    for (var i=0, il=dataids.length; i < il; i++) {
+									        grid.jqGrid('setSelection',dataids[i], false);
+									    }
+									    $( "#customerInvoice_lineitems_iladd" ).trigger( "click" );
+									 $("#customerInvoice_lineitems").jqGrid('setSelection','new_row', true);
+									},300);
+									disablePDFEmail_Button_Edit();
+									cuLineItemChanges_Out();
 								},
 								
 								errorfunc : function(rowid, response) {
+									$("#info_dialog").css("z-index", "12345");
 									return false;
 								},
 								afterrestorefunc : function(rowid) {
+									$("#info_dialog").css("z-index", "12345");
 									// alert("afterrestorefunc");
 								}
 							}
@@ -11108,7 +11500,7 @@ function loadCustomerInvoice(){
 							console.log(response.responseText);
 							return true;
 								},
-					aftersavefunc : function(id) {
+					aftersavefunc : function(response) {
 
 
 						var ids = $("#customerInvoice_lineitems").jqGrid('getDataIDs');
@@ -11125,21 +11517,37 @@ function loadCustomerInvoice(){
 							cuinvrowid= idd;
 						}
 						if(CuInvoiceDetailrowid=="new_row"){
-							var newid=Number(cuinvrowid)+1;
-							$("#" + CuInvoiceDetailrowid).attr("id", newid);
-							//$("#taxableID_new_row").attr("id", "taxableID_"+newid);
+							$("#" + CuInvoiceDetailrowid).attr("id", Number(cuinvrowid)+1);
+							var candoidrownum=Number(cuinvrowid)+1;
+							$("#canDoID_new_row").attr("id", "canDoID_"+candoidrownum);
+							$("#canDoVIID_new_row").attr("id","canDoVIID_"+candoidrownum);
+							$("#canDeleteCuInvID_new_row").attr("id","canDeleteCuInvID_"+candoidrownum)
+							$("#CuInvNoteImageIcon_new_row").attr("id","CuInvNoteImageIcon_"+candoidrownum);
+							$("#canDeleteCuInvID_"+candoidrownum).attr("onclick","deleteRowFrom_cuInvLineItemsJqGrid('"+candoidrownum+"');");
+							$("#CuInvNoteImageIcon_"+candoidrownum).attr("onclick","ShowcuInvLineNote('"+candoidrownum+"');");
+							setshowWarehouseCost_cuInv(Number(cuinvrowid)+1);
+						}else{
+							setshowWarehouseCost_cuInv(CuInvoiceDetailrowid);
 						}
 						
-						var grid=$("#customerInvoice_lineitems");
-						grid.jqGrid('resetSelection');
-					    var dataids = grid.getDataIDs();
-					    for (var i=0, il=dataids.length; i < il; i++) {
-					        grid.jqGrid('setSelection',dataids[i], false);
-					    }
-					    
+						
 						//formatCurrency(sum)
 					
-						setoverallcustomerinvoicetotal();
+					    setoverallcustomerinvoicetotal();
+						//alert("insidee");
+						setTimeout(function(){
+						 $("#customerInvoice_lineitems").jqGrid('resetSelection');
+						 var grid=$("#customerInvoice_lineitems");
+							grid.jqGrid('resetSelection');
+						    var dataids = grid.getDataIDs();
+						    for (var i=0, il=dataids.length; i < il; i++) {
+						        grid.jqGrid('setSelection',dataids[i], false);
+						    }
+						    $( "#customerInvoice_lineitems_iladd" ).trigger( "click" );
+						 $("#customerInvoice_lineitems").jqGrid('setSelection','new_row', true);
+						},300);
+						disablePDFEmail_Button_Edit();
+						cuLineItemChanges_Out();
 					
 					},
 					errorfunc : function(rowid, response) {
@@ -11149,12 +11557,12 @@ function loadCustomerInvoice(){
 					},
 
 					oneditfunc : function(id) {
-						 $('#imgInvoicePDF').empty();
+			/*			 $('#imgInvoicePDF').empty();
 						  $('#imgInvoicePDF').append('<input type="image" src="./../resources/Icons/PDF_new_disabled.png" title="View CuInvoice" return false;" style="background: #EEDEBC;cursor:default;">');
 
 						  $('#imgInvoiceEmail').empty();
 						  $('#imgInvoiceEmail').append('<input id="contactEmailID" type="image" src="./../resources/Icons/mail_new_disabled.png" title="Email Customer Invoice" style="background: #EEDEBC;cursor:default;" return false;">');
-
+*/
 						console.log('OnEditfunc'+id);
 						var unitcost=$("#"+id+"_unitCost").val();
 						unitcost=unitcost.replace(/[^0-9\-.]+/g,"");
@@ -11164,14 +11572,33 @@ function loadCustomerInvoice(){
 						$("#"+id+"_unitCost").val(unitcost);
 					}
 					
-				}
+				},restoreAfterSelect :false
 				
 			});	
-	$('#customerInvoice_lineitems').jqGrid('navButtonAdd',"#customerInvoice_lineitemspager",{ caption:"", buttonicon:"ui-icon-calculator", onClickButton:ShowInvoiceNote, position: "last", title:"Edit note for line item", cursor: "pointer"});
+	//Drag And DROP
+	jQuery("#customerInvoice_lineitems").jqGrid('sortableRows');
+	jQuery("#customerInvoice_lineitems").jqGrid('gridDnD');
+	//$('#customerInvoice_lineitems').jqGrid('navButtonAdd',"#customerInvoice_lineitemspager",{ caption:"", buttonicon:"ui-icon-calculator", onClickButton:ShowInvoiceNote, position: "last", title:"Edit note for line item", cursor: "pointer"});
 	//commented By Aravind 
 	//to hide ^ 
 	//$('#customerInvoice_lineitems').jqGrid('navButtonAdd',"#customerInvoice_lineitemspager",{ caption:"", buttonicon:"", onClickButton:showHiddenCost, position: "last", title:"Show/Hide Cost", cursor: "pointer"});
 }
+
+
+/*
+ * Added by Simon
+ * Reason for Adding : ID#567 (below 5 lines)
+ */
+//$('#customerInvoice_lineitems').jqGrid('navButtonAdd',"#customerInvoice_lineitemspager",{ caption:"", buttonicon:"ui-icon-folder-collapsed", onClickButton:ShowTemplateList, position: "last", title:"Add template Line items", cursor: "pointer"});
+/*$("#customerInvoice_lineitems_ilsave").css({"display":"none"});
+$("#customerInvoice_lineitems_iladd").css({"display":"none"});
+$("#customerInvoice_lineitems_iledit").css({"display":"none"});
+$("#customerInvoice_lineitems_ilcancel").css({"display":"none"});*/
+
+$("#customerInvoice_lineitems_ilsave").click(function() {
+	setTimeout(function(){$("#info_dialog").css("z-index", "12345");
+	},100);
+	});
 var flag=true;
 function showHiddenCost(){
 	console.log(type);
@@ -11186,6 +11613,18 @@ function showHiddenCost(){
 		flag=true;
 	}
 }
+
+function changePosition(cuLines_selectRow){
+	if(cuLines_selectRow=="new_row"){
+	 if($("#"+cuLines_selectRow+"_itemCode").val().length==0 || ltrim($("#"+cuLines_selectRow+"_itemCode").val()).length==0){
+		 $("#"+cuLines_selectRow+"_itemCode").val("");
+		 $("#"+cuLines_selectRow+"_itemCode").focus();
+	  }else{
+		}
+	}else{
+	}
+}
+
 function setProductTaxable(cellValue, options, rowObject){
 		var element = '';
 		//var taxValue =  $('#customerInvoice_TaxTerritory').val();
@@ -11238,6 +11677,7 @@ function generatecustoemrInvoiceFormTotalIDSeriallize(){
 	var customerInvoice_frightIDcu=$("#customerInvoice_frightIDcu").val();
 	var customerInvoice_taxIdcu=$("#customerInvoice_taxIdcu").val();
 	var customerInvoice_totalID=$("#customerInvoice_totalID").val()+"";
+	
 	if(customerInvoice_totalID!=null && customerInvoice_totalID!=undefined && customerInvoice_totalID!=""){
 		customerInvoice_totalID=customerInvoice_totalID.replace(/[^0-9\.-]+/g,"");
 		customerInvoice_totalID=customerInvoice_totalID.replace(",","");
@@ -11245,10 +11685,51 @@ function generatecustoemrInvoiceFormTotalIDSeriallize(){
 		return customerInvoice_totalID;
 }
 
+function CIGeneralTabSeriallize() {
+	var value1 = $("customerInvoice_invoiceNumberId").val();
+	var value2 = $("customerbillToAddressIDcuInvoice").val();
+	var value3 = $("customerbillToAddressID1cuInvoice").val();
+	var value4 = $("customerbillToAddress2").val();
+	var value5 = $("customerbillToCitycuInvoice").val();
+	var value6 = $("customerbillToZipIDcuInvoice").val();
+	var value7 = $("emailListCU").val();
+	var value8 = $("customerInvoice_salesRepsList").val();
+	var value9 = $("customerInvoice_CSRList").val();
+	var value10 = $("customerInvoice_SalesMgrList").val();
+	var value11 = $("customerInvoice_EngineersList").val();
+	var value12 = $("customerInvoice_PrjMgrList").val();
+	var value13 = $("customer_Divisions").val();
+	var value14 = $("customerInvoie_PONoID").val();
+	var value15 = $("customerInvoice_TaxTerritory").val();
+	var value16 = $("customerinvoice_paymentTerms").val();
+	var value17 = $("customerInvoice_dueDateID").val();
+	var value18 = $("prWareHouseSelectID").val();
+	var value19 = $("shipViaCustomerSelectID").val();
+	var value20 = $("customerInvoice_shipDateID").val();
+	var value21 = $("customerInvoice_proNumberID").val();
+	var value22 = $("#CI_Shipto").contents().find("#shipToName").val();
+	var value23 = $("#CI_Shipto").contents().find("#shipToAddress1").val();
+	var value24 = $("#CI_Shipto").contents().find("#shipToAddress2").val();
+	var value25 = $("#CI_Shipto").contents().find("#shipToCity").val();
+	var value26 = $("#CI_Shipto").contents().find("#shipToState").val();
+	var value27 = $("#CI_Shipto").contents().find("#shipToZip").val();
+	var value28 = $("#CI_Shipto").contents().find("#shiptomoderhiddenid").val();
+	var value29 = $("#customerInvoie_doNotMailID").is(':checked');
+	var value30 = $("#customerInvoice_invoiceDateID").val();
+
+	var value = value1 + value2 + value3 + value4 + value5 + value6 + value7
+			+ value8 + value9 + value10 + value11 + value12 + value13 + value14
+			+ value15 + value16 + value17 + value18 + value19 + value20
+			+ value21 + value22 + value23 + value24 + value25 + value26
+			+ value27 + value28 + value29 + value30;
+	return value;
+}
+
+
 function canDocheckboxFormatterVIPO(cellValue, options, rowObject){
 	var id="canDoVIID_"+options.rowId;
 	//clickVIcheckboxChanges(this.id)
-	var element = "<img src='./../resources/images/delete_jqGrid.png' style='vertical-align: middle;' id='"+id+"' onclick='deleteRowFromJqGrid("+options.rowId+");'>";
+	var element = "<img src='./../resources/images/delete_jqGrid.png' style='vertical-align: middle;' id='"+id+"' onclick='deleteRowFromJqGrid_VeInv("+options.rowId+");'>";
 return element;
 }
 
@@ -11465,38 +11946,7 @@ function gettaxpercentagefromvePO(vepoid){
 		}
 	});
 }
-function setshowWHCost(id){
-	var row=jQuery("#customerInvoice_lineitems").getRowData(id);
-	var productCost=row['whseCost'];
-	if(productCost==null || productCost=="" || productCost==undefined || productCost==0.00){
-		productCost=0.00;
-	}
-	$("#salesorder_cost").val(formatCurrency(productCost));
-	var rows = jQuery("#customerInvoice_lineitems").getDataIDs();
-	var grandTotal = 0;
-	 for(a=0;a<rows.length;a++)
-	 {
-	    rowdata=jQuery("#customerInvoice_lineitems").getRowData(rows[a]);
-	    var eachproductCost=rowdata['whseCost'];
-	    if(eachproductCost==null || eachproductCost=="" || eachproductCost==undefined){
-	    	eachproductCost=0.00;
-		}
-	    var quantity=rowdata['quantityBilled'];
-	    if(quantity==null || quantity=="" || quantity==undefined){
-	    	quantity=0.00;
-		}
-	    var warehsecost=Number(eachproductCost)*Number(quantity);
-	    grandTotal=grandTotal+parseFloat(warehsecost);
-	      }
-	 $("#salesorder_order").val(formatCurrency(grandTotal));
-	 var subTotalIDLine=$("#customerInvoice_subTotalID").val();
-	 subTotalIDLine=subTotalIDLine.replace(/[^0-9-.]/g, '');
-	 if(subTotalIDLine==null || subTotalIDLine=="" || subTotalIDLine==undefined){
-		 subTotalIDLine=0.00;
-	 }
-	 var margintotal=Number(subTotalIDLine)-Number(grandTotal);
-	 $("#salesorder_total").val(formatCurrency(margintotal));
-}
+
 function setproductWareHouseCost(selrowId,prMasterID){
 	$.ajax({
 		url: "./salesOrderController/getproductWareHouseCost",
@@ -11510,7 +11960,7 @@ function setproductWareHouseCost(selrowId,prMasterID){
 }
 jQuery("#costToDisplay").hide();
 
-function deleteRowFromJqGrid(jqGridRowId)
+function deleteRowFromJqGrid_VeInv(jqGridRowId)
 {
 	 var veBillDetailId = jQuery("#vendorinvoice1").jqGrid ('getCell', jqGridRowId, 'veBillDetailId');
 	 if(veBillDetailId!=undefined && veBillDetailId!=null && veBillDetailId!="" && veBillDetailId!=0){
@@ -11525,3 +11975,160 @@ function deleteRowFromJqGrid(jqGridRowId)
 	 jQuery("#new_row_prItemCode").focus();
 	 setgridtotal();
 }
+function deleteRowFrom_cuInvLineItemsJqGrid(jqGridRowId)
+{
+	 var cuInvoiceDetailId = jQuery("#customerInvoice_lineitems").jqGrid ('getCell', jqGridRowId, 'cuInvoiceDetailId');
+	 if(cuInvoiceDetailId != null && cuInvoiceDetailId != 0 && cuInvoiceDetailId != undefined ){
+		 cuInv_LineItemsToBeDeleted.push(cuInvoiceDetailId);
+		 $('#customerInvoice_lineitems').jqGrid('delRowData',jqGridRowId);
+		// $( "#customerInvoice_lineitems_iladd" ).trigger( "click" );		 
+	 }else{
+		 $('#customerInvoice_lineitems').jqGrid('delRowData',jqGridRowId);
+	//	 $( "#customerInvoice_lineitems_iladd" ).trigger( "click" );
+	 }
+	 $('#customerInvoice_lineitems').jqGrid('setSelection', "new_row");
+	 $("#new_row_itemCode").focus();
+	 setoverallcustomerinvoicetotal();
+	 disablePDFEmail_Button_Edit();
+}
+function disablePDFEmail_Button_Edit()
+{
+	var aInvoiceDetails = $("#custoemrInvoiceFormID").serialize();
+	console.log("=======================================================================");
+	console.log(_globaloldcustomerInvoiceform+" ========== "+aInvoiceDetails);
+	console.log("=======================================================================");
+	var gridRows = $('#customerInvoice_lineitems').getRowData();
+ 	var invoiceGridDetails =  JSON.stringify(gridRows)+$("#customerInvoice_invoiceDateID").val();
+ 	console.log(_globaloldcustomerInvoicegrid+" ========== "+invoiceGridDetails);
+ 	var aInvoiceDetailsTotal=generatecustoemrInvoiceFormTotalIDSeriallize();
+	var generalTabFormval= CIGeneralTabSeriallize();
+ 	
+
+	if(_globaloldcustomerInvoiceform != generalTabFormval || _globaloldcustomerInvoicegrid != invoiceGridDetails || _globaloldcustomerInvoiceformTotal != aInvoiceDetailsTotal)
+		{
+		  $('#imgInvoicePDF').empty();
+		  $('#imgInvoicePDF').append('<input type="image" src="./../resources/Icons/PDF_new_disabled.png" title="View CuInvoice" return false;" style="background: #EEDEBC;cursor:default;">');
+
+		  $('#imgInvoiceEmail').empty();
+		  $('#imgInvoiceEmail').append('<input id="contactEmailID" type="image" src="./../resources/Icons/mail_new_disabled.png" title="Email Customer Invoice" style="background: #EEDEBC;cursor:default;" return false;">');
+		  
+		}
+	else
+		{
+		  $('#imgInvoicePDF').empty();
+		  $('#imgInvoicePDF').append('<input type="image" src="./../resources/Icons/PDF_new.png" title="View CuInvoice" onclick="viewCuInvoicePDF(); return false;"	style="background: #EEDEBC;">');
+
+		  $('#imgInvoiceEmail').empty();
+		  $('#imgInvoiceEmail').append(' <input id="contactEmailID" type="image" src="./../resources/Icons/mail_new.png" title="Email Customer Invoice" style="background:#EEDEBC;" onclick="sendPOEmail(\'CuInvoice\');return false;">');
+		
+		}
+}
+
+function setshowWarehouseCost_cuInv(id){
+	if(id!="new_row"){
+		var row=jQuery("#customerInvoice_lineitems").getRowData(id);
+		var productCost=row['whseCost'];
+		if(productCost==null || productCost=="" || productCost==undefined){
+			productCost=0.00;
+		}
+		$("#cuInvoice_whsecost").val(formatCurrency(productCost));
+	}else{
+		$("#cuInvoice_whsecost").val(formatCurrency(0));
+	}
+	var rows = jQuery("#customerInvoice_lineitems").getDataIDs();
+	var grandTotal = 0;
+	 for(a=0;a<rows.length-1;a++)
+	 {
+	    rowdata=jQuery("#customerInvoice_lineitems").getRowData(rows[a]);
+	    var eachproductCost=rowdata['whseCost'];
+	    if(eachproductCost==null || eachproductCost=="" || eachproductCost==undefined){
+	    	eachproductCost=0.00;
+		}
+	    var quantity=rowdata['quantityBilled'];
+	    if(quantity==null || quantity=="" || quantity==undefined){
+	    	quantity=0.00;
+		}
+	    var warehsecost=Number(eachproductCost)*Number(quantity);
+	    grandTotal=grandTotal+parseFloat(warehsecost);
+	      }
+	 $("#cuInvoice_ordercost").val(formatCurrency(grandTotal));
+	 var subTotalIDLine=$("#customerInvoice_subTotalID").val();
+	 subTotalIDLine=subTotalIDLine.replace(/[^0-9-.]/g, '');
+	 if(subTotalIDLine==null || subTotalIDLine=="" || subTotalIDLine==undefined){
+		 subTotalIDLine=0.00;
+	 }
+	 var margintotal=Number(subTotalIDLine)-Number(grandTotal);
+	 $("#cuInvoice_margintotal").val(formatCurrency(margintotal));
+	
+}
+function cuLineItemChanges_Out(formvalue)
+{ 
+	//alert(formvalue);
+	var ret_val=true;
+	var aInvoiceDetails = $("#custoemrInvoiceFormID").serialize();
+	console.log("=======================================================================");
+	console.log(_globaloldcustomerInvoiceform+" ========== "+aInvoiceDetails);
+	console.log("=======================================================================");
+	var gridRows = $('#customerInvoice_lineitems').getRowData();
+ 	var invoiceGridDetails =  JSON.stringify(gridRows)+$("#customerInvoice_invoiceDateID").val();
+ 	console.log(_globaloldcustomerInvoicegrid+" ========== "+invoiceGridDetails);
+ 	var aInvoiceDetailsTotal=generatecustoemrInvoiceFormTotalIDSeriallize();
+	var generalTabFormval= CIGeneralTabSeriallize();
+	
+	if(_globaloldcustomerInvoiceform != generalTabFormval ){
+		console.log("ERROR:::_globaloldcustomerInvoiceform=="+_globaloldcustomerInvoiceform);
+		console.log("ERROR:::_globalnewcustomerInvoiceform=="+generalTabFormval);
+	}
+	if(_globaloldcustomerInvoicegrid != invoiceGridDetails){
+		console.log("ERROR:::_globaloldcustomerInvoicegrid=="+_globaloldcustomerInvoicegrid);
+		console.log("ERROR:::_invoiceGridDetails=="+invoiceGridDetails);
+	}
+	if(_globaloldcustomerInvoiceformTotal != aInvoiceDetailsTotal){
+		console.log("ERROR:::_globaloldcustomerInvoiceformTotal=="+_globaloldcustomerInvoiceformTotal);
+		console.log("ERROR:::_aInvoiceDetailsTotal=="+aInvoiceDetailsTotal);
+	}
+		
+	if($('#customerInvoice_lineitems').val()!=undefined && typeof(_globaloldcustomerInvoicegrid)!="undefined"){
+
+	if(_globaloldcustomerInvoiceform != generalTabFormval || _globaloldcustomerInvoicegrid != invoiceGridDetails || _globaloldcustomerInvoiceformTotal != aInvoiceDetailsTotal)
+		{
+		
+
+	    if(formvalue=="TabChange"){
+   		 $( "#salesreleasetab ul li:nth-child(1)" ).addClass("ui-state-disabled");
+   		 $('#loadingDivForCIGeneralTab').css({
+				"display": "none"
+			}); 
+	    
+ 	  var newDialogDiv = jQuery(document.createElement('div'));
+			jQuery(newDialogDiv).html('<span><b style="color:Green;">You have made changes, please save prior to continuing.</b></span>');
+			jQuery(newDialogDiv).dialog({modal: true, width:300, height:150, title:"Information.", 
+			closeOnEscape: false,
+			open: function(event, ui) { $(".ui-dialog-titlebar-close").hide(); },
+			buttons:{
+				"OK": function(){
+					jQuery(this).dialog("close");
+					$( "#cusinvoicetab ul li:nth-child(1)" ).addClass("ui-state-disabled");
+				    return false;
+				}}}).dialog("open");
+			ret_val=false;
+	    }
+	    else{
+	    	 $('#loadingDivForCIGeneralTab').css({
+					"display": "none"
+				}); 
+		$( "#cusinvoicetab ul li:nth-child(1)" ).addClass("ui-state-disabled");
+		ret_val=false;
+   	}
+	 
+	}else{
+    	$( "#cusinvoicetab ul li:nth-child(1)" ).removeClass("ui-state-disabled");
+    	 $('#loadingDivForCIGeneralTab').css({
+				"display": "none"
+			}); 
+    	 ret_val=true;
+    }	
+    }
+	return ret_val;
+}
+

@@ -3,16 +3,24 @@
 	
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
+<style>
+.ui-jqgrid tr.jqgrow td {
+		text-overflow: ellipsis !important;
+        white-space: nowrap !important;
+    }
+</style>
 <div id=cusinvoicetab style="margin: 0 auto">
 <input type="hidden" id="CI_taxfreight" />
 <input type="hidden" id="CI_taxsubtotal" />
 	<ul>
-		<li><a href="#soreleasegeneral" onclick="sogeneralclick()">General</a></li>
-		<li><a href="#soreleaselineitem" onclick="solineitemclick()">Line
+		<li id="cICheckTab1"><a href="#soreleasegeneral" onclick="sogeneralclick('TabChange')">General</a></li>
+		<li id="cICheckTab2"><a href="#soreleaselineitem" onclick="solineitemclick('TabChange')">Line
 				Items</a></li>
 		<li><a href="#hidden" style="display: none;">Hidden</a></li>
 	</ul>
-
+<input type="hidden" id="custInvCloseSaveHiddenOut" value=''/>
+ <div class="loadingDivEmailAttachment" id="loadingDivForCIGeneralTab" style="display: none;opacity: 0.7;background-color: #fff;z-index: 1234;text-align: center;"></div>
+	
 	<div id="soreleasegeneral">
 		<form id="custoemrInvoiceFormID">
 			<table style="margin: 0 auto;">
@@ -530,9 +538,31 @@
 			</table>
 			<div id='customerInvoice_lineItemsGrid'>
 			<table id="customerInvoice_lineitems"></table>
-			<div id="customerInvoice_lineitemspager"></div>
+			<div id="customerInvoice_lineitemspager" style="display:none"></div>
 			</div>
-			<br>
+			
+<!-- 				<div id= "cuInvLineItemNote_Out">
+	<form action="" id="cuInvLineItemNoteFormOutside">
+		<table align="right">
+			<tr>
+			 	<td>
+	   				<textarea cols="70" id="lineItemNoteID_cuInvOut" name="lineItemNoteNamecuInvOut" style="height: 252px; width:570px;"></textarea>
+	   				<input id="lineItemNoteLabelID" style="display: none;">
+	   			</td>
+			</tr>
+		</table>
+		<table align="right">
+			<tr>
+			 	<td>
+	   				<input type="button" class="savehoverbutton turbo-tan" id= "SaveInlineNoteID_cuInvOut" value="Save" onclick="SaveCuInvLineItemNote_Out()" style=" width:80px;display:inline-block;">
+					<input type="button" class="cancelhoverbutton turbo-tan"  value="Cancel" onclick="cuInvCancelInLineNote_Out()" style="width:80px;">
+	   			</td>
+			</tr>
+		</table>
+	</form>
+</div>  -->
+
+	<br>
 			<%--
 			<fieldset class="custom_fieldset" style="width: 809px">
 				<legend class="custom_legend">
@@ -605,6 +635,13 @@
 				<legend class="custom_legend">
 					<label><b>Totals</b></label>
 				</legend>
+					<table>
+   			<tr id="costdetails" align="center" >
+	   			<td  style="width:200px"><label>Line Item Whse cost:</label></td><td><input type="text" style="width:85px" id="cuInvoice_whsecost" ></td>
+	       		<td  style="width:200px"><label >Total Order Cost:</label></td><td><input type="text" style="width:85px" id="cuInvoice_ordercost" value="$0.00" readonly="readonly"></td>
+	   			<td  style="width:120px"> <label>Margin:</label></td><td><input type="text" style="width:85px" id="cuInvoice_margintotal" readonly="readonly"></td>
+	   		</tr>
+	   		</table>
 				<table width="100%">
 					<tr align="center">
 						<td><label>Subtotal:</label></td>
@@ -647,9 +684,9 @@
 				</tbody>
 			</table>
 			<table align="center" style="width: 780px">
-					<!-- <tr>
+					<tr>
 						<td><div id="showMessageCuInvoice" style="color: green;margin-left: 566%;"></div></td>
-					</tr> -->
+					</tr>
 					<tr>
 						<td align="left" width="5%">
 						<div id="imgInvoicePDF"><input type="image"
@@ -754,7 +791,27 @@
 		</table>
 	</form>
 </div>
-
+<div id= "cuInvLineItemNote_In" >
+	<form action="" id="cuInvLineItemNoteFormInside">
+		<table align="right">
+			<tr>
+			 	<td>
+	   				<textarea cols="70" id="lineItemNoteID_cuInvIn" name="lineItemNoteNamecuInvIn" style="height: 252px; width:570px;"></textarea>
+	   				<input id="lineItemNoteLabelID" style="display: none;">
+	   			</td>
+			</tr>
+		</table>
+		<table align="right">
+			<tr>
+			 	<td>
+	   				<input type="button" class="savehoverbutton turbo-tan" id= "SaveInlineNoteID_cuInvIn" value="Save" onclick="SaveCuInvLineItemNote_In()" style=" width:80px;display:inline-block;">
+					<input type="button" class="cancelhoverbutton turbo-tan"  value="Cancel" onclick="cuInvCancelInLineNote_In()" style="width:80px;">
+	   			</td>
+			</tr>
+		</table>
+	</form>
+</div>
+		
 <script>
 	$("#CiShipToRadioSet").buttonset();
 	$("#CiShipToRadioSet").buttonset("enable");
@@ -888,26 +945,55 @@
 
 	}
 
-	function solineitemclick() {
+	function solineitemclick(formval) {
+		 $('#loadingDivForCIGeneralTab').css({
+				"display": "block"
+			});
+		 so_openornot=1; 
+		 var returnvalue=cuLineItemChanges_Out(formval);
+		 if(returnvalue){
 		if( $('input:text[name=jobHeader_JobNumber_name]').val()!='undefined' ||  $('input:text[name=jobHeader_JobNumber_name]').val()!='')
 		createtpusage('job-Release Tab','Customer Invoice-Line Tab','Info','job,Release Tab,Customer Invoice-Line,Job Number:'+ $('input:text[name=jobHeader_JobNumber_name]').val());
+		$('#custoemrInvoiceFormTotalID').find("#costdetails").css('display','');
+		if(globalinsideoroutsidejob){
 		jQuery("#cusinvoicetab").dialog({
 			width : 900,
-			height : 700
+			height : 1000
 		});
+		}else{
+			jQuery("#cusinvoicetab").dialog({
+				width : 900,
+				height : 970
+			});
+		}
 		var jobNum ='${requestScope.joMasterDetails.jobNumber}';
-		if(jobNum!==null && jobNum!=""){
 			loadCustomerInvoice();
-			}
+		 }
 	}
 
-	function sogeneralclick() {
+	function sogeneralclick(formval) {
+		 $('#loadingDivForCIGeneralTab').css({
+				"display": "block"
+			});
+		 so_openornot=1; 
+		var returnvalue=cuLineItemChanges_Out(formval);
+		if(returnvalue){
+		$('#custoemrInvoiceFormTotalID').find("#costdetails").css('display','none');	
 		if( $('input:text[name=jobHeader_JobNumber_name]').val()!='undefined' ||  $('input:text[name=jobHeader_JobNumber_name]').val()!='')
 		createtpusage('job-Release Tab','Customer Invoice-General Tab','Info','job,Release Tab,Customer Invoice,Job Number:'+ $('input:text[name=jobHeader_JobNumber_name]').val());
+		if(globalinsideoroutsidejob){
 		jQuery("#cusinvoicetab").dialog({
 			width : 900,
 			height : 850
 		});
+		}else{
+			jQuery("#cusinvoicetab").dialog({
+				width : 900,
+				height : 930
+			});
+		}
+		
+		}
 	}
 
 	var shipAddressInc = 0;
@@ -1059,9 +1145,8 @@
 			 taxAmt = Number(floorFigureoverall(taxsubtotal, 2))*Number(taxRate)/100;
 		 }
 		 sum = Number(subtot) + taxAmt + Number(frieght);
-		 $("#customerInvoice_taxIdcu").val(Number(floorFigureoverall(taxAmt, 2)));
-		 $("#customerInvoice_totalID").val(Number(floorFigureoverall(sum, 2)));
-		
+		 $("#customerInvoice_taxIdcu").val(formatCurrency(Number(floorFigureoverall(taxAmt, 2))));
+		 $("#customerInvoice_totalID").val(formatCurrency(Number(floorFigureoverall(sum, 2))));
 		}
 
 	function CIGeneralTabSeriallize(){
@@ -1107,6 +1192,20 @@
 		var lineItemDate= $("#customerInvoice_lineinvoiceDateID").val();
 		$("#customerInvoice_invoiceDateID").val(lineItemDate);
 	}
+
+	jQuery(function(){
+		jQuery("#cuInvLineItemNote_In").dialog({
+				autoOpen : false,
+				modal : true,
+				title:"InLine Note",
+				height: 390,
+				width: 635,
+				buttons : {  },
+				close:function(){
+					//return true;
+				}	
+		});
+	});
 </script>
 
 <div><jsp:include page="./job/creditRebuild.jsp"></jsp:include></div>

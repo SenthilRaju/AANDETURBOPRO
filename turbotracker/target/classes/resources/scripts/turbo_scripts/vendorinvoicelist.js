@@ -71,7 +71,8 @@ var allText = $('#apacct').html();
 
 					getDueonDayswithDate($('#rxMasterID').val(),$("#date").val(),"withoutPO")
 					
-				})
+				});
+				
 			});
 			
 			$("#postdate").change( function() {
@@ -355,7 +356,7 @@ var allText = $('#apacct').html();
 			jQuery(function() {
 				jQuery("#addNewVendorInvoiceFromPODlg").dialog({
 					autoOpen : false,
-					height : 1050,
+					height : 980,
 					width : 980,
 					title : "Add New Vendor Invoice",
 					resizable: false,
@@ -366,6 +367,11 @@ var allText = $('#apacct').html();
 					    global_vendorInvoicetotalPOForm=generatevendorInvoiceFormTotalIDSeriallize();
 					    //$(".ui-dialog-titlebar-close").hide(); 
 						deleteveBillDetailIDDetailId=new Array();
+						$(":button").dblclick(function(e){
+							   
+							   return false;
+							  
+							     });
 					},
 					close : function() {
 						// $('#userFormId').validationEngine('hideAll');
@@ -377,7 +383,7 @@ var allText = $('#apacct').html();
 				// addcreditDebitMemosDlg
 				jQuery("#addNewVendorInvoiceDlg").dialog({
 					autoOpen : false,
-					height : 1000,
+					height : 900,
 					width : 960,
 					title : "Add New Vendor Invoice",
 					modal : true,
@@ -386,11 +392,19 @@ var allText = $('#apacct').html();
 					open: function( event, ui ) {
 						//$(".ui-dialog-titlebar-close").hide(); 
 						deleteveBillDistributionID=new Array();
+						$(":button").dblclick(function(e){
+							   
+							   return false;
+							  
+							     });
 					},
 					close : function() {
 						// $('#userFormId').validationEngine('hideAll');
+						$("#rxMasterID").val(0);
+						$('#veBillIdJob').val(0);
 						$("#invoicesGrid").trigger("reloadGrid");
 						$("#vendorInvoiceGrid").trigger("reloadGrid");
+						
 						return true;
 					}
 				});
@@ -531,11 +545,12 @@ var allText = $('#apacct').html();
 				        	$('#apacct').val(data.SysAccountLinkage.coAccountIdap).attr('selected', true);
 				        }
 					});
-					
+					document.getElementById("addNewVendorInvoiceForm").reset();
+					$('#veBillIdJob').val('0');
 					loadNewVendorInvoice();
+					$("#vendorInvoiceGrid").trigger("reloadGrid");
 					jQuery("#addNewVendorInvoiceDlg").dialog("open");
 					//added by prasant for BID#1472
-					document.getElementById("addNewVendorInvoiceForm").reset();
 					//$('#vendorInvoiceGrid').jqGrid('clearGridData');
 					$('#payable').val("");
 					$('#vendorAddress').html("");
@@ -1194,11 +1209,12 @@ var allText = $('#apacct').html();
 //													document.location.href ="./vendorinvoicelist";
 //												}else{
 												$("#vendorinvoiceWoPO").html("Saved.");
+												$('#veBillIdJob').val(data);
+												$("#vendorInvoiceGrid").trigger("reloadGrid");
 												setTimeout(function(){
 													$("#vendorinvoiceWoPO").html("");					
 													},2000);
-												$('#veBillIdJob').val(data);
-												$("#vendorInvoiceGrid").trigger("reloadGrid");
+												
 													if(operation=='close'){
 													$("#addNewVendorInvoiceDlg").dialog("close");
 													}
@@ -3349,9 +3365,9 @@ function loadlineItemGrid()
 			url:query,
 			postData: {'vepoID':vepoID},
 			loadonce: false,
-			colNames:['Product No', 'Description','Qty', 'Cost Each', 'Mult.', 'Tax','Net Each', 'Amount', 'VeBillId', 'prMasterID' ,'veBillDetailId', 'vePodetailID','<img src="./../resources/images/delete.png" style="vertical-align: middle;">',''],//
+			colNames:['Product No','', 'Description','Qty', 'Cost Each', 'Mult.', 'Tax','Net Each', 'Amount', 'VeBillId', 'prMasterID' ,'veBillDetailId', 'vePodetailID','<img src="./../resources/images/delete.png" style="vertical-align: middle;">',''],//
 			colModel :[
-		{name:'note',index:'note',align:'left',width:90,editable:true,hidden:false, edittype:'text', editoptions:{size:40,
+		{name:'prItemCode',index:'prItemCode',align:'left',width:90,editable:true,hidden:false, edittype:'text', editoptions:{size:40,
 			dataEvents: [
 		       			  { type: 'focus', data: { i: 7 }, fn: function(e) { 
    		    				  var rowobji=$(e.target).closest('tr.jqgrow');
@@ -3433,6 +3449,7 @@ function loadlineItemGrid()
 	            });
 	      }	
 		},editrules:{edithidden:false,required: true}},
+		{name:'inLineNoteImage', index:'inLineNoteImage', align:'right', width:25,hidden:false, editable:false, formatter:veInvinlineNoteImage, editoptions:{size:15, alignText:'right'},editrules:{edithidden:true}},
 		{name:'description', index:'description', align:'left', width:130, editable:true,hidden:false, edittype:'text', editoptions:{size:40,maxlength:50,
 			dataEvents: [
 		       			  { type: 'focus', data: { i: 7 }, fn: function(e) {
@@ -3612,7 +3629,7 @@ function loadlineItemGrid()
 		{name:'veBillDetailId', index:'veBillDetailId', align:'right', width:50,hidden:true, editable:true, editoptions:{size:15, alignText:'right'},editrules:{edithidden:false,required: false}},
 		{name:'vePodetailId', index:'vePodetailId', align:'right', width:50,hidden:true, editable:true, editoptions:{size:15, alignText:'right'},editrules:{edithidden:false,required: false}},
 		{name:'canDo', index:'canDo', align:'center',  width:20, hidden:false, editable:false, formatter:canDocheckboxFormatterVIPO,   editrules:{edithidden:true}},
-		{name:'inLineNote',index:'inLineNote', align:'right', width:10,hidden:true, editable:false,editoptions:{size:15, alignText:'right'},editrules:{edithidden:true}}
+		{name:'note',index:'note', align:'right', width:10,hidden:true, editable:false,editoptions:{size:15, alignText:'right'},editrules:{edithidden:true}}
 		],
 			rowNum: 0, pgbuttons: false, recordtext: '', rowList: [], pgtext: null, viewrecords: false,
 			sortname: 'itemCode', sortorder: "asc", imgpath: 'themes/basic/images', caption: false,
@@ -3748,7 +3765,9 @@ function loadlineItemGrid()
 					var candoidrownum=Number(veaccrrowid)+1;
 					$("#canDoID_new_row").attr("id", "canDoID_"+candoidrownum);
 					$("#canDoVIID_new_row").attr("id","canDoVIID_"+candoidrownum);
+					$("#noteImageIcon_new_row").attr("id","noteImageIcon_"+candoidrownum);
 					$("#canDoVIID_"+candoidrownum).attr("onclick","deleteRowFromJqGrid("+candoidrownum+");setvendorInvoicegridtotal();");
+					$("#noteImageIcon_"+candoidrownum).attr("onclick","ShowNote('"+candoidrownum+"');");
 					}
 					/*var grid=$("#lineItemGrid");
 					grid.jqGrid('resetSelection');
@@ -3819,7 +3838,9 @@ function loadlineItemGrid()
 				var candoidrownum=Number(veaccrrowid)+1;
 				$("#canDoID_new_row").attr("id", "canDoID_"+candoidrownum);
 				$("#canDoVIID_new_row").attr("id","canDoVIID_"+candoidrownum);
+				$("#noteImageIcon_new_row").attr("id","noteImageIcon_"+candoidrownum);
 				$("#canDoVIID_"+candoidrownum).attr("onclick","deleteRowFromJqGrid("+candoidrownum+");setvendorInvoicegridtotal();");
+				$("#noteImageIcon_"+candoidrownum).attr("onclick","ShowNote('"+candoidrownum+"');");
 			}
 			
 			/*var grid=$("#lineItemGrid");
@@ -3881,7 +3902,123 @@ function loadlineItemGrid()
 	}*/
 				
 }	
+function veInvinlineNoteImage(cellValue, options, rowObject){
+	var element = '';
+	var id="noteImageIcon_"+options.rowId;
+	var test=""+options.rowId;
+	
+	var noteValue = $("#lineItemGrid").jqGrid('getCell',options.rowId,'note');
+	if(noteValue==false){
+		noteValue=rowObject.note;
+	}
+	console.log("noteValue"+noteValue);
+   if(noteValue != '' && noteValue != null && noteValue != undefined){
+	   element = "<div><div align='center'><img src='./../resources/images/inline_jqGrid1.png' style='vertical-align: middle;' id='"+id+"' onclick=\"ShowNote('"+test+"')\"/></div></div>";	   
+   }else{
+	   element = "<div><div align='center'><img src='./../resources/images/inline_jqGrid.png' style='vertical-align: middle;' id='"+id+"' onclick=\"ShowNote('"+test+"')\"/></div></div>";
+   }
+   return element;
+} 
 
+function ShowNote(row){
+	/*try{
+		*/
+		//var jobStatus=$('#jobStatusList').val();
+		//console.log("JobStatus"+jobStatus);
+	
+	
+		if(CKEDITOR.instances["lineItemNoteID_veInvOut"]!=undefined)			
+		{CKEDITOR.instances["lineItemNoteID_veInvOut"].destroy(true);}
+		if(typeof(jobStatus) != "undefined")
+		{
+		CKEDITOR.replace('lineItemNoteID_veInvOut', ckEditorconfigforinline);
+		}
+		else
+		{
+		CKEDITOR.replace('lineItemNoteID_veInvOut', ckEditorconfig);
+		}
+		
+		//var rows = jQuery("#SOlineItemGrid").getDataIDs();
+		//var id = jQuery("#SOlineItemGrid").jqGrid('getGridParam',row);
+		$("#SaveInlineNoteID_veInvOut").attr("onclick","SaveVeInvLineItemNote_out('"+row+"');");
+		var notes = jQuery("#lineItemGrid").jqGrid ('getCell', row, 'note');	  
+			CKEDITOR.instances['lineItemNoteID_veInvOut'].setData(notes);
+			
+			if($('#jobStatusList').val()== 4){
+				$("#SaveInlineNoteID_veInvOut").css("display", "none");
+			}else{
+				$("#SaveInlineNoteID_veInvOut").css("display", "inline-block");
+			}
+			
+			jQuery("#veInvLineItemNote_Out").dialog("open");
+		//	$(".nicEdit-main").focus();
+			return true;
+		/*}catch(err){
+			console.log(err.message);
+			alert(err.message);
+		}*/
+	}
+
+	function SaveVeInvLineItemNote_out(row){
+		var inlineText=  CKEDITOR.instances["lineItemNoteID_veInvOut"].getData(); 
+		
+		//var rows = jQuery("#SOlineItemGrid").getDataIDs();
+		//var id = jQuery("#SOlineItemGrid").jqGrid('getGridParam','selrow');
+//		row=jQuery("#SOlineItemGrid").getRowData(rows[id-1]);
+		  /*var notes = row['note'];
+		  var cuSodetailId = row['cuSodetailId'];*/
+		  //var aLineItem = new Array();
+		  //aLineItem.push(inlineText);
+		  var image="<img src='./../resources/images/lineItem_new.png' style='vertical-align: middle;'>";
+		  if(inlineText==null || inlineText==undefined || inlineText==""){
+			  image=undefined;
+			  inlineText=undefined;
+		  }
+//		  if(isNaN(row)==true || row==undefined){
+//			  $("#new_row_noteImage").val(image);
+//			  $("#new_row_note").val(inlineText);
+//		  }else{
+		  	$("#lineItemGrid").jqGrid('setCell',row,'note', inlineText);
+		  	 console.log($("#lineItemGrid").jqGrid('getCell',row,'note')  );
+			  $("#lineItemGrid").jqGrid('setCell',row,'inLineNoteImage', image);
+			  
+//		  }
+		  
+		  
+		  jQuery("#veInvLineItemNote_Out").dialog("close");
+		  CKEDITOR.instances['lineItemNoteID_veInvOut'].destroy();
+		 
+		  //aLineItem.push(cuSodetailId);
+		/*$.ajax({
+			url: "./salesOrderController/saveLineItemNote",
+			type: "POST",
+			data : {'lineItem' : aLineItem},
+			success: function(data) {
+				jQuery("#SoLineItemNote").dialog("close");
+				$("#SOlineItemGrid").trigger("reloadGrid");
+			}
+			});*/
+	}
+
+	function veInvCancelInLineNote_out(){
+		jQuery("#veInvLineItemNote_Out").dialog("close");
+		 CKEDITOR.instances['lineItemNoteID_veInvOut'].destroy();
+		return false;
+	}
+
+	jQuery(function(){
+		jQuery("#veInvLineItemNote_Out").dialog({
+				autoOpen : false,
+				modal : true,
+				title:"InLine Note",
+				height: 390,
+				width: 635,
+				buttons : {  },
+				close:function(){
+					return true;
+				}	
+		});
+	});
 
 
 function setvendorInvoicegridtotal(){
@@ -4069,7 +4206,7 @@ function SaveVendorInvoicewithPO(operation){
 		}
 	else
 		{	
-		var itemCode=$("#new_row_note").val();
+		var itemCode=$("#new_row_prItemCode").val();
 		if(itemCode!=undefined){
 	if($('#veBillIdPO').val()!=null && $('#veBillIdPO').val()!="" ){
 	if(global_vendorInvoicePOForm != vendorInvoiceDetails || global_vendorInvoicegridPOForm != vendorInvoiceGridDetails || global_vendorInvoicetotalPOForm != vendorInvoiceDetailsTotal)
@@ -4349,19 +4486,28 @@ function loadNewVendorInvoice(){
 			
              global_vendorInvoiceWOPOForm=generatewopoFormSeriallize();
              $( "#vendorInvoiceGrid_iladd" ).trigger( "click" );
-              var gridRows = $('#vendorInvoiceGrid').getRowData();
-             global_vendorInvoicegridWOPOForm=JSON.stringify(gridRows);
-             global_vendorInvoicetotalWOPOForm=generatevendorInvoiceWOPOFormTotalIDSeriallize();
-            
+              
+              
+              setTimeout(function(){ var gridRows = $('#vendorInvoiceGrid').getRowData();global_vendorInvoicegridWOPOForm=JSON.stringify(gridRows);
+             global_vendorInvoicetotalWOPOForm=generatevendorInvoiceWOPOFormTotalIDSeriallize();},1000);
+            //alert("first");
 	    },
 	    gridComplete: function () {
 	    	jQuery("#vendorInvoiceGrid").closest(".ui-jqgrid-bdiv").scrollTop(posit_outside_loadNewVendorInvoice);
-	    	setnewvendorinvoiceGridDetails()
+	    	setnewvendorinvoiceGridDetails();
+	    	//alert("second");
 		 },
 			ondblClickRow: function(rowid) {
 				if(rowid=="new_row"){
 					 
 				 }else{
+					 var rowData = jQuery(this).getRowData(rowid); 
+						var veBillDistributionId = rowData["veBillDistributionId"];
+						var coExpenseAccountId = rowData["coExpenseAccountId"];
+						var joMasterId = rowData["joMasterId"];
+						$('#coAccountID').val(coExpenseAccountId);
+						$('#joMasterID').val(joMasterId);
+						console.log("veBillDistributionId :: "+veBillDistributionId);
 					 posit_outside_loadNewVendorInvoice= jQuery("#vendorInvoiceGrid").closest(".ui-jqgrid-bdiv").scrollTop();
 					 $("#vendorInvoiceGrid_ilcancel").trigger("click");
 				     $("#vendorInvoiceGrid_iledit").trigger("click");
@@ -4372,13 +4518,6 @@ function loadNewVendorInvoice(){
 		},
 		onSelectRow:  function(id){
 			VeInvoicewoPODetailrowid=id;
-			var rowData = jQuery(this).getRowData(id); 
-			var veBillDistributionId = rowData["veBillDistributionId"];
-			var coExpenseAccountId = rowData["coExpenseAccountId"];
-			var joMasterId = rowData["joMasterId"];
-			$('#coAccountID').val(coExpenseAccountId);
-			$('#joMasterID').val(joMasterId);
-			console.log("veBillDistributionId :: "+veBillDistributionId);
 			posit_outside_loadNewVendorInvoice= jQuery("#vendorInvoiceGrid").closest(".ui-jqgrid-bdiv").scrollTop();
 		},					
 		jsonReader : {
@@ -4785,7 +4924,7 @@ function SaveVendorInvoicewithoutPO(operation){
 //	console.log("vendorInvoiceDetails"+vendorInvoiceDetails);
 	//$('#rxMasterID').val(data.Vebill.rxMasterId);
 	//$('#veBillIdJob').val(data.Vebill.veBillId);
-	if($('#veBillIdJob').val()!=null && $('#veBillIdJob').val()!=""){
+	if($('#veBillIdJob').val()!=null && $('#veBillIdJob').val()!="" && ($('#veBillIdJob').val()!= 0 ||operation=='close')){
 	if(global_vendorInvoiceWOPOForm != vendorInvoiceDetails || global_vendorInvoicegridWOPOForm != vendorInvoiceGridDetails || global_vendorInvoicetotalWOPOForm != vendorInvoiceDetailsTotal)
 	{
 		
@@ -4954,7 +5093,7 @@ function getDefaultAccountNumber(masterID){
 	 * Added by Simon
 	 * Reason for changing ID #576
 	 */
-	/*$.ajax({
+	$.ajax({
         url: './getAandD?rxMasterId='+masterID,
         type: 'GET',       
         success: function (data) {
@@ -4991,7 +5130,7 @@ function getDefaultAccountNumber(masterID){
 				}
 				$("#new_row_number").focus();
 			});
-        }});*/
+        }});
 	
 }
 

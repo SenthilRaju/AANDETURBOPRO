@@ -71,7 +71,8 @@ var allText = $('#apacct').html();
 
 					getDueonDayswithDate($('#rxMasterID').val(),$("#date").val(),"withoutPO")
 					
-				})
+				});
+				
 			});
 			
 			$("#postdate").change( function() {
@@ -355,7 +356,7 @@ var allText = $('#apacct').html();
 			jQuery(function() {
 				jQuery("#addNewVendorInvoiceFromPODlg").dialog({
 					autoOpen : false,
-					height : 1050,
+					height : 980,
 					width : 980,
 					title : "Add New Vendor Invoice",
 					resizable: false,
@@ -366,6 +367,11 @@ var allText = $('#apacct').html();
 					    global_vendorInvoicetotalPOForm=generatevendorInvoiceFormTotalIDSeriallize();
 					    //$(".ui-dialog-titlebar-close").hide(); 
 						deleteveBillDetailIDDetailId=new Array();
+						$(":button").dblclick(function(e){
+							   
+							   return false;
+							  
+							     });
 					},
 					close : function() {
 						// $('#userFormId').validationEngine('hideAll');
@@ -377,7 +383,7 @@ var allText = $('#apacct').html();
 				// addcreditDebitMemosDlg
 				jQuery("#addNewVendorInvoiceDlg").dialog({
 					autoOpen : false,
-					height : 1000,
+					height : 900,
 					width : 960,
 					title : "Add New Vendor Invoice",
 					modal : true,
@@ -386,6 +392,11 @@ var allText = $('#apacct').html();
 					open: function( event, ui ) {
 						//$(".ui-dialog-titlebar-close").hide(); 
 						deleteveBillDistributionID=new Array();
+						$(":button").dblclick(function(e){
+							   
+							   return false;
+							  
+							     });
 					},
 					close : function() {
 						// $('#userFormId').validationEngine('hideAll');
@@ -3916,30 +3927,30 @@ function ShowNote(row){
 		//console.log("JobStatus"+jobStatus);
 	
 	
-		if(CKEDITOR.instances["lineItemNoteID"]!=undefined)			
-		{CKEDITOR.instances["lineItemNoteID"].destroy(true);}
+		if(CKEDITOR.instances["lineItemNoteID_veInvOut"]!=undefined)			
+		{CKEDITOR.instances["lineItemNoteID_veInvOut"].destroy(true);}
 		if(typeof(jobStatus) != "undefined")
 		{
-		CKEDITOR.replace('lineItemNoteID', ckEditorconfigforinline);
+		CKEDITOR.replace('lineItemNoteID_veInvOut', ckEditorconfigforinline);
 		}
 		else
 		{
-		CKEDITOR.replace('lineItemNoteID', ckEditorconfig);
+		CKEDITOR.replace('lineItemNoteID_veInvOut', ckEditorconfig);
 		}
 		
 		//var rows = jQuery("#SOlineItemGrid").getDataIDs();
 		//var id = jQuery("#SOlineItemGrid").jqGrid('getGridParam',row);
-		$("#SaveInlineNoteID").attr("onclick","SaveVeInvLineItemNote('"+row+"');");
+		$("#SaveInlineNoteID_veInvOut").attr("onclick","SaveVeInvLineItemNote_out('"+row+"');");
 		var notes = jQuery("#lineItemGrid").jqGrid ('getCell', row, 'note');	  
-			CKEDITOR.instances['lineItemNoteID'].setData(notes);
+			CKEDITOR.instances['lineItemNoteID_veInvOut'].setData(notes);
 			
 			if($('#jobStatusList').val()== 4){
-				$("#SaveInlineNoteID").css("display", "none");
+				$("#SaveInlineNoteID_veInvOut").css("display", "none");
 			}else{
-				$("#SaveInlineNoteID").css("display", "inline-block");
+				$("#SaveInlineNoteID_veInvOut").css("display", "inline-block");
 			}
 			
-			jQuery("#veInvLineItemNote").dialog("open");
+			jQuery("#veInvLineItemNote_Out").dialog("open");
 		//	$(".nicEdit-main").focus();
 			return true;
 		/*}catch(err){
@@ -3948,8 +3959,8 @@ function ShowNote(row){
 		}*/
 	}
 
-	function SaveVeInvLineItemNote(row){
-		var inlineText=  CKEDITOR.instances["lineItemNoteID"].getData(); 
+	function SaveVeInvLineItemNote_out(row){
+		var inlineText=  CKEDITOR.instances["lineItemNoteID_veInvOut"].getData(); 
 		
 		//var rows = jQuery("#SOlineItemGrid").getDataIDs();
 		//var id = jQuery("#SOlineItemGrid").jqGrid('getGridParam','selrow');
@@ -3974,8 +3985,8 @@ function ShowNote(row){
 //		  }
 		  
 		  
-		  jQuery("#veInvLineItemNote").dialog("close");
-		  CKEDITOR.instances['lineItemNoteID'].destroy();
+		  jQuery("#veInvLineItemNote_Out").dialog("close");
+		  CKEDITOR.instances['lineItemNoteID_veInvOut'].destroy();
 		 
 		  //aLineItem.push(cuSodetailId);
 		/*$.ajax({
@@ -3989,14 +4000,14 @@ function ShowNote(row){
 			});*/
 	}
 
-	function SoCancelInLineNote(){
-		jQuery("#veInvLineItemNote").dialog("close");
-		 CKEDITOR.instances['lineItemNoteID'].destroy();
+	function veInvCancelInLineNote_out(){
+		jQuery("#veInvLineItemNote_Out").dialog("close");
+		 CKEDITOR.instances['lineItemNoteID_veInvOut'].destroy();
 		return false;
 	}
 
 	jQuery(function(){
-		jQuery("#veInvLineItemNote").dialog({
+		jQuery("#veInvLineItemNote_Out").dialog({
 				autoOpen : false,
 				modal : true,
 				title:"InLine Note",

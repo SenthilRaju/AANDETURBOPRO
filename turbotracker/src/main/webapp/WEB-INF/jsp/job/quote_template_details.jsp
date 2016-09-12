@@ -84,9 +84,16 @@ font-style:italic;
 			<br>
 			<table align="left">
 			<tr width="100%">
-			<td width="20%"> <input type="button" name="QuoteTemppreviewButton" id="QuoteTemppreviewButton" class="add turbo-tan" value="PDF Preview" title="PDF Preview"  style="width: 100px;" onclick="viewLinePDF()"/>&nbsp;<input type="button" name="addquotegridButton_temp" id="addquotegridButton_temp" class="add turbo-tan" value="Add" title="Add"  style="width: 100px;" onclick="addquotegridrow_temp();validatequotedisabledbuttons();"/></td>
+			<td width="50%"> <input type="button" name="QuoteTemppreviewButton" id="QuoteTemppreviewButton" class="add turbo-tan" value="PDF Preview" title="PDF Preview"  style="width: 100px;" onclick="viewLinePDF()"/>&nbsp;<input type="button" name="addquotegridButton_temp" id="addquotegridButton_temp" class="add turbo-tan" value="Add" title="Add"  style="width: 100px;" onclick="addquotegridrow_temp();validatequotedisabledbuttons();"/>
+			 	<span id="addQuotesTemplateView" align="right" >
+			 		<input type="button" id="quoteTemplateSaveId" class="savehoverbutton turbo-tan" value="Save" onclick="saveANDcloseQuoteTemplate()" style=" width:100px;">
+					<input type="button" id="quoteTemplateCancel" class="cancelhoverbutton turbo-tan"  value="Close" onclick="cancelQuoteTemplate()" style="width:100px;">  
+				</span>
+				<span id="editQuotesTemplateView" align="right" style=""></span>
+				<span id="copyQuotesTemplateView" align="right" style=""></span>
+			</td>
 			<!-- <td >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="checkbox" style="width:100px;margin-left: -42px;display:none;" id="quotechkTotalPrice_template" name="quotechkTotalPrice_template" onclick="saveANDcloseQuoteTemplate(true)"><label style="margin-left: -39px;display:none;"><b>Include on Quote</b></label></td> -->
-			<td width="80%" colspan="2" align="right"><b><label>Total Price:&nbsp;</label><label id="sellpriceTemplateLabel" style="color: green;font-size:18px;"></label></b>&nbsp;&nbsp;&nbsp;&nbsp;<b><label><b>Total Cost:</b>&nbsp;</label><label id="totalpriceTemplateLabel" style="color: green;font-size:18px;"></label></b></td></tr>
+			<td width="50%" colspan="2" align="right"><b><label>Total Price:&nbsp;</label><label id="sellpriceTemplateLabel" style="color: green;font-size:18px;"></label></b>&nbsp;&nbsp;&nbsp;&nbsp;<b><label><b>Total Cost:</b>&nbsp;</label><label id="totalpriceTemplateLabel" style="color: green;font-size:18px;"></label></b></td></tr>
 			</tr>
 			</table>
 			<!-- <table id="quoteTemplateProductsGrid"></table><div id="quoteTemplateProductsGridPager"></div> 
@@ -173,10 +180,10 @@ font-style:italic;
 		</table>
 		</form>
 	</div> 
-		<hr width="1115px;">
+		<!-- <hr width="1115px;"> -->
 		<table style="width:1080px;align:center">
 		<tr><td colspan="4" align="right" id="labelforsuccess"></td></tr>
-		 	<tr>
+		 	<!-- <tr>
 			 	<td></td>
 			 	<td id="addQuotesTemplateView" align="right" style="padding-right:1px;">
 			 		<input type="button" id="quoteTemplateSaveId" class="savehoverbutton turbo-tan" value="Save" onclick="saveANDcloseQuoteTemplate()" style=" width:125px;">
@@ -184,7 +191,7 @@ font-style:italic;
 				</td>
 				<td id="editQuotesTemplateView" align="right" style="padding-right:1px;"></td>
 				<td id="copyQuotesTemplateView" align="right" style="padding-right:1px;"></td>
-			</tr>
+			</tr> -->
 		</table>
 	</div>
 	<div id="addTemplateLineItem">

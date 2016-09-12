@@ -186,12 +186,12 @@
 
 			
 		</div>	
-	<div id= "veInvLineItemNote">
-	<form action="" id="veInvLineItemNoteForm">
+	<div id= "veInvLineItemNote_Out">
+	<form action="" id="veInvLineItemNoteFormOutside">
 		<table align="right">
 			<tr>
 			 	<td>
-	   				<textarea cols="70" id="lineItemNoteID" name="lineItemNoteName" style="height: 252px; width:570px;"></textarea>
+	   				<textarea cols="70" id="lineItemNoteID_veInvOut" name="lineItemNoteNameVeInvOut" style="height: 252px; width:570px;"></textarea>
 	   				<input id="lineItemNoteLabelID" style="display: none;">
 	   			</td>
 			</tr>
@@ -199,8 +199,8 @@
 		<table align="right">
 			<tr>
 			 	<td>
-	   				<input type="button" class="savehoverbutton turbo-tan" id= "SaveInlineNoteID" value="Save" onclick="SaveSoLineItemNote()" style=" width:80px;display:inline-block;">
-					<input type="button" class="cancelhoverbutton turbo-tan"  value="Cancel" onclick="SoCancelInLineNote()" style="width:80px;">
+	   				<input type="button" class="savehoverbutton turbo-tan" id= "SaveInlineNoteID_veInvOut" value="Save" onclick="SaveVeInvLineItemNote_out()" style=" width:80px;display:inline-block;">
+					<input type="button" class="cancelhoverbutton turbo-tan"  value="Cancel" onclick="veInvCancelInLineNote_out()" style="width:80px;">
 	   			</td>
 			</tr>
 		</table>

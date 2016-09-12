@@ -1766,12 +1766,12 @@ function addquotesdialog() {
 	aGlobalVariable = "add";
 	aGlobalConstant = "add";
 	isquoteAddnew = "yes";
-	var editQuotesView = '<input type="button" class="savehoverbutton turbo-tan" value="Save & Close" onclick="saveANDcloseQuote()" style=" width:125px;">&nbsp;'
-			+ '<input type="button" class="cancelhoverbutton turbo-tan"  value="Cancel" onclick="cancelQuote()" style="width:80px;">';
+	//var editQuotesView = '<input type="button" class="savehoverbutton turbo-tan" value="Save & Close" onclick="saveANDcloseQuote()" style=" width:125px;">&nbsp;'
+		//	+ '<input type="button" class="cancelhoverbutton turbo-tan"  value="Cancel" onclick="cancelQuote()" style="width:80px;">';
 	$("#editQuotesView").empty();
 	$("#copyQuotesView").empty();
 	$("#addQuotesView").empty();
-	$("#addQuotesView").append(editQuotesView);
+	//$("#addQuotesView").append(editQuotesView);
 	jQuery("#joQuoteheader").text(0);
 	loadQuotesListDetails();
 	var fullName = $("#loginNameHiddenID").val();
@@ -1801,14 +1801,15 @@ function addquotesdialog() {
 function editQuoteDetails() {
 	aGlobalVariable = "edit";
 	aGlobalConstant = "edit";
+	
 
 	isquoteAddnew = "no";
-	var editQuotesView = '<input type="button" class="savehoverbutton turbo-tan" value="Save & Close" onclick="saveANDcloseQuote()" style=" width:125px;">&nbsp;'
-			+ '<input type="button" class="cancelhoverbutton turbo-tan"  value="Cancel" onclick="cancelEditQuote()" style="width:80px;">';
+	//var editQuotesView = '<input type="button" class="savehoverbutton turbo-tan" value="Save & Close" onclick="saveANDcloseQuote()" style=" width:125px;">&nbsp;'
+	//		+ '<input type="button" class="cancelhoverbutton turbo-tan"  value="Cancel" onclick="cancelEditQuote()" style="width:80px;">';
 	$("#addQuotesView").empty();
 	$("#copyQuotesView").empty();
 	$("#editQuotesView").empty();
-	$("#editQuotesView").append(editQuotesView);
+	//$("#editQuotesView").append(editQuotesView);
 	aCancelQuote = '';
 	var grid = $("#quotes");
 	var rowId = grid.jqGrid('getGridParam', 'selrow');
@@ -1823,9 +1824,11 @@ function editQuoteDetails() {
 			width : 300,
 			height : 150,
 			title : "Warning",
+			
 			buttons : [ {
 				height : 35,
 				text : "OK",
+				
 				click : function() {
 					$(this).dialog("close");
 				}
@@ -1875,12 +1878,12 @@ function onDoubleClickEditQuoteDetails(theRowID) {
 	aGlobalVariable = "edit";
 	aGlobalConstant = "edit";
 	isquoteAddnew = "no";
-	var editQuotesView = '<input type="button" class="savehoverbutton turbo-tan" value="Save & Close" onclick="saveANDcloseQuote()" style=" width:125px;">&nbsp;'
-			+ '<input type="button" class="cancelhoverbutton turbo-tan"  value="Cancel" onclick="cancelEditQuote()" style="width:80px;">';
+	//var editQuotesView = '<input type="button" class="savehoverbutton turbo-tan" value="Save & Close" onclick="saveANDcloseQuote()" style=" width:125px;">&nbsp;'
+	//		+ '<input type="button" class="cancelhoverbutton turbo-tan"  value="Cancel" onclick="cancelEditQuote()" style="width:80px;">';
 	$("#addQuotesView").empty();
 	$("#copyQuotesView").empty();
 	$("#editQuotesView").empty();
-	$("#editQuotesView").append(editQuotesView);
+//	$("#editQuotesView").append(editQuotesView);
 	aCancelQuote = '';
 	var joQuoteHeaderID = $("#quotes").jqGrid('getCell', theRowID,
 			'joQuoteHeaderID');
@@ -1961,6 +1964,7 @@ function onDoubleClickEditQuoteDetails(theRowID) {
 	$('#addquotesList').trigger("reloadGrid");
 	jQuery("#joQuoteheader").text(joQuoteHeaderID);
 	$("#joHeaderID").val(joQuoteHeaderID);
+	resizable: false,
 	jQuery("#addquotes").dialog("open");
 	return true;
 }
@@ -2445,12 +2449,12 @@ function copyQuickQuote() {
 	if(iscopyQuickQuoteClick){
 		iscopyQuickQuoteClick = false;
 	aGlobalVariable = "copy";
-	var copyQuotesView = '<input type="button" class="savehoverbutton turbo-tan" value="Save & Close" onclick="saveANDcloseQuote()" style=" width:125px;">&nbsp;'
-			+ '<input type="button" class="cancelhoverbutton turbo-tan"  value="Cancel" onclick="cancelCopyQuote()" style="width:80px;">';
+//	var copyQuotesView = '<input type="button" class="savehoverbutton turbo-tan" value="Save & Close" onclick="saveANDcloseQuote()" style=" width:125px;">&nbsp;'
+	//		+ '<input type="button" class="cancelhoverbutton turbo-tan"  value="Cancel" onclick="cancelCopyQuote()" style="width:80px;">';
 	$("#addQuotesView").empty();
 	$("#editQuotesView").empty();
 	$("#copyQuotesView").empty();
-	$("#copyQuotesView").append(copyQuotesView);
+//	$("#copyQuotesView").append(copyQuotesView);
 	var grid = $("#quotes");
 	var rowId = grid.jqGrid('getGridParam', 'selrow');
 

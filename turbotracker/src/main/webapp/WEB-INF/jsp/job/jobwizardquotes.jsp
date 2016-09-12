@@ -10,7 +10,15 @@
     width: 100%;
     background: url('../resources/scripts/jquery-autocomplete/send_mail_waiting.gif') 50% 50% no-repeat;
 }
+
 </style>
+	<script>
+	     var chkfontSizeonTextEditorYN="${sessionScope.chkfontSizeonTextEditorYN}";
+		var chkfontStyleonTextEditorYN="${sessionScope.chkfontStyleonTextEditorYN}";
+		
+		var inp_fontStyleonTextEdValue="${sessionScope.inp_fontStyleonTextEdValue}";
+		var inp_fontSizeonTextEdValue="${sessionScope.inp_fontSizeonTextEdValue}";
+			</script>
 	<table>
 		<tr><td colspan="2"><jsp:include page="jobwizardheader.jsp"></jsp:include></td></tr>
 		<tr><td colspan="2"><hr style="width:1100px; color:#C2A472;"></td></tr>
@@ -809,6 +817,14 @@
 	jQuery(document).ready(function() {
 		var quoteThru_id="${requestScope.joMasterDetails.addendumQuotedThru}";
 		var quoteReceived_id="${requestScope.joMasterDetails.addendumReceived}";
+		
+		var chkfontSizeonTextEditorYN="${requestScope.chkfontSizeonTextEditorYN}";
+		var chkfontStyleonTextEditorYN="${requestScope.chkfontStyleonTextEditorYN}";
+		
+		var inp_fontStyleonTextEdValue="${requestScope.inp_fontStyleonTextEdValue}";
+		var inp_fontSizeonTextEdValue="${requestScope.inp_fontSizeonTextEdValue}";
+	
+
 		if(quoteThru_id==''){
 			quoteThru_id='0';
 			}

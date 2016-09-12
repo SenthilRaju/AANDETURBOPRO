@@ -70,7 +70,7 @@
 			<li><a onclick="showTab('Journal')" class="requiredSave" id="jobTabJournalHeader">Journal</a><input id="joMasterID" type="hidden" value="${requestScope.joMasterID}"/></li> 
 			 -->
 			
-			<li id="viewwebpage"><input type="text" id="webpageurltoopen" placeholder="[Click to set WebPage]" value="${requestScope.appletUrl }"/></li>
+			<li id="viewwebpage"><input type="text" id="webpageurltoopen" placeholder="[Click to set WebPage]"  size="40" value="${requestScope.appletUrl }"/></li>
 <!-- 	   <li><input type="submit"  value="Go" onClick="accessAppletMethod()" /></li> -->
 <!-- 	   <APPLET CODE="TurboApplet.class" archive="./../turboappletswing1.jar"    style="width: 30px; height: 25px; float: left;" id="AppletABC"></APPLET> -->
 			

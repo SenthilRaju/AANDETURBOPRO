@@ -456,12 +456,16 @@ function jobMainForm_save() {
 	var jobCustomerId = $("#JobCustomerId").val();
 	var joMasterId = $("#joMasterHiddenID").val();
 	var jobStatusID = $('#jobStatusList').val();
+	
 	if($("#jobMain_salesRepsList").val() === ''){
 		$("#salesRepId").val("");
+		
 	}if($("#jobMain_CSRList").val() === ''){
 		$("#CSRId").val("");
+		
 	}if($("#jobMain_SalesMgrList").val() === ''){
 		$("#salesMgrId").val("");
+		
 	}if($("#jobMain_EngineersList").val() === ''){
 		$("#cus_engineerId").val("");
 	}if($("#jobMain_PrjMgrList").val() === ''){

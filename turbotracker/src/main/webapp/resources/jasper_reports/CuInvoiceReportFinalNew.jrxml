@@ -2,7 +2,7 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="CuInvoiceReport" pageWidth="612" pageHeight="792" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="35de86c0-16af-44d7-b699-f4837f07be00">
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="1"/>
+	<property name="ireport.y" value="61"/>
 	<parameter name="CuInvoice" class="java.lang.String"/>
 	<parameter name="shiptoName" class="java.lang.String"/>
 	<parameter name="shiptoAddress1" class="java.lang.String"/>
@@ -46,7 +46,7 @@ LEFT JOIN cuInvoiceDetail ON cuInvoiceDetail.cuInvoiceID = cuInvoice.cuInvoiceID
 LEFT JOIN prMaster ON prMaster.prMasterID = cuInvoiceDetail.prMasterID
 LEFT JOIN tsUserLogin ON tsUserLogin.UserLoginID = cuInvoice.cuAssignmentID0
 LEFT JOIN cuTerms ON cuTerms.cuTermsID = cuInvoice.cuTermsID
-WHERE cuInvoice.cuInvoiceID=$P{CuInvoice};]]>
+WHERE cuInvoice.cuInvoiceID=$P{CuInvoice} ORDER BY cuInvoiceDetail.position;]]>
 	</queryString>
 	<field name="ReleaseType" class="java.lang.Integer">
 		<fieldDescription><![CDATA[]]></fieldDescription>

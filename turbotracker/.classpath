@@ -351,8 +351,5 @@
 			<attribute name="owner.project.facets" value="java"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="C:/Program Files/Apache Software Foundation/Tomcat 7.0/lib/servlet-api.jar"/>
-	<classpathentry kind="lib" path="D:/workspace/Latest/turbotracker/src/main/webapp/WEB-INF/lib/hibernate-c3p0-4.2.1.final.jar"/>
-	<classpathentry kind="lib" path="C:/Users/velmurugan/Desktop/timesnewroman.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>

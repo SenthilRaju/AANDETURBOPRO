@@ -1,4 +1,10 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
+<style>
+.ui-jqgrid tr.jqgrow td {
+		text-overflow: ellipsis !important;
+        white-space: nowrap !important;
+    }
+</style>
 <div id="soreleaselineitem">
 <input type="hidden" name="QuotedPricePrMasterID" id="QuotedPricePrMasterID" value="${requestScope.QuotedPricePrMasterID}" />
 	<table>
@@ -83,7 +89,7 @@
 		<table align="right">
 			<tr>
 			 	<td>
-	   				<textarea cols="70" id="lineItemNoteID" name="lineItemNoteName" style="height: 252px; width:570px;"></textarea>
+	   				<textarea cols="70" id="lineItemNoteID_SO" name="lineItemNoteName" style="height: 252px; width:570px;"></textarea>
 	   				<input id="lineItemNoteLabelID" style="display: none;">
 	   			</td>
 			</tr>
@@ -91,7 +97,7 @@
 		<table align="right">
 			<tr>
 			 	<td>
-	   				<input type="button" class="savehoverbutton turbo-tan" id= "SaveInlineNoteID" value="Save" onclick="SaveSoLineItemNote()" style=" width:80px;display:inline-block;">
+	   				<input type="button" class="savehoverbutton turbo-tan" id= "SaveInlineNoteID_SO" value="Save" onclick="SaveSoLineItemNote()" style=" width:80px;display:inline-block;">
 					<input type="button" class="cancelhoverbutton turbo-tan"  value="Cancel" onclick="SoCancelInLineNote()" style="width:80px;">
 	   			</td>
 			</tr>

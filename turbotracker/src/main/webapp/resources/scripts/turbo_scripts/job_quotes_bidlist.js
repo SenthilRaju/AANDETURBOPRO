@@ -757,7 +757,10 @@ function quoteHistory(){
 		jQuery(function(){
 			var dialogWidth = 1150;
 			jQuery("#addquoteTemplate").dialog({
-				autoOpen:false, height:750, width:dialogWidth,top:1000,position: [($(window).width() / 2) - (dialogWidth / 2), 190], modal:true, title:'Add/Edit Template',  iframe: true,
+				autoOpen:false, height:1000, 
+				resizable:false,
+				width:dialogWidth
+				,position: [($(window).width() / 2) - (dialogWidth / 2), 190], modal:true, title:'Add/Edit Template',  iframe: true,
 				open: function(event, ui) {  
 		            //jQuery('.ui-dialog-titlebar-close').removeClass("ui-dialog-titlebar-close").hide();  
 		        },
@@ -1929,8 +1932,8 @@ $("#quoteTemplateProductsGrid_iladd").live('click', function() {
 			aGlobalVariable = "edit";
 			aGlobalConstant = "edit";
 			isquoteAddnew = "no";
-			var editQuotesView = '<input type="button" class="savehoverbutton turbo-tan" value="Save & Close" onclick="saveANDcloseQuote()" style=" width:125px;">&nbsp;'
-					+ '<input type="button" class="cancelhoverbutton turbo-tan"  value="Cancel" onclick="cancelEditQuote()" style="width:80px;">';
+			var editQuotesView = '<input type="button" class="savehoverbutton turbo-tan" value="Save & Close" onclick="saveANDcloseQuote()" style=" width:100px;">&nbsp;'
+					+ '<input type="button" class="cancelhoverbutton turbo-tan"  value="Cancel" onclick="cancelEditQuote()" style="width:100px;">';
 			$("#addQuotesView").empty();
 			$("#copyQuotesView").empty();
 			$("#editQuotesView").empty();
@@ -2844,7 +2847,7 @@ $("#quoteTemplateProductsGrid_iladd").live('click', function() {
 				altclass:'myAltRowClass',
 				imgpath: 'themes/basic/images',
 				caption: '',
-				height : 350,
+				height : 630,
 				width : 1100,
 				rownumbers:true,
 				cellsubmit: 'clientArray',
@@ -3039,6 +3042,7 @@ $("#quoteTemplateProductsGrid_iladd").live('click', function() {
 								    validatequotedisabledbuttons_temp();
 								    $("#SaveQuoteTemplateButtonID").css({ opacity: 'initial'});
 								    $("#SaveQuoteTemplateButtonID").attr("disabled", false);
+								    jQuery("#addnewquotesTemplateList").closest(".ui-jqgrid-bdiv").scrollTop(posit_job_addnewquotesList);
 								},
 								errorfunc : function(rowid, response) {
 									
@@ -3064,7 +3068,7 @@ $("#quoteTemplateProductsGrid_iladd").live('click', function() {
 									}
 									$("#"+id+"_quantityBilled").val(amount);
 									$("#"+id+"_unitCost").val(unitcost);*/
-								
+									posit_job_addnewquotesList= $("#addnewquotesTemplateList").closest(".ui-jqgrid-bdiv").scrollTop();
 								}
 							},restoreAfterSelect :false
 						});

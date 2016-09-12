@@ -211,7 +211,7 @@ var allText = $('#apacct').html();
 				//addcreditDebitMemosDlg
 				jQuery("#addNewVendorInvoiceDlg").dialog({
 					autoOpen : false,
-					height : 710,
+					height : 860,
 					width : 960,
 					title : "Add New Vendor Invoice",
 					modal : true,

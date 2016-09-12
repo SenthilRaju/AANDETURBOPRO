@@ -46,7 +46,7 @@
 				p:password="${app.jdbc.password}"
 				p:acquireIncrement="5"
 				p:idleConnectionTestPeriod="60"
-				p:maxPoolSize="1000"
+				p:maxPoolSize="2500"
 				p:maxStatements="5000"
 				p:minPoolSize="3" 
 				p:testConnectionOnCheckout="true"

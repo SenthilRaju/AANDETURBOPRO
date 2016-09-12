@@ -55,6 +55,8 @@ $('input[type=text]').on('keyup', function(e) {
 
 $(document).ready(function() {
 	 
+
+	
 	loadnewquotesList();
 	// altered by Niaz 2014-09-04 for inline edit enter key need
 //	
@@ -4788,8 +4790,8 @@ function addquotesdialog() {
 	aGlobalConstant = "add";
 	isquoteAddnew = "yes";
 		
-	var editQuotesView = '<input type="button" id="SaveQuoteButtonID" class="savehoverbutton turbo-tan" value="Save" onclick="saveANDcloseQuote()" style=" width:125px;">&nbsp;'
-			+ '<input type="button" id="CloseQuoteButtonID" class="cancelhoverbutton turbo-tan"  value="Close" onclick="cancelQuote()" style="width:80px;">';
+	var editQuotesView = '<input type="button" id="SaveQuoteButtonID" class="savehoverbutton turbo-tan" value="Save" onclick="saveANDcloseQuote()" style=" width:100px;">&nbsp;'
+			+ '<input type="button" id="CloseQuoteButtonID" class="cancelhoverbutton turbo-tan"  value="Close" onclick="cancelQuote()" style="width:100px;">';
 	$("#editQuotesView").empty();
 	$("#copyQuotesView").empty();
 	$("#addQuotesView").empty();
@@ -5608,6 +5610,23 @@ $("#"+id+"_linebreak").attr('tabindex',110);
 			$("#"+id+"_type").focus();
 		}
 }
+
+function checkFontSizeStyleClicked()
+{
+	var returnvalue;
+	$.ajax({
+		url:"./job_controller/getfontSizeNameValueIfChecked",
+		type : "GET",
+		async:false,
+		data : {},
+		success : function(data) {
+			returnvalue=data;
+		}
+	});
+	return returnvalue;
+
+
+}
 function launchTextEditor(rowid){
 	var addclickedornot=$( "#addnewquotesList_iladd" ).hasClass( "ui-state-disabled" );
 	var editclickedornot=$( "#addnewquotesList_iledit" ).hasClass( "ui-state-disabled" );
@@ -5615,11 +5634,59 @@ function launchTextEditor(rowid){
 			$("#addnewquotesList_ilsave").trigger("click");
 		}else{
 if(CKEDITOR.instances["Quoteeditor"]!=undefined)			
-{CKEDITOR.instances["Quoteeditor"].destroy(true);}			
-CKEDITOR.replace('Quoteeditor', ckEditorconfig);
+{CKEDITOR.instances["Quoteeditor"].destroy(true);}	
+
+var value=checkFontSizeStyleClicked();
+var values=value.split(',');
+
+
+
+/*if(values[0]=="1")
+	{
+	ckEditorconfig.font_defaultLabel = values[1];
+	ckEditorconfig.bodyId="bodyCon";
+	$("#bodyCon").attr('font-family',inp_fontStyleonTextEdValue);
+	
+	
+	}
+else{*/
+	ckEditorconfig.font_defaultLabel ='Times New Roman';
+	ckEditorconfig.bodyId="bodyCon";
+	$("#bodyCon").attr('font-family','Times New Roman');
+	
+	
+	
+   /* }
+if(values[2]=="1")
+{
+	ckEditorconfig.fontSize_defaultLabel = values[3];
+	ckEditorconfig.bodyId="bodyCon";
+	$("#bodyCon").attr('font-size',inp_fontSizeonTextEdValue);
+
+}
+else{*/
+	
+
+	ckEditorconfig.fontSize_defaultLabel='10pt';
+	ckEditorconfig.bodyId="bodyCon";
+	$("#bodyCon").attr('font-size','10pt');
+//}
+
+/*font_defaultLabel : 'Times New Roman',
+fontSize_defaultLabel:'10',*/
+
+/*ckEditorconfig.font_defaultLabel = 'Arial';
+ckEditorconfig.fontSize_defaultLabel = '16px';*/
+
+//ckEditorconfig.addCss( 'body { font-family:Arial ;font-size:16px }' );
+
+
+var f=CKEDITOR.replace('Quoteeditor', ckEditorconfig);
+/*CKEDITOR.instances["ckEditorconfig"].addCss( 'body { font-family:Arial ;font-size:16px }' );*/
 var htmlcontent=jQuery("#addnewquotesList").jqGrid('getCell', rowid, 'texteditor');
 $("#Quoteselrowid").val(rowid);
 CKEDITOR.instances['Quoteeditor'].setData(htmlcontent);
+
 setTimeout(function(){
 	jQuery("#QuoteckEditordivbx").dialog("open");
 }, 500);
@@ -5661,6 +5728,7 @@ function addquotegridrow(){
 var posit_job_addnewquotesList=0;var lastselid;
 var lasteditcel;
 function loadnewquotesList(){
+	
 	var typeload = { '1':'Title','2':'Item2','3':'Item3','4':'Price'};
 	var overallcategoryList=getcategoryList();
 	
@@ -5812,13 +5880,25 @@ function loadnewquotesList(){
 		altclass:'myAltRowClass',
 		imgpath: 'themes/basic/images',
 		caption: '',
-		height : 350,
+		height : 630,
 		width : 1100,
 		rownumbers:true,
+		//multiselect: true,
+	
+		
 		rowNum: 1000000, 
 		loadonce: false,
 		cellsubmit: 'clientArray',
 		editurl: 'clientArray',pager: jQuery('#addnewquotespager'),
+		
+	/*	beforeSelectRow: function (rowid, e) {
+			
+			if(e.ctrlKey  )
+				return true
+				else 
+				 return false;
+			
+		},*/
     	ondblClickRow: function(rowid) {
     		//editnewquoteslist(rowid);
     		var lastSelQuote = '';
@@ -5827,6 +5907,11 @@ function loadnewquotesList(){
 		        lastSel=rowid; 
 		     }
 		     $("#addnewquotesList_iledit").trigger("click");
+		    
+	   	   //  alert("calling..."+rowid);
+			 /*posit_job_salesorder= jQuery("#addnewquotesList").closest(".ui-jqgrid-bdiv").scrollTop();
+			 $("#addnewquotesList_ilcancel").trigger("click");
+		     $("#addnewquotesList_iledit").trigger("click");*/
     	},
     	loadBeforeSend: function(xhr) {
 			posit_job_addnewquotesList= jQuery("#addnewquotesList").closest(".ui-jqgrid-bdiv").scrollTop();
@@ -5848,6 +5933,9 @@ function loadnewquotesList(){
     			   return false;
     			  
     			     });
+    	/*	$("#addnewquotesList").jqGrid({
+    		    //myGridOptions...    
+    		}).hideCol('cb');*/
     		}
 		},
 		jsonReader : { 
@@ -5998,6 +6086,7 @@ function loadnewquotesList(){
 						    validatequotedisabledbuttons();
 						    $("#SaveQuoteButtonID").css({ opacity: 'initial'});
 						    $("#SaveQuoteButtonID").attr("disabled", false);
+						    jQuery("#addnewquotesList").closest(".ui-jqgrid-bdiv").scrollTop(posit_job_addnewquotesList);
 						},
 						errorfunc : function(rowid, response) {
 							
@@ -6023,18 +6112,41 @@ function loadnewquotesList(){
 							}
 							$("#"+id+"_quantityBilled").val(amount);
 							$("#"+id+"_unitCost").val(unitcost);*/
-						
+							posit_job_addnewquotesList= $("#addnewquotesList").closest(".ui-jqgrid-bdiv").scrollTop();
 						}
 					},restoreAfterSelect :false
 				});
 	//Drag And DROP
 		jQuery("#addnewquotesList").jqGrid('sortableRows');
+		
+
+		//undernith line enables drag and drop
 		jQuery("#addnewquotesList").jqGrid('gridDnD');
+		
+	/*       jQuery("#addnewquotesList").jqGrid('gridDnD', {
+	    	    ondrop: function (ev, ui, getdata) {
+	    	        // var acceptId = $(ui.draggable).attr("id");
+	    	        // getdata is the data from $('#table1').jqGrid('getRowData',acceptId);
+	    	        // so you have full information about dropped row
+	    	    	alert("ondrop is called");
+	    	    	var grid=$("#addnewquotesList");
+					grid.jqGrid('resetSelection');
+				    var dataids = grid.getDataIDs();
+				    for (var i=0, il=dataids.length; i < il; i++) {
+				        grid.jqGrid('setSelection',dataids[i], false);
+				    }
+	    	    	
+	    	    	
+	    	    }
+	    	});*/
+            
 		jQuery("#addnewquotesList").jqGrid('bindKeys', { 
 			"onEnter" : function(rowid) {
 				$("#addnewquotesList_ilsave").trigger("click");
 			}
 			});
+		//functionality for- while clicking on  another row then previous row data should be saved
+		
 		$("#gbox_addnewquotesList").find(".ui-jqgrid-bdiv").click(function(e) {
 			var addclickedornot=$( "#addnewquotesList_iladd" ).hasClass( "ui-state-disabled" );
 			var editclickedornot=$( "#addnewquotesList_iledit" ).hasClass( "ui-state-disabled" );

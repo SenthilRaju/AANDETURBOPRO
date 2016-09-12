@@ -170,7 +170,8 @@ function PreloadDataFromInvoiceTable(){
 			var dueDateformat = (Number(dueDate.getMonth())+1)+'/'+dueDate.getDate()+'/'+dueDate.getFullYear();
 			$("#customerInvoice_dueDateID").val(dueDateformat);
 			var invoiceDate = new Date(data.cuInvoice.createdOn);
-			var invoiceDateformat = (Number(invoiceDate.getMonth())+1)+'/'+invoiceDate.getDate()+'/'+invoiceDate.getFullYear();
+			var invoicemonth=(Number(invoiceDate.getMonth())+1)<10?'0'+(Number(invoiceDate.getMonth())+1):(Number(invoiceDate.getMonth())+1); 
+			var invoiceDateformat = invoicemonth+'/'+invoiceDate.getDate()+'/'+invoiceDate.getFullYear();
 			$("#customerInvoice_invoiceDateID").val(invoiceDateformat);
 			var shipDate = new Date(data.cuInvoice.shipDate);
 			var shipDateformat = (Number(shipDate.getMonth())+1)+'/'+shipDate.getDate()+'/'+shipDate.getFullYear();
@@ -1164,6 +1165,7 @@ jQuery( "#salesrelease").dialog({
 	width: 840,
 	title:"Sales Order",
 	modal: true,
+	resizable:false,
 	open: function(){
 	
 		$("#PO_Shipto").contents().find( "#shipToRadioButtonSet" ).buttonset( "destroy" );
@@ -1192,6 +1194,8 @@ jQuery( "#salesrelease").dialog({
 		
 		$("#note").autocomplete("destroy");
 		 $(".ui-menu-item").hide();
+		// $('#SOlineItemGrid').empty();
+		 $('#SOlineItemGrid').jqGrid('GridUnload');
 		return true;
 	}
 });

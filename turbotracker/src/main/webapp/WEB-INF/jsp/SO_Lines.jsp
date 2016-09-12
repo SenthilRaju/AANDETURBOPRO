@@ -1,4 +1,10 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
+<style>
+.ui-jqgrid tr.jqgrow td {
+		text-overflow: ellipsis !important;
+        white-space: nowrap !important;
+    }
+</style>
 <div id="soreleaselineitem">
 <input type="hidden" name="QuotedPricePrMasterID" id="QuotedPricePrMasterID" value="${requestScope.QuotedPricePrMasterID}" />
 	<table>

@@ -2065,22 +2065,35 @@ function ChangeTeamDropDown(value) {
 		document.getElementById('architectId').style.display = 'none';
 		document.getElementById('engineerId').style.display = 'none';
 		document.getElementById('gcId').style.display = 'none';
+		document.getElementById('bidderId').style.display = 'none';
 	} else if (value == "2") {
 		document.getElementById('customerId').style.display = 'none';
 		document.getElementById('architectId').style.display = 'block';
 		document.getElementById('engineerId').style.display = 'none';
 		document.getElementById('gcId').style.display = 'none';
+		document.getElementById('bidderId').style.display = 'none';
 	} else if (value == "3") {
 		document.getElementById('customerId').style.display = 'none';
 		document.getElementById('architectId').style.display = 'none';
 		document.getElementById('engineerId').style.display = 'block';
 		document.getElementById('gcId').style.display = 'none';
+		document.getElementById('bidderId').style.display = 'none';
 	} else if (value == "4") {
 		document.getElementById('customerId').style.display = 'none';
 		document.getElementById('architectId').style.display = 'none';
 		document.getElementById('engineerId').style.display = 'none';
 		document.getElementById('gcId').style.display = 'block';
+		document.getElementById('bidderId').style.display = 'none';
 	}
+	else if (value == "5")	{
+		document.getElementById('customerId').style.display = 'none';
+		document.getElementById('architectId').style.display = 'none';
+		document.getElementById('engineerId').style.display = 'none';
+		document.getElementById('gcId').style.display = 'none';
+		document.getElementById('bidderId').style.display = 'block';
+	}
+	
+	
 	return false;
 }
 

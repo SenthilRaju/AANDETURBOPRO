@@ -27,8 +27,9 @@
 <div  style="background-color: #FAFAFA">
 <div>
 	 <jsp:include page="./headermenu.jsp"></jsp:include> 
+	 
 </div>
-<div class="tabs_main" id="settings_tabs" style="padding-left: 0px;width:1110px;margin:0 auto; background-color: #FAFAFA;height: 1650px;right:8px; box-shadow: 1px 6px 5px 5px #AAAAAA;">
+<div class="tabs_main" id="settings_tabs" style="padding-left: 0px;width:1110px;margin:0 auto; background-color: #FAFAFA;height:  1727px;right:8px; box-shadow: 1px 6px 5px 5px #AAAAAA;">
 	<ul>
 		<li id="settingsFormDetails"><a href="#settingsFormDetailsBlock">Company Settings</a></li>
 		<li id="settingsCustmerDetails"><a href="#settingsCustmerDetailsBlock">Customer Settings</a></li>
@@ -3301,6 +3302,57 @@ Description             : Vendor Settings fieldset UI.
 						                                        <td><input type="radio" id="chkfontsizeonPriceN"   value="No"        name="chkfontsizeonPricelblYN" checked="checked"><label>No</label></td>
 						                                     </c:if>
 				                                        </tr>
+				                                          <!-- Created By: prasant  Date: 11-08-2016 Purpose :ID#613  -->
+				                                            <tr style="display:none;">
+					                                        <td><label>Font style on text editor shall be</label>
+					                                        <select name="fontStyleonTextEd"
+																id="fontStyleonTextEditor">
+																	<option value='Arial' >Arial</option>
+																	<option value="Comic Sans MS">Comic Sans MS</option>
+																	<option value="Courier New" >Courier New</option>
+																	<option value="Georgia">Georgia</option>
+																	<option value="lucida sans unicode" >Lucida Sans uni</option>
+																	<option value="Tahoma" >Tahoma</option>
+																	<option value="Times New Roman" >Times New Roman</option>
+																	<option value="Trebuchet MS" >Trebuchet MS</option>	
+																	<option value="Verdana" >Verdana</option>
+																	<option value="SansSerif" >SansSerif</option>
+																	
+															</select> 
+															</td>
+					                                         <c:if test="${sessionScope.chkfontStyleonTextEditorYN == 1}">
+						                                        <td><input type="radio" id="chkfontStyleonTextEditorY"   checked="checked"  value="Yes"       name="chkfontStyleonTextEditorYN"><label>Yes</label></td>
+						                                        <td><input type="radio" id="chkfontStyleonTextEditorN"     value="No"      name="chkfontStyleonTextEditorYN"><label>No</label></td>
+						                                     </c:if>
+						                                      <c:if test="${sessionScope.chkfontStyleonTextEditorYN == 0}">
+						                                        <td><input type="radio" id="chkfontStyleonTextEditorY"   value="Yes"   name="chkfontStyleonTextEditorYN"><label>Yes</label></td>
+						                                        <td><input type="radio" id="chkfontStyleonTextEditorN"   value="No"   name="chkfontStyleonTextEditorYN" checked="checked"><label>No</label></td>
+						                                     </c:if>
+				                                        </tr>
+				                                        
+				                                            <tr style="display:none;">
+					                                        <td><label>Font Size on text editor shall be</label>
+					                                        <select name="fontSizeonTextEd"
+																id="fontSizeonTextEditor">
+																	<option value="8">8pt</option>
+																	<option value="10">10pt</option>
+																	<option value="12">12pt</option>
+																	<option value="14">14pt</option>
+																    <option value="16">16pt</option>
+																	<option value="18">18pt</option>
+																	<option value="20">20pt</option>
+															</select> 
+
+															</td>
+					                                         <c:if test="${sessionScope.chkfontSizeonTextEditorYN == 1}">
+						                                        <td><input type="radio" id="chkfontSizeonTextEditorY"   checked="checked"  value="Yes"       name="chkfontSizeonTextEditorYN"><label>Yes</label></td>
+						                                        <td><input type="radio" id="chkfontSizeonTextEditorN"     value="No"      name="chkfontSizeonTextEditorYN"><label>No</label></td>
+						                                     </c:if>
+						                                      <c:if test="${sessionScope.chkfontSizeonTextEditorYN == 0}">
+						                                        <td><input type="radio" id="chkfontSizeonTextEditorY"   value="Yes"        name="chkfontSizeonTextEditorYN"><label>Yes</label></td>
+						                                        <td><input type="radio" id="chkfontSizeonTextEditorN"   value="No"        name="chkfontSizeonTextEditorYN" checked="checked"><label>No</label></td>
+						                                     </c:if>
+				                                        </tr>
 				                                       <!--  -->  
 				                                        
 				                                        
@@ -3580,7 +3632,27 @@ jQuery(document).ready(function(){
             o.content =pastevalue;
 	       } 
 });
-
+//added by prasant #612 
+	var inp_fontStyleonTextEdValue="${sessionScope.inp_fontStyleonTextEdValue}";
+	var inp_fontSizeonTextEdValue="${sessionScope.inp_fontSizeonTextEdValue}";
+	
+	
+	 $('#fontStyleonTextEditor').find('option').each( function() {
+	      var $this = $(this);
+	      if ($this.val() == inp_fontStyleonTextEdValue) {
+	         $this.attr('selected','selected');
+	         return false;
+	      }
+	 });
+	 $('#fontSizeonTextEditor').find('option').each( function() {
+	      var $this = $(this);
+	      if ($this.val() == inp_fontSizeonTextEdValue) {
+	         $this.attr('selected','selected');
+	         
+	         return false;
+	      }
+	 });
+	
 	var edd="";
 	function myCustomInitInstance(ed) {  
 	edd=ed;
@@ -3594,8 +3666,11 @@ jQuery(document).ready(function(){
 	  }
 	}
 	
-	
+	 jQuery("select#cboDays option[selected]").removeAttr("selected");
+	 jQuery("select#cboDays option[value=]").attr("selected", "selected"); 
 	$("#digstatus").hide();
+	
+	
 	
 	$("#settingsCustmerDetails").removeClass("ui-state-disabled");
 	$("#settingsVendorDetails").removeClass("ui-state-disabled");

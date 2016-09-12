@@ -825,7 +825,9 @@ function formatCurrencynodollar(strValue)
 
 function customCurrencyFormatterWithoutDollar(cellValue, options, rowObject) {
 	console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"+cellValue);
-	if(cellValue!=undefined){
+	if(isNaN(cellValue)||cellValue==""||cellValue==0 ||cellValue==undefined){
+		cellValue=0;
+	}else{
 		cellValue=parseFloat(cellValue.toString()).toFixed(4);
 	}
 	return cellValue;
@@ -1235,6 +1237,7 @@ var posit_job_salesorder=0;
 var soLines_selectRow;
 var checkelement;
 function loadSOLineItemGrid(){	
+	$("#SOlineItemGrid").jqGrid('GridUnload');
 	var cuSOID = $('#Cuso_ID').text();
 	try {
 	 $('#SOlineItemGrid').jqGrid({
@@ -1531,7 +1534,7 @@ function loadSOLineItemGrid(){
 		                        }
 	                    ],decimalPlaces: 2	
 		},editrules:{edithidden:true}},
-		{name:'priceMultiplier', index:'priceMultiplier', align:'right', width:20,hidden:false, editable:true, editoptions:{size:15, alignText:'right',
+		{name:'priceMultiplier', index:'priceMultiplier', align:'right', width:25,hidden:false, editable:true, editoptions:{size:15, alignText:'right',
 			dataEvents: [
 			             { type: 'focus', data: { i: 7 }, fn: function(e) { 
 			             CalculatesoLinegrideditrowvalues(soLines_selectRow);
@@ -1613,7 +1616,7 @@ function loadSOLineItemGrid(){
 		],
 			rowNum: 0, pgbuttons: false, recordtext: '', rowList: [], pgtext: null, viewrecords: false,
 			sortname: 'itemCode', sortorder: "asc", imgpath: 'themes/basic/images', caption: false,
-			height:482.5,	width: 750, rownumbers:true, altRows: true, altclass:'myAltRowClass', caption: 'Line Item',
+			height:582,	width: 750, rownumbers:true, altRows: true, altclass:'myAltRowClass', caption: 'Line Item',
 			jsonReader : {
 				root: "rows",
 				page: "page",
@@ -2098,6 +2101,7 @@ function loadSOLineItemGrid(){
 	 			$('#SOReleaseSuggestedPriceID').css('background','-webkit-gradient(linear, left top, left bottom, from(#b47015), to(#6f4c23))');
 			}
 			*/});
+		
 }
 
 function CalculatesoLinegrideditrowvalues(editrowid){
@@ -2380,8 +2384,7 @@ function closeSOLineItemTab(){
       }else{
     	  so_lines_form="[]";
     	  $("#salesrelease").dialog("close");
-      }
-	
+      }	
 }
 
 function canDeleteSOCheckboxFormatter(cellValue, options, rowObject){

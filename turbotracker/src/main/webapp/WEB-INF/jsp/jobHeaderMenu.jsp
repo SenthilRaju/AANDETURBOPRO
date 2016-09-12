@@ -211,12 +211,14 @@
 							<option value="2" onclick="">Architect</option>
 							<option value="3" onclick="">Engineer</option>
 							<option value="4" onclick="">G.C.</option>
+							<option value="5" onclick="">Bidder</option>
 					</select></td>
 					<td class="space">
 						 <input type="text" id="customerId" style="width: 290px;" value="" placeholder="Minimum 2 characters required">
 						 <input type="text" id="architectId" style="width: 290px; display:none;" value="" placeholder="Minimum 2 characters required" > <input type="text" id="architectRXId" class = "visible" style="display:none;">
 						 <input type="text" id="engineerId"	style="width: 290px;  display:none;" value="" placeholder="Minimum 2 characters required" > <input type="text" id="engineersRXId" style="display:none;">
 						 <input type="text" id="gcId" style="width: 290px;  display:none;" value="" placeholder="Minimum 2 characters required" ><input type="text" id="gcRXId" style="display:none;">
+						<input type="text" id="bidderId" style="width: 290px;  display:none;" value="" placeholder="Minimum 2 characters required" ><input type="text" id="bidderRXId" style="display:none;">
 					</td>
 						<td><div id="teamSelectLists"></div></td>
 			          </tr>
@@ -686,14 +688,13 @@
 		var ckEditorconfig = {
         	    height:'400',
         	    startupOutlineBlocks:false,
-        	    scayt_autoStartup:true,
+        	    scayt_autoStartup:false,
         	    pasteFromWordPromptCleanup:true,
         	    pasteFromWordRemoveFontStyles:true, 
         	    pasteFromWordRemoveStyles:false,
         	    disableNativeSpellChecker:true,
         	    scayt_minWordLength:3, 
-        	    font_defaultLabel : 'Times New Roman',
-        	    fontSize_defaultLabel:'10',
+        	
         	   coreStyles_underline:{ element: 'span',overrides: 'u', styles: { 'text-decoration' : 'underline' },
             	    childRule: function( element ) {
         	        return false;

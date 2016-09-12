@@ -46,7 +46,7 @@ $("#cusinvoicetab").dialog({
 		$("#SO_Shipto").contents().find( "#shipToRadioButtonSet" ).buttonset( "destroy" );
 		$("#CI_Shipto").contents().find( "#shipToRadioButtonSet" ).buttonset();
 		
-    	$('#cusinvoicetab').tabs({ selected: 0 });
+    	//$('#cusinvoicetab').tabs({ selected: 0 });
      var cuInvoiceID = $('#cuInvoiceID').text();
      
      if (cuInvoiceID == '') {
@@ -2935,6 +2935,7 @@ function generaltabformvalidation(){
 
 function soGeneralformChanges(formvalue){
 	console.log("soGeneralformChanges");
+	var ret_val=true;
 	var new_so_generalform_values=generaltabformvalidation();
     var new_so_general_form = JSON.stringify(new_so_generalform_values);
     var gridRows = $('#SoSplitCommissionGrid').getRowData();
@@ -2968,18 +2969,22 @@ function soGeneralformChanges(formvalue){
 					$( "#salesreleasetab ul li:nth-child(2)" ).addClass("ui-state-disabled");
 				    return false;
 				}}}).dialog("open");
+			ret_val=false;
     	}else{
     		$('#loadingDivForSOGeneralTab').css({
 				"display": "none"
 			});
     		$( "#salesreleasetab ul li:nth-child(2)" ).addClass("ui-state-disabled");
+    		ret_val=false;
     	}
     }else{
     	$( "#salesreleasetab ul li:nth-child(2)" ).removeClass("ui-state-disabled");
+    	ret_val=true;
     }
-	return false;
+	return ret_val;
 }
 function soLineItemformChanges(formvalue){
+	var ret_val=true;
 	console.log("soLineItemformChanges");
 	  var gridRows = $('#SOlineItemGrid').getRowData();
       var new_so_lines_form =  JSON.stringify(gridRows);
@@ -3004,19 +3009,22 @@ function soLineItemformChanges(formvalue){
 					$( "#salesreleasetab ul li:nth-child(1)" ).addClass("ui-state-disabled");
 				    return false;
 				}}}).dialog("open");
+			ret_val=false;
     	}else{
     		 $('#loadingDivForSOGeneralTab').css({
   				"display": "none"
   			});
     		$( "#salesreleasetab ul li:nth-child(1)" ).addClass("ui-state-disabled");
+    		ret_val=false;
     	}
     	
     	
     }else{
     	$( "#salesreleasetab ul li:nth-child(1)" ).removeClass("ui-state-disabled");
+    	ret_val=true;
     }
      }
-	return false;
+	return ret_val;
 }
 
 $(function() { var cache = {}; var lastXhr=''; $( "#SOlocationShipToCityeditable" ).autocomplete({ minLength: 2,timeout :1000,

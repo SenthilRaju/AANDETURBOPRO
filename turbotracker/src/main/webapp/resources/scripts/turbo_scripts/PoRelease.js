@@ -72,6 +72,7 @@ jQuery( "#porelease" ).dialog({
 	close: function () {
 		$("#note").autocomplete("destroy");
 		 $(".ui-menu-item").hide();
+		 $('#lineItemGrid').jqGrid('GridUnload');
 		return true;
 	}
 });

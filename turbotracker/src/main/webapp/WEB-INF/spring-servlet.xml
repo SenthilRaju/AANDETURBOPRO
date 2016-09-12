@@ -43,6 +43,7 @@
 	      <entry key="json" value="application/json"/>
 	    </map>
 	  </property>
+	  <!--  p:redirectHttp10Compatible="false" -->
 	  <property name="viewResolvers">
 	    <list>
 	      <bean class="org.springframework.web.servlet.view.UrlBasedViewResolver"

@@ -1612,6 +1612,27 @@ function saveJobSettingsSysVariable() {
 		fontsizeonPriceValue = $("#fontsizeonPrice").val();
 	}
 
+	//added by prasant #612 date 11-08-2016
+	
+	var chkfontStyleonTextEditorYN ="0";
+	var fontStyleonTextEdValue ="Arial";
+	if($('input:radio[name=chkfontStyleonTextEditorYN]:checked').val()==="Yes"){
+		chkfontStyleonTextEditorYN="1";
+		fontStyleonTextEdValue = $("#fontStyleonTextEditor").val();
+	}
+
+	var chkfontSizeonTextEditorYN ="0";
+	var fontSizeonTextEdValue ="8pt";
+	if($('input:radio[name=chkfontSizeonTextEditorYN]:checked').val()==="Yes"){
+		chkfontSizeonTextEditorYN="1";
+		fontSizeonTextEdValue = $("#fontSizeonTextEditor").val();
+		
+	}
+
+	
+	
+	
+	
 	
 	
 //	alert(" chkUserCustomerCreditYN = "+chkUserCustomerCreditYN);
@@ -1651,7 +1672,14 @@ function saveJobSettingsSysVariable() {
 			'chkshowbranchYN':chkshowbranchYN, 'chkscrejobstYN':chkscrejobstYN, 'chkreqengbookjobYN':chkreqengbookjobYN, 'planSpecLabel1':planSpecLabel1,
 			'planSpecLabel2':planSpecLabel2, 'chkdefJobTaxTerritoryYN':chkdefJobTaxTerritoryYN, 'chkUserCustomerCreditYN' : chkUserCustomerCreditYN,'chkReqSplitCommissionYN':chkReqSplitCommissionYN,
 			'chkdefOverRideTaxTerritoryYN':chkdefOverRideTaxTerritoryYN,'chkI2I3QtyYN':chkI2I3QtyYN,'chkI2I3CostYN':chkI2I3CostYN,'chkI3SellPriceYN':chkI3SellPriceYN,
-			'chkI2I3ManufYN':chkI2I3ManufYN,'chkI2I3CatYN':chkI2I3CatYN,'chkSPpriceYN':chkSPpriceYN,'chkfontsizeonPriceYN':chkfontsizeonPriceYN,'fontsizeonPriceValue':fontsizeonPriceValue },
+			'chkI2I3ManufYN':chkI2I3ManufYN,'chkI2I3CatYN':chkI2I3CatYN,'chkSPpriceYN':chkSPpriceYN,
+			'chkfontsizeonPriceYN':chkfontsizeonPriceYN,'fontsizeonPriceValue':fontsizeonPriceValue,
+			'chkfontStyleonTextEditorYN':chkfontStyleonTextEditorYN,'fontStyleonTextEdValue':fontStyleonTextEdValue,
+			'chkfontSizeonTextEditorYN':chkfontSizeonTextEditorYN,'fontSizeonTextEdValue':fontSizeonTextEdValue
+        
+        
+        
+        },
         type: 'POST',
         success: function(data){
         	createtpusage('Company-Settings','Save Job Settings','Info','Company-Settings,Saving Job Settings');

@@ -141,7 +141,14 @@ border: 4px solid #09ad7e;
 			<br>
 			<table align="left">
 			<tr width="100%">
-			<td width="20%"><input type="button" name="quotepdfpreviewButton" id="quotepdfpreviewButton" class="add turbo-tan" value="PDF Preview" title="PDF Preview"  style="width: 100px;" onclick="validatequotedisabledbuttons();pdfpreviewButton()"/>&nbsp;<input type="button" name="addquotegridButton" id="addquotegridButton" class="add turbo-tan" value="Add" title="Add"  style="width: 100px;" onclick="addquotegridrow();validatequotedisabledbuttons();"/></td>
+			<td width="50%"><input type="button" name="quotepdfpreviewButton" id="quotepdfpreviewButton" class="add turbo-tan" value="PDF Preview" title="PDF Preview"  style="width: 100px;" onclick="validatequotedisabledbuttons();pdfpreviewButton()"/>&nbsp;<input type="button" name="addquotegridButton" id="addquotegridButton" class="add turbo-tan" value="Add" title="Add"  style="width: 100px;" onclick="addquotegridrow();validatequotedisabledbuttons();"/>
+			 	<span id="addQuotesView" align="right" style="">
+			 		<input type="button" class="savehoverbutton turbo-tan" value="Save" onclick="saveANDcloseQuote()" style="width:100px;">
+					<input type="button" class="cancelhoverbutton turbo-tan"  value="Close" onclick="cancelQuote()" style="width:100px;">  
+				</span>
+				<span id="editQuotesView" align="right" style=""></span>
+				<span id="copyQuotesView" align="right" style=""></span>
+			</td>
 			<!-- <td style="width: 464px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td> -->
 			<td colspan=2 width="80%" align="right"><b><label>Total Price:&nbsp;</label><label id="sellpriceLabel" style="color: green;font-size:18px;"></label></b>&nbsp;&nbsp;&nbsp;&nbsp;<b><label><b>Total Cost:</b>&nbsp;</label><label id="totalpriceLabel" style="color: green;font-size:18px;"></label></b>
 			</td></tr>
@@ -229,10 +236,10 @@ border: 4px solid #09ad7e;
 					</fieldset>
 				</td></tr>
 			</table>
-		<hr width="1115px;">
+		<!-- <hr width="1115px;"> -->
 		<table style="width:1080px;align:center">
 		<tr><td colspan="3" align="right"><span id="QuotesSaveSuccessMessage" style="color: green;display: none"></span></td></tr>
-		 	<tr>
+		 	<!-- <tr>
 			 	<td></td>
 			 	<td id="addQuotesView" align="right" style="padding-right:1px;">
 			 		<input type="button" class="savehoverbutton turbo-tan" value="Save" onclick="saveANDcloseQuote()" style=" width:125px;">
@@ -240,7 +247,7 @@ border: 4px solid #09ad7e;
 				</td>
 				<td id="editQuotesView" align="right" style="padding-right:1px;"></td>
 				<td id="copyQuotesView" align="right" style="padding-right:1px;"></td>
-			</tr>
+			</tr> -->
 		</table>
 	</div>
 	<div id= "addInLineItem">

@@ -8297,7 +8297,7 @@ String aJobSelectQry = "SELECT joMaster.joMasterId, joMaster.jobNumber, joMaster
 				+ "FROM cuInvoiceDetail cuInvDet "
 				+ "Left Join prMaster pr on cuInvDet.prMasterID = pr.prMasterID "
 				+ "Right Join cuInvoice cuso on cuso.cuInvoiceID = cuInvDet.cuInvoiceID "
-				+ "where cuInvDet.cuInvoiceID ='" + thecuInvoiceId + "';";
+				+ "where cuInvDet.cuInvoiceID ='" + thecuInvoiceId + "' ORDER BY position;";
 		Session aSession = null;
 		ArrayList<Cuinvoicedetail> aQueryList = new ArrayList<Cuinvoicedetail>();
 		try {
@@ -8321,6 +8321,7 @@ String aJobSelectQry = "SELECT joMaster.joMasterId, joMaster.jobNumber, joMaster
 				aCuinvoicedetail.setTaxTotal((BigDecimal) aObj[9]);
 				aCuinvoicedetail.setNote((String) aObj[10]);
 				aCuinvoicedetail.setNoteImage((String) aObj[10]);
+				aCuinvoicedetail.setWhseCost( itsInventoryService.getWarehouseCost(aCuinvoicedetail.getPrMasterId()));
 				aQueryList.add(aCuinvoicedetail);
 			}
 		} catch (Exception e) {
@@ -11372,6 +11373,7 @@ String aJobSelectQry = "SELECT joMaster.joMasterId, joMaster.jobNumber, joMaster
 					iteratorObj = (Cusodetail) aList.get(i);
 					
 					iteratorObj.setQuantityBilled(iteratorObj.getQuantityBilled()==null?BigDecimal.ZERO:iteratorObj.getQuantityBilled());
+					if(iteratorObj.getQuantityBilled()!=null&&iteratorObj.getQuantityOrdered()!=null)
 					if((iteratorObj.getQuantityOrdered().subtract(iteratorObj.getQuantityBilled())).compareTo(BigDecimal.ZERO)>0){
 					BigDecimal total = (iteratorObj.getQuantityOrdered()==null?new BigDecimal("0.0000"):iteratorObj.getQuantityOrdered().subtract(iteratorObj.getQuantityBilled()))
 							.multiply((iteratorObj.getPriceMultiplier()==null || (iteratorObj.getPriceMultiplier().compareTo(new BigDecimal("0.0000"))==0) ?new BigDecimal("1.0000"):iteratorObj.getPriceMultiplier())
@@ -12208,6 +12210,7 @@ String aJobSelectQry = "SELECT joMaster.joMasterId, joMaster.jobNumber, joMaster
 					.subtract(latestQuantityBilled);
 			aCuinvdetail.setTaxable(theCuInvDetail.getTaxable());
 			aCuinvdetail.setNote(theCuInvDetail.getNote());
+			aCuinvdetail.setPosition(theCuInvDetail.getPosition());
 			Boolean rollbackexecute=false;
 			if(theCuInvDetail.getCuInvoiceDetailId()>0){
 				Session atplogSession= itsSessionFactory.openSession();
@@ -12808,9 +12811,9 @@ String aJobSelectQry = "SELECT joMaster.joMasterId, joMaster.jobNumber, joMaster
 			aTransaction = aSession.beginTransaction();
 			aTransaction.begin();
 
-			String aInsertInvoice = "INSERT cuInvoiceDetail(cuInvoiceID, cuSODetailID,prMasterID, Description, Note,  QuantityBilled, UnitCost, PriceMultiplier, Taxable,whseCost ) SELECT  "
+			String aInsertInvoice = "INSERT cuInvoiceDetail(cuInvoiceID, cuSODetailID,prMasterID, Description, Note,  QuantityBilled, UnitCost, PriceMultiplier, Taxable,whseCost,position ) SELECT  "
 					+ cuInvoiceID
-					+ ",cuSODetailID ,prMasterID  ,Description ,Note ,(QuantityOrdered - QuantityBilled) ,UnitCost ,PriceMultiplier ,Taxable,whseCost FROM cuSODetail WHERE cuSOID="
+					+ ",cuSODetailID ,prMasterID  ,Description ,Note ,(QuantityOrdered - QuantityBilled) ,UnitCost ,PriceMultiplier ,Taxable,whseCost,position FROM cuSODetail WHERE cuSOID="
 					+ cuSOID
 					+ " AND (IFNULL(QuantityOrdered,0) - IFNULL(QuantityBilled,0)) !=0";
 			    /* Changed by Zenith on 2015-05-12 for (-) Quantities 
@@ -13291,12 +13294,12 @@ String aJobSelectQry = "SELECT joMaster.joMasterId, joMaster.jobNumber, joMaster
 							   "INSERT INTO cuInvoiceDetail").append("(cuInvoiceID, ")
 							  .append("cuSODetailID, ").append("prMasterID,")
 							  .append(" Description,").append(" Note,")
-							  .append("QuantityBilled,").append(" UnitCost,PriceMultiplier,Taxable ) ")
+							  .append("QuantityBilled,").append(" UnitCost,PriceMultiplier,Taxable,position ) ")
 							  .append("(SELECT ").append(cuInvoiceID)
 							  .append(",vePODetailID,prMasterID ,Description")
 							  .append(",Note ,QuantityBilled ")
 							//  .append(",UnitCost,PriceMultiplier,FreightCost FROM veBillDetail ").append("WHERE")
-							    .append(",0,0,Taxable FROM veBillDetail ").append("WHERE")
+							    .append(",0,0,Taxable,0 FROM veBillDetail ").append("WHERE")
 							  .append(" veBillID =").append(billedList.get(0)).append(")");
 					
 					
@@ -13307,13 +13310,13 @@ String aJobSelectQry = "SELECT joMaster.joMasterId, joMaster.jobNumber, joMaster
 					 Prmaster thePrmaster = (Prmaster) aSession.get(Prmaster.class,	prMasterIDforQP);
 					 
 
-					String query2 = "INSERT INTO cuInvoiceDetail(cuInvoiceID,  prMasterID, Description, Note,QuantityBilled,UnitCost,UnitPrice,PriceMultiplier,Taxable ) VALUES("
+					String query2 = "INSERT INTO cuInvoiceDetail(cuInvoiceID,  prMasterID, Description, Note,QuantityBilled,UnitCost,UnitPrice,PriceMultiplier,Taxable,position ) VALUES("
 							+ cuInvoiceID
 							+ ",'"
 							+ prMasterIDforQP+"','Quoted Price','',1,"
 							+ aReleaseAllocatedAmt
 							+ ","
-							+ aReleaseAllocatedAmt + ",1,"+thePrmaster.getIsTaxable()+");";
+							+ aReleaseAllocatedAmt + ",1,"+thePrmaster.getIsTaxable()+",1000);";
 					//aSession.createSQLQuery(query1).executeUpdate();
 					aSession.createSQLQuery(aInsertInvoiceQuery).executeUpdate();
 					aSession.createSQLQuery(query2).executeUpdate();
@@ -13330,9 +13333,9 @@ String aJobSelectQry = "SELECT joMaster.joMasterId, joMaster.jobNumber, joMaster
 							   "INSERT INTO cuInvoiceDetail").append("(cuInvoiceID, ")
 							  .append("cuSODetailID, ").append("prMasterID,")
 							  .append(" Description,").append(" Note,")
-							  .append("QuantityBilled,").append(" UnitCost,PriceMultiplier,Taxable ) ")
+							  .append("QuantityBilled,").append(" UnitCost,PriceMultiplier,Taxable,position ) ")
 							  .append("(SELECT ").append(cuInvoiceID)
-							  .append(",vePODetailID,prMasterID ,Description,Note ,0,0,0,Taxable ")
+							  .append(",vePODetailID,prMasterID ,Description,Note ,0,0,0,Taxable,posistion ")
 							    .append(" FROM vePODetail ").append("WHERE")
 							  .append(" vePOID =").append(cuInvoice.getCuSoid()).append(")");
 					
@@ -13343,13 +13346,13 @@ String aJobSelectQry = "SELECT joMaster.joMasterId, joMaster.jobNumber, joMaster
 					 Integer prMasterIDforQP = (Integer) aSession.createSQLQuery(query1).uniqueResult();
 					 Prmaster thePrmaster = (Prmaster) aSession.get(Prmaster.class,	prMasterIDforQP);
 
-					String query2 = "INSERT INTO cuInvoiceDetail(cuInvoiceID,  prMasterID, Description, Note,QuantityBilled,UnitCost,UnitPrice,PriceMultiplier,Taxable ) VALUES("
+					String query2 = "INSERT INTO cuInvoiceDetail(cuInvoiceID,  prMasterID, Description, Note,QuantityBilled,UnitCost,UnitPrice,PriceMultiplier,Taxable,position ) VALUES("
 							+ cuInvoiceID
 							+ ",'"
 							+ prMasterIDforQP+"','Quoted Price','',1,"
 							+ aReleaseAllocatedAmt
 							+ ","
-							+ aReleaseAllocatedAmt + ",1,"+thePrmaster.getIsTaxable()+");";
+							+ aReleaseAllocatedAmt + ",1,"+thePrmaster.getIsTaxable()+",1000);";
 					//aSession.createSQLQuery(query1).executeUpdate();
 					aSession.createSQLQuery(aInsertInvoiceQuery).executeUpdate();
 					aSession.createSQLQuery(query2).executeUpdate();
@@ -13369,11 +13372,11 @@ String aJobSelectQry = "SELECT joMaster.joMasterId, joMaster.jobNumber, joMaster
 				   "INSERT INTO cuInvoiceDetail").append("(cuInvoiceID, ")
 				  .append("cuSODetailID, ").append("prMasterID,")
 				  .append(" Description,").append(" Note,")
-				  .append("QuantityBilled,").append(" UnitCost,PriceMultiplier,Taxable ) ")
+				  .append("QuantityBilled,").append(" UnitCost,PriceMultiplier,Taxable,position ) ")
 				  .append("(SELECT ").append(cuInvoiceID)
 				  .append(",vePODetailID,prMasterID ,Description")
 				  .append(",Note ,QuantityOrdered ")
-				  .append(",UnitCost,PriceMultiplier,Taxable FROM vePODetail ").append("WHERE")
+				  .append(",UnitCost,PriceMultiplier,Taxable,posistion FROM vePODetail ").append("WHERE")
 				  .append(" vePOID =").append(vePOID).append(")");
 		
 		
@@ -13383,13 +13386,13 @@ String aJobSelectQry = "SELECT joMaster.joMasterId, joMaster.jobNumber, joMaster
 		 
 		 Integer prMasterIDforQP = (Integer) aSession.createSQLQuery(query1).uniqueResult();
 
-		String query2 = "INSERT INTO cuInvoiceDetail(cuInvoiceID,  prMasterID, Description, Note,QuantityBilled,UnitCost,UnitPrice,PriceMultiplier,Taxable ) VALUES("
+		String query2 = "INSERT INTO cuInvoiceDetail(cuInvoiceID,  prMasterID, Description, Note,QuantityBilled,UnitCost,UnitPrice,PriceMultiplier,Taxable,position ) VALUES("
 				+ cuInvoiceID
 				+ ",'"
 				+ prMasterIDforQP+"','Quoted Price','',1,"
 				+ aReleaseAllocatedAmt
 				+ ","
-				+ aReleaseAllocatedAmt + ",1,0);";
+				+ aReleaseAllocatedAmt + ",1,0,1000);";
 		//aSession.createSQLQuery(query1).executeUpdate();
 		aSession.createSQLQuery(aInsertInvoiceQuery).executeUpdate();
 		aSession.createSQLQuery(query2).executeUpdate();
@@ -22873,6 +22876,47 @@ String aJobSelectQry = "SELECT joMaster.joMasterId, joMaster.jobNumber, joMaster
 			
 			
 		
+		}
+
+		@Override
+		public String getfontSizeNameValueIfChecked() {
+			
+			String aSelectQry = "   SELECT ValueLong, ValueString FROM sysVariable WHERE sysVariableID IN (2014005064 ,2014005063 )";
+			String returnValue="";
+			Session aSession = null;
+			try {
+				Cuso aCuso = new Cuso();
+			
+				aSession = itsSessionFactory.openSession();
+				Query aQuery = aSession.createSQLQuery(aSelectQry);
+				List<String> list=aQuery.list();
+				
+				
+				Iterator<?> aIterator = list.iterator();
+				
+                while(aIterator.hasNext())
+                {    int count=0;
+                	Object[] obj=(Object[]) aIterator.next();
+                	
+                	returnValue=returnValue+obj[0]+","+obj[1];
+                	 while(aIterator.hasNext()){
+                		 count++;
+                		 if(count==1)
+                		 returnValue=returnValue+",";
+                		 else break;
+                	 }
+               }
+                           
+				
+				
+			} catch (Exception e) {
+				itsLogger.error(e.getMessage(), e);
+				
+			} finally {
+				aSession.flush();
+				aSession.close();
+			}
+			return returnValue;
 		}
 }
 	

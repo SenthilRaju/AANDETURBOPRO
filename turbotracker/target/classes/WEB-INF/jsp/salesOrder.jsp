@@ -68,18 +68,44 @@ function salesgeneralclick(){
 			"display": "block"
 		});
 	 so_openornot=1; 
-	soLineItemformChanges("TabChange");
+	var retval=soLineItemformChanges("TabChange");
+	if(retval){
+		if(globalinsideoroutsidejob){
+		jQuery("#salesrelease").dialog({
+			width : 840,
+			height : 830
+		});
+		}else{
+			jQuery("#salesrelease").dialog({
+				width : 840,
+				height : 1000
+			});
+		}
 	if( $('input:text[name=jobHeader_JobNumber_name]').length>0 )
 		 createtpusage('job-Release Tab','SO Tab-General','Info','Job-Release Tab,View,SO Tab-General,Job Number:'+ $('input:text[name=jobHeader_JobNumber_name]').val());
-}
+	}
+	}
 function saleslineitemsclick(){
 	 $('#loadingDivForSOGeneralTab').css({
 			"display": "block"
 		}); 
 	 so_openornot=1; 
-	soGeneralformChanges("TabChange");
+	 var retval=soGeneralformChanges("TabChange");
+	 if(retval){
 	if( $('input:text[name=jobHeader_JobNumber_name]').length>0 )
 	createtpusage('job-Release Tab','SO Tab-Line Items','Info','Job-Release Tab,View,SO Tab-Line Items,Job Number:'+ $('input:text[name=jobHeader_JobNumber_name]').val());
+	if(globalinsideoroutsidejob){
+	jQuery("#salesrelease").dialog({
+		width : 840,
+		height : 1050
+	});
+	}else{
+		jQuery("#salesrelease").dialog({
+			width : 840,
+			height : 1120
+		});
+	}
+	 }
 }
 function salesacknowledgementclick(){
 	if( $('input:text[name=jobHeader_JobNumber_name]').length>0 )
