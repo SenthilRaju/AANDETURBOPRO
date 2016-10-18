@@ -63,6 +63,7 @@ jQuery( "#porelease" ).dialog({
 		 
       },
 	closeOnEscape: false,
+	resizable:false,
 	open: function() {                         // open event handler
         $(this)                                // the element being dialogged
             .parent()                          // get the dialog widget element

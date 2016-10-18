@@ -1611,7 +1611,18 @@ function saveJobSettingsSysVariable() {
 		chkfontsizeonPriceYN="1";
 		fontsizeonPriceValue = $("#fontsizeonPrice").val();
 	}
-
+	//added by prasant #517 date 06-09-2016
+	
+var ckhIncludeJobInShipToAddressOnPDFYN ="0";
+	
+	if($('input:radio[name=ckhIncludeJobInShipToAddressOnPDFYN]:checked').val()==="Yes"){
+		ckhIncludeJobInShipToAddressOnPDFYN="1";
+		
+	}
+	
+	
+	
+	
 	//added by prasant #612 date 11-08-2016
 	
 	var chkfontStyleonTextEditorYN ="0";
@@ -1674,6 +1685,7 @@ function saveJobSettingsSysVariable() {
 			'chkdefOverRideTaxTerritoryYN':chkdefOverRideTaxTerritoryYN,'chkI2I3QtyYN':chkI2I3QtyYN,'chkI2I3CostYN':chkI2I3CostYN,'chkI3SellPriceYN':chkI3SellPriceYN,
 			'chkI2I3ManufYN':chkI2I3ManufYN,'chkI2I3CatYN':chkI2I3CatYN,'chkSPpriceYN':chkSPpriceYN,
 			'chkfontsizeonPriceYN':chkfontsizeonPriceYN,'fontsizeonPriceValue':fontsizeonPriceValue,
+			'ckhIncludeJobInShipToAddressOnPDFYN':ckhIncludeJobInShipToAddressOnPDFYN,
 			'chkfontStyleonTextEditorYN':chkfontStyleonTextEditorYN,'fontStyleonTextEdValue':fontStyleonTextEdValue,
 			'chkfontSizeonTextEditorYN':chkfontSizeonTextEditorYN,'fontSizeonTextEdValue':fontSizeonTextEdValue
         

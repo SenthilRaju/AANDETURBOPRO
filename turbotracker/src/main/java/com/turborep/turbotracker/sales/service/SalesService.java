@@ -126,6 +126,8 @@ public interface SalesService {
 
 	public Boolean checkSalesOrderInvoicedornot(Integer cuSOId)throws JobException;
 
-	public List<String> getListOfCCMailId(Integer userLoginId);;
+	public List<String> getListOfCCMailId(Integer userLoginId);
+
+	//public List<JobsNameBean> getAllJobsforThisCustomer(Integer custID);
 }
 	

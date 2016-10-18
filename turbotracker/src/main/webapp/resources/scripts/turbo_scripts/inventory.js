@@ -1,4 +1,7 @@
 var warehouse = $('#bankAccountsID').val();
+
+var serchedDate=getUrlVars()["search"];
+
 var inactive = $('#inactivelist').prop('checked');
 jQuery(document).ready(function() {
 	
@@ -8,6 +11,36 @@ jQuery(document).ready(function() {
 	//loadInventoryValueGrid();
 
 });
+//added by prasant #538
+var globalSearchVal=getUrlVars()["searchId"];
+
+var inventorySearch=getUrlVars()["inventorySearch"];
+if(inventorySearch==1)
+	{
+	
+	var keyValue=getUrlVars()["key"];
+	globalSearchVal="1";
+	}
+
+if(globalSearchVal==1)
+	{
+
+	var serchedDate=getUrlVars()["search"];
+	
+	$('#searchJob').val(serchedDate);
+	
+		$("#searchJob").autocomplete({
+			disabled: true
+		});
+		
+		searchData = $('#searchJob').val();
+		loadInventoryGrid();
+		//$("#inventoryValueGrid").trigger("reloadGrid");
+		$('#searchJob').val('');
+	//	globalSearchVal="2";
+		
+	
+	}
 
 var posit_outside_inventoryGrid=0;
 function loadInventoryGrid() {
@@ -23,14 +56,19 @@ function loadInventoryGrid() {
 	warehouse = $('#bankAccountsID').val();
 	
 	var key =$("#searchJob").val(); 
+	
+	if(inventorySearch==1)
+		{
+		key=keyValue;
+		globalSearchVal="1";
+		}
 	var aCustomerPage = $("#inventoryID").val();
 	//alert("customerpage=="+aCustomerPage);
 	$("#inventoryGrid").jqGrid({
 		datatype: 'json',
 		mtype: 'GET',
 		url:'./inventoryList',
-		postData: {'itemCode':key,'Inactive':checked,'Warehouse':warehouse},
-		postData: {'searchData':key,'Inactive':checked,'Warehouse':function(){//alert("inside grid"+key); 
+		postData: {'itemCode':key,'Inactive':checked,'Warehouse':warehouse,'searchData':key,'Inactive':checked,'Warehouse':function(){//alert("inside grid"+key); 
 			return warehouse;}},
 		pager: jQuery('#inventoryGridpager'),
 	   	colNames:['prMasterID', 'Item Code', 'Description','Department','Category','Primary Vendor','On Hand', 'Allocated', 'Available', 'On Order', 'Submitted'],
@@ -84,7 +122,7 @@ function loadInventoryGrid() {
 					console.log("prMaster---"+prMaster+'===itemCode ::'+itemCode);
 					 
 				});
-				location.href="./inventoryDetails?token=view&inventoryId="+prMaster + "&itemCode=" + itemCode+"&gridposition="+posit_outside_inventoryGrid;
+				location.href="./inventoryDetails?token=view&inventoryId="+prMaster + "&itemCode=" + itemCode+"&gridposition="+posit_outside_inventoryGrid+"&search="+key;
 			}
 			
 			$("#searchJob").autocomplete({
@@ -112,7 +150,7 @@ function loadInventoryGrid() {
 			var ItemCode = rowData['itemCode'];
 			var checkpermission=getGrantpermissionprivilage('Inventory',0);
 			if(checkpermission){
-				document.location.href = "./inventoryDetails?token=view&inventoryId="+prMasterID+"&itemCode="+ItemCode+"&gridposition="+posit_outside_inventoryGrid;
+				document.location.href = "./inventoryDetails?token=view&inventoryId="+prMasterID+"&itemCode="+ItemCode+"&gridposition="+posit_outside_inventoryGrid+"&search="+key+"&searchId="+globalSearchVal;
 			}
 	    	return true;
     	}
@@ -265,11 +303,13 @@ function getSearchDetails()
 	else
 		return false;*/
 	
+	
 	if($('#searchJob').val() != null && $('#searchJob').val() != '')
 	{
 		$("#searchJob").autocomplete({
 			disabled: true
 		});
+		globalSearchVal="1";
 		searchData = $('#searchJob').val();
 		$("#inventoryGrid").jqGrid('GridUnload');
 		loadInventoryGrid();

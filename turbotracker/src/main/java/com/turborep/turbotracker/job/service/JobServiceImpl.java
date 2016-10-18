@@ -2759,13 +2759,17 @@ public class JobServiceImpl implements JobService {
 		return 0;
 	}
 
-	@Override
+/*
+ * 
+ * Aravind's Backup
+ * 
+ * 	@Override
 	public ArrayList<JobHistory> getJobsHistory() throws JobException {
 		String aSelectHistoryQry = "SELECT jobHis.jobNumber, jobHis.jobName, jobHis.jobOpenedDate , jobHis.BidDate,jobHis.joMasterID "
 				+ "FROM jobHistory jobHis "
-				+ "JOIN (SELECT MAX(jobHistoryID) as jobHisID FROM jobHistory GROUP BY jobNumber) jh "
-				+ "ON jobHis.jobHistoryID = jh.jobHisID "
-				+ "ORDER BY jobHis.jobHistoryID DESC LIMIT 0, 15;";
+				+ "JOIN (SELECT MAX(jobHistoryID) as jobHisID FROM jobHistory GROUP BY jobNumber,tsUserLoginID) jh "
+				+ "ON jobHis.jobHistoryID = jh.jobHisID where tsUserLoginID=? "
+				+ " ORDER BY jobHis.jobHistoryID DESC LIMIT 0, 25;";
 		Session aSession = null;
 		List<JobHistory> aQueryList = null;
 		try {
@@ -2801,9 +2805,52 @@ public class JobServiceImpl implements JobService {
 			aSelectHistoryQry=null;
 		}
 		return (ArrayList<JobHistory>) aQueryList;
-	}
+	}*/
 
-	
+	public ArrayList<JobHistory> getJobsHistory(Integer userLoginID) throws JobException {
+		String aSelectHistoryQry = "SELECT jobHis.jobNumber, jobHis.jobName, jobHis.jobOpenedDate , jobHis.BidDate,jobHis.joMasterID "
+				+ "FROM jobHistory jobHis "
+				+ "JOIN (SELECT MAX(jobHistoryID) as jobHisID FROM jobHistory GROUP BY jobNumber,tsUserLoginID) jh "
+				+ "ON jobHis.jobHistoryID = jh.jobHisID where tsUserLoginID=? "
+				+ " ORDER BY jobHis.jobHistoryID DESC LIMIT 0, 25;";
+		Session aSession = null;
+
+		List<JobHistory> aQueryList = null;
+		try {
+			JobHistory aJobHistory = null;
+			aSession = itsSessionFactory.openSession();
+			aQueryList = new ArrayList<JobHistory>();
+			Query aQuery = aSession.createSQLQuery(aSelectHistoryQry);
+
+			aQuery.setInteger(0, userLoginID);
+
+			Iterator<?> aIterator = aQuery.list().iterator();
+			while (aIterator.hasNext()) {
+				aJobHistory = new JobHistory();
+				Object[] aObj = (Object[]) aIterator.next();
+				// aJobHistory.setJobHistoryID((Integer)aObj[0]);
+				aJobHistory.setJobNumber((String) aObj[0]);
+				aJobHistory.setJobName((String) aObj[1]);
+				aJobHistory.setJobOpenedDateStr(DateFormatUtils.format((Date) aObj[2], "MM/dd/yyyy "));
+				if (aObj[3] != null && aObj[3].toString() != "") {
+					aJobHistory.setJobBidDateStr(DateFormatUtils.format((Date) aObj[3], "MM/dd/yyyy "));
+				} else {
+					aJobHistory.setJobBidDateStr("");
+				}
+				aJobHistory.setJoMasterID((Integer) aObj[4]);
+				aQueryList.add(aJobHistory);
+			}
+		} catch (Exception e) {
+			itsLogger.error(e.getMessage(), e);
+			JobException aJobException = new JobException(e.getMessage(), e);
+			throw aJobException;
+		} finally {
+			aSession.flush();
+			aSession.close();
+			aSelectHistoryQry = null;
+		}
+		return (ArrayList<JobHistory>) aQueryList;
+	}
 
 	@Override
 	public Jomaster getJoMasterIdJobstatus(String theJobNumber)
@@ -7793,18 +7840,14 @@ String aJobSelectQry = "SELECT joMaster.joMasterId, joMaster.jobNumber, joMaster
 		try {
 			
 			if (theVepoID != null) {
-				aPOLineItemListQry = "SELECT ve.vePODetailID," + " ve.vePOID, "
-						+ " ve.prMasterID, " + " ve.Description,"
-						+ " ve.QuantityOrdered, " + " ve.Taxable, "
-						+ " ve.UnitCost," + " ve.PriceMultiplier,"
-						+ " ve.posistion," + " pr.ItemCode, " + " vepo.TaxTotal, "
+				aPOLineItemListQry = "SELECT ve.vePODetailID," + " ve.vePOID, " + " ve.prMasterID, "
+						+ " ve.Description," + " ve.QuantityOrdered, " + " ve.Taxable, " + " ve.UnitCost,"
+						+ " ve.PriceMultiplier," + " ve.posistion," + " pr.ItemCode, " + " vepo.TaxTotal, "
 						+ " ve.Note, " + " ve.QuantityReceived, "
-						+ " ve.AcknowledgementDate, ve.EstimatedShipDate, ve.VendorOrderNumber "+
+						+ " ve.AcknowledgementDate, ve.EstimatedShipDate, ve.VendorOrderNumber, " +
 						/*
-						 * " vbd.QuantityBilled, " +
-						 * " IF(vbd.QuantityBilled IS NULL,0.0000,vbd.QuantityBilled) AS invoiced "
-						 * +
-						 */
+						 * " vbd.QuantityBilled, " + */
+						  " IF(ve.QuantityBilled IS NULL,0.0000,ve.QuantityBilled) AS invoiced "+
 						"FROM vePODetail ve LEFT JOIN prMaster pr ON ve.prMasterID = pr.prMasterID "
 						+ "RIGHT JOIN vePO vepo ON vepo.vePOID = ve.vePOID " +
 						/*
@@ -7934,7 +7977,7 @@ String aJobSelectQry = "SELECT joMaster.joMasterId, joMaster.jobNumber, joMaster
 						
 						
 						
-						// avepoDetail.setInvoicedAmount((BigDecimal) aObj[14]);
+						avepoDetail.setInvoicedAmount((BigDecimal)aObj[16]);
 						aQueryList.add(avepoDetail);
 						ackDate = null; shipDate = null;
 					}
@@ -10340,12 +10383,20 @@ String aJobSelectQry = "SELECT joMaster.joMasterId, joMaster.jobNumber, joMaster
 			//TaxAmount = JobUtil.floorFigureoverall((new BigDecimal("0.01")).multiply((newSubTotal).add(taxfreight==1?newFreight:new BigDecimal("0.0000")).subtract(newDiscountAmt)).multiply(aCuinvoice.getTaxRate()==null?new BigDecimal("0.0000"):aCuinvoice.getTaxRate()),3);
 			TaxAmount=aCuinvoice.getTaxAmount()==null?new BigDecimal("0.0000"):aCuinvoice.getTaxAmount();
 			
-			CityTax = JobUtil.floorFigureoverall((new BigDecimal("0.01")).multiply(TaxableSales).multiply(aCoTaxTerritory.getDistribution1()==null?new BigDecimal("0.0000"):aCoTaxTerritory.getDistribution1()),2);
-			CountyTax =JobUtil.floorFigureoverall((new BigDecimal("0.01")).multiply(TaxableSales).multiply(aCoTaxTerritory.getDistribution2()==null?new BigDecimal("0.0000"):aCoTaxTerritory.getDistribution2()),2);
-			MTATax = JobUtil.floorFigureoverall((new BigDecimal("0.01")).multiply(TaxableSales).multiply(aCoTaxTerritory.getDistribution3()==null?new BigDecimal("0.0000"):aCoTaxTerritory.getDistribution3()),2);
-			CCDTax = JobUtil.floorFigureoverall((new BigDecimal("0.01")).multiply(TaxableSales).multiply(aCoTaxTerritory.getDistribution4()==null?new BigDecimal("0.0000"):aCoTaxTerritory.getDistribution4()),2);
-			OtherTax =JobUtil.floorFigureoverall((new BigDecimal("0.01")).multiply(TaxableSales).multiply(aCoTaxTerritory.getDistribution5()==null?new BigDecimal("0.0000"):aCoTaxTerritory.getDistribution5()),2);
-			
+			if(aCoTaxTerritory==null){
+			    CityTax=new BigDecimal("0.0000");
+			    CountyTax=new BigDecimal("0.0000");
+			    MTATax=new BigDecimal("0.0000");
+			    CCDTax=new BigDecimal("0.0000");
+			    OtherTax=new BigDecimal("0.0000");
+			   }else{
+			   
+			   CityTax = JobUtil.floorFigureoverall((new BigDecimal("0.01")).multiply(TaxableSales).multiply(aCoTaxTerritory.getDistribution1()==null?new BigDecimal("0.0000"):aCoTaxTerritory.getDistribution1()),2);
+			   CountyTax =JobUtil.floorFigureoverall((new BigDecimal("0.01")).multiply(TaxableSales).multiply(aCoTaxTerritory.getDistribution2()==null?new BigDecimal("0.0000"):aCoTaxTerritory.getDistribution2()),2);
+			   MTATax = JobUtil.floorFigureoverall((new BigDecimal("0.01")).multiply(TaxableSales).multiply(aCoTaxTerritory.getDistribution3()==null?new BigDecimal("0.0000"):aCoTaxTerritory.getDistribution3()),2);
+			   CCDTax = JobUtil.floorFigureoverall((new BigDecimal("0.01")).multiply(TaxableSales).multiply(aCoTaxTerritory.getDistribution4()==null?new BigDecimal("0.0000"):aCoTaxTerritory.getDistribution4()),2);
+			   OtherTax =JobUtil.floorFigureoverall((new BigDecimal("0.01")).multiply(TaxableSales).multiply(aCoTaxTerritory.getDistribution5()==null?new BigDecimal("0.0000"):aCoTaxTerritory.getDistribution5()),2);
+			   }			
 			StateTax = JobUtil.floorFigureoverall(TaxAmount.subtract(CityTax).subtract(CountyTax).subtract(MTATax).subtract(CCDTax).subtract(OtherTax),2);
 			
 			//StateTax = JobUtil.floorFigureoverall(aCuinvoice.getTaxAmount().subtract(CityTax).subtract(CountyTax).subtract(MTATax).subtract(CCDTax).subtract(OtherTax),2);
@@ -10428,14 +10479,14 @@ String aJobSelectQry = "SELECT joMaster.joMasterId, joMaster.jobNumber, joMaster
 			aTpCuinvoiceLogMaster.setLastAddCost(oldCuinvoice.getFreightCost()==null?new BigDecimal("0.0000"):oldCuinvoice.getFreightCost());
 			aTpCuinvoiceLogMaster.setSalesPersionId(aCuinvoice.getCuAssignmentId0());
 			
-			aTpCuinvoiceLogMaster.setState(aCoTaxTerritory.getState());
-			aTpCuinvoiceLogMaster.setCounty(aCoTaxTerritory.getCounty());
-			aTpCuinvoiceLogMaster.setCountyCode(aCoTaxTerritory.getCountyCode());
-			aTpCuinvoiceLogMaster.setTaxDistribution1(aCoTaxTerritory.getDistribution1());
-			aTpCuinvoiceLogMaster.setTaxDistribution2(aCoTaxTerritory.getDistribution2());
-			aTpCuinvoiceLogMaster.setTaxDistribution3(aCoTaxTerritory.getDistribution3());
-			aTpCuinvoiceLogMaster.setTaxDistribution4(aCoTaxTerritory.getDistribution4());
-			aTpCuinvoiceLogMaster.setTaxDistribution5(aCoTaxTerritory.getDistribution5());
+			aTpCuinvoiceLogMaster.setState(aCoTaxTerritory==null?"":aCoTaxTerritory.getState());
+			   aTpCuinvoiceLogMaster.setCounty(aCoTaxTerritory==null?"":aCoTaxTerritory.getCounty());
+			   aTpCuinvoiceLogMaster.setCountyCode(aCoTaxTerritory==null?"":aCoTaxTerritory.getCountyCode());
+			   aTpCuinvoiceLogMaster.setTaxDistribution1(aCoTaxTerritory==null?new BigDecimal("0.0000"):aCoTaxTerritory.getDistribution1());
+			   aTpCuinvoiceLogMaster.setTaxDistribution2(aCoTaxTerritory==null?new BigDecimal("0.0000"):aCoTaxTerritory.getDistribution2());
+			   aTpCuinvoiceLogMaster.setTaxDistribution3(aCoTaxTerritory==null?new BigDecimal("0.0000"):aCoTaxTerritory.getDistribution3());
+			   aTpCuinvoiceLogMaster.setTaxDistribution4(aCoTaxTerritory==null?new BigDecimal("0.0000"):aCoTaxTerritory.getDistribution4());
+			   aTpCuinvoiceLogMaster.setTaxDistribution5(aCoTaxTerritory==null?new BigDecimal("0.0000"):aCoTaxTerritory.getDistribution5());
 			aTpCuinvoiceLogMaster.setIsTaxShipping(aCuinvoice.getTaxfreight()==1?(byte)1:(byte)0);
 			
 			aTpCuinvoiceLogMaster.setTaxableSales(TaxableSales);
@@ -22918,5 +22969,6 @@ String aJobSelectQry = "SELECT joMaster.joMasterId, joMaster.jobNumber, joMaster
 			}
 			return returnValue;
 		}
+		
 }
 	

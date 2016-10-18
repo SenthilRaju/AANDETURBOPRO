@@ -809,7 +809,8 @@ public class VendorListController {
 			JsonArray array = ele.getAsJsonArray();
 			System.out.println("array length==>"+array.size());
 			BigDecimal whcostTotalAmount=BigDecimal.ZERO;
-			for (JsonElement ele1 : array) {
+			for (int ki=0;ki<array.size()-1;ki++) {
+                JsonElement ele1=array.get(ki);
 				boolean saved = false;
 				Vepodetail aVepodetail=new Vepodetail();
 				JsonObject obj = ele1.getAsJsonObject();
@@ -902,7 +903,8 @@ public class VendorListController {
 			JsonArray array = ele.getAsJsonArray();
 			System.out.println("array length==>"+array.size());
 			BigDecimal whcostTotalAmount=BigDecimal.ZERO;
-			for (JsonElement ele1 : array) {
+			for (int ki=0;ki<array.size()-1;ki++) {
+				JsonElement ele1=array.get(ki);
 				boolean saved = false;
 				Vepodetail aVepodetail=new Vepodetail();
 				JsonObject obj = ele1.getAsJsonObject();

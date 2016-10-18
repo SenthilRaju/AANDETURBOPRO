@@ -34,17 +34,22 @@ jQuery(document).ready(function(){
 	var reportnum = getUrlVars()["report_name"];
 	var division = getUrlVars()["division_name"];
 	var sortBy = getUrlVars()["sort_by_name"];
+	var bidderID=getUrlVars()["bidder_ID"];
+	if(bidderID===undefined)
+		bidderID="";
 	var aAdvancedSearchSeri = "jobNumber_name="+jobNumber+"&city_name="+city+"&project_code="+project+"&bidDateName="+rangeChk+"&rangepickerName="+rangepicker+"" +
 		"&thruPickerName="+thrupicker+"&budget_name="+budgetchk+"&bid_name="+bidchk+"&quote_name="+quotechk+"&booked_name="+bookedchk+
 		"&closed_name="+closechk+"&submitted_name="+submittedchk+"&planning_name="+planningchk+"&lost_name="+lostchk+"" +
 		"&abondoned_name="+abondonedchk+"&reject_name="+rejectchk+"&overBudget_name="+overbudchk+"&customer_name="+customerName+
 		"&architect_name="+architectName+"&engineer_name="+engineerName+"&gc_name="+gcName+"&team_status_name="+teamStatus+"&salesrep_name="+salesRep+"&csr_name="+
 		csr+"&salesMgr_name="+salesMgr+"&engineerEmp_name="+engineerEmp+"&prjMgr_name="+prjMgr+"&takeOff_name="+takeOff+"&quoteBy_name="+quoteBy+
-		"&employee_assignee_name="+employeeAssign+"&customer_po_name="+customerPo+"&report_name="+reportnum+"&division_name="+division+"&sort_by_name="+sortBy;
+		"&employee_assignee_name="+employeeAssign+"&customer_po_name="+customerPo+"&report_name="+reportnum+"&division_name="+division+"&sort_by_name="+sortBy+"&bidder_ID="+bidderID;
+
 	loadAdvancedSearchList(aAdvancedSearchSeri);
 });
 
 function loadAdvancedSearchList(aAdvancedSearchSeri){
+	
 	$("#searchResultsGrid").jqGrid({
 		url:'./jobtabs2/getAdvacedSearchJobList?'+aAdvancedSearchSeri,
 		datatype: 'JSON',

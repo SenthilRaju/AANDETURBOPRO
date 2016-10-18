@@ -266,11 +266,12 @@ var salesUserId = $("#salesRepUserID").val();
 		function customerFilterDialog(){
 			jQuery( "#customerDialogBox" ).dialog( "open" );
 		}
-
+	
 		$(function() { var cache = {}; var lastXhr = '';
-		$( "#customerFilterListID" ).autocomplete({ minLength: 3,timeout :1000,
+		$("#bidderFilterListID").autocomplete({ minLength: 2,timeout :1000,
 			select: function (event, ui) {
 				var rxMasterID = ui.item.id; 
+				 
 				/*$.ajax({
 					url: "./search/searchrolodexForSale",
 					mType: "GET",
@@ -288,7 +289,7 @@ var salesUserId = $("#salesRepUserID").val();
 							 loginID = createdLogin;
 						 }*/
 						$("#FilterrxCustomerID").val(rxMasterID);
-						 var loginID = $('SalesRepComboList').val();
+						 var loginID = $("#SalesRepComboList").val();
 						 $('#UpcomingBidsGrid').jqGrid('setGridParam',{ postData: {'salesRepId': loginID,'rxCustomerID':rxMasterID } });
 						 $("#UpcomingBidsGrid").trigger("reloadGrid");
 						 $('#quotedJobGrid').jqGrid('setGridParam',{ postData: {'salesRepId': loginID,'rxCustomerID':rxMasterID } });
@@ -307,14 +308,25 @@ var salesUserId = $("#salesRepUserID").val();
 					}
 				});*/
 			},
-			source: function( request, response ) { var term = request.term;
-				if ( term in cache ) { response( cache[ term ] ); 	return; 	}
-				lastXhr = $.getJSON(/* "search/searchCustomerListForUpComingBids"*/ "salescontroller/customerName", request, function( data, status, xhr ) { cache[ term ] = data; 
-					if ( xhr === lastXhr ) { response( data ); 	} });
+			source: function( request, response ) {
+				var term = request.term;
+			var	loginID1=$('#SalesRepComboList').val();
+				if(loginID1=="-1")
+					{
+					loginID1="0";
+					}
+			
+				
+				if ( term in cache ) 
+				  { response( cache[ term ] ); 	return; 	}
+				lastXhr = $.getJSON(/* "search/searchCustomerListForUpComingBids"*/ "customerList/customerNameListEmployee?tsUserLoginID="+loginID1, request, function( data, status, xhr ) {
+				/*	cache[ term ] = data; */
+					/*if ( xhr === lastXhr )*/ { response( data ); 	} });
 			},
 			error: function (result) {
 			     $('.ui-autocomplete-loading').removeClass("ui-autocomplete-loading");
-			}  }); });
+			}  });
+		});
 
 		function loadCustomerFilterGrid(createdLogin, changedLogin, rxMasterID){
 			$("#customerFilterSearchGrid").jqGrid({
@@ -660,7 +672,7 @@ var salesUserId = $("#salesRepUserID").val();
 		$("#PendingQuoteGridDialog").trigger("reloadGrid");
 		return true;
 	}
-	
+	/***********************Pendding Jobs****************************/	
 	var pendingBids_grid = function (arrColNamesPendingQuotes, arrColModelPendingQuotes){
 		var salesrepId = $('#SalesRepComboList').val();
 		console.log('Jenith-1: '+salesrepId);
@@ -833,7 +845,7 @@ var salesUserId = $("#salesRepUserID").val();
 		});
 		return true;
 	};
-	
+	/***********************Quoted Job****************************/
 	var quotedJob_grid = function (arrColNamesPendingQuotes, arrColModelPendingQuotes){
 		//var empId =      $('#SalesRepComboList').val();
 		var salesrepId = $('#SalesRepComboList').val();
@@ -971,7 +983,7 @@ var salesUserId = $("#salesRepUserID").val();
 	function clearCustomer(){
 		 $('#customerName').val('');
 		 $('#FilterrxCustomerID').val('');
-		 $('#customerFilterListID').val('');
+		 $('#bidderFilterListID').val('');
 		 $("#UpcomingBidsGrid").jqGrid('GridUnload');
 		 upcomingBids_grid (arrColNamesUpcomingBids, arrColModelUpcomingBids);
 		 $("#UpcomingBidsGrid").trigger("reloadGrid");
@@ -985,7 +997,7 @@ var salesUserId = $("#salesRepUserID").val();
 		 awarded_grid (arrColNamesAwarded, arrColModelAwarded);
 		 $("#AwardedContractors").trigger("reloadGrid");
 	}
-	
+	/***********************Awarded contractores****************************/
 	var awarded_grid = function (arrColNamesAwarded, arrColModelAwarded){
 		var salesrepId = jQuery("#SalesRepComboList").val();
 		if (salesrepId === null) {
@@ -1245,7 +1257,7 @@ var salesUserId = $("#salesRepUserID").val();
 		
 		
 	}
-	
+	/***********************Upcomming Bids****************************/
 	var upcomingBidsgridDialog = function (arrColNamesUpcomingBids, arrColModelUpcomingBids) {
 		console.log(arrColNamesUpcomingBids);
 		console.log("===============================");

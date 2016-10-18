@@ -54,6 +54,7 @@ import net.sf.jasperreports.engine.xml.JRXmlLoader;
 import org.apache.commons.lang.time.DateUtils;
 import org.apache.log4j.Logger;
 import org.hibernate.connection.ConnectionProvider;
+import org.json.JSONArray;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -68,6 +69,7 @@ import com.google.gson.JsonParser;
 import com.turborep.turbotracker.Inventory.service.InventoryConstant;
 import com.turborep.turbotracker.Inventory.service.InventoryService;
 import com.turborep.turbotracker.Rolodex.service.RolodexService;
+import com.turborep.turbotracker.banking.dao.VeBillPaymentHistory;
 import com.turborep.turbotracker.company.dao.CoTaxTerritory;
 import com.turborep.turbotracker.company.dao.Rxaddress;
 import com.turborep.turbotracker.company.dao.Rxcontact;
@@ -2204,6 +2206,8 @@ public class SalesOrderController {
 				String path_JRXML = null;
 				JasperDesign jd  = null;
 				String filename="";
+				Integer IncludeJobNameasCoinPDF=0;
+				
 				logger.info("print Price:"+price);
 				Cuso cuso=jobService.getSingleCUSODetails(cusoID);
 				if("NotChecked".equalsIgnoreCase(price))
@@ -2221,6 +2225,8 @@ public class SalesOrderController {
 					addlist.add("ShowWeightonPickTickets");
 					addlist.add("ShowBinLocationonPickTickets");
 					addlist.add("UseWarehousesaddressonPickTickets");
+					addlist.add("IncludJobNamein_co_inshiptoaddressonPDForder");
+					
 					ArrayList<Sysvariable> sysvariablelist=new ArrayList<Sysvariable>();
 								
 					try {
@@ -2245,6 +2251,11 @@ public class SalesOrderController {
 									params.put("WarehousePickTicket", 1);
 									WhsePickTicket=true;
 								}
+								else if (i == 3) {
+									IncludeJobNameasCoinPDF=1;
+									
+									
+								}
 								// break;
 							}
 						}
@@ -2258,6 +2269,8 @@ public class SalesOrderController {
 					}
 					params.put("WHSAddress", warehouseAddress);
 					// Dynamically added the column the in jasper report
+					 params.put("printJobName", IncludeJobNameasCoinPDF);
+						
 
 					jd = JRXmlLoader.load(path_JRXML);
 					JRDesignBand band = new JRDesignBand();
@@ -2452,6 +2465,8 @@ public class SalesOrderController {
 					List<String> addlist=new ArrayList<String>();
 					addlist.add("RemoveEXTLISTcolumnfromSalesOrderPDF");
 					addlist.add("RemoveMULTcolumnfromSalesOrderPDF");
+					addlist.add("IncludJobNamein_co_inshiptoaddressonPDForder");
+					
 					
 					sysvariablelist = userService.getInventorySettingsDetails(addlist);
 					;
@@ -2462,6 +2477,9 @@ public class SalesOrderController {
 					}
 					if (sysvariablelist.get(1).getValueLong() == 1) {
 						removemult = true;
+					}
+					if (sysvariablelist.get(2).getValueLong() == 1) {
+						IncludeJobNameasCoinPDF = 1;
 					}
 					jd = JRXmlLoader.load(path_JRXML);
 					JRDesignBand jdb=(JRDesignBand) jd.getColumnHeader();
@@ -2491,6 +2509,7 @@ public class SalesOrderController {
 					JRDesignElement  jr6d=(JRDesignElement) jrb.getElementByKey("column5detail1");
 					params.put("removeextlst",!removeextlst);
 					params.put("removeMult",!removemult);
+					params.put("printJobName", IncludeJobNameasCoinPDF);
 					System.out.println("Test");
 				}
 				
@@ -2639,6 +2658,7 @@ public class SalesOrderController {
 					}
 				}else{
 					if("NotChecked".equalsIgnoreCase(price) && jd!=null){
+						
 						ReportService.dynamicReportCall(theResponse,params,"pdf",jd,filename,connection);
 					}else{
 						if(thejorelease.getReleaseType()==5){
@@ -3330,6 +3350,41 @@ if(batchInvoiceCuID.length()>0 && !batchInvoiceCuID.equals("0")){
 			throws IOException, MessagingException, VendorException {
 		Connection connection =null;
 		ConnectionProvider con =null;
+		
+	List<String> addlist=new ArrayList<String>();
+		
+		addlist.add("IncludJobNamein_co_inshiptoaddressonPDForder");
+		
+		 
+		ArrayList<Sysvariable> sysvariablelist=new ArrayList<Sysvariable>();
+					
+		try {
+			sysvariablelist = userService.getInventorySettingsDetails(addlist);
+		} catch (UserException e) {
+			e.printStackTrace();
+		}
+		
+		int i=0;
+		Integer printJobNameStatus=0;
+		
+		if (sysvariablelist.get(0).getValueLong() == 1) {
+			printJobNameStatus = 1;
+		}
+		
+		/*for (Sysvariable aSysvariable : sysvariablelist) {
+			if (aSysvariable.getValueLong() != null) {
+				if (aSysvariable.getValueLong() == 1) {
+					if (i == 0) {
+						printJobNameStatus=1;
+					}
+										}
+			}
+			i = i + 1;
+		}*/
+		
+		
+		
+		
 		try {
 			HashMap<String, Object> params = new HashMap<String, Object>();
 			String path_JRXML = theRequest
@@ -3423,6 +3478,9 @@ if(batchInvoiceCuID.length()>0 && !batchInvoiceCuID.equals("0")){
 			params.put("billtoState", BillToState);
 			params.put("billtoZip", BillToZip);
 			params.put("CuInvoice", CuInvoice);
+			
+			params.put("printJobName", printJobNameStatus);
+			
 			
 			if(aRxAddressShipto!=null)
 			{
@@ -3653,6 +3711,29 @@ if(batchInvoiceCuID.length()>0 && !batchInvoiceCuID.equals("0")){
 		
 	}
 	
+	
+	//Added by prasant #512
+		/*@RequestMapping(value = "/getAllJobforthisCustomer", method = RequestMethod.POST)
+		public @ResponseBody List<JobsNameBean> getAllJobs(			
+				@RequestParam(value = "custID", required = false) Integer custID,
+				HttpSession theSession,HttpServletResponse theResponse,HttpServletRequest theRequest)
+				throws IOException, JobException {
+			List<JobsNameBean> jobNames=new ArrayList<JobsNameBean>();
+			
+			System.out.println("hi");
+			if (custID!=null)
+			 jobNames=salesServices.getAllJobsforThisCustomer(custID);
+			
+			//ArrayList<JobsNameBean> myCustomList = .... // list filled with objects
+					JSONArray jsonArray = new JSONArray();
+					for (int i=0; i < joMasterID.size(); i++) {
+					        jsonArray.put(joMasterID.get(i).getJSONObject());
+					}
+			System.out.println("--------------------------------------------->>>>>>>>>"+jobNames.size());
+			return jobNames;
+			
+		}*/
+	
 	@RequestMapping(value = "/printWarehouseTransferReport", method = RequestMethod.GET)
 	public @ResponseBody
 	void printWarehouseTransferReport(
@@ -3877,9 +3958,11 @@ if(batchInvoiceCuID.length()>0 && !batchInvoiceCuID.equals("0")){
 		ConnectionProvider con = null;
 		try {
 			List<String> addlist=new ArrayList<String>();
-			addlist.add("IncludeListcolumnoninvoices");
-			addlist.add("IncludeExtListcolumnoninvoices");
-			addlist.add("IncludeMultcolumnoninvoices");
+			//addlist.add("IncludeListcolumnoninvoices");
+			//addlist.add("IncludeExtListcolumnoninvoices");
+			//addlist.add("IncludeMultcolumnoninvoices");
+			addlist.add("IncludJobNamein_co_inshiptoaddressonPDForder");
+			
 			ArrayList<Sysvariable> sysvariablelist=new ArrayList<Sysvariable>();
 						
 			try {
@@ -3887,6 +3970,12 @@ if(batchInvoiceCuID.length()>0 && !batchInvoiceCuID.equals("0")){
 			} catch (UserException e) {
 				e.printStackTrace();
 			}
+			Integer  printJobNameascoinPdf=0;
+			
+			if (sysvariablelist.get(0).getValueLong() == 1) {
+				printJobNameascoinPdf = 1;
+		    }
+			
 			
 			/*int i=0;
 			boolean listColumn=false;
@@ -3998,6 +4087,8 @@ if(batchInvoiceCuID.length()>0 && !batchInvoiceCuID.equals("0")){
 			/*params.put("incListCol", listColumn);
 			params.put("incExtListCol", ExtListColumn);
 			params.put("incMultCol", MultColumn);*/
+
+			params.put("printJobName", printJobNameascoinPdf);
 			params.put("incListCol", true);
 			params.put("incExtListCol", true);
 			params.put("incMultCol", true);

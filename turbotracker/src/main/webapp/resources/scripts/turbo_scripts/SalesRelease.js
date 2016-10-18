@@ -221,7 +221,8 @@ function PreloadDataFromInvoiceTable(){
 			$('#customerInvoice_lineproNumberID').val(data.cuInvoice.trackingNumber);
 			$('#customerInvoice_lineinvoiceNumberId').val(data.cuInvoice.invoiceNumber);
 			$('#customerbillToAddressIDcuInvoice').val(data.CustomerName);
-			$("#shipToCustomerAddressID").val(data.cuInvoice.rxShipToId)
+			$("#shipToCustomerAddressID").val(data.cuInvoice.rxShipToId);
+			$("#jobnodescription").val(data.cuInvoice.jobnoDescription);
 			addressToShipCustomerInvoice();
 			customerinvoiceShiptoAddress(data.cuInvoice.cuInvoiceId,'cuinvoice');
 			if(data.cuInvoice.doNotMail===0)
@@ -1283,7 +1284,7 @@ function callSalesOrderStatus(){
 		var dataid = $('#transactionStatus').val();
 	    var newDialogDiv = jQuery(document.createElement('div'));
 	    jQuery(newDialogDiv).attr("id", "showSalesOrderOptions");
-	    jQuery(newDialogDiv).html('<span><input type = "button" class="cancelhoverbutton turbo-tan" style="width: 85%;" id="Void" onclick="onSetSalesStatus(this.value)" value="Void"></span><br><br><span><input type = "button" class="cancelhoverbutton turbo-tan" style="width: 85%;" id="Quote" onclick="onSetSalesStatus(this.value)" value="Quote"></span><br><br><span><input type = "button" class="cancelhoverbutton turbo-tan" style="width: 85%;" id="Hold" onclick="onSetSalesStatus(this.value)" value="OnHold"></span><br><br><span><input type = "button" style="width: 85%;" class="cancelhoverbutton turbo-tan" id="Open" onclick="onSetSalesStatus(this.value)" value="Open"></span><br><span id="bookasjobsspan"><br><input type = "button" style="width: 85%;"  class="cancelhoverbutton turbo-tan" id="BookasJob" onclick="onSetSalesStatus(this.value)" value="Book as Job"><br></span><br><span><input type = "button" class="cancelhoverbutton turbo-tan" style="width: 85%;" id="Close" onclick="onSetSalesStatus(this.value)" value="Closed" /></span>');
+	    jQuery(newDialogDiv).html('<span><input type = "button" class="cancelhoverbutton turbo-tan" style="width: 85%;" id="Void" onclick="onSetSalesStatus(this.value)" value="Void"></span><br><br><span><input type = "button" class="cancelhoverbutton turbo-tan" style="width: 85%;" id="Quote" onclick="onSetSalesStatus(this.value)" value="Quote"></span><br><br><span><input type = "button" class="cancelhoverbutton turbo-tan" style="width: 85%;" id="Hold" onclick="onSetSalesStatus(this.value)" value="OnHold"></span><br><br><span><input type = "button" style="width: 85%;" class="cancelhoverbutton turbo-tan" id="Open" onclick="onSetSalesStatus(this.value)" value="Open"></span><br><span id="Importtojobsspan" style=" display: none;"><br><input type = "button" style="width: 85%;"  class="cancelhoverbutton turbo-tan" id="ImportToJob" onclick="onSetSalesStatus(this.value)" value="Import to Job"></span><span id="bookasjobsspan"><br><input type = "button" style="width: 85%;"  class="cancelhoverbutton turbo-tan" id="BookasJob" onclick="onSetSalesStatus(this.value)" value="Book as Job"></span><br><span><input type = "button" class="cancelhoverbutton turbo-tan" style="width: 85%;" id="Close" onclick="onSetSalesStatus(this.value)" value="Closed" /></span>');
 	  
 		jQuery(newDialogDiv).dialog({
 			modal : true,
@@ -1404,11 +1405,20 @@ function onSetSalesStatus(e){
 		$('#withPriceLine').attr('checked',false);
 		withPrice='NotChecked';
 		break;
+		
 	case 'Book as Job':
 		setStatus = 3;
 		$('#withPrice').attr('checked',false);
 		$('#withPriceLine').attr('checked',false);
 		withPrice='NotChecked';
+		break;
+		
+	case 'Import to Job':
+		setStatus = 4;
+		$('#withPrice').attr('checked',false);
+		$('#withPriceLine').attr('checked',false);
+		withPrice='NotChecked';
+		
 		break;
 	default:
 		setStatus = 2;
@@ -1433,6 +1443,31 @@ function onSetSalesStatus(e){
 						}).dialog("open");
 		
 	}
+	
+	
+	
+	/*if(setStatus==4){
+		var customer=$("#CustomerNameGeneral").val();
+		//var data=getProjectsForCustomer(customer);
+		 var newDialogDiv = jQuery(document.createElement('div'));
+		    jQuery(newDialogDiv).attr("id", "showImportTojobdialog");
+		   jQuery(newDialogDiv).html('<span><select id="Importjobs"></select></span>');
+		  $(newDialogDiv).find('#Importjobs').css({
+			    'width': '306px',
+			    'margin-top': '43px',
+			    'margin-left':'33px'
+			});     
+		  
+		  
+			jQuery(newDialogDiv).dialog({
+				modal : true,
+				width : 400,
+				height : 250,
+				title : "Import Sales Order to Job",
+				buttons : [{height:35,text: "GO",click: function() { $(this).dialog("close");$("#showSalesOrderOptions").dialog("destroy").remove();viewPOPDF();}}]
+	}).dialog("open");
+		
+	}*/
 	if(setStatus==-1){
 		
 		 var newDialogDiv = jQuery(document.createElement('div'));
@@ -1450,6 +1485,10 @@ function onSetSalesStatus(e){
 			}).dialog("open");
 		
 	}
+	
+
+	
+	
 	/*if(setStatus == 3 && ($('#tagJobID').val()==null || $('#tagJobID').val()=="")){
 		
 		    var newDialogDiv2 = jQuery(document.createElement('div'));
@@ -1493,7 +1532,62 @@ function onSetSalesStatus(e){
 	
 }
 
+/*
+function getProjectsForCustomer(customer)
+{
+	alert("calling..1");
+	var custID="";
+	 custID=$('#billToCustomerNameGeneralID').val();
+	if(custID=="")
+		custID=$("#SO_Shipto").contents().find("#shiptoaddrhiddenfromuiid").val();
+	alert("calling..1"+custID);
+	$.ajax({
+		 
+ 		url: "./salesOrderController/getAllJobforthisCustomer",
+ 		type: "POST",
+ 		data: {"custID":custID},
+ 		success: function(data) {
+	 			alert("test");
+	 			 		}	,
+	 	error: function(XMLHttpRequest, textStatus, errorThrown) { 
+	 	                    alert("Status: " + textStatus); alert("Error: " + errorThrown); 
+	 			 		}
+	 });	
+	$.ajax({
+		url: "./salesOrderController/getAllJobforthisCustomer",
+		type: "POST",
+		
+		data :{"customer":customer},
+		success: function(data1) {			
+			console.log(data1);	
+			alert(data1);
+			$.each(data, function( index, value ) {
+				if (index==5)		
+				  alert( index + ": " + value);
+				   
+			//	});
+			
+			$('#showSalesOrderOptions').dialog('destroy').remove();
+			$('#transactionStatus').val(setStatus);
+			$('#soStatusButton').val(e);
+			if(setStatus==3 && cuSoid!=null && cuSoid!=undefined && cuSoid!=""){
+				var urlData="";
+				var urijobname=encodeBigurl($('#tagJobIDwz').val());
+				urlData=urlData+"token=view"+"&jobNumber="+$("#SOnumberGeneral").val()+"&jobName="+urijobname+"&jobStatus='Booked'"+"&joMasterID="+data;
+				var checkpermission=getGrantpermissionprivilage('Main',0);
+				if(checkpermission){
+				document.location.href = "./jobflow?"+urlData;
+				},
+				
+                } 
+	
+			
+		
+	//});
 
+
+//}
+*/
 function UsDateFormate(createdDate){
 	var date = new Date(createdDate);
 	var CreatedOn = date.getDate();

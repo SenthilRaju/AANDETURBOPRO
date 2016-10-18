@@ -213,6 +213,12 @@ function fn_override_taxIDBasedOnCustomer(){
 			else
 			{
 				var joblocationname="${fn:replace(fn:replace(requestScope.joMasterDetails.locationName, "\\", "\\\\"), "\"", "\\\"")}";
+
+                                //added by prasant #1580 9/9/2016
+				if(customername.indexOf("<input type") != -1){
+				customername="";
+				//alert("in my validation code");
+			}
 				var name = customername;
 					if(name ==null || name == "" || typeof(name) == 'undefined' )
 				name = "${fn:replace(fn:replace(requestScope.joMasterDetails.description, "\\", "\\\\"), "\"", "\\\"")}";

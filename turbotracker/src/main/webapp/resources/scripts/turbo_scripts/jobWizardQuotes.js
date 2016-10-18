@@ -1603,6 +1603,8 @@ function submitBid() {
 }
 
 function saveBidderNaavigatorList() {
+	
+	
 	var bidderListValue = $("#BidDialogCustomForm").serialize();
 	var grid = $("#quotesBidlist");
 	var rowId = grid.jqGrid('getGridParam', 'selrow');
@@ -1635,7 +1637,8 @@ function saveBidderNaavigatorList() {
 					}
 				});
 	} else if (aBidderDialogVar === "edit") {
-		$
+		
+				$
 				.ajax({
 					url : "./jobtabs2/manpulateQuotebidList",
 					type : "POST",
@@ -2411,7 +2414,7 @@ function editBidDetails() {
 		return false;
 	}
 	var joBiddderID = grid.jqGrid('getCell', rowId, 'bidderId');
-	var joBidder = grid.jqGrid('getCell', rowId, 'bidder');
+		var joBidder = grid.jqGrid('getCell', rowId, 'bidder');
 	var joBidderLow = grid.jqGrid('getCell', rowId, 'low');
 	var joQuoteTypeID = grid.jqGrid('getCell', rowId, 'quoteTypeID');
 	var joLastQuote = grid.jqGrid('getCell', rowId, 'lastQuote');
@@ -2424,7 +2427,8 @@ function editBidDetails() {
 	var joRep = grid.jqGrid('getCell', rowId, 'rep');
 	$("#customer_quoteType option[value=" + joQuoteTypeID + "]").attr(
 			"selected", true);
-	$("#bidderId").val(joBiddderID);
+	//$("#bidderId").val(joBiddderID);
+	$('#BidDialogCustomForm').find('#bidderId').val(joBiddderID);
 	$("#bidder").val(joBidder);
 	if (joBidderLow === 'Yes') {
 		$("#low").attr("checked", true);
@@ -2480,6 +2484,7 @@ function editBidDetails() {
 	$("#contactId option[value=" + rxContactID+ "]").attr('selected','selected');
 //	setTimeout("$('#contactId option[value=" + rxContactID
 //			+ "]').attr('selected','selected')", 1000);
+	
 	jQuery("#BidDialogCustom").dialog("open");
 	return true;
 }

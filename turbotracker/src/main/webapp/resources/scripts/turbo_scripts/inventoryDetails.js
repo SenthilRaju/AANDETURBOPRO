@@ -297,6 +297,10 @@ function checkinventoryvalidation(){
  		return false;
  	}
  	var aTokenID = getUrlVars()["token"];
+ 	var serchedDate=getUrlVars()["search"];
+ 	var sId=getUrlVars()["searchId"];
+ 
+ 	
  	var aInactiveboxIDBox = $("#inactiveboxIDBox").is(':checked');
  	var aInventoryboxIDBox = $("#inventoryIDBox").is(':checked');
  	var aConsignboxIDBox = $("#consignmentIDBox").is(':checked');
@@ -351,7 +355,7 @@ function checkinventoryvalidation(){
  				var checkpermission=getGrantpermissionprivilage('Inventory',0);
 				if(checkpermission){
 				var gridposition=getUrlVars()["gridposition"];
- 				document.location.href = "./inventory?gridposition="+gridposition;
+ 				document.location.href = "./inventory?gridposition="+gridposition+"&search="+serchedDate+"&searchId="+sId;
 				}
  			}
  		},

@@ -187,6 +187,7 @@ function searchJOB(){
 	var reportnum = $("#reportnameID").val();
 	var division = $("#divisionID").val();
 	var sortBy = $("#sortbyId").val();
+       var bidder_ID=$("#bidderRXId").val();
 	
 	var aAdvancedSearchSeri = "jobNumber_name="+jobNumber+"&city_name="+city+"&project_code="+project+"&bidDateName="+rangeChk+"&rangepickerName="+rangepicker+"" +
 								"&thruPickerName="+thrupicker+"&budget_name="+budgetchk+"&bid_name="+bidchk+"&quote_name="+quotechk+"&booked_name="+bookedchk+
@@ -194,7 +195,7 @@ function searchJOB(){
 								"&abondoned_name="+abondonedchk+"&reject_name="+rejectchk+"&overBudget_name="+overbudchk+"&customer_name="+customerName+
 								"&architect_name="+architectName+"&engineer_name="+engineerName+"&gc_name="+gcName+"&team_status_name="+teamStatus+"&salesrep_name="+salesRep+"&csr_name="+
 								csr+"&salesMgr_name="+salesMgr+"&engineerEmp_name="+engineerEmp+"&prjMgr_name="+prjMgr+"&takeOff_name="+takeOff+"&quoteBy_name="+quoteBy+
-								"&employee_assignee_name="+employeeAssign+"&customer_po_name="+customerPo+"&report_name="+reportnum+"&division_name="+division+"&sort_by_name="+sortBy;
+								"&employee_assignee_name="+employeeAssign+"&customer_po_name="+customerPo+"&report_name="+reportnum+"&division_name="+division+"&sort_by_name="+sortBy+"&bidder_ID="+bidder_ID;
 	
 	$.ajax({
 		url:'./jobtabs2/getAdvacedSearchChkJobList',
@@ -220,7 +221,7 @@ function searchJOB(){
 				"&abondoned_name="+abondonedchk+"&reject_name="+rejectchk+"&overBudget_name="+overbudchk+"&customer_name="+customerName+
 				"&architect_name="+architectName+"&engineer_name="+engineerName+"&gc_name="+gcName+"&team_status_name="+teamStatus+"&salesrep_name="+salesRep+"&csr_name="+
 				csr+"&salesMgr_name="+salesMgr+"&engineerEmp_name="+engineerEmp+"&prjMgr_name="+prjMgr+"&takeOff_name="+takeOff+"&quoteBy_name="+quoteBy+
-				"&employee_assignee_name="+employeeAssign+"&customer_po_name="+customerPo+"&report_name="+reportnum+"&division_name="+division+"&sort_by_name="+sortBy;
+				"&employee_assignee_name="+employeeAssign+"&customer_po_name="+customerPo+"&report_name="+reportnum+"&division_name="+division+"&sort_by_name="+sortBy+"&bidder_ID="+bidder_ID;
 			}
 		}
 	});
@@ -2292,6 +2293,90 @@ $(function() { var cache = {}; var lastXhr='';
 	}); 
 });
 
+$(function() {
+	var cache = {};
+	var lastXhr = '';
+	$("#bidderId")
+			.autocomplete(
+					{
+						minLength : 3,
+						timeout : 1000,
+						select : function(event, ui) {
+							var rxMasterid = ui.item.id;
+							$("#bidderRXId").val(rxMasterid);
+							$.ajax({
+								url : "./jobtabs2/filterQuoteTypeID",
+								mType : "GET",
+								data : {
+									'rxMasterId' : rxMasterid
+								},
+								success : function(data) {
+									var quoteTypeID = data.cuMasterTypeId;
+									$(
+											"#customer_quoteType option[value="
+													+ quoteTypeID + "]").attr(
+											"selected", true);
+								}
+							});
+							$
+									.ajax({
+										url : "./jobtabs2/filterBidderList",
+										mType : "GET",
+										data : {
+											'rxMasterId' : rxMasterid
+										},
+										success : function(data) {
+											var select = '<select style="width:227px;margin-left: 3px;" id="contactId" onchange="getContactId()"><option value="-1"></option><option value="-2" style="color:#CB842E;font-family: Verdana,Arial,sans-serif;font-weight: bold;">+ Add New</option>';
+											$
+													.each(
+															data,
+															function(index,
+																	value) {
+																quoteId = value.id;
+																var quoteName = value.value;
+																select += '<option value='
+																		+ quoteId
+																		+ '>'
+																		+ quoteName
+																		+ '</option>';
+															});
+											select += '</select>';
+											$("#contacthiddenID").hide();
+											$('#contactselectID').empty();
+											$('#contactselectID')
+													.append(select);
+										}
+									});
+							getContactId = function() {
+								var contactId = $("#contactId").val();
+								if (contactId === '-2') {
+									openContact();
+								}
+								$("#rxContactId").val(contactId);
+							};
+						},
+						source : function(request, response) {
+							var term = request.term;
+							if (term in cache) {
+								response(cache[term]);
+								return;
+							}
+							lastXhr = $.getJSON("jobtabs2/bidderList", request,
+									function(data, status, xhr) {
+										cache[term] = data;
+										if (xhr === lastXhr) {
+											response(data);
+										}
+									});
+						},
+						error : function(result) {
+
+							$('.ui-autocomplete-loading').removeClass(
+									"ui-autocomplete-loading");
+						}
+					});
+});
+
 function autoFocus(t){
 	if(t.value.length == 3){
 		$("#exchangeCodeDirID").focus();					
@@ -2737,13 +2822,13 @@ function salesOrderTemplate()
 }
 
 /*Added to get Search List*/
-
-$(function() { var cache = {}; var lastXhr='';
+//commented by prasant for #617 addded the same in jobHeaderMenu.jsp check if required
+/*$(function() { var cache = {}; var lastXhr='';
 $("#searchJob").autocomplete({ minLength: 1,timeout :1000,
-	/*open: function(){ 
+	open: function(){ 
 		$(".ui-autocomplete").prepend('<div style="font-size: 15px;"><b><a href="./inventoryDetails?token=new" style="color:#3E8DC6;font-family: Verdana,Arial,sans-serif;font-size: 0.8em;">+ Add New Inventory</a></b></div>');
 		$('.ui-autocomplete-loading').removeClass("ui-autocomplete-loading");
-	},*/
+	},
 select: function (event, ui) {
 	var aValue = ui.item.value;
 	var aText = ui.item.label;
@@ -2763,7 +2848,7 @@ source: function( request, response ) { var term = request.term;
 error: function (result) {
      $('.ui-autocomplete-loading').removeClass("ui-autocomplete-loading");
 } });
-});
+});*/
 
 
 function versionDialog(){

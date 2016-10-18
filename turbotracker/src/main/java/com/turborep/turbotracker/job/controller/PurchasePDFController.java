@@ -71,6 +71,7 @@ import com.turborep.turbotracker.job.service.JobService;
 import com.turborep.turbotracker.job.service.PDFService;
 import com.turborep.turbotracker.mail.SendQuoteMail;
 import com.turborep.turbotracker.product.dao.Prwarehouse;
+import com.turborep.turbotracker.system.dao.Sysvariable;
 import com.turborep.turbotracker.user.dao.TpUsage;
 import com.turborep.turbotracker.user.dao.TsUserLogin;
 import com.turborep.turbotracker.user.dao.TsUserSetting;
@@ -780,6 +781,39 @@ Logger logger = Logger.getLogger(JobQuoteFormController.class);
 			}
 			
 			
+			//added by prasant date 06/09/2016 #ID 517 
+
+			List<String> addlist=new ArrayList<String>();
+			
+			addlist.add("IncludJobNamein_co_inshiptoaddressonPDForder");
+			
+			 
+			ArrayList<Sysvariable> sysvariablelist=new ArrayList<Sysvariable>();
+						
+			try {
+				sysvariablelist = userService.getInventorySettingsDetails(addlist);
+			} catch (UserException e) {
+				e.printStackTrace();
+			}
+			
+			int i=0;
+			Integer printJobNameStatus=0;
+			
+			for (Sysvariable aSysvariable : sysvariablelist) {
+				if (aSysvariable.getValueLong() != null) {
+					if (aSysvariable.getValueLong() == 1) {
+						if (i == 0) {
+							printJobNameStatus=1;
+						}
+											}
+				}
+				i = i + 1;
+			}
+			//added by prasanth 
+			 if(aPO.getJoReleaseId()==null)
+			   {
+			    printJobNameStatus=0;
+			  }
 			Rxaddress aRxAddress = null;
 			if(aPO.getRxVendorId() != null){
 				aRxAddress = itsJobService.getRxAddress(aPO.getRxVendorId());
@@ -1024,6 +1058,7 @@ Logger logger = Logger.getLogger(JobQuoteFormController.class);
 			}
 			params.put("NoticeToParameter", NoticeToParameter);
 			params.put("releaseType", booleanvalue);
+			params.put("printJobName",printJobNameStatus);
 			 connection = con.getConnection();
 			if(WriteorView!=null&&WriteorView.equals("write")){
 				ReportService.WriteReportCall(theRequest,theResponse,params,"pdf",path_JRXML,filename,connection);
@@ -1766,10 +1801,14 @@ Logger logger = Logger.getLogger(JobQuoteFormController.class);
 				if(theRxMasterID != null){
 					aRxmaster = itsJobService.getSingleRxMasterDetails(theRxMasterID);
 				}
+				Jomaster aJomaster = null;
+				if(theJobNumber != "" && theJobNumber != null){
+					aJomaster = itsJobService.getSingleJobDetails(theJobNumber,joMasterID);
+				}
 				Rxaddress aRxAddressBillTo = null;
 				if(aPO.getRxBillToId() != null){
 					logger.info("Bill Calling");
-					aRxAddressBillTo = itsJobService.getRxMasterBillAddress(aPO.getRxBillToId(), "bill");
+					aRxAddressBillTo = itsJobService.getRxMasterBillAddress(aJomaster.getRxCustomerId(), "bill");
 				}
 				Rxaddress aRxAddressShipTo = null;
 				if(aPO.getRxBillToId() != null){
@@ -1786,10 +1825,7 @@ Logger logger = Logger.getLogger(JobQuoteFormController.class);
 					logger.info("ShipTo Calling");
 					aRxAddressOtherShipTo = itsJobService.getRxMasterBillAddress(aPO.getRxShipToAddressId(), "shipToOther");
 				}
-				Jomaster aJomaster = null;
-				if(theJobNumber != "" && theJobNumber != null){
-					aJomaster = itsJobService.getSingleJobDetails(theJobNumber,joMasterID);
-				}
+				
 				aPrwarehouses = itsJobService.getWareHouse();
 				
 				PdfContentByte cb = aPdfWriter.getDirectContent();

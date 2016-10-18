@@ -68,16 +68,16 @@
         		<tr><td> 
 				<div>
 					<select class="selectSalesWidth" id="SalesRepComboList" onchange="changeSalesrep()" onkeypress="checkpermission()" onclick="checkpermission()">
-					<option value = "-1">All</option>
+					<option value = "-1" >All</option>
 					</select> &nbsp; 
 					<input type="button" value="Filter" class="filter turbo-blue"/>
 				</div>
 				</td>
 				<td>
 					<div class="customerSearchField">
-						<label class="customerfont">Customer: </label>
+						<label class="customerfont">Bidder: </label>
 						<!-- <input type="button" id="customerFilterButton" value="Customer Search" class="filter turbo-blue" onclick="customerFilterDialog()"/>  -->
-						<input type="text" id="customerFilterListID" name="customerFilterListName" class="customerinputfield" placeholder="Minimum 3 characters required to get Customer List"/>
+						<input type="text" id="bidderFilterListID" name="bidderFilterListName" class="customerinputfield" placeholder="Minimum 3 characters required to get Customer List"/>
 						<img alt="search" src="./../resources/scripts/jquery-autocomplete/search.png">
 						<input type="hidden" name="FilterrxCustomerID" id="FilterrxCustomerID"/>
 						<input type = "button" value="Clear" style="background: #D5C964;width: 60px;height: 20px;font-weight: bold;font-size: 12px;color:white !important;" id="clearCustomer" onClick="clearCustomer()"/>

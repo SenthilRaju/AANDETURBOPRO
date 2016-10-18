@@ -349,7 +349,7 @@ html, body { width:100%; height: 100%; margin:0;}
 .ui-autocomplete div { padding:2px 5px; white-space:nowrap; overflow:hidden; }
 .ui-autocomplete strong { font-weight:normal; color:#3399FF; }
 .ui-autocomplete-loading { background: white url('./../resources/scripts/jquery-autocomplete/loading3.gif') right center no-repeat; }
-.home_down { background:url('./../../../resources/images/home_turbo.jpg') center no-repeat; height: 251px; width: 1044px;}
+.home_down { background:url('./../../../resources/images/home_turbo12.jpg') center no-repeat; height: 251px; width: 706px; padding-left: 8px; margin-left: 172px;}
 .down_home{ width: 360px; padding-left: 25px; height: 200px; }
 .imglist { font-family: Verdana,Arial,sans-serif; font-size: 14px; margin-top:7px;}
 /**Pure css3 style button css*/
@@ -360,6 +360,7 @@ html, body { width:100%; height: 100%; margin:0;}
 .alink:hover {color: #013ADF;background-color: #FAFAFA;text-decoration: underline; cursor: pointer;}
 .bodyDiv{background: #FAFAFA;}
 .generalSearchTable{width: 1100px;padding-top: 49px;}
+.generalSearchNewTable{padding-top: 40px;float:left; padding-bottom: 45px; height: 80%;width:67%}
 .generalSearchTd{float: left; padding-bottom: 45px; height: 350px;width: 710px;}
 .generalSearchColumns {padding-left: 00px;}
 .widgetForFullNameLable{margin-top: 01px; background: none repeat scroll 0 0 #4A5F71; width: 680px !important;}
@@ -368,13 +369,14 @@ html, body { width:100%; height: 100%; margin:0;}
 .contentForSearchBoxpara{padding: 5px;}
 .rolodexLabel{color:#4A5F71;}
 .rolodexLabelTD{padding-left: 10px;}
-.rolodexSearchInput{width:385px; padding-left: 25px; padding-top: 5px;padding-bottom: 5px;}
+.rolodexSearchInput{width:385px; padding-left: 25px;float:left; padding-top: 5px;padding-bottom: 5px;}
+.rolodexSearchNewTable{padding-top: 55px; padding-bottom: 57px; float:left; height: 616px;width: 29%}
 .jobSearchTD{padding-left: 10px;width: 425px;}
 .newJobLink{padding-left: 75px;}
 .newlinkLabel{padding-left: 40px;}
 .newlinkLabel a{color:#3F5365;font-family: Verdana,Arial,sans-serif;;font-size: 12px; font-weight:bold;text-decoration: none;}
 .divHeight{height: 25px; background: #FAFAFA;}
-.realseNotesDiv{padding-left: 0px;padding-top: 30px;}
+.realseNotesDiv{padding-left: 0px;padding-top: 38px;width: 63%;}
 .versionLableH3{font-family: Verdana,Arial,sans-serif; color: white;padding-left: 15px; font-size: 19px;padding-bottom: 10px;}
 .realseNotesUl{color: white;padding-left: 22px; padding-bottom: 70px; width: 300px;}
 .hightimglist{height: 5px;}

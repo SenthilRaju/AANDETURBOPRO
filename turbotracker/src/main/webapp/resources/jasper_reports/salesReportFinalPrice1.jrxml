@@ -34,6 +34,7 @@
 	<parameter name="QuoteFooterText" class="java.lang.String"/>
 	<parameter name="jobStatus" class="java.lang.Integer"/>
 	<parameter name="printJobName" class="java.lang.Integer"/>
+	<parameter name="parameter1" class="java.lang.String"/>
 	<queryString>
 		<![CDATA[SELECT joRelease.ReleaseType,
 cuSODetail.*, prMaster.ItemCode,
@@ -488,11 +489,13 @@ LEFT JOIN prWarehouseInventory ON prMaster.prMasterID =prWarehouseInventory.prMa
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement positionType="Float" x="346" y="115" width="221" height="16" isPrintWhenDetailOverflows="true" uuid="5fea6b1d-59f9-4bf9-98e9-f49a99bb65d7"/>
 				<textElement verticalAlignment="Middle" markup="html"/>
-				<textFieldExpression><![CDATA[( $P{billAddress1}!=null && !$P{billAddress1}.equals("") ? $P{billAddress1}+"<br>" : "" )
+				<textFieldExpression><![CDATA[($P{printJobName}.intValue()==1)?
+"<b>c/o:</b>"+(($F{joReleaseID}!=null ? $F{Job} : $F{Tag})):
+(( $P{billAddress1}!=null && !$P{billAddress1}.equals("") ? $P{billAddress1}+"<br>" : "" )
 +( $P{billAddress2}!=null && !$P{billAddress2}.equals("") ? $P{billAddress2}+"<br>" : "" )
 +( $P{billCity}!=null && !$P{billCity}.equals("") ? $P{billCity}+", " : "" )
 +( $P{BilState}!=null && !$P{BilState}.equals("") ? $P{BilState}+" " : "" )
-+( $P{BillZip}!=null && !$P{BillZip}.equals("") ? $P{BillZip} : "" )]]></textFieldExpression>
++( $P{BillZip}!=null && !$P{BillZip}.equals("") ? $P{BillZip} : "" ))]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement x="296" y="148" width="271" height="18" isRemoveLineWhenBlank="true" isPrintWhenDetailOverflows="true" uuid="71693623-1977-4344-8463-c784e3992890"/>
@@ -500,6 +503,16 @@ LEFT JOIN prWarehouseInventory ON prMaster.prMasterID =prWarehouseInventory.prMa
 					<font isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{NoticeToParameter}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement positionType="Float" x="346" y="131" width="221" height="16" isPrintWhenDetailOverflows="true" uuid="d6d1cc48-d1f2-446f-b56b-a50ec22dcee6"/>
+				<textElement verticalAlignment="Middle" markup="html"/>
+				<textFieldExpression><![CDATA[($P{printJobName}.intValue()==1)?
+(( $P{billAddress1}!=null && !$P{billAddress1}.equals("") ? $P{billAddress1}+"<br>" : "" )
++( $P{billAddress2}!=null && !$P{billAddress2}.equals("") ? $P{billAddress2}+"<br>" : "" )
++( $P{billCity}!=null && !$P{billCity}.equals("") ? $P{billCity}+", " : "" )
++( $P{BilState}!=null && !$P{BilState}.equals("") ? $P{BilState}+" " : "" )
++( $P{BillZip}!=null && !$P{BillZip}.equals("") ? $P{BillZip} : "" )):""]]></textFieldExpression>
 			</textField>
 		</band>
 	</title>

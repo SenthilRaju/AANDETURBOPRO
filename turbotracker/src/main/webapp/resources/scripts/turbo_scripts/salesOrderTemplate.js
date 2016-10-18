@@ -137,15 +137,21 @@ function loadaddSalesOrderTemplateDetails(){
 		colModel :[
 			{name:'note',index:'note',align:'left',width:60,editable:true,hidden:false, edittype:'text', editoptions:{size:40,
 				 dataInit: function (elem) {
-					 
+				
 			            $(elem).autocomplete({
 			                source: 'jobtabs3/productCodeWithNameList',
 			                minLength: 1,
 			                select: function (event, ui) { ;$(elem).focus().trigger({ type: 'keypress', charCode: 13 });
 			                var id = ui.item.id;  
 			                var product = ui.item.label; 
+			       
 			                var aSelectedRowId = $("#addSalesOrderTemplateGrid").jqGrid('getGridParam', 'selrow');
 			                $("#addSalesOrderTemplateGrid").jqGrid('setCell', aSelectedRowId,'prMasterId', id);
+			                
+		                	//$("#"+aSelectedRowId+"_prMasterId").val(id);
+		                	//$("#new_row_prMasterId").val(id);
+		                	
+		                	//var celValue = $('#vePOID').val();
 
 			    
 			                $.ajax({
@@ -153,23 +159,23 @@ function loadaddSalesOrderTemplateDetails(){
 						        type: 'POST',       
 						        success: function (data) {
 						        	$.each(data, function(key, valueMap) {										
-										
+								
 						        		if("lineItems"==key)
 										{				
 											$.each(valueMap, function(index, value){						
 												
-													$("#description").val(value.description);
-													$("#unitCost").val(value.lastCost);
+													$("#new_row_description").val(value.description);
+													$("#new_row_unitCost").val(value.lastCost);
 													//alert("Unit Cast---->"+value.lastCost);
-													$("#priceMultiplier").val(value.pomult);
+													$("#new_row_priceMultiplier").val(value.pomult);
 													//alert("POMultiplexer--->"+value.pomult);
 													
 													if(value.isTaxable == 1)
 													{
-														$("#taxable").prop("checked",true);
+														$("#new_row_taxable").prop("checked",true);
 													}
 													else
-														$("#taxable").prop("checked",false);
+														$("#new_row_taxable").prop("checked",false);
 														
 														
 													

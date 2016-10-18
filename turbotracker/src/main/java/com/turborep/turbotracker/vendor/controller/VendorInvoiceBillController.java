@@ -630,7 +630,12 @@ public class VendorInvoiceBillController {
 			String printtype = null;
 			String frmBillDate = "''";
 			String toBillDate ="''";
-			String queryBuild=getAccountsPayableListQuery(null, fromDate, toDate);
+			String queryBuild=null;
+			if((fromDate!=null) && (fromDate.equals("")==false)){
+				queryBuild=getAccountsPayableListQuery(null, fromDate, toDate);
+			}else{
+				queryBuild=getAccountsPayableListQuery(null, null, toDate);
+			}
 			SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
 			 SimpleDateFormat sdff = new SimpleDateFormat("yyyy-MM-dd");
 			if(fromDate!=null && !fromDate.trim().equals("")){
@@ -964,6 +969,13 @@ public class VendorInvoiceBillController {
 		    aVepo = vendorService.getPONumber(thePO);			
 			Sysvariable stmtgroupbyjob= itsEmployeeService.getSysVariableDetails("ReqInvWithPO");
 			
+			//added by prasant #629 date:10.05.16
+			Integer status=vendorService.checkPurchaseOrderRecived(aVepo.getVePoid());
+			Boolean NonInventory=true;
+			NonInventory=vendorService.checkStausForAllNonInventory(aVepo.getVePoid());			
+			if(!NonInventory)
+				status=2;
+				map.put("Status",status);
 			if(aVepo.getPonumber() != null && aVepo.getPonumber().length() > 0)
 			{
 				invoiceStatus=itsGltransactionService.getAllVeBillDetailswithvePoid(aVepo.getVePoid());
@@ -1006,6 +1018,7 @@ public class VendorInvoiceBillController {
 		
 		return map;
 	}
+	
 	
 	@RequestMapping(value = "/getDueOnDays", method = RequestMethod.POST)
 	public @ResponseBody
@@ -1740,6 +1753,17 @@ public class VendorInvoiceBillController {
 				else
 					aVebill.setVeBillId(veBillIdPO);
 				
+				if(delData!=null){
+				     for(String detailID:delData){
+				      Vebilldetail aVebilldetail=new Vebilldetail();
+				      System.out.println("delData[i]"+detailID);
+				      Integer vebillDetailID=JobUtil.ConvertintoInteger(detailID);
+				      aVebilldetail.setVeBillDetailId(vebillDetailID);
+				      aVebilldetail.setVeBillId(aVebill.getVeBillId());
+				      vendorService.saveVebillDetail(aVebilldetail,"delete");
+				     }
+				    }
+				
 				if(veBillIdPO == null || veBillIdPO == 0){
 					
 					//insertStatus = vendorService.insertVebillDetail(veBillid,vepoId,aUserBean.getUserId());
@@ -1829,7 +1853,7 @@ public class VendorInvoiceBillController {
 			//update the edited vendor invoice	
 				if(!reason.equals(""))
 				{
-				vendorService.rollbackupdatePrMaster(veBillIdPO);
+			//	vendorService.rollbackupdatePrMaster(veBillIdPO);
 				}
 				aVebill.setVeBillId(veBillIdPO);
 				System.out.println("delData"+delData);
@@ -2358,7 +2382,7 @@ public class VendorInvoiceBillController {
 	
 	
 	public String getAccountsPayableListQuery(String searchData,String startDate,String endDate) throws VendorException{
-		
+
 		SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
 		SimpleDateFormat sdff = new SimpleDateFormat("yyyy-MM-dd");
 		if(startDate!=null && !startDate.trim().equals("")){
@@ -2391,11 +2415,11 @@ public class VendorInvoiceBillController {
 		
 		String customDate = "";
 		
-		if(!startDate.equals("")&& !endDate.equals("")){
+		if((startDate!=null && !startDate.equals("")) && (endDate!=null && !endDate.equals(""))){
 			customDate = endDate;		}
-		else if(!startDate.equals("") && endDate.equals("")){
+		else if((startDate!=null && !startDate.equals("")) || (endDate!=null && endDate.equals(""))){
 			customDate = startDate;
-		}else if(!endDate.equals("") && startDate.equals("")){
+		}else if((endDate!=null && !endDate.equals("")) || (startDate!=null && startDate.equals(""))){
 			customDate = endDate;
 		}else{
 			customDate = formattedto;
@@ -2412,7 +2436,7 @@ public class VendorInvoiceBillController {
 		+ " IF(DATE(mo.TransactionDate)>'"+customDate+"',vb.BillAmount-(vb.AppliedAmount-(mLD.Amount+mLD.Discount)),vb.BillAmount-vb.AppliedAmount)AS balance"
 		+ " FROM veBill vb LEFT JOIN moLinkageDetail mLD ON vb.veBillID = mLD.veBillID LEFT JOIN moTransaction mo ON mLD.moTransactionID = mo.moTransactionID AND mo.Void <>1"
 		+ " LEFT OUTER JOIN rxMaster rx ON vb.rxMasterID = rx.rxMasterID LEFT OUTER JOIN vePO vp ON vb.vePOID = vp.vePOID"
-		+ " WHERE (vb.vePOID IS NULL OR vb.vePOID IS NOT NULL) and vb.TransactionStatus >0 or vb.TransactionStatus=-2 ";
+		+ " WHERE (vb.vePOID IS NULL OR vb.vePOID IS NOT NULL) and (vb.TransactionStatus >0 or vb.TransactionStatus=-2) ";
 		         
 		if(searchData !=null && !searchData.equals("")){
 			aVendorBillsListQry+= "And  (vb.veBillID LIKE '%"+searchData+"%' OR PONumber LIKE '%"+searchData+"%' OR InvoiceNumber LIKE '%"+searchData+"%'" +
@@ -2420,18 +2444,18 @@ public class VendorInvoiceBillController {
 					" OR AppliedAmount LIKE '%"+searchData+"%' OR vb.vePOID LIKE '%"+searchData+"%' OR vb.joReleaseDetailID LIKE '%"+searchData+"%')";
 		}
 		
-		if(!startDate.equals("")&& !endDate.equals("")){
+		if((startDate!=null && !startDate.equals("")) && (endDate!=null && !endDate.equals(""))){
 			aVendorBillsListQry+= " AND Date(BillDate) >= '"+startDate +"' AND Date(BillDate) <= '"+endDate+"' GROUP BY vb.veBillID ";	}
-		else if(!startDate.equals("") && endDate.equals("")){
+		else if((startDate!=null && !startDate.equals(""))){
 			aVendorBillsListQry+= " AND Date(BillDate) >='"+startDate+"' GROUP BY vb.veBillID ";
-		}else if(!endDate.equals("") && startDate.equals("")){
+		}else if((endDate!=null && !endDate.equals(""))){
 			aVendorBillsListQry+= " AND Date(BillDate) <='"+endDate+"' GROUP BY vb.veBillID ";
 		}else{
 			aVendorBillsListQry+= " AND Date(BillDate) <= '"+formattedto+"' GROUP BY vb.veBillID ";
 		}
 				
 		String orderByIndex="";
-		String orderBy="ASC";
+		String orderBy="DESC";
 		
 		     
 		/*if(sortIndex.equals("billDate")){

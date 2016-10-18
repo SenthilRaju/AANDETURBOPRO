@@ -808,10 +808,10 @@ public class VendorService implements VendorServiceInterface{
 				aVendorBillPayBean.setFreightAmount((BigDecimal) aObj[10]);
 				aVendorBillPayBean.setApplyingAmount((BigDecimal) aObj[11]);
 				aVendorBillPayBean.setDiscountAmount((BigDecimal) aObj[12]);
-				System.out.println("checking..............................................................Before>");
-				if(aObj[13]!=null)
+		
+				//if(aObj[13]!=null)
 				//System.out.println("checking======"+(String) aObj[1]+"=======>"+(short)aObj[13]);
-				System.out.println("checking..............................................................After>");
+		
 				if(aObj[13]!=null)
 				aVendorBillPayBean.setTranStatus((short)aObj[13]);
 				if(aObj[14]!=null)
@@ -1899,7 +1899,7 @@ l.			 * Table :veBillDetail
 		+ " IF(DATE(mo.TransactionDate)>'"+customDate+"',vb.BillAmount-(vb.AppliedAmount-(mLD.Amount+mLD.Discount)),vb.BillAmount-vb.AppliedAmount)AS balance"
 		+ " FROM veBill vb LEFT JOIN moLinkageDetail mLD ON vb.veBillID = mLD.veBillID LEFT JOIN moTransaction mo ON mLD.moTransactionID = mo.moTransactionID AND mo.Void <>1"
 		+ " LEFT OUTER JOIN rxMaster rx ON vb.rxMasterID = rx.rxMasterID LEFT OUTER JOIN vePO vp ON vb.vePOID = vp.vePOID"
-		+ " WHERE (vb.vePOID IS NULL OR vb.vePOID IS NOT NULL) and vb.TransactionStatus >0 or vb.TransactionStatus=-2";
+		+ " WHERE (vb.vePOID IS NULL OR vb.vePOID IS NOT NULL) and (vb.TransactionStatus >0 or vb.TransactionStatus=-2)";
 		         
 		if(searchData !=null && !searchData.equals("")){
 			aVendorBillsListQry+= "And  (vb.veBillID LIKE '%"+searchData+"%' OR PONumber LIKE '%"+searchData+"%' OR InvoiceNumber LIKE '%"+searchData+"%'" +
@@ -1917,18 +1917,18 @@ l.			 * Table :veBillDetail
 			aVendorBillsListQry+= " AND Date(BillDate) <= '"+formattedto+"' GROUP BY vb.veBillID HAVING (balance >0.01 OR balance < -0.01)";
 		}*/
 		
-		if(!startDate.equals("")&& !endDate.equals("")){
+		if((startDate!=null && !startDate.equals("")) && (endDate!=null && !endDate.equals(""))){
 			aVendorBillsListQry+= " AND Date(BillDate) >= '"+startDate +"' AND Date(BillDate) <= '"+endDate+"' GROUP BY vb.veBillID ";	}
-		else if(!startDate.equals("") && endDate.equals("")){
+		else if((startDate!=null && !startDate.equals(""))){
 			aVendorBillsListQry+= " AND Date(BillDate) >='"+startDate+"' GROUP BY vb.veBillID ";
-		}else if(!endDate.equals("") && startDate.equals("")){
+		}else if((endDate!=null && !endDate.equals(""))){
 			aVendorBillsListQry+= " AND Date(BillDate) <='"+endDate+"' GROUP BY vb.veBillID ";
 		}else{
 			aVendorBillsListQry+= " AND Date(BillDate) <= '"+formattedto+"' GROUP BY vb.veBillID ";
 		}
 				
 		String orderByIndex="";
-		String orderBy="DESC";
+		String orderBy="ASC";
 		
 		itsLogger.info("sortIndex::["+sortIndex+"]");
 		     
@@ -3859,11 +3859,16 @@ l.			 * Table :veBillDetail
 		
 	}
 
-	public String updatePrMaster(Integer veBillId) throws JobException {
+	public String updatePrMaster(Integer veBillId) throws JobException {/*
 		Session aVePOSession = itsSessionFactory.openSession();
 		Transaction aTransaction;
 		Transaction aTransaction1;
 		Transaction aTransaction2;
+		BigDecimal statusPurseOrder=BigDecimal.ZERO;
+		BigDecimal NoOfLineItems=new BigDecimal(0);
+		BigDecimal TotalAvgForInv=new BigDecimal(0);
+		
+		BigDecimal OldInventoryCount,t2;
 		try {
 			aTransaction2 = aVePOSession.beginTransaction();
 			aTransaction2.begin();
@@ -3877,7 +3882,7 @@ l.			 * Table :veBillDetail
 			aTransaction1.begin();
 			
 			List<Vebilldetail> aVebilldetail= getVeBillDetails(veBillId);
-			/*If comp==0 both are equal if comp==1 first value is greater if comp=-1 second value is greater*/
+			If comp==0 both are equal if comp==1 first value is greater if comp=-1 second value is greater
 			if(avebill!=null && comp==1){
 				int sizeVeBillDetail=aVebilldetail.size();
 				System.out.println("------------"+avebill.getFreightAmount());
@@ -3885,31 +3890,65 @@ l.			 * Table :veBillDetail
 				freightamount = new BigDecimal(fr_Amt.floatValue()/Float.parseFloat(""+sizeVeBillDetail));
 				System.out.println("------------"+freightamount);
 			}
-			for(Vebilldetail loopVebilldetail:aVebilldetail){
+			 
+			 //added by prasant for a vendor Invoice calculate the total lineItems for this vendorInvoice
+				for(Vebilldetail loopVebilldetail1:aVebilldetail){
+					NoOfLineItems=NoOfLineItems.add(loopVebilldetail1.getQuantityBilled());					
+				}
+			    TotalAvgForInv=(avebill.getBillAmount()).divide(NoOfLineItems,2,RoundingMode.HALF_UP);				
 				
-				BigDecimal quanti_billed=loopVebilldetail.getQuantityBilled();
+			
+			  for(Vebilldetail loopVebilldetail:aVebilldetail){
+				 
+				    statusPurseOrder=BigDecimal.ZERO;
+			    	BigDecimal quanti_billed=loopVebilldetail.getQuantityBilled();
+					//added by prasant kumar #629
+			    	if(loopVebilldetail.getVePodetailId()!=null)
+			    	 statusPurseOrder=getNumberOfProductReceived(loopVebilldetail.getVePodetailId());
 				
-				if(quanti_billed!=null && quanti_billed.compareTo(BigDecimal.ZERO)!=0) // if quatity is zero nothing to updated as per eric request
-				{
-					if(freightamount.compareTo(new BigDecimal(0))>0){
+			    	if(quanti_billed!=null && quanti_billed.compareTo(BigDecimal.ZERO)!=0) // if quatity is zero nothing to updated as per eric request
+			    	{
+				    	if(freightamount.compareTo(new BigDecimal(0))>0){
 						
 						//if(quanti_billed!=null && quanti_billed.compareTo(BigDecimal.ZERO)!=0)
 						eachprofreightamount=new BigDecimal(freightamount.floatValue()/quanti_billed.floatValue());
-						/*else
-						eachprofreightamount = BigDecimal.ZERO;*/
+						else
+						eachprofreightamount = BigDecimal.ZERO;
 					}
 					
 					BigDecimal productcost=loopVebilldetail.getUnitCost().multiply((loopVebilldetail.getPriceMultiplier()==null||loopVebilldetail.getPriceMultiplier().compareTo(BigDecimal.ZERO)==0)?new BigDecimal(1):loopVebilldetail.getPriceMultiplier()).add(eachprofreightamount).setScale(2,BigDecimal.ROUND_FLOOR);
 					aTransaction = aVePOSession.beginTransaction();
 					aTransaction.begin();
 					Prmaster objPrmaster = (Prmaster) aVePOSession.get(Prmaster.class,loopVebilldetail.getPrMasterId());
-					/*Velmurugan
+					Velmurugan
 					 * 31-07-2015
 					 * Regarding need to update only is inventory product
-					 * */
+					 * 
+					
+					//added by prasant #629
+					BigDecimal NewInventoryOnHand=new BigDecimal(0);
+					BigDecimal OldInventoryOnHand=new BigDecimal(0);
+					NewInventoryOnHand=NewInventoryOnHand.add(objPrmaster.getInventoryOnHand().setScale(2, BigDecimal.ROUND_FLOOR));
+					OldInventoryOnHand=OldInventoryOnHand.add(objPrmaster.getInventoryOnHand().setScale(2, BigDecimal.ROUND_FLOOR));
+					if (statusPurseOrder.compareTo(BigDecimal.ZERO)>0){
+						t2=objPrmaster.getInventoryOnHand().setScale(2, BigDecimal.ROUND_FLOOR);						
+						OldInventoryCount=t2.subtract(statusPurseOrder);
+				     	OldInventoryOnHand=OldInventoryCount;					
+					}
+					//
 					if(objPrmaster.getIsInventory()==1){
 						if(objPrmaster.getAverageCost()!=null && objPrmaster.getAverageCost().compareTo(new BigDecimal(0))>0){
-							productcost=productcost.add(objPrmaster.getAverageCost().setScale(2, BigDecimal.ROUND_FLOOR)).divide(new BigDecimal(2)).setScale(2, BigDecimal.ROUND_FLOOR);
+						//	productcost=productcost.add(objPrmaster.getAverageCost().setScale(2, BigDecimal.ROUND_FLOOR)).divide(new BigDecimal(2)).setScale(2, BigDecimal.ROUND_FLOOR);
+							//BigDecimal RcvItemTotalvalue=(((loopVebilldetail.getQuantityBilled().multiply(loopVebilldetail.getUnitCost()).multiply((loopVebilldetail.getPriceMultiplier()==null||loopVebilldetail.getPriceMultiplier().compareTo(BigDecimal.ZERO)==0)?new BigDecimal(1):loopVebilldetail.getPriceMultiplier())).add(eachprofreightamount).setScale(2,BigDecimal.ROUND_FLOOR)).divide(loopVebilldetail.getQuantityBilled(),2,RoundingMode.HALF_UP)).multiply(loopVebilldetail.getQuantityBilled());
+							BigDecimal RcvItemTotalvalue=TotalAvgForInv.multiply(loopVebilldetail.getQuantityBilled());
+							//BigDecimal RcvItemTotalvalue=aveill
+							System.out.println("========================================================================");
+							System.out.println("NewInventoryOnHand:->"+NewInventoryOnHand+"   OldInventoryOnHand:->"+OldInventoryOnHand+"RcvItemTotalvalue:->"+RcvItemTotalvalue);
+							System.out.println("========================================================================");	
+							if (NewInventoryOnHand.compareTo(BigDecimal.ZERO) !=0)
+				                productcost=(((objPrmaster.getAverageCost().setScale(2, BigDecimal.ROUND_FLOOR).multiply(OldInventoryOnHand)).add(RcvItemTotalvalue)).divide(NewInventoryOnHand,2,RoundingMode.HALF_UP));
+							else
+							    productcost=BigDecimal.ZERO;
 							objPrmaster.setAverageCost(productcost);
 						}else{
 							objPrmaster.setAverageCost(productcost.setScale(2, BigDecimal.ROUND_FLOOR));
@@ -3932,14 +3971,201 @@ l.			 * Table :veBillDetail
 			aVePOSession.close();
 		}
 		return "Success";
-	}
+	*/
+
+		Session aVePOSession = itsSessionFactory.openSession();
+		Transaction aTransaction;
+		Transaction aTransaction1;
+		Transaction aTransaction2;
+		BigDecimal statusPurseOrder=BigDecimal.ZERO;
+		BigDecimal NoOfLineItems=new BigDecimal(0);
+		BigDecimal TotalAvgForInv=new BigDecimal(0);
+		
+		BigDecimal OldInventoryCount,t1,t2;
+		try {
+			aTransaction2 = aVePOSession.beginTransaction();
+			aTransaction2.begin();
+			Vebill avebill=(Vebill) aVePOSession.get(Vebill.class,veBillId);
+			//Vepo objVepo= (Vepo) aVePOSession.get(Vepo.class,objVepodetail.getVePoid());
+			itsLogger.info("FreightAmount=="+avebill.getFreightAmount());
+			int comp=avebill.getFreightAmount().compareTo(new BigDecimal(0));
+			BigDecimal freightamount=new BigDecimal(0);
+			BigDecimal eachprofreightamount=new BigDecimal(0);
+			aTransaction1 = aVePOSession.beginTransaction();
+			aTransaction1.begin();
+			
+			List<Vebilldetail> aVebilldetail= getVeBillDetails(veBillId);
+			
+			/*If comp==0 both are equal if comp==1 first value is greater if comp=-1 second value is greater*/
+			if(avebill!=null && comp==1){
+				int sizeVeBillDetail=aVebilldetail.size();
+				System.out.println("------------"+avebill.getFreightAmount());
+				BigDecimal fr_Amt=avebill.getFreightAmount();
+				freightamount = new BigDecimal(fr_Amt.floatValue()/Float.parseFloat(""+sizeVeBillDetail));
+				System.out.println("------------"+freightamount);
+			}
+ 
+			 //added by prasant for a vendor Invoice calculate the total lineItems for this vendorInvoice
+				for(Vebilldetail loopVebilldetail1:aVebilldetail){
+					NoOfLineItems=NoOfLineItems.add(loopVebilldetail1.getQuantityBilled());					
+				}
+				//calculating the avg of each lineItems
+			    TotalAvgForInv=(avebill.getBillAmount()).divide(NoOfLineItems,2,RoundingMode.HALF_UP);				
+				//
+		     	for(Vebilldetail loopVebilldetail:aVebilldetail){
+		     		
+		     	statusPurseOrder=BigDecimal.ZERO;				
+				BigDecimal quanti_billed=loopVebilldetail.getQuantityBilled();	
+				
+
+				//added by prasant kumar #629
+				if(loopVebilldetail.getVePodetailId()!=null)				
+					statusPurseOrder=getNumberOfProductReceived(loopVebilldetail.getVePodetailId(),loopVebilldetail.getPrMasterId());
+			
+					
+					
+				if(quanti_billed!=null && quanti_billed.compareTo(BigDecimal.ZERO)!=0) // if quatity is zero nothing to updated as per eric request
+				{
+					if(freightamount.compareTo(new BigDecimal(0))>0){
+						
+						//if(quanti_billed!=null && quanti_billed.compareTo(BigDecimal.ZERO)!=0)
+						eachprofreightamount=new BigDecimal(freightamount.floatValue()/quanti_billed.floatValue());
+						/*else
+						eachprofreightamount = BigDecimal.ZERO;*/
+					}
+					
+					BigDecimal productcost=loopVebilldetail.getUnitCost().multiply((loopVebilldetail.getPriceMultiplier()==null||loopVebilldetail.getPriceMultiplier().compareTo(BigDecimal.ZERO)==0)?new BigDecimal(1):loopVebilldetail.getPriceMultiplier()).add(eachprofreightamount).setScale(2,BigDecimal.ROUND_FLOOR);
+					aTransaction = aVePOSession.beginTransaction();
+					aTransaction.begin();
+					Prmaster objPrmaster = (Prmaster) aVePOSession.get(Prmaster.class,loopVebilldetail.getPrMasterId());
+				
+					BigDecimal NewInventoryOnHand=objPrmaster.getInventoryOnHand().setScale(2, BigDecimal.ROUND_FLOOR);
+					BigDecimal OldInventoryOnHand=objPrmaster.getInventoryOnHand().setScale(2, BigDecimal.ROUND_FLOOR);
+					//NewInventoryOnHand=NewInventoryOnHand.add(objPrmaster.getInventoryOnHand().setScale(2, BigDecimal.ROUND_FLOOR));
+					//OldInventoryOnHand=OldInventoryOnHand.add(objPrmaster.getInventoryOnHand().setScale(2, BigDecimal.ROUND_FLOOR));
+					if (statusPurseOrder.compareTo(BigDecimal.ZERO)>0){
+						t2=objPrmaster.getInventoryOnHand().setScale(2, BigDecimal.ROUND_FLOOR);						
+						OldInventoryOnHand=t2.subtract(statusPurseOrder);				     					
+					}
+					//Regarding need to update only is inventory product
+					if(objPrmaster.getIsInventory()==1){
+						if(objPrmaster.getAverageCost()!=null && objPrmaster.getAverageCost().compareTo(new BigDecimal(0))>0){
+							//old inventory product avg calculate formula
+							//productcost=productcost.add(objPrmaster.getAverageCost().setScale(2, BigDecimal.ROUND_FLOOR)).divide(new BigDecimal(2)).setScale(2, BigDecimal.ROUND_FLOOR);
+							BigDecimal RcvItemTotalvalue=TotalAvgForInv.multiply(loopVebilldetail.getQuantityBilled());
+							System.out.println("========================================================================");
+							System.out.println("NewInventoryOnHand:->"+NewInventoryOnHand+"   OldInventoryOnHand:->"+OldInventoryOnHand+" TotalAvgForInv:"+TotalAvgForInv+"  RcvItemTotalvalue:->"+RcvItemTotalvalue);
+							System.out.println("========================================================================");	
+							if(NewInventoryOnHand.compareTo(BigDecimal.ZERO)!=0)
+				            productcost=((objPrmaster.getAverageCost().setScale(2, BigDecimal.ROUND_FLOOR).multiply(OldInventoryOnHand)).add(RcvItemTotalvalue)).divide(NewInventoryOnHand,2,RoundingMode.HALF_UP);
+							else
+								productcost= BigDecimal.ZERO;
+							
+							objPrmaster.setAverageCost(productcost);
+						}else{
+							objPrmaster.setAverageCost(productcost.setScale(2, BigDecimal.ROUND_FLOOR));
+						}
+					aVePOSession.update(objPrmaster);
+					}
+					aTransaction.commit();
+				}
+			}
+			
+			
+			
+		} catch (Exception e) {
+			itsLogger.error(e.getMessage(), e);
+			JobException aJobException = new JobException(e.getCause()
+					.getMessage(), e);
+			throw aJobException;
+		} finally {
+			aVePOSession.flush();
+			aVePOSession.close();
+		}
+		return "Success";
 	
+	
+	}
+	//added by prasant kumar #629
+		public BigDecimal getNumberOfProductReceived(Integer vePodetailId,Integer prMasterID)
+		{
+			
+			String aQry = "   SELECT quantityReceived FROM Vereceivedetail WHERE vePodetailId= " +vePodetailId +"and prMasterId= "+prMasterID;
+				Session aSession = null;
+			BigDecimal receicveItemCount=new BigDecimal(0);
+			
+			if(vePodetailId==null)
+			{
+				receicveItemCount=BigDecimal.ZERO;
+				return receicveItemCount;
+			}
+			List<BigDecimal> veRcvIDs = null;
+			try {
+				// Retrieve session from Hibernate
+				aSession = itsSessionFactory.openSession();
+				// Create a Hibernate query (HQL)
+				Query query = aSession.createQuery(aQry);
+				// Retrieve all
+				 veRcvIDs = query.list();
+				if(veRcvIDs.size() > 0){
+					System.out.println("Inventory Products are Received :"+veRcvIDs.get(0));
+					receicveItemCount=(veRcvIDs.get(0));		
+				}
+				
+			   } catch (Exception e) {
+				itsLogger.error(e.getMessage(), e);
+				//throw new JobException(e.getMessage(), e);
+			   } finally {
+				aSession.flush();
+				aSession.close();
+				aQry = null;
+			}
+			return receicveItemCount;
+		}
+		//added by prasant kumar #629
+		public Integer checkPurchaseOrderRecived(Integer  vePoID){
+			String aQry = "  SELECT veReceiveId FROM Vereceive WHERE vePoid = " +vePoID ;
+			Session aSession = null;
+			int Count=0;
+			if(vePoID==null)
+			{ Count=0;
+			return Count;
+			}
+			List<Integer> veRcvIDs = null;
+			try {
+				// Retrieve session from Hibernate
+				aSession = itsSessionFactory.openSession();
+				// Create a Hibernate query (HQL)
+				Query query = aSession.createQuery(aQry);
+				// Retrieve all
+				 veRcvIDs = query.list();
+				if(veRcvIDs.size() > 0){
+					Count=veRcvIDs.get(0);		
+				}
+				else{
+					Count=0;
+				}
+			} catch (Exception e) {
+				itsLogger.error(e.getMessage(), e);
+				//throw new JobException(e.getMessage(), e);
+			} finally {
+				aSession.flush();
+				aSession.close();
+				aQry = null;
+			}
+			return Count;
+		}
 	@Override
 	public String rollbackupdatePrMaster(Integer veBillId) throws JobException {
 		Session aVePOSession = itsSessionFactory.openSession();
 		Transaction aTransaction;
 		Transaction aTransaction1;
 		Transaction aTransaction2;
+		BigDecimal statusPurseOrder=BigDecimal.ZERO;
+		BigDecimal NoOfLineItems=new BigDecimal(0);
+		BigDecimal TotalAvgForInv=new BigDecimal(0);
+		BigDecimal OldInventoryCount,t1,t2;
+		
 		try {
 			aTransaction2 = aVePOSession.beginTransaction();
 			aTransaction2.begin();
@@ -3961,7 +4187,24 @@ l.			 * Table :veBillDetail
 				freightamount = new BigDecimal(fr_Amt.floatValue()/Float.parseFloat(""+sizeVeBillDetail));
 				System.out.println("------------"+freightamount);
 			}
+			
+			 //added by prasant for a vendor Invoice calculate the total lineItems for this vendorInvoice
+			for(Vebilldetail loopVebilldetail1:aVebilldetail){
+				
+				NoOfLineItems=NoOfLineItems.add(loopVebilldetail1.getQuantityBilled());					
+			}
+			//calculating the avg of each lineItems
+		    TotalAvgForInv=(avebill.getBillAmount()).divide(NoOfLineItems,2,RoundingMode.HALF_UP);				
+			//
+			
 			for(Vebilldetail loopVebilldetail:aVebilldetail){
+				
+				
+				//added by prasant kumar #629
+				if(loopVebilldetail.getVePodetailId()!=null)				
+					statusPurseOrder=getNumberOfProductReceived(loopVebilldetail.getVePodetailId(),loopVebilldetail.getPrMasterId());
+				
+				System.out.println("No of RCV Items:>>.>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"+statusPurseOrder);
 				itsLogger.info("PriceMultiplier=="+loopVebilldetail.getPriceMultiplier());
 				if(freightamount.compareTo(new BigDecimal(0))>0){
 					BigDecimal quanti_billed=loopVebilldetail.getQuantityBilled();
@@ -3982,14 +4225,34 @@ l.			 * Table :veBillDetail
 				 * 31-07-2015
 				 * Regarding need to update only is inventory product
 				 * */
+				
+				BigDecimal NewInventoryOnHand=objPrmaster.getInventoryOnHand().setScale(2, BigDecimal.ROUND_FLOOR);
+				BigDecimal OldInventoryOnHand=objPrmaster.getInventoryOnHand().setScale(2, BigDecimal.ROUND_FLOOR);
+				//NewInventoryOnHand=NewInventoryOnHand.add(objPrmaster.getInventoryOnHand().setScale(2, BigDecimal.ROUND_FLOOR));
+				//OldInventoryOnHand=OldInventoryOnHand.add(objPrmaster.getInventoryOnHand().setScale(2, BigDecimal.ROUND_FLOOR));
+				if (statusPurseOrder.compareTo(BigDecimal.ZERO)>0){
+					t2=objPrmaster.getInventoryOnHand().setScale(2, BigDecimal.ROUND_FLOOR);						
+					OldInventoryCount=t2.subtract(statusPurseOrder);
+			     	OldInventoryOnHand=OldInventoryCount;					
+				}
 				if(objPrmaster.getIsInventory()==1){
 				if(objPrmaster.getAverageCost()!=null && objPrmaster.getAverageCost().compareTo(new BigDecimal(0))>0){
-					oldavgcost = (objPrmaster.getAverageCost().multiply(new BigDecimal(2)).setScale(2, BigDecimal.ROUND_FLOOR));
-					System.out.println("====>>>"+oldavgcost.subtract(productcost));
-					objPrmaster.setAverageCost(oldavgcost.subtract(productcost));
-				}
-				aVePOSession.update(objPrmaster);
-				aTransaction.commit();
+					//productcost=productcost.add(objPrmaster.getAverageCost().setScale(2, BigDecimal.ROUND_FLOOR)).divide(new BigDecimal(2)).setScale(2, BigDecimal.ROUND_FLOOR);
+					BigDecimal RcvItemTotalvalue=TotalAvgForInv.multiply(loopVebilldetail.getQuantityBilled());
+					System.out.println("========================================================================");
+					System.out.println("RollBackNewInventoryOnHand:->"+NewInventoryOnHand+"  RollBackOldInventoryOnHand:->"+OldInventoryOnHand+" RollBackTotalAvgForInv:"+TotalAvgForInv+"  RollBackRcvItemTotalvalue:->"+RcvItemTotalvalue);
+					System.out.println("========================================================================");	
+					if(NewInventoryOnHand.compareTo(BigDecimal.ZERO)!=0)
+					if(OldInventoryOnHand.compareTo(BigDecimal.ZERO)!=0)
+		            productcost=((objPrmaster.getAverageCost().setScale(2, BigDecimal.ROUND_FLOOR).multiply(NewInventoryOnHand)).subtract(RcvItemTotalvalue)).divide(OldInventoryOnHand,2,RoundingMode.HALF_UP);
+			           // ((objPrmaster.getAverageCost().setScale(2, BigDecimal.ROUND_FLOOR).multiply(OldInventoryOnHand)).add(RcvItemTotalvalue)).divide(NewInventoryOnHand,2,RoundingMode.HALF_UP);
+				   else
+						productcost= BigDecimal.ZERO;
+					
+					objPrmaster.setAverageCost(productcost);
+					}
+				   aVePOSession.update(objPrmaster);
+				   aTransaction.commit();
 				}
 			}
 			
@@ -5233,7 +5496,7 @@ l.			 * Table :veBillDetail
 			aTransaction.begin();
 			
 			aSession.createSQLQuery("insert into veBillHistory (vePOID,veBillID,vePODetailID,quantityInvoiced,invoiceAmount,entryDate,enteredBy)"
-					+ " SELECT vePOID,"+veBillid+",vePODetailID,QuantityOrdered,QuantityBilled AS invoiceAmt, NOW() as entryDate,"+userID+"  FROM vePODetail  WHERE vePOID = '"+vepoID+"'").executeUpdate();
+     + " SELECT "+vepoID+",veBillID,vePODetailID,QuantityBilled AS QuantityInvoiced,ROUND(QuantityBilled*UnitCost*PriceMultiplier,4) AS QuantityBilled, NOW() as entryDate,"+userID+"  FROM veBillDetail  WHERE veBillID = '"+veBillid+"' AND vePODetailID IS NOT NULL").executeUpdate();
 			aTransaction.commit();
 			updatePrMaster(veBillid);
 			
@@ -5458,5 +5721,74 @@ l.			 * Table :veBillDetail
 			aQry = null;
 		}
 		return status;
+	}
+	public Boolean checkStausNonInventory(Integer prMasterId) {
+
+		String aQry = "	SELECT isInventory FROM Prmaster WHERE prMasterId= " +prMasterId ;
+		Session aSession = null;
+		boolean status=false;
+		List<Byte> veRcvIDs = null;
+		try {
+			// Retrieve session from Hibernate
+			aSession = itsSessionFactory.openSession();
+			// Create a Hibernate query (HQL)
+			Query query = aSession.createQuery(aQry);
+			// Retrieve all
+			 veRcvIDs = query.list();
+			  //Iterator<Integer> i=veRcvIDs
+			 if(veRcvIDs.size()>0)
+			 {
+				 if(veRcvIDs.get(0).intValue()==1)
+					 status=true;
+			 }
+			 
+			
+		} catch (Exception e) {
+			itsLogger.error(e.getMessage(), e);
+			//throw new JobException(e.getMessage(), e);
+		} finally {
+			aSession.flush();
+			aSession.close();
+			aQry = null;
+			
+		}
+		return status;
+	
+	}
+
+
+
+	@Override
+	public Boolean checkStausForAllNonInventory(Integer vePoid) {
+
+		String aQry = " SELECT prMasterId FROM Vepodetail WHERE vePoid= " +vePoid ;
+		Session aSession = null;
+		boolean status=false;
+		List<Integer> prMasterIDs = null;
+		try {
+			// Retrieve session from Hibernate
+			aSession = itsSessionFactory.openSession();
+			// Create a Hibernate query (HQL)
+			Query query = aSession.createQuery(aQry);
+			// Retrieve all
+			prMasterIDs = query.list();
+	for(Integer prmasterID:prMasterIDs)
+	{
+		status=checkStausNonInventory(prmasterID);
+		if (status==true)
+			break;
+	}
+		
+			
+		} catch (Exception e) {
+			itsLogger.error(e.getMessage(), e);
+			//throw new JobException(e.getMessage(), e);
+		} finally {
+			aSession.flush();
+			aSession.close();
+			aQry = null;
+		}
+		return status;
+	
 	}
 }

@@ -24,6 +24,7 @@
 						}
 	</style>
 </head>
+
 <body>
 
 	<div style="background-color: #FAFAFA">
@@ -91,6 +92,7 @@
 	<div style="display: none;">
 		<input type="text" id="inventoryID" value="${requestScope.userDetails.inventoryperpage}">
 		<input type="text" id="key" value="${requestScope.key}">
+		<input type="text" id="NsearchID" value="2" >
 	</div>
 	<script type="text/javascript" src="./../resources/scripts/turbo_scripts/inventory.js"></script>
 </body>

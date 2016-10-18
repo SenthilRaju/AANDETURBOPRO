@@ -2,7 +2,7 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Vendor_PurchaseOrder" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="1b89ec97-40f5-4b62-883f-860b3ad19f78">
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="116"/>
+	<property name="ireport.y" value="176"/>
 	<parameter name="PONUMBER" class="java.lang.String"/>
 	<parameter name="VENDORNAME" class="java.lang.String"/>
 	<parameter name="ADDRESS1" class="java.lang.String"/>
@@ -38,6 +38,7 @@
 	<parameter name="releaseType" class="java.lang.Boolean">
 		<defaultValueExpression><![CDATA[new Boolean(false)]]></defaultValueExpression>
 	</parameter>
+	<parameter name="printJobName" class="java.lang.Integer"/>
 	<queryString>
 		<![CDATA[SELECT(SELECT headertext FROM tsUserSetting) AS header,(SELECT companylogo FROM tsUserSetting) AS logo,(SELECT Terms FROM tsUserSetting)AS terms,ve.vePODetailID, ve.vePOID,  ve.prMasterID,  ve.Description, ve.QuantityOrdered, ve.Taxable,  ve.UnitCost, ve.PriceMultiplier, (ve.UnitCost*(IF(ve.PriceMultiplier=0.0,1,ve.PriceMultiplier))) AS netea,(ve.UnitCost*(IF(ve.PriceMultiplier=0.0,1,ve.PriceMultiplier))*ve.QuantityOrdered) AS totalvalue,ve.posistion, pr.ItemCode,  vepo.TaxTotal,  ve.Note,  ve.QuantityReceived, vepo.wantedOnOrBefore, vepo.CustomerPONumber  FROM vePODetail ve LEFT JOIN prMaster pr ON ve.prMasterID = pr.prMasterID RIGHT JOIN vePO vepo ON vepo.vePOID = ve.vePOID WHERE ve.vePOID = $P{VEPOID} ORDER BY ve.posistion]]>
 	</queryString>
@@ -256,12 +257,13 @@
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement x="336" y="258" width="211" height="18" isPrintWhenDetailOverflows="true" uuid="bd686195-e4ec-4561-9d47-c031ddbc39e6"/>
-				<textElement markup="html"/>
-				<textFieldExpression><![CDATA[( $P{SHIPTO_ADDRESS1}!=null && !$P{SHIPTO_ADDRESS1}.equals("") ? $P{SHIPTO_ADDRESS1}+"<br>" : "" )
+				<textElement verticalAlignment="Middle" markup="html"/>
+				<textFieldExpression><![CDATA[($P{printJobName}.intValue()==1)?
+("<b>c/o:</b>"+($P{TAG})):(( $P{SHIPTO_ADDRESS1}!=null && !$P{SHIPTO_ADDRESS1}.equals("") ? $P{SHIPTO_ADDRESS1}+"<br>" : "" )
 +( $P{SHIPTO_ADDRESS2}!=null && !$P{SHIPTO_ADDRESS2}.equals("") ? $P{SHIPTO_ADDRESS2}+"<br>" : "" )
 +( $P{SHIPTO_CITY}!=null && !$P{SHIPTO_CITY}.equals("") ? $P{SHIPTO_CITY}+", " : "" )
 +( $P{SHIPTO_STATE}!=null && !$P{SHIPTO_STATE}.equals("") ? $P{SHIPTO_STATE}+" " : "" )
-+( $P{SHIPTO_ZIP}!=null && !$P{SHIPTO_ZIP}.equals("") ? $P{SHIPTO_ZIP} : "" )]]></textFieldExpression>
++( $P{SHIPTO_ZIP}!=null && !$P{SHIPTO_ZIP}.equals("") ? $P{SHIPTO_ZIP} : "" ))]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement x="373" y="114" width="134" height="16" isPrintWhenDetailOverflows="true" uuid="e4d654fe-c4f4-42a0-a534-fea64435213f"/>
@@ -323,6 +325,16 @@
 				<reportElement x="373" y="183" width="168" height="16" uuid="57bff3da-cdff-44a1-b88d-53193e6257d9"/>
 				<textFieldExpression><![CDATA[$F{CustomerPONumber}]]></textFieldExpression>
 			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="336" y="276" width="211" height="18" isPrintWhenDetailOverflows="true" uuid="f723e737-71a7-4d9c-bfdd-1c466ef3d1bb"/>
+				<textElement markup="html"/>
+				<textFieldExpression><![CDATA[($P{printJobName}.intValue()==1)?
+( ($P{SHIPTO_ADDRESS1}!=null && !$P{SHIPTO_ADDRESS1}.equals("") ? $P{SHIPTO_ADDRESS1}+"<br>" : "" )
++( $P{SHIPTO_ADDRESS2}!=null && !$P{SHIPTO_ADDRESS2}.equals("") ? $P{SHIPTO_ADDRESS2}+"<br>" : "" )
++( $P{SHIPTO_CITY}!=null && !$P{SHIPTO_CITY}.equals("") ? $P{SHIPTO_CITY}+", " : "" )
++( $P{SHIPTO_STATE}!=null && !$P{SHIPTO_STATE}.equals("") ? $P{SHIPTO_STATE}+" " : "" )
++( $P{SHIPTO_ZIP}!=null && !$P{SHIPTO_ZIP}.equals("") ? $P{SHIPTO_ZIP} : "" )):""]]></textFieldExpression>
+			</textField>
 		</band>
 	</title>
 	<pageHeader>
@@ -341,50 +353,50 @@
 	<columnHeader>
 		<band height="20" splitType="Stretch">
 			<staticText>
-				<reportElement x="0" y="0" width="92" height="20" uuid="721a4b52-8695-4b4a-a2c9-5197784cf627"/>
-				<textElement>
+				<reportElement x="0" y="0" width="69" height="20" uuid="721a4b52-8695-4b4a-a2c9-5197784cf627"/>
+				<textElement textAlignment="Center" verticalAlignment="Top">
 					<font size="10" isBold="true" isUnderline="false"/>
 				</textElement>
 				<text><![CDATA[ITEM]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="92" y="0" width="174" height="20" uuid="f1fa941c-a6a0-43d1-a008-2bd5e7846368"/>
-				<textElement>
+				<reportElement x="69" y="0" width="220" height="20" uuid="f1fa941c-a6a0-43d1-a008-2bd5e7846368"/>
+				<textElement verticalAlignment="Top">
 					<font size="10" isBold="true" isUnderline="false"/>
 				</textElement>
 				<text><![CDATA[DESCRIPTION]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="267" y="0" width="39" height="20" uuid="dc6c814c-5ecd-4408-a1a0-baaf39b7b70b"/>
-				<textElement textAlignment="Right">
+				<reportElement x="289" y="0" width="43" height="20" uuid="dc6c814c-5ecd-4408-a1a0-baaf39b7b70b"/>
+				<textElement textAlignment="Center">
 					<font size="10" isBold="true" isUnderline="false"/>
 				</textElement>
 				<text><![CDATA[QTY]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="306" y="0" width="63" height="20" uuid="36962515-9208-4d74-ac37-ea537c4663fe"/>
-				<textElement textAlignment="Right">
+				<reportElement x="332" y="0" width="53" height="20" uuid="36962515-9208-4d74-ac37-ea537c4663fe"/>
+				<textElement textAlignment="Center">
 					<font size="10" isBold="true" isUnderline="false" isStrikeThrough="false"/>
 				</textElement>
 				<text><![CDATA[LIST]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="369" y="0" width="48" height="20" uuid="2b72b757-1f8a-48e3-90ee-65b8f44efdc7"/>
-				<textElement textAlignment="Right">
+				<reportElement x="385" y="0" width="51" height="20" uuid="2b72b757-1f8a-48e3-90ee-65b8f44efdc7"/>
+				<textElement textAlignment="Center">
 					<font size="10" isBold="true" isUnderline="false"/>
 				</textElement>
 				<text><![CDATA[MULT]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="417" y="0" width="76" height="20" uuid="aba53db6-cd2c-455d-9a94-f20dccda3b40"/>
-				<textElement textAlignment="Right">
+				<reportElement x="436" y="0" width="57" height="20" uuid="aba53db6-cd2c-455d-9a94-f20dccda3b40"/>
+				<textElement textAlignment="Center">
 					<font size="10" isBold="true" isUnderline="false"/>
 				</textElement>
 				<text><![CDATA[ NETEA]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="493" y="0" width="62" height="20" uuid="b0ad1acd-2569-4220-a7d1-79033d7f1977"/>
-				<textElement textAlignment="Right">
+				<textElement textAlignment="Center">
 					<font size="10" isBold="true" isItalic="false" isUnderline="false"/>
 				</textElement>
 				<text><![CDATA[TOTAL]]></text>
@@ -394,36 +406,36 @@
 	<detail>
 		<band height="18" splitType="Stretch">
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement x="0" y="0" width="92" height="18" isPrintWhenDetailOverflows="true" uuid="17f4798f-a24c-4729-aa70-b5da2ea61cf0"/>
-				<textElement>
-					<font size="9"/>
+				<reportElement x="0" y="0" width="69" height="18" isPrintWhenDetailOverflows="true" uuid="17f4798f-a24c-4729-aa70-b5da2ea61cf0"/>
+				<textElement textAlignment="Center" verticalAlignment="Bottom">
+					<font size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{ItemCode}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement x="92" y="0" width="174" height="18" isPrintWhenDetailOverflows="true" uuid="ed2af979-d4af-43e2-8e14-a63ab68f6e06"/>
-				<textElement>
-					<font size="9"/>
+				<reportElement x="69" y="0" width="220" height="18" isPrintWhenDetailOverflows="true" uuid="ed2af979-d4af-43e2-8e14-a63ab68f6e06"/>
+				<textElement verticalAlignment="Bottom">
+					<font size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{Description}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" pattern=" ###0.####" isBlankWhenNull="true">
-				<reportElement x="267" y="0" width="39" height="18" isPrintWhenDetailOverflows="true" uuid="60e451d4-a8bf-42ca-b734-5516cffea7c4"/>
-				<textElement textAlignment="Right">
+				<reportElement x="289" y="0" width="45" height="18" isPrintWhenDetailOverflows="true" uuid="60e451d4-a8bf-42ca-b734-5516cffea7c4"/>
+				<textElement textAlignment="Center" verticalAlignment="Bottom">
 					<font size="9"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{QuantityOrdered}.setScale( 2,RoundingMode.FLOOR )]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" pattern="###0.0000" isBlankWhenNull="true">
-				<reportElement x="369" y="0" width="48" height="18" isPrintWhenDetailOverflows="true" uuid="bad6a8ec-c331-4c63-afb7-6114c6b34d4c"/>
-				<textElement textAlignment="Right">
+				<reportElement x="385" y="0" width="51" height="18" isPrintWhenDetailOverflows="true" uuid="bad6a8ec-c331-4c63-afb7-6114c6b34d4c"/>
+				<textElement textAlignment="Center" verticalAlignment="Bottom">
 					<font size="9"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{PriceMultiplier}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" pattern="$ #,##0.00" isBlankWhenNull="true">
-				<reportElement x="417" y="0" width="76" height="18" isPrintWhenDetailOverflows="true" uuid="ca27dcbc-9790-43ff-93e8-cabac54c778d"/>
-				<textElement textAlignment="Right">
+				<reportElement x="436" y="0" width="57" height="18" isPrintWhenDetailOverflows="true" uuid="ca27dcbc-9790-43ff-93e8-cabac54c778d"/>
+				<textElement textAlignment="Center" verticalAlignment="Bottom">
 					<font size="9"/>
 				</textElement>
 				<textFieldExpression><![CDATA[( $F{UnitCost}==null ? BigDecimal.ZERO : $F{UnitCost}.setScale( 2, RoundingMode.FLOOR ) )
@@ -432,15 +444,15 @@
 )]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" pattern="$ #,##0.00" isBlankWhenNull="true">
-				<reportElement x="306" y="0" width="63" height="18" isPrintWhenDetailOverflows="true" uuid="9b8a2c79-10ce-435c-9a89-1178744232ac"/>
-				<textElement textAlignment="Right">
+				<reportElement x="332" y="0" width="53" height="18" isPrintWhenDetailOverflows="true" uuid="9b8a2c79-10ce-435c-9a89-1178744232ac"/>
+				<textElement textAlignment="Center" verticalAlignment="Bottom">
 					<font size="9"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{UnitCost}.setScale( 2, RoundingMode.FLOOR )]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" pattern="$ #,##0.00" isBlankWhenNull="true">
 				<reportElement x="493" y="0" width="62" height="18" isPrintWhenDetailOverflows="true" uuid="e6d1eb76-9207-4e83-bd23-ac0ba33bc752"/>
-				<textElement textAlignment="Right">
+				<textElement textAlignment="Center" verticalAlignment="Bottom">
 					<font size="9"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$V{totaleachvalue}.setScale( 2, RoundingMode.FLOOR )]]></textFieldExpression>
@@ -448,7 +460,7 @@
 		</band>
 		<band height="15">
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement x="92" y="0" width="174" height="15" isRemoveLineWhenBlank="true" isPrintWhenDetailOverflows="true" uuid="ca396ccf-143d-489b-a300-aa82f752f1b2"/>
+				<reportElement x="69" y="0" width="197" height="15" isRemoveLineWhenBlank="true" isPrintWhenDetailOverflows="true" uuid="ca396ccf-143d-489b-a300-aa82f752f1b2"/>
 				<textElement markup="html">
 					<font size="9"/>
 					<paragraph rightIndent="5"/>

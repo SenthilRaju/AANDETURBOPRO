@@ -9,7 +9,7 @@ var selectedLineItemGrid;
 var commission_PO_grid_form;
 var Purchase_lines_form;
 var POlineItemgridLoad=true;
-
+var deletePOLineDetailID=new Array();
 function loadEditPOSplitCommissionList(joMasterID,joReleaseID){
 	createtpusage('Drop Ship-Release Tab','View Split-Commission','Info','Job,Release Tab,Drop Ship Split Commission ,JoReleaseId:'+$("#jobreleasehiddenId").val());
 	$('#EditPoSplitCommissionGrid').jqGrid('GridUnload');
@@ -302,7 +302,7 @@ function loadEditPOSplitCommissionList(joMasterID,joReleaseID){
 }
 function loadLinesItemGrid() {
 
-	var schgrid='<table id="lineItemGrid"></table><div id="lineItemPager"></div>';	
+	var schgrid='<table id="lineItemGrid"></table><div id="lineItemPager" style="display:none;"></div>';	
 	$('#jqgridLine').empty();
 	$('#jqgridLine').append(schgrid);
 	grid = $("#lineItemGrid"),
@@ -333,7 +333,7 @@ function loadLinesItemGrid() {
 								dataInit: function (elem) {
 		            $(elem).autocomplete({
 		                source: 'jobtabs3/productCodeWithNameList',
-		                minLength: 1,
+		                minLength: 1,timeout :1000,autoFocus: true,
 		                select: function (event, ui) {
 		                	var IncTaxOnPOAndInvoices=getSysvariableStatusBasedOnVariableName('IncTaxOnPOAndInvoices');
 		                	var aSelectedRowId = $("#lineItemGrid").jqGrid('getGridParam', 'selrow');
@@ -393,8 +393,8 @@ function loadLinesItemGrid() {
 													}
 											
 											}); 												
-											$("#new_row_description").focus();
-											$("#"+aSelectedRowId+"_description").focus();
+											$("#new_row_quantityOrdered").focus();
+//											$("#"+aSelectedRowId+"_description").focus();
 										}	
 									});
 																		
@@ -404,52 +404,341 @@ function loadLinesItemGrid() {
 		                }
 		            });
 		      },dataEvents: [
-			       			  { type: 'focus', data: { i: 7 }, fn: function(e) { e.target.select(); } },
-			    			  { type: 'click', data: { i: 7 }, fn: function(e) { e.target.select(); } }
-			    			  ]
+	   		       			  { type: 'focus', data: { i: 7 }, fn: function(e) {
+	     		       				var rowobji=$(e.target).closest('tr.jqgrow');
+	     			    			 var textboxid=rowobji.attr('id');
+	     			    			poLines_selectRow=textboxid;
+	     			    			  		jQuery("#lineItemGrid").jqGrid('setSelection',poLines_selectRow, true);
+	     		       				  e.target.select(); 
+
+	     		       			  } },
+	     		    			  { type: 'click', data: { i: 7 }, fn: function(e) { 
+	     		    				  var rowobji=$(e.target).closest('tr.jqgrow');
+	     		    				  var textboxid=rowobji.attr('id');
+	     		    				poLines_selectRow=textboxid;
+	     				    		  jQuery("#lineItemGrid").jqGrid('setSelection',poLines_selectRow, true);
+	     		    				  e.target.select();
+	     		    				//  changePosition(poLines_selectRow);
+	     		    			  }
+	     		    			   },
+	     		    			  { type: 'change', data: { i: 7 }, fn: function(e) {
+	     		    			  var rowobji=$(e.target).closest('tr.jqgrow');
+	     			    		  var textboxid=rowobji.attr('id');
+	     			    		poLines_selectRow=textboxid;
+	     			    			jQuery("#lineItemGrid").jqGrid('setSelection',poLines_selectRow, true);
+	     			    			e.target.select();
+	     		    				//changePosition(poLines_selectRow);
+	     		    			  } },
+	   		    			  ]
 					},editrules:{edithidden:false,required: true}},
-			{name:'inLineNoteImage', index:'inLineNoteImage', align:'center', width:10,hidden:false,editable:false,formatter: inlineNoteImageFormater},
+			{name:'inLineNoteImage', index:'inLineNoteImage', align:'center', width:10,hidden:false,editable:false,formatter: POinlineNoteImage},
            	{name:'description', index:'description', align:'left', width:130, editable:true,hidden:false, edittype:'text', editoptions:{size:40,maxlength:50,
-           		dataEvents: [
-    		       			  { type: 'focus', data: { i: 7 }, fn: function(e) { e.target.select(); } },
-    		    			  { type: 'click', data: { i: 7 }, fn: function(e) { e.target.select(); } }
-    		    			  ]},editrules:{edithidden:false},  
+           		dataEvents:  [
+       		       			  { type: 'focus', data: { i: 7 }, fn: function(e) {
+         		       				var rowobji=$(e.target).closest('tr.jqgrow');
+         			    			 var textboxid=rowobji.attr('id');
+         			    			poLines_selectRow=textboxid;
+         			    			  		jQuery("#lineItemGrid").jqGrid('setSelection',poLines_selectRow, true);
+         		       				  e.target.select(); 
+
+         		       			  } },
+         		    			  { type: 'click', data: { i: 7 }, fn: function(e) { 
+         		    				  var rowobji=$(e.target).closest('tr.jqgrow');
+         		    				  var textboxid=rowobji.attr('id');
+         		    				poLines_selectRow=textboxid;
+         				    		  jQuery("#lineItemGrid").jqGrid('setSelection',poLines_selectRow, true);
+         		    				  e.target.select();
+         		    				//  changePosition(poLines_selectRow);
+         		    			  }
+         		    			   },
+         		    			  { type: 'change', data: { i: 7 }, fn: function(e) {
+         		    			  var rowobji=$(e.target).closest('tr.jqgrow');
+         			    		  var textboxid=rowobji.attr('id');
+         			    		poLines_selectRow=textboxid;
+         			    			jQuery("#lineItemGrid").jqGrid('setSelection',poLines_selectRow, true);
+         			    			e.target.select();
+         		    				//changePosition(poLines_selectRow);
+         		    			  } },
+         	                        {
+         		                         type: 'keypress',
+         		                         fn: function(e) {
+         		                        	 var key = e.which;
+         		                    		 if(key == 13)  // the enter key code
+         		                    		  {
+         		                    			 searchPrMasterId=null;
+         		                 			     searchProduct=null;
+         		                    			// CalculatesoLinegrideditrowvalues(poLines_selectRow);
+         		                    			 $("#lineItemGrid_ilsave").trigger("click");
+         		                 			    $( "#lineItemGrid_iladd" ).trigger( "click" );
+         		                    		    return false;  
+         		                    		  }
+         		                         }
+         		                        }
+         		    			  ]},editrules:{edithidden:false},  
 				cellattr: function (rowId, tv, rawObject, cm, rdata)	 {return 'style="white-space: normal" ';}},
 			{name:'notes', index:'notes', align:'right', width:50,hidden:true, editable:true, editoptions:{size:15, alignText:'right'},editrules:{edithidden:false}},
 			{name:'notesdesc', index:'notesdesc', align:'right', width:50,hidden:true, editable:true, editoptions:{size:15, alignText:'right'},editrules:{edithidden:false}},
 			{name:'quantityOrdered', index:'quantityOrdered', align:'center', width:20,hidden:false, editable:true, editoptions:{size:5, alignText:'left',maxlength:7,decimalPlaces: 2,
-				dataEvents: [
-   		       			  { type: 'focus', data: { i: 7 }, fn: function(e) { e.target.select(); } },
-   		    			  { type: 'click', data: { i: 7 }, fn: function(e) { e.target.select(); } }
-   		    			  ]},formatter:callFloorFigureMethod,editrules:{number:true,required: true}},
+				dataEvents:  [
+	   		       			  { type: 'focus', data: { i: 7 }, fn: function(e) {
+	     		       				var rowobji=$(e.target).closest('tr.jqgrow');
+	     			    			 var textboxid=rowobji.attr('id');
+	     			    			poLines_selectRow=textboxid;
+	     			    			  		jQuery("#lineItemGrid").jqGrid('setSelection',poLines_selectRow, true);
+	     		       				  e.target.select(); 
+
+	     		       			  } },
+	     		    			  { type: 'click', data: { i: 7 }, fn: function(e) { 
+	     		    				  var rowobji=$(e.target).closest('tr.jqgrow');
+	     		    				  var textboxid=rowobji.attr('id');
+	     		    				poLines_selectRow=textboxid;
+	     				    		  jQuery("#lineItemGrid").jqGrid('setSelection',poLines_selectRow, true);
+	     		    				  e.target.select();
+	     		    				//  changePosition(poLines_selectRow);
+	     		    			  }
+	     		    			   },
+	     		    			  { type: 'change', data: { i: 7 }, fn: function(e) {
+	     		    			  var rowobji=$(e.target).closest('tr.jqgrow');
+	     			    		  var textboxid=rowobji.attr('id');
+	     			    		poLines_selectRow=textboxid;
+	     			    			jQuery("#lineItemGrid").jqGrid('setSelection',poLines_selectRow, true);
+	     			    			e.target.select();
+	     		    				//changePosition(poLines_selectRow);
+	     		    			  } },
+	     	                        {
+	     		                         type: 'keypress',
+	     		                         fn: function(e) {
+	     		                        	 var key = e.which;
+	     		                    		 if(key == 13)  // the enter key code
+	     		                    		  {
+	     		                    			 searchPrMasterId=null;
+	     		                 			     searchProduct=null;
+	     		                    			// CalculatesoLinegrideditrowvalues(poLines_selectRow);
+	     		                    			 $("#lineItemGrid_ilsave").trigger("click");
+	     		                 			    $( "#lineItemGrid_iladd" ).trigger( "click" );
+	     		                    		    return false;  
+	     		                    		  }
+	     		                         }
+	     		                        }
+	     		    			  ]},formatter:callFloorFigureMethod,editrules:{number:true,required: true}},
 			{name:'quantityReceived', index:'quantityReceived', align:'center', width:40,hidden:true, editable:false, editoptions:{size:5, alignText:'right',
-				dataEvents: [
-   		       			  { type: 'focus', data: { i: 7 }, fn: function(e) { e.target.select(); } },
-   		    			  { type: 'click', data: { i: 7 }, fn: function(e) { e.target.select(); } }
-   		    			  ]},editrules:{edithidden:true}},
+				dataEvents:  [
+	   		       			  { type: 'focus', data: { i: 7 }, fn: function(e) {
+	     		       				var rowobji=$(e.target).closest('tr.jqgrow');
+	     			    			 var textboxid=rowobji.attr('id');
+	     			    			poLines_selectRow=textboxid;
+	     			    			  		jQuery("#lineItemGrid").jqGrid('setSelection',poLines_selectRow, true);
+	     		       				  e.target.select(); 
+
+	     		       			  } },
+	     		    			  { type: 'click', data: { i: 7 }, fn: function(e) { 
+	     		    				  var rowobji=$(e.target).closest('tr.jqgrow');
+	     		    				  var textboxid=rowobji.attr('id');
+	     		    				poLines_selectRow=textboxid;
+	     				    		  jQuery("#lineItemGrid").jqGrid('setSelection',poLines_selectRow, true);
+	     		    				  e.target.select();
+	     		    				//  changePosition(poLines_selectRow);
+	     		    			  }
+	     		    			   },
+	     		    			  { type: 'change', data: { i: 7 }, fn: function(e) {
+	     		    			  var rowobji=$(e.target).closest('tr.jqgrow');
+	     			    		  var textboxid=rowobji.attr('id');
+	     			    		poLines_selectRow=textboxid;
+	     			    			jQuery("#lineItemGrid").jqGrid('setSelection',poLines_selectRow, true);
+	     			    			e.target.select();
+	     		    				//changePosition(poLines_selectRow);
+	     		    			  } },
+	     	                        {
+	     		                         type: 'keypress',
+	     		                         fn: function(e) {
+	     		                        	 var key = e.which;
+	     		                    		 if(key == 13)  // the enter key code
+	     		                    		  {
+	     		                    			 searchPrMasterId=null;
+	     		                 			     searchProduct=null;
+	     		                    			// CalculatesoLinegrideditrowvalues(poLines_selectRow);
+	     		                    			 $("#lineItemGrid_ilsave").trigger("click");
+	     		                 			    $( "#lineItemGrid_iladd" ).trigger( "click" );
+	     		                    		    return false;  
+	     		                    		  }
+	     		                         }
+	     		                        }
+	     		    			  ]},editrules:{edithidden:true}},
 			{name:'invoicedAmount', index:'invoicedAmount', align:'center', width:40,hidden:true, editable:false, editoptions:{size:5, alignText:'right',
 				dataEvents: [
-   		       			  { type: 'focus', data: { i: 7 }, fn: function(e) { e.target.select(); } },
-   		    			  { type: 'click', data: { i: 7 }, fn: function(e) { e.target.select(); } }
-   		    			  ]},editrules:{edithidden:true}},
+	   		       			  { type: 'focus', data: { i: 7 }, fn: function(e) {
+	     		       				var rowobji=$(e.target).closest('tr.jqgrow');
+	     			    			 var textboxid=rowobji.attr('id');
+	     			    			poLines_selectRow=textboxid;
+	     			    			  		jQuery("#lineItemGrid").jqGrid('setSelection',poLines_selectRow, true);
+	     		       				  e.target.select(); 
+
+	     		       			  } },
+	     		    			  { type: 'click', data: { i: 7 }, fn: function(e) { 
+	     		    				  var rowobji=$(e.target).closest('tr.jqgrow');
+	     		    				  var textboxid=rowobji.attr('id');
+	     		    				poLines_selectRow=textboxid;
+	     				    		  jQuery("#lineItemGrid").jqGrid('setSelection',poLines_selectRow, true);
+	     		    				  e.target.select();
+	     		    				//  changePosition(poLines_selectRow);
+	     		    			  }
+	     		    			   },
+	     		    			  { type: 'change', data: { i: 7 }, fn: function(e) {
+	     		    			  var rowobji=$(e.target).closest('tr.jqgrow');
+	     			    		  var textboxid=rowobji.attr('id');
+	     			    		poLines_selectRow=textboxid;
+	     			    			jQuery("#lineItemGrid").jqGrid('setSelection',poLines_selectRow, true);
+	     			    			e.target.select();
+	     		    				//changePosition(poLines_selectRow);
+	     		    			  } },
+	     	                        {
+	     		                         type: 'keypress',
+	     		                         fn: function(e) {
+	     		                        	 var key = e.which;
+	     		                    		 if(key == 13)  // the enter key code
+	     		                    		  {
+	     		                    			 searchPrMasterId=null;
+	     		                 			     searchProduct=null;
+	     		                    			// CalculatesoLinegrideditrowvalues(poLines_selectRow);
+	     		                    			 $("#lineItemGrid_ilsave").trigger("click");
+	     		                 			    $( "#lineItemGrid_iladd" ).trigger( "click" );
+	     		                    		    return false;  
+	     		                    		  }
+	     		                         }
+	     		                        }
+	     		    			  ]},editrules:{edithidden:true}},
 			{name:'unitCost', index:'unitCost', align:'right', width:50,hidden:false, editable:true, editoptions:{size:15, alignText:'right',maxlength:10,decimalPlaces: 2,
-				dataEvents: [
-   		       			  { type: 'focus', data: { i: 7 }, fn: function(e) { e.target.select(); } },
-   		    			  { type: 'click', data: { i: 7 }, fn: function(e) { e.target.select(); } }
-   		    			  ]
+				dataEvents:  [
+	   		       			  { type: 'focus', data: { i: 7 }, fn: function(e) {
+	     		       				var rowobji=$(e.target).closest('tr.jqgrow');
+	     			    			 var textboxid=rowobji.attr('id');
+	     			    			poLines_selectRow=textboxid;
+	     			    			  		jQuery("#lineItemGrid").jqGrid('setSelection',poLines_selectRow, true);
+	     		       				  e.target.select(); 
+
+	     		       			  } },
+	     		    			  { type: 'click', data: { i: 7 }, fn: function(e) { 
+	     		    				  var rowobji=$(e.target).closest('tr.jqgrow');
+	     		    				  var textboxid=rowobji.attr('id');
+	     		    				poLines_selectRow=textboxid;
+	     				    		  jQuery("#lineItemGrid").jqGrid('setSelection',poLines_selectRow, true);
+	     		    				  e.target.select();
+	     		    				//  changePosition(poLines_selectRow);
+	     		    			  }
+	     		    			   },
+	     		    			  { type: 'change', data: { i: 7 }, fn: function(e) {
+	     		    			  var rowobji=$(e.target).closest('tr.jqgrow');
+	     			    		  var textboxid=rowobji.attr('id');
+	     			    		poLines_selectRow=textboxid;
+	     			    			jQuery("#lineItemGrid").jqGrid('setSelection',poLines_selectRow, true);
+	     			    			e.target.select();
+	     		    				//changePosition(poLines_selectRow);
+	     		    			  } },
+	     	                        {
+	     		                         type: 'keypress',
+	     		                         fn: function(e) {
+	     		                        	 var key = e.which;
+	     		                    		 if(key == 13)  // the enter key code
+	     		                    		  {
+	     		                    			 searchPrMasterId=null;
+	     		                 			     searchProduct=null;
+	     		                    			// CalculatesoLinegrideditrowvalues(poLines_selectRow);
+	     		                    			 $("#lineItemGrid_ilsave").trigger("click");
+	     		                 			    $( "#lineItemGrid_iladd" ).trigger( "click" );
+	     		                    		    return false;  
+	     		                    		  }
+	     		                         }
+	     		                        }
+	     		    			  ]
 			}, formatter:customCurrencyFormatter, editrules:{edithidden: true}},
 			{name:'priceMultiplier', index:'priceMultiplier', align:'right', width:40,hidden:false, editable:true, editoptions:{size:15, alignText:'right',decimalPlaces: 4,
-				dataEvents: [
-   		       			  { type: 'focus', data: { i: 7 }, fn: function(e) { e.target.select(); } },
-   		    			  { type: 'click', data: { i: 7 }, fn: function(e) { e.target.select(); } }
-   		    			  ]}, formatter:'number', formatoptions:{decimalPlaces: 4},editrules:{number:true,required: true}},
+				dataEvents:  [
+	   		       			  { type: 'focus', data: { i: 7 }, fn: function(e) {
+	     		       				var rowobji=$(e.target).closest('tr.jqgrow');
+	     			    			 var textboxid=rowobji.attr('id');
+	     			    			poLines_selectRow=textboxid;
+	     			    			  		jQuery("#lineItemGrid").jqGrid('setSelection',poLines_selectRow, true);
+	     		       				  e.target.select(); 
+
+	     		       			  } },
+	     		    			  { type: 'click', data: { i: 7 }, fn: function(e) { 
+	     		    				  var rowobji=$(e.target).closest('tr.jqgrow');
+	     		    				  var textboxid=rowobji.attr('id');
+	     		    				poLines_selectRow=textboxid;
+	     				    		  jQuery("#lineItemGrid").jqGrid('setSelection',poLines_selectRow, true);
+	     		    				  e.target.select();
+	     		    				//  changePosition(poLines_selectRow);
+	     		    			  }
+	     		    			   },
+	     		    			  { type: 'change', data: { i: 7 }, fn: function(e) {
+	     		    			  var rowobji=$(e.target).closest('tr.jqgrow');
+	     			    		  var textboxid=rowobji.attr('id');
+	     			    		poLines_selectRow=textboxid;
+	     			    			jQuery("#lineItemGrid").jqGrid('setSelection',poLines_selectRow, true);
+	     			    			e.target.select();
+	     		    				//changePosition(poLines_selectRow);
+	     		    			  } },
+	     	                        {
+	     		                         type: 'keypress',
+	     		                         fn: function(e) {
+	     		                        	 var key = e.which;
+	     		                    		 if(key == 13)  // the enter key code
+	     		                    		  {
+	     		                    			 searchPrMasterId=null;
+	     		                 			     searchProduct=null;
+	     		                    			// CalculatesoLinegrideditrowvalues(poLines_selectRow);
+	     		                    			 $("#lineItemGrid_ilsave").trigger("click");
+	     		                 			    $( "#lineItemGrid_iladd" ).trigger( "click" );
+	     		                    		    return false;  
+	     		                    		  }
+	     		                         }
+	     		                        }
+	     		    			  ]}, formatter:'number', formatoptions:{decimalPlaces: 4},editrules:{number:true,required: true}},
 			{name:'taxable', index:'taxable', align:'center',  width:20, hidden:false, editable:true, formatter:'checkbox', edittype:'checkbox', editrules:{edithidden:true}},
 			{name:'netCast',index:'netCast',width:50 , align:'right',formatter:customCurrencyFormatter,hidden:true},
 			{name:'quantityBilled', index:'quantityBilled', align:'right', width:50,hidden:false, editable:true, formatter:POtotalFormatter, editoptions:{size:15, alignText:'right',decimalPlaces: 4,
-				dataEvents: [
-   		       			  { type: 'focus', data: { i: 7 }, fn: function(e) { e.target.select(); } },
-   		    			  { type: 'click', data: { i: 7 }, fn: function(e) { e.target.select(); } }
-   		    			  ]},editrules:{edithidden:true}},
+				dataEvents:  [
+	   		       			  { type: 'focus', data: { i: 7 }, fn: function(e) {
+	     		       				var rowobji=$(e.target).closest('tr.jqgrow');
+	     			    			 var textboxid=rowobji.attr('id');
+	     			    			poLines_selectRow=textboxid;
+	     			    			  		jQuery("#lineItemGrid").jqGrid('setSelection',poLines_selectRow, true);
+	     		       				  e.target.select(); 
+
+	     		       			  } },
+	     		    			  { type: 'click', data: { i: 7 }, fn: function(e) { 
+	     		    				  var rowobji=$(e.target).closest('tr.jqgrow');
+	     		    				  var textboxid=rowobji.attr('id');
+	     		    				poLines_selectRow=textboxid;
+	     				    		  jQuery("#lineItemGrid").jqGrid('setSelection',poLines_selectRow, true);
+	     		    				  e.target.select();
+	     		    				//  changePosition(poLines_selectRow);
+	     		    			  }
+	     		    			   },
+	     		    			  { type: 'change', data: { i: 7 }, fn: function(e) {
+	     		    			  var rowobji=$(e.target).closest('tr.jqgrow');
+	     			    		  var textboxid=rowobji.attr('id');
+	     			    		poLines_selectRow=textboxid;
+	     			    			jQuery("#lineItemGrid").jqGrid('setSelection',poLines_selectRow, true);
+	     			    			e.target.select();
+	     		    				//changePosition(poLines_selectRow);
+	     		    			  } },
+	     	                        {
+	     		                         type: 'keypress',
+	     		                         fn: function(e) {
+	     		                        	 var key = e.which;
+	     		                    		 if(key == 13)  // the enter key code
+	     		                    		  {
+	     		                    			 searchPrMasterId=null;
+	     		                 			     searchProduct=null;
+	     		                    			// CalculatesoLinegrideditrowvalues(poLines_selectRow);
+	     		                    			 $("#lineItemGrid_ilsave").trigger("click");
+	     		                 			    $( "#lineItemGrid_iladd" ).trigger( "click" );
+	     		                    		    return false;  
+	     		                    		  }
+	     		                         }
+	     		                        }
+	     		    			  ]},editrules:{edithidden:true}},
 			{name:'vePoid', index:'vePoid', align:'right', width:50,hidden:true, editable:true, editoptions:{size:15, alignText:'right'},editrules:{edithidden:true,required: false}},
 			{name:'prMasterId', index:'prMasterId', align:'right', width:50,hidden:true, editable:true, editoptions:{size:15, alignText:'right'},editrules:{edithidden:true,required: false}},
 			{name:'vePodetailId', index:'vePodetailId', align:'right', width:50,hidden:true, editable:true, editoptions:{size:15, alignText:'right'},editrules:{edithidden:true,required: false}},
@@ -457,27 +746,141 @@ function loadLinesItemGrid() {
 			{name:'upAndDown',index:'upAndDown',align:'left',width:50, formatter: upAndDownImage,hidden:true},
 			{name:'taxTotal', index:'taxTotal', align:'center', width:20,hidden:true},
 			{name:'ackDate', index:'ackDate', align:'center', width:50,hidden:false, editable:true,   editoptions:{size:15, align:'center',
-				dataEvents: [
-   		       			  { type: 'focus', data: { i: 7 }, fn: function(e) { e.target.select(); } },
-   		    			  { type: 'click', data: { i: 7 }, fn: function(e) { e.target.select(); } }
-   		    			  ]
+				dataEvents:  [
+	   		       			  { type: 'focus', data: { i: 7 }, fn: function(e) {
+	     		       				var rowobji=$(e.target).closest('tr.jqgrow');
+	     			    			 var textboxid=rowobji.attr('id');
+	     			    			poLines_selectRow=textboxid;
+	     			    			  		jQuery("#lineItemGrid").jqGrid('setSelection',poLines_selectRow, true);
+	     		       				  e.target.select(); 
+
+	     		       			  } },
+	     		    			  { type: 'click', data: { i: 7 }, fn: function(e) { 
+	     		    				  var rowobji=$(e.target).closest('tr.jqgrow');
+	     		    				  var textboxid=rowobji.attr('id');
+	     		    				poLines_selectRow=textboxid;
+	     				    		  jQuery("#lineItemGrid").jqGrid('setSelection',poLines_selectRow, true);
+	     		    				  e.target.select();
+	     		    				//  changePosition(poLines_selectRow);
+	     		    			  }
+	     		    			   },
+	     		    			  { type: 'change', data: { i: 7 }, fn: function(e) {
+	     		    			  var rowobji=$(e.target).closest('tr.jqgrow');
+	     			    		  var textboxid=rowobji.attr('id');
+	     			    		poLines_selectRow=textboxid;
+	     			    			jQuery("#lineItemGrid").jqGrid('setSelection',poLines_selectRow, true);
+	     			    			e.target.select();
+	     		    				//changePosition(poLines_selectRow);
+	     		    			  } },
+	     	                        {
+	     		                         type: 'keypress',
+	     		                         fn: function(e) {
+	     		                        	 var key = e.which;
+	     		                    		 if(key == 13)  // the enter key code
+	     		                    		  {
+	     		                    			 searchPrMasterId=null;
+	     		                 			     searchProduct=null;
+	     		                    			// CalculatesoLinegrideditrowvalues(poLines_selectRow);
+	     		                    			 $("#lineItemGrid_ilsave").trigger("click");
+	     		                 			    $( "#lineItemGrid_iladd" ).trigger( "click" );
+	     		                    		    return false;  
+	     		                    		  }
+	     		                         }
+	     		                        }
+	     		    			  ]
 			},editrules:{edithidden:false}},//formatter:'date',, formatoptions:{ srcformat: 'd-m-Y',newformat:'m/d/Y'}
 			{name:'shipDate', index:'shipDate', align:'center', width:50,hidden:false, editable:true, editoptions:{size:15, alignText:'center',
-				dataEvents: [
-   		       			  { type: 'focus', data: { i: 7 }, fn: function(e) { e.target.select(); } },
-   		    			  { type: 'click', data: { i: 7 }, fn: function(e) { e.target.select(); } }
-   		    			  ]}, editrules:{edithidden:false}},//formatter:'date',, formatoptions:{srcformat: 'd-m-Y',newformat:'m/d/Y'}
+				dataEvents:  [
+	   		       			  { type: 'focus', data: { i: 7 }, fn: function(e) {
+	     		       				var rowobji=$(e.target).closest('tr.jqgrow');
+	     			    			 var textboxid=rowobji.attr('id');
+	     			    			poLines_selectRow=textboxid;
+	     			    			  		jQuery("#lineItemGrid").jqGrid('setSelection',poLines_selectRow, true);
+	     		       				  e.target.select(); 
+
+	     		       			  } },
+	     		    			  { type: 'click', data: { i: 7 }, fn: function(e) { 
+	     		    				  var rowobji=$(e.target).closest('tr.jqgrow');
+	     		    				  var textboxid=rowobji.attr('id');
+	     		    				poLines_selectRow=textboxid;
+	     				    		  jQuery("#lineItemGrid").jqGrid('setSelection',poLines_selectRow, true);
+	     		    				  e.target.select();
+	     		    				//  changePosition(poLines_selectRow);
+	     		    			  }
+	     		    			   },
+	     		    			  { type: 'change', data: { i: 7 }, fn: function(e) {
+	     		    			  var rowobji=$(e.target).closest('tr.jqgrow');
+	     			    		  var textboxid=rowobji.attr('id');
+	     			    		poLines_selectRow=textboxid;
+	     			    			jQuery("#lineItemGrid").jqGrid('setSelection',poLines_selectRow, true);
+	     			    			e.target.select();
+	     		    				//changePosition(poLines_selectRow);
+	     		    			  } },
+	     	                        {
+	     		                         type: 'keypress',
+	     		                         fn: function(e) {
+	     		                        	 var key = e.which;
+	     		                    		 if(key == 13)  // the enter key code
+	     		                    		  {
+	     		                    			 searchPrMasterId=null;
+	     		                 			     searchProduct=null;
+	     		                    			// CalculatesoLinegrideditrowvalues(poLines_selectRow);
+	     		                    			 $("#lineItemGrid_ilsave").trigger("click");
+	     		                 			    $( "#lineItemGrid_iladd" ).trigger( "click" );
+	     		                    		    return false;  
+	     		                    		  }
+	     		                         }
+	     		                        }
+	     		    			  ]}, editrules:{edithidden:false}},//formatter:'date',, formatoptions:{srcformat: 'd-m-Y',newformat:'m/d/Y'}
 			{name:'vendorOrderNumber', index:'vendorOrderNumber', align:'right', width:50,hidden:false, editable:true, editoptions:{size:15, alignText:'right',
-				dataEvents: [
-   		       			  { type: 'focus', data: { i: 7 }, fn: function(e) { e.target.select(); } },
-   		    			  { type: 'click', data: { i: 7 }, fn: function(e) { e.target.select(); } }
-   		    			  ]},editrules:{edithidden:false}},
+				dataEvents:  [
+	   		       			  { type: 'focus', data: { i: 7 }, fn: function(e) {
+	     		       				var rowobji=$(e.target).closest('tr.jqgrow');
+	     			    			 var textboxid=rowobji.attr('id');
+	     			    			poLines_selectRow=textboxid;
+	     			    			  		jQuery("#lineItemGrid").jqGrid('setSelection',poLines_selectRow, true);
+	     		       				  e.target.select(); 
+
+	     		       			  } },
+	     		    			  { type: 'click', data: { i: 7 }, fn: function(e) { 
+	     		    				  var rowobji=$(e.target).closest('tr.jqgrow');
+	     		    				  var textboxid=rowobji.attr('id');
+	     		    				poLines_selectRow=textboxid;
+	     				    		  jQuery("#lineItemGrid").jqGrid('setSelection',poLines_selectRow, true);
+	     		    				  e.target.select();
+	     		    				//  changePosition(poLines_selectRow);
+	     		    			  }
+	     		    			   },
+	     		    			  { type: 'change', data: { i: 7 }, fn: function(e) {
+	     		    			  var rowobji=$(e.target).closest('tr.jqgrow');
+	     			    		  var textboxid=rowobji.attr('id');
+	     			    		poLines_selectRow=textboxid;
+	     			    			jQuery("#lineItemGrid").jqGrid('setSelection',poLines_selectRow, true);
+	     			    			e.target.select();
+	     		    				//changePosition(poLines_selectRow);
+	     		    			  } },
+	     	                        {
+	     		                         type: 'keypress',
+	     		                         fn: function(e) {
+	     		                        	 var key = e.which;
+	     		                    		 if(key == 13)  // the enter key code
+	     		                    		  {
+	     		                    			 searchPrMasterId=null;
+	     		                 			     searchProduct=null;
+	     		                    			// CalculatesoLinegrideditrowvalues(poLines_selectRow);
+	     		                    			 $("#lineItemGrid_ilsave").trigger("click");
+	     		                 			    $( "#lineItemGrid_iladd" ).trigger( "click" );
+	     		                    		    return false;  
+	     		                    		  }
+	     		                         }
+	     		                        }
+	     		    			  ]},editrules:{edithidden:false}},
 			{name:'inLineNote', index:'inLineNote', align:'center', width:20,hidden:true},
 			{name:'canDeletePO', index:'canDeletePO', align:'center',  width:20, hidden:false, editable:false, formatter:canDeletePOCheckboxFormatter,   editrules:{edithidden:true}}
 			],
 		rowNum: 0, pgbuttons: false, recordtext: '', rowList: [], pgtext: null, viewrecords: false,
 		sortname: 'vePodetailId', sortorder: "asc", imgpath: 'themes/basic/images', caption: false,
-		height:210,	width:910, rownumbers:true, altRows: true,viewrecords: true, altclass:'myAltRowClass',
+		height:482.5,	width:910, rownumbers:true, altRows: true,viewrecords: true, altclass:'myAltRowClass',
 		//editurl:"./jobtabs5/manpulaterPOReleaseLineItem",
 		caption: 'Line Item',
 		
@@ -578,12 +981,32 @@ function loadLinesItemGrid() {
 			$("#lineItemGrid").trigger("reloadGrid");
 			$("#Ack").trigger("reloadGrid");
 			 */
-	
+			  $("#lineItemGrid").setSelection(1, true);
+				var ids = $('#lineItemGrid').jqGrid('getDataIDs');
+			    mytestmethod_loc_var=true;
+			    $( "#lineItemGrid_iladd" ).trigger( "click" );
+			 //   $("#salesorder_whsecost").val(formatCurrency("0.00"));
+			   /* if(salesOrderFlag==null){			    	
+			    	$(".ui-icon-folder-collapsed").css({"width":"76px","height":"21.5px","background":"url('./../resources/images/CopyRow.png')","position":"inherit","top":"-2px"});
+			    }else{
+			    	$(".ui-icon-folder-collapsed").css({"width":"76px","height":"21.5px","background":"url('./../resources/images/inline_template.PNG')","position":"inherit","top":"-2px"});			    	
+			    }*/
+			  //  searchPrMasterId=null;
+			 //   searchProduct=null;
+			    $(".ui-icon-newwin").css({"background":"url('./../resources/images/CopyRow.png')"});
+				
+			    if(POlineItemgridLoad){
+		           	 var gridRows = $('#lineItemGrid').getRowData();
+		           	Purchase_lines_form =  JSON.stringify(gridRows);
+			             POlineItemgridLoad=true;
+		            }
+			    SetoverAllPOTotal();
+	            POLineItemTabformChanges();
 		},
 		gridComplete: function () {
 	      	jQuery("#lineItemGrid").closest(".ui-jqgrid-bdiv").scrollTop(posit_outside_purchaseorder);
 	        posit_outside_purchaseorder=0;
-	        SetoverAllPOTotal();
+	        /*SetoverAllPOTotal();
 	        if(POlineItemgridLoad){
            	 var gridRows = $('#lineItemGrid').getRowData();
            	Purchase_lines_form =  JSON.stringify(gridRows);
@@ -597,7 +1020,7 @@ function loadLinesItemGrid() {
             POlineItemgridLoad=true;
             }
             POLineItemTabformChanges();
-            TinyMCETextEditorForAllInitsetup(560,220,true);
+            TinyMCETextEditorForAllInitsetup(560,220,true);*/
 		},
 		loadError : function (jqXHR, textStatus, errorThrown){	},
 		onSelectRow:  function(id){
@@ -611,7 +1034,14 @@ function loadLinesItemGrid() {
 		        jQuery(this).restoreRow(lastSel); 
 		        lastSel=id; 
 		     }
-		     $("#lineItemGrid_iledit").trigger("click");
+		     
+		     if(id=="new_row"){
+				 
+			 }else{
+				 posit_outside_purchaseorder= jQuery("#lineItemGrid").closest(".ui-jqgrid-bdiv").scrollTop();
+				 $("#lineItemGrid_ilcancel").trigger("click");
+			     $("#lineItemGrid_iledit").trigger("click");
+			 }
 		},
 		cellsubmit: 'clientArray',
 		editurl: 'clientArray',
@@ -671,22 +1101,38 @@ function loadLinesItemGrid() {
 									}
 									 veaccrrowid= idd;
 								}
-								console.log("Add"+selectedLineItemGrid); 
 								if(selectedLineItemGrid=="new_row"){
 									console.log("IFselectedLineItemGrid"+selectedLineItemGrid); 
 									$("#" + selectedLineItemGrid).attr("id", Number(veaccrrowid)+1);
 									var changeidnum=Number(veaccrrowid)+1;
-									//$("#canDeleteSOID_new_row").attr("id","canDeleteSOID_"+changeidnum);
+									$("#canDeletePOID_new_row").attr("id","canDeletePOID_"+changeidnum);
+									$("#openinventorydetailspopup_new_row").attr("id","openinventorydetailspopup_"+changeidnum);
+									$("#PONoteImageIcon_new_row").attr("id","PONoteImageIcon_"+changeidnum);
+									//$("#openinventorydetailspopup_new_row").attr("id", Number(veaccrrowid)+1);openinventorydetailspopup_
+//									$("#canDeleteSOID_new_row").attr("onclick","setsoLinegridTotal();deleteSOCheckboxChanges("+(Number(veaccrrowid)+1)+")");
+									$("#openinventorydetailspopup_"+changeidnum).attr("onclick","openinventorydetailspopup("+changeidnum+")");
+									$("#canDeletePOID_"+changeidnum).attr("onclick","SetoverAllPOTotal();deleteRowFromJqGrid_PO("+changeidnum+");POLineItemTabformChanges();");
+									$("#PONoteImageIcon_"+changeidnum).attr("onclick","ShowPOLineNote('"+changeidnum+"');");
+									
+									
 									}
 								
-								var grid=$("#lineItemGrid");
+								
+								
+								/*var grid=$("#lineItemGrid");
 								grid.jqGrid('resetSelection');
 							    var dataids = grid.getDataIDs();
 							    for (var i=0, il=dataids.length; i < il; i++) {
 							        grid.jqGrid('setSelection',dataids[i], false);
-							    }
+							    }*/
 							    SetoverAllPOTotal();
 							    POLineItemTabformChanges();
+							    $('#ImgPOPDF').empty();
+								  $('#ImgPOPDF').append('<input type="image" src="./../resources/Icons/PDF_new_disabled.png" title="View Purchase Order" return false;" style="background: #EEDEBC;cursor:default;">');
+								  $('#ImgPOEmail').empty();
+								  $('#ImgPOEmail').append('<input id="contactEmailID" type="image" src="./../resources/Icons/mail_new_disabled.png" title="Email Purchase Order" style="background: #EEDEBC;cursor:default;" return false;">');
+							
+							    $("#lineItemGrid").jqGrid('setSelection','new_row', true);
 							},
 							errorfunc : function(rowid, response) {
 								return false;
@@ -718,20 +1164,33 @@ function loadLinesItemGrid() {
 							}
 							console.log("Edit"+selectedLineItemGrid); 
 							if(selectedLineItemGrid=="new_row"){
-								console.log("IF selectedLineItemGrid"+selectedLineItemGrid);
+								console.log("IFselectedLineItemGrid"+selectedLineItemGrid); 
 								$("#" + selectedLineItemGrid).attr("id", Number(veaccrrowid)+1);
 								var changeidnum=Number(veaccrrowid)+1;
-								//$("#canDeleteSOID_new_row").attr("id","canDeleteSOID_"+changeidnum);
+								$("#canDeletePOID_new_row").attr("id","canDeletePOID_"+changeidnum);
+								$("#openinventorydetailspopup_new_row").attr("id","openinventorydetailspopup_"+changeidnum);
+								$("#PONoteImageIcon_new_row").attr("id","PONoteImageIcon_"+changeidnum);
+								//$("#openinventorydetailspopup_new_row").attr("id", Number(veaccrrowid)+1);openinventorydetailspopup_
+//								$("#canDeleteSOID_new_row").attr("onclick","setsoLinegridTotal();deleteSOCheckboxChanges("+(Number(veaccrrowid)+1)+")");
+								$("#openinventorydetailspopup_"+changeidnum).attr("onclick","openinventorydetailspopup("+changeidnum+")");
+								$("#canDeletePOID_"+changeidnum).attr("onclick","SetoverAllPOTotal();deleteRowFromJqGrid_PO("+changeidnum+");POLineItemTabformChanges();");
+								$("#PONoteImageIcon_"+changeidnum).attr("onclick","ShowPOLineNote('"+changeidnum+"');");
 								}
 							
-							var grid=$("#lineItemGrid");
+							/*var grid=$("#lineItemGrid");
 							grid.jqGrid('resetSelection');
 						    var dataids = grid.getDataIDs();
 						    for (var i=0, il=dataids.length; i < il; i++) {
 						        grid.jqGrid('setSelection',dataids[i], false);
-						    }
+						    }*/
 						    SetoverAllPOTotal();
 						    POLineItemTabformChanges();
+						    $('#ImgPOPDF').empty();
+							  $('#ImgPOPDF').append('<input type="image" src="./../resources/Icons/PDF_new_disabled.png" title="View Purchase Order" return false;" style="background: #EEDEBC;cursor:default;">');
+							  $('#ImgPOEmail').empty();
+							  $('#ImgPOEmail').append('<input id="contactEmailID" type="image" src="./../resources/Icons/mail_new_disabled.png" title="Email Purchase Order" style="background: #EEDEBC;cursor:default;" return false;">');
+						
+						    $("#lineItemGrid").jqGrid('setSelection','new_row', true);
 						},
 						errorfunc : function(rowid, response) {
 							
@@ -757,44 +1216,44 @@ function loadLinesItemGrid() {
 							$("#"+id+"_unitCost").val(unitcost);
 						
 						}
-					}
+					},restoreAfterSelect :false
 				});
 	
-	 		$("#lineItemGrid").jqGrid('navButtonAdd',"#lineItemPager",{ caption:"", buttonicon:"ui-icon-document", onClickButton:openLineItemNoteDialog, position: "after", title:"Inline Note", cursor: "pointer"});
+	 		/*$("#lineItemGrid").jqGrid('navButtonAdd',"#lineItemPager",{ caption:"", buttonicon:"ui-icon-document", onClickButton:openLineItemNoteDialog, position: "after", title:"Inline Note", cursor: "pointer"});
 	 		$("#lineItemGrid").jqGrid('navButtonAdd',"#lineItemPager",{ caption:"", buttonicon:"ui-icon-bookmark", onClickButton:showInvoicedReceived, position: "after", title:"Show Received/Invoiced", cursor: "pointer"});
-	 		
+	 		*/
 	 		//Drag And DROP
 	 		jQuery("#lineItemGrid").jqGrid('sortableRows');
 	 		jQuery("#lineItemGrid").jqGrid('gridDnD');
 
 
 	 		$("#lineItemGrid_iladd").click(function() {
-	 			$('#SaveLinesPOButton').css('background','-webkit-gradient(linear, left top, left bottom, from(#C1C3CA), to(#A4A4A5))');
+	 		/*	$('#SaveLinesPOButton').css('background','-webkit-gradient(linear, left top, left bottom, from(#C1C3CA), to(#A4A4A5))');
 	 			$('#CancelLinesPOButton').css('background','-webkit-gradient(linear, left top, left bottom, from(#C1C3CA), to(#A4A4A5))');
 	 			document.getElementById("SaveLinesPOButton").disabled = true;
 	 			document.getElementById("CancelLinesPOButton").disabled = true;
-	 		});
+	 		*/});
 	 		$("#lineItemGrid_iledit").click(function() {
-	 			$('#SaveLinesPOButton').css('background','-webkit-gradient(linear, left top, left bottom, from(#C1C3CA), to(#A4A4A5))');
+	 		/*	$('#SaveLinesPOButton').css('background','-webkit-gradient(linear, left top, left bottom, from(#C1C3CA), to(#A4A4A5))');
 	 			$('#CancelLinesPOButton').css('background','-webkit-gradient(linear, left top, left bottom, from(#C1C3CA), to(#A4A4A5))');
 	 			document.getElementById("SaveLinesPOButton").disabled = true;
 	 			document.getElementById("CancelLinesPOButton").disabled = true;
-	 		});
+	 		*/});
 
 	 		$("#lineItemGrid_ilsave").click(function() {
-	 			document.getElementById("SaveLinesPOButton").disabled = false;
+	 			/*document.getElementById("SaveLinesPOButton").disabled = false;
 	 			document.getElementById("CancelLinesPOButton").disabled = false;
 	 			$('#SaveLinesPOButton').css('background','-webkit-gradient(linear, left top, left bottom, from(#637c92), to(#3b4f60))');
 	 			$('#CancelLinesPOButton').css('background','-webkit-gradient(linear, left top, left bottom, from(#637c92), to(#3b4f60))');
-	 		    });
+	 		    */});
 
 
 	 		$("#lineItemGrid_ilcancel").click(function() {
-	 			document.getElementById("SaveLinesPOButton").disabled = false;
+	 		/*	document.getElementById("SaveLinesPOButton").disabled = false;
 	 			document.getElementById("CancelLinesPOButton").disabled = false;
 	 			$('#SaveLinesPOButton').css('background','-webkit-gradient(linear, left top, left bottom, from(#637c92), to(#3b4f60))');
 	 			$('#CancelLinesPOButton').css('background','-webkit-gradient(linear, left top, left bottom, from(#637c92), to(#3b4f60))');
-	 		});
+	 		*/});
 }
 
 function getProductDetails(){
@@ -852,10 +1311,15 @@ function SetoverAllPOTotal(){
 	var aVal = new Array(); 
 	var aTax = new Array();
 	var sum = 0;
-	var taxAmount = 0;
+	 var totalamount=0;
+	 var taxamount=0;
+	 var taxcellValue;
 	var aTotal = 0;
+	
+	
+	
 	var ids = $("#lineItemGrid").jqGrid('getDataIDs');
-	$.each(allRowsInGrid, function(index, value) {
+	/*$.each(allRowsInGrid, function(index, value) {
 		aVal[index] = value.quantityBilled;
 		var number1 = aVal[index].replace("$", "");
 		var number2 = number1.replace(".00", "");
@@ -882,20 +1346,47 @@ function SetoverAllPOTotal(){
 			taxAmount = taxAmount + Number(number6)*(taxValue/100);
 		}
 		}
-	});
-	$('#subtotalGeneralId').val(Number(floorFigureoverall(sum, 2)));
-	$('#subtotalLineId').val(Number(floorFigureoverall(sum,2)));
-	$('#subtotalKnowledgeId').val(Number(floorFigureoverall(sum,2)));
-	$('#generalID').val(Number(floorFigureoverall(taxAmount,2)));
-	$('#lineID').val(Number(floorFigureoverall(taxAmount,2)));
-	$('#KnowledgeID').val(Number(floorFigureoverall(taxAmount,2)));
+	});*/
+	
+	
+	for(var i=0;i<ids.length;i++){
+		 var selectedRowId=ids[i];
+               	 if(selectedRowId!='new_row'){
+		 cellValue =$("#lineItemGrid").jqGrid ('getCell', selectedRowId, 'quantityBilled');
+		 taxcellValue=$("#lineItemGrid").jqGrid ('getCell', selectedRowId, 'taxable');
+		 var id="#canDeletePOID_"+selectedRowId;
+		 var canDo=$(id).is(':checked');
+		 if(taxcellValue=="Yes"){
+			 var eachamount=parseFloat(floorFigureoverall(cellValue.replace(/[^0-9\.-]+/g,""),2));
+			 var multiplyamount=eachamount*Number(taxpercentage)/100;
+			 if(!canDo){
+			 taxamount=Number(taxamount)+Number(multiplyamount);
+			
+			 }
+		 }
+		var cellvalueamt=Number(parseFloat(cellValue.replace(/[^0-9\.-]+/g,"")).toFixed(3));
+		//alert(parseFloat(cellValue.replace(/[^0-9\.-]+/g,"")).toFixed(2));
+		if(!canDo){
+		 totalamount=cellvalueamt+totalamount;
+		 totalamount=Number(floorFigureoverall(totalamount,2));
+		}
+             }
+	 }
+	
+	
+	$('#subtotalGeneralId').val(Number(floorFigureoverall(totalamount, 2)));
+	$('#subtotalLineId').val(Number(floorFigureoverall(totalamount,2)));
+	$('#subtotalKnowledgeId').val(Number(floorFigureoverall(totalamount,2)));
+	$('#generalID').val(Number(floorFigureoverall(taxamount,2)));
+	$('#lineID').val(Number(floorFigureoverall(taxamount,2)));
+	$('#KnowledgeID').val(Number(floorFigureoverall(taxamount,2)));
 	
 	var frieghtvalue=Number($("#freightGeneralId").val().replace(/[^0-9\.]+/g,""));
 	if(frieghtvalue==undefined ||frieghtvalue=="" || frieghtvalue==null ||frieghtvalue=="null"){
 		frieghtvalue=0.00;
 		}
 	
-	aTotal = aTotal + sum + Number(floorFigureoverall(taxAmount,2)) +frieghtvalue;
+	aTotal = aTotal + totalamount + Number(floorFigureoverall(taxamount,2)) +frieghtvalue;
 	$('#totalGeneralId').val(Number(floorFigureoverall(aTotal,2)));
 	$('#totalLineId').val(Number(floorFigureoverall(aTotal,2)));
 	$('#totalKnowledgeId').val(Number(floorFigureoverall(aTotal,2)));
@@ -971,7 +1462,7 @@ function SaveLinesPurchaseOrder(popupdetail){
 
 
 	  var rows = jQuery("#lineItemGrid").getDataIDs();
-	  var deletePOLineDetailID=new Array();
+	/*  var deletePOLineDetailID=new Array();
 		 for(var a=0;a<rows.length;a++)
 		 {
 		    row=jQuery("#lineItemGrid").getRowData(rows[a]);
@@ -985,11 +1476,11 @@ function SaveLinesPurchaseOrder(popupdetail){
 			 	}
 			 $('#lineItemGrid').jqGrid('delRowData',rows[a]);
 		  }
-	} 
+	}*/ 
 	
 	var gridRows = $('#lineItemGrid').getRowData();
 	var dataToSend = JSON.stringify(gridRows);
-
+	console.log("PO:"+dataToSend);
 		
 	$.ajax({
 		url: "./jobtabs5/SaveLinesPurchaseOrder",
@@ -1008,13 +1499,19 @@ function SaveLinesPurchaseOrder(popupdetail){
 			 if(popupdetail=="close"){
 				 document.location.href = "./po_list";
 			 }
+			 $('#ImgPOPDF').empty();
+			  $('#ImgPOPDF').append('<input type="image" src="./../resources/Icons/PDF_new.png" title="View Purchase Order" onclick="viewPOPDF();"	style="background: #EEDEBC;" id="lineTabPDF">');
+
+			  $('#ImgPOEmail').empty();
+			  $('#ImgPOEmail').append(' <input id="contactEmailID" type="image" src="./../resources/Icons/mail_new.png" title="Email Purchase Order" style="background: #EEDEBC" id="lineTabMail" onclick="onclick="outsidepoEmailButtonAction();">');
+			
 			// $( "#salesreleasetab ul li:nth-child(1)" ).removeClass("ui-state-disabled");
 		}
 	});
 }
 
 
-function canDeletePOCheckboxFormatter(cellValue, options, rowObject){
+/*function canDeletePOCheckboxFormatter(cellValue, options, rowObject){
 	var qty_ord=rowObject.quantityOrdered;
 	var qty_rcd=rowObject.quantityReceived;
 	if(qty_ord==null || qty_ord==""){
@@ -1030,7 +1527,7 @@ function canDeletePOCheckboxFormatter(cellValue, options, rowObject){
 	var id="canDeletePOID_"+options.rowId;
 	var element = "<input type='checkbox' id='"+id+"' onclick='deletePOCheckboxChanges(this.id,"+allowornot+");SetoverAllPOTotal();POLineItemTabformChanges();' value='false'>";
 	return element;
-}
+}*/
 
 function deletePOCheckboxChanges(id,allowornot){
 	id="#"+id;
@@ -1166,7 +1663,7 @@ function closePurchaseOrderLineItemTab(){
     if((freightLineId+"").contains("$")){
     	freightLineId=freightLineId.replace(/[^0-9\.-]+/g,"");
     }
-    new_PO_lines_form=new_PO_lines_form+formatCurrency(freightLineId);
+   // new_PO_lines_form=new_PO_lines_form+formatCurrency(freightLineId);
     if(new_PO_lines_form != Purchase_lines_form){
   	  var newDialogDiv = jQuery(document.createElement('div'));
 			jQuery(newDialogDiv).html('<span><b style="color:Green;">You have made changes,would you like to save?</b></span>');
@@ -1267,7 +1764,7 @@ function POLineItemTabformChanges(formvalue){
 	    if((freightLineId+"").contains("$")){
 	    	freightLineId=freightLineId.replace(/[^0-9\.-]+/g,"");
 	    }
-	    new_PO_lines_form=new_PO_lines_form+formatCurrency(freightLineId);
+	   // new_PO_lines_form=new_PO_lines_form+formatCurrency(freightLineId);
 	    
 	    console.log("Purchase_lines_form"+Purchase_lines_form);
 	    console.log("new_PO_lines_form"+new_PO_lines_form);
@@ -1362,3 +1859,132 @@ $.ajax({
 }
 return Number(totalamt);
 }
+function canDeletePOCheckboxFormatter(cellValue, options, rowObject){
+	var id="canDeletePOID_"+options.rowId;
+	//deleteSOCheckboxChanges(this.id);
+	var element = "<img src='./../resources/images/delete_jqGrid.png' style='vertical-align: middle;' id='"+id+"' onclick='deleteRowFromJqGrid_PO("+options.rowId+");SetoverAllPOTotal();POLineItemTabformChanges();'>";
+	return element;
+}
+function deleteRowFromJqGrid_PO(jqGridRowId)
+{
+	 var vePodetailId = jQuery("#lineItemGrid").jqGrid ('getCell', jqGridRowId, 'vePodetailId');
+	 if(vePodetailId != null && vePodetailId != 0 && vePodetailId != undefined ){
+		 deletePOLineDetailID.push(vePodetailId);
+		 $('#lineItemGrid').jqGrid('delRowData',jqGridRowId);
+		 $( "#lineItemGrid_iladd" ).trigger( "click" );		 
+	 }else{
+		 $('#lineItemGrid').jqGrid('delRowData',jqGridRowId);
+		 $( "#lineItemGrid_iladd" ).trigger( "click" );
+	 }
+	 $('#lineItemGrid').jqGrid('setSelection', "new_row");
+	 $("#new_row_itemCode").focus();
+}
+
+function POinlineNoteImage(cellValue, options, rowObject){
+	var element = '';
+	var id="PONoteImageIcon_"+options.rowId;
+	var test=""+options.rowId;
+   if(cellValue !== '' && cellValue !== null && cellValue != undefined){
+	   element = "<div><div align='center'><img src='./../resources/images/inline_jqGrid1.png' style='vertical-align: middle;' id='"+id+"' onclick=\"ShowPOLineNote('"+test+"')\"/></div></div>";	   
+   }else{
+	   element = "<div><div align='center'><img src='./../resources/images/inline_jqGrid.png' style='vertical-align: middle;' id='"+id+"' onclick=\"ShowPOLineNote('"+test+"')\"/></div></div>";
+   }
+   return element;
+} 
+
+function ShowPOLineNote(row){
+	/*try{
+		*/
+		var jobStatus=$('#jobStatusList').val();
+		console.log("JobStatus"+jobStatus);
+		/*if(typeof(jobStatus) != "undefined")
+		{*/
+		if(CKEDITOR.instances["lineItemNoteID_POIn"]!=undefined)			
+		{CKEDITOR.instances["lineItemNoteID_POIn"].destroy(true);}
+		CKEDITOR.replace('lineItemNoteID_POIn', ckEditorconfig);
+		/*}
+		else
+		{
+		CKEDITOR.replace('lineItemNoteID', ckEditorconfig);
+		}*/
+		
+		//var rows = jQuery("#customerInvoice_lineitems").getDataIDs();
+		//var id = jQuery("#customerInvoice_lineitems").jqGrid('getGridParam',row);
+		$("#SaveInlineNoteID_POIn").attr("onclick","SavePOLineItemNote_In('"+row+"');");
+		var notes = jQuery("#lineItemGrid").jqGrid ('getCell', row, 'inLineNote');	  
+			CKEDITOR.instances['lineItemNoteID_POIn'].setData(notes);
+			
+			if($('#jobStatusList').val()== 4){
+				$("#SaveInlineNoteID_POIn").css("display", "none");
+			}else{
+				$("#SaveInlineNoteID_POIn").css("display", "inline-block");
+			}
+			
+			jQuery("#POLineItemNote_In").dialog("open");
+		//	$(".nicEdit-main").focus();
+			return true;
+		/*}catch(err){
+			console.log(err.message);
+			alert(err.message);
+		}*/
+	}
+
+	function SavePOLineItemNote_In(row){
+		var inlineText=  CKEDITOR.instances["lineItemNoteID_POIn"].getData(); 
+		
+		//var rows = jQuery("#customerInvoice_lineitems").getDataIDs();
+		//var id = jQuery("#customerInvoice_lineitems").jqGrid('getGridParam','selrow');
+//		row=jQuery("#customerInvoice_lineitems").getRowData(rows[id-1]);
+		  /*var notes = row['note'];
+		  var cuSodetailId = row['cuSodetailId'];*/
+		  //var aLineItem = new Array();
+		  //aLineItem.push(inlineText);
+		  var image="<img src='./../resources/images/lineItem_new.png' style='vertical-align: middle;'>";
+		  if(inlineText==null || inlineText==undefined || inlineText==""){
+			  image=undefined;
+			  inlineText=undefined;
+		  }
+//		  if(isNaN(row)==true || row==undefined){
+//			  $("#new_row_noteImage").val(image);
+//			  $("#new_row_note").val(inlineText);
+//		  }else{
+		  	$("#lineItemGrid").jqGrid('setCell',row,'inLineNote', inlineText);  
+			  $("#lineItemGrid").jqGrid('setCell',row,'inLineNoteImage', image);
+			  
+//		  }
+		  
+		  
+		  jQuery("#POLineItemNote_In").dialog("close");
+		  CKEDITOR.instances['lineItemNoteID_POIn'].destroy();
+		 
+		  //aLineItem.push(cuSodetailId);
+		/*$.ajax({
+			url: "./salesOrderController/saveLineItemNote",
+			type: "POST",
+			data : {'lineItem' : aLineItem},
+			success: function(data) {
+				jQuery("#SoLineItemNote").dialog("close");
+				$("#customerInvoice_lineitems").trigger("reloadGrid");
+			}
+			});*/
+	}
+
+	function POCancelInLineNote_In(){
+		jQuery("#POLineItemNote_In").dialog("close");
+		 CKEDITOR.instances['lineItemNoteID_POIn'].destroy();
+		return false;
+	}
+
+	jQuery(function(){
+		jQuery("#POLineItemNote_In").dialog({
+				autoOpen : false,
+				modal : true,
+				title:"InLine Note",
+				height: 390,
+				width: 635,
+				buttons : {  },
+				close:function(){
+					//return true;
+				}	
+		});
+	});

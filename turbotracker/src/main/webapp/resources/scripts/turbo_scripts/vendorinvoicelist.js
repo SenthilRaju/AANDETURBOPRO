@@ -458,7 +458,22 @@ var allText = $('#apacct').html();
 							  $('#InvalidPOMsg').text('All item has been invoiced for the PO #'+po);
 							  jQuery("#InvalidPODlg").dialog("open"); return
 							  true;
-							   } else{
+							   }
+                                             // alert("Status:-"+data.Status);
+							  //check Po Line items recived or not 
+							  //added by prasant #629 date:10/05/16
+							  if(data.Status==0) {									  
+									  console.log("Test");
+									  jQuery("#EnterPODlg").dialog("close");
+									  $('#InvalidPOMsg').text('Please Receive Line Items for this PO #'+po);
+									  jQuery("#InvalidPODlg").dialog("open");
+									  return  true;
+									   }
+							  
+
+
+
+                                            else{
 							 
 				        		 
 				        	

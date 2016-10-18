@@ -2327,7 +2327,7 @@ Description             : Vendor Settings fieldset UI.
 																</tr>
 														 </table>
 														</fieldset>
-														<table style="position:relative;top:25px;">
+														<table style="position:relative;top:-2px;">
 												<tr>
 												<td><label id="messsagetouser"></label></td>
 												</tr>
@@ -2641,7 +2641,7 @@ Description             : Vendor Settings fieldset UI.
 										</table>
 										</form>
 										</fieldset>
-										<fieldset class="ui-widget-content ui-corner-all" style="position: absolute;top: 43.5%;right: 2%;width: 745px;height: 300px;">
+										<fieldset class="ui-widget-content ui-corner-all" style="position: absolute;top: 41.5%;right: 3%;width: 745px;height: 300px;">
 											<legend class="custom_legend"><label><b>Quotes Category</b></label></legend>
 											<form name="jobquotecolumnform" id="jobquotecolumnform">
 												<table>
@@ -2801,6 +2801,21 @@ Description             : Vendor Settings fieldset UI.
 		                                        <td colspan="2"><input type="radio" id="chkdefOverRideTaxTerritoryYN" value="No"  name="chkdefOverRideTaxTerritoryYN" checked="checked">No</input></td>
 	                                       	</c:if>
                                         </tr>
+                                        
+                                        
+                                          <tr>
+                                         <!--  EditedBy: Prasant	Date: 17 jun 2016  Ref : ID #517 -->
+                                          <td colspan="2"><label>Include Job Name in 'c/o' in ship to address on PDF orders?</label></td>
+		                                     <c:if test="${requestScope.ckhIncludeJobInShipToAddressOnPDFYN == 1}">
+		                                        <td colspan="2"><input type="radio" id="ckhIncludeJobInShipToAddressOnPDFYN"  value="Yes" name="ckhIncludeJobInShipToAddressOnPDFYN" checked="checked">Yes</input></td>
+		                                        <td colspan="2"><input type="radio" id="ckhIncludeJobInShipToAddressOnPDFYN" value="No"  name="ckhIncludeJobInShipToAddressOnPDFYN" >No</input></td>
+                                      		</c:if>
+	                                       	<c:if test="${requestScope.ckhIncludeJobInShipToAddressOnPDFYN == 0 || empty requestScope.ckhIncludeJobInShipToAddressOnPDFYN}">
+	                                        	<td colspan="2"><input type="radio" id="ckhIncludeJobInShipToAddressOnPDFYN"  value="Yes" name="ckhIncludeJobInShipToAddressOnPDFYN" >Yes</input></td>
+		                                        <td colspan="2"><input type="radio" id="ckhIncludeJobInShipToAddressOnPDFYN" value="No"  name="ckhIncludeJobInShipToAddressOnPDFYN" checked="checked">No</input></td>
+	                                       	</c:if>
+                                        </tr>
+                                        
                                         <!--  EditedBy: Naveed	Date: 20 Aug2015  Ref : ID #276
                                         <tr>
 	                                        <td colspan="2"><label>Default Quote By to User creating the Job</label></td>

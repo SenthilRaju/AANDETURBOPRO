@@ -7,9 +7,8 @@ body
 {
 	/* Font */
 	/* font-family: SansSerif/DejaVu Serif, 'serif''; */
-	font-family: Times New Roman/times new roman,'serif';
-	font-size: 10.0pt;
-
+     font-family: Times New Roman/times new roman,'serif';
+	font-size: 10.0pt; 
 	/* Text color */
 	color: #333;
 

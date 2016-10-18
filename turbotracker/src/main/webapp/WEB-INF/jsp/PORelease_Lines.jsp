@@ -28,11 +28,17 @@
 	<table id="lineItemGrid"></table>
 	<div id="lineItemPager"></div>
 	</div>
-	<br>
 	<div>
 		<table>
+		<tr>
+		<td>
+			<div style="margin-left:550px;" >
+			<label > <b>Show Received/Invoiced </b> <input type="checkbox" id="showInvoicedReceived" onchange="showInvoicedReceived()" ></label>
+			  
+			  </div>
+			</td>
+		</tr>
 			<tr>
-			
 			<td >
 					<input type="button" class="turbo-tan savehoverbutton" id="importFromXML" onclick="showXmlUploadForm()" value="Import from XML">
 						<div id="uploadXml_Form" style="display: none; border: 3px 0px #FFFFFF solid">
@@ -115,9 +121,14 @@
 	  		<fieldset class= " custom_fieldset" style="padding-bottom: 0px;vertical-align: middle;">
 		    	<table>
 		    		<tr>
-				  		<td align="right" style="padding-right: 7px;"><input type="image" src="./../resources/Icons/PDF_new.png" title="View Purchase Order" onclick="viewPOPDF()"  style="background: #EEDEBC;"></td> 	
+		    		
+				  		<td align="right" style="padding-right: 7px;">
+				  		<div id="ImgPOPDF"> <input type="image" src="./../resources/Icons/PDF_new.png" title="View Purchase Order" onclick="viewPOPDF()"  style="background: #EEDEBC;">
+				  		</div></td> 	
+				  	
 				  		<!-- <td align="right" style="padding-right: 7px;"><input id="contactEmailID" type="image" src="./../resources/Icons/mail_new.png" title="Email Purchase Order" style="background: #EEDEBC"onclick="sendPOEmail('poGeneral')"></td> -->
-		    			<td align="right" style="padding-right: 7px;"><input id="contactEmailID" type="image" src="./../resources/Icons/mail_new.png" title="Email Purchase Order" style="background: #EEDEBC"onclick="outsidepoEmailButtonAction()"></td>
+		    			
+		    			<td align="right" style="padding-right: 7px;"><div id="ImgPOEmail"><input id="contactEmailID" type="image" src="./../resources/Icons/mail_new.png" title="Email Purchase Order" style="background: #EEDEBC"onclick="outsidepoEmailButtonAction()"></div></td>
 		    		</tr>
 		    	</table>
 	   		</fieldset>
@@ -132,12 +143,12 @@
 	</tr>
 </table>
 </div>
-<div id= "POInLineItem">
+<div id= "POLineItemNote_In">
 	<form action="" id="POInLineItemID">
 		<table align="right">
 			<tr>
 			 	<td>
-	   				<textarea  id="inlineItemId" name="inlineItemName" ></textarea>
+	   				<textarea  id="lineItemNoteID_POIn" name="inlineItemName" ></textarea>
 	   				<input id="inlineItemLableId" style="display: none;">
 	   			</td>
 			</tr>
@@ -145,8 +156,8 @@
 		<table align="right">
 			<tr>
 			 	<td>
-	   				<input type="button" class="savehoverbutton turbo-tan" id="PoSaveInLineItemID" value="Save" onclick="saveLineItemNote()" style=" width:80px;display:inline-block;">
-					<input type="button" class="cancelhoverbutton turbo-tan"  value="Cancel" onclick="POCancelInLineNote()" style="width:80px;">
+	   				<input type="button" class="savehoverbutton turbo-tan" id="SaveInlineNoteID_POIn" value="Save" onclick="SavePOLineItemNote_In()" style=" width:80px;display:inline-block;">
+					<input type="button" class="cancelhoverbutton turbo-tan"  value="Cancel" onclick="POCancelInLineNote_In()" style="width:80px;">
 	   			</td>
 			</tr>
 		</table>

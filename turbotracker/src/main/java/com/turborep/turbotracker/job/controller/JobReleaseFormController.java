@@ -3608,7 +3608,7 @@ public class JobReleaseFormController {
 				}
 			
 			BigDecimal priceMultiplier =BigDecimal.ZERO;
-			String priceMultiplier_str=obj.get("unitCost").getAsString();
+			String priceMultiplier_str=obj.get("priceMultiplier").getAsString();
 			if(priceMultiplier_str!=null && priceMultiplier_str!="" && priceMultiplier_str.length()>0){
 					priceMultiplier_str=priceMultiplier_str.replaceAll("\\$", "");
 					priceMultiplier_str=priceMultiplier_str.replaceAll(",", "");
@@ -3617,7 +3617,7 @@ public class JobReleaseFormController {
 				}
 			
 			BigDecimal unitPrice =BigDecimal.ZERO;
-			String unitPrice_str=obj.get("unitCost").getAsString();
+			String unitPrice_str=obj.get("unitPrice").getAsString();
 			if(unitPrice_str!=null && unitPrice_str!="" && unitPrice_str.length()>0){
 					unitPrice_str=unitPrice_str.replaceAll("\\$", "");
 					unitPrice_str=unitPrice_str.replaceAll(",", "");
@@ -4542,6 +4542,14 @@ public@ResponseBody String getCommissionPaidDetails(
 		List<Vepodetail> lstvepodetail=new ArrayList<Vepodetail>();
 		
 		NodeList nList = doc.getElementsByTagName("LINEITEM");
+		System.out.println("ZPECMULT=============>"+((Element)(doc.getElementsByTagName("HEADER").item(0))).getAttribute("ZPECMULT"));
+		String ZPECMULT="0";
+		try {
+			ZPECMULT=((Element)(doc.getElementsByTagName("HEADER").item(0))).getAttribute("ZPECMULT");
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+		}
+		
 		for (int temp = 0; temp < nList.getLength(); temp++) {
 			Vepodetail aVepodetail = new Vepodetail();
 			Node nNode = nList.item(temp);
@@ -4554,12 +4562,12 @@ public@ResponseBody String getCommissionPaidDetails(
 				
 				System.out.println(eElement.getAttribute("ZMULTIPLY"));
 				System.out.println(new BigDecimal(eElement.getAttribute("ZMULTIPLY")));
-				
 				aVepodetail.setItemCode("*");
 				aVepodetail.setDescription(eElement.getAttribute("CITEMNO"));
 				aVepodetail.setQuantityOrdered(new BigDecimal(eElement.getAttribute("NORDQTY")));
 				aVepodetail.setUnitCost(new BigDecimal(eElement.getAttribute("NPRICE")));
-				aVepodetail.setPriceMultiplier(new BigDecimal(eElement.getAttribute("ZMULTIPLY")));
+				//aVepodetail.setPriceMultiplier(new BigDecimal(eElement.getAttribute("ZMULTIPLY")));
+				aVepodetail.setPriceMultiplier(new BigDecimal(ZPECMULT));
 				aVepodetail.setPrMasterId(prmasterid);
 				aVepodetail.setVePoid(theVepoId);
 				aVepodetail.setTaxable(false);
@@ -4864,7 +4872,8 @@ public@ResponseBody String getCommissionPaidDetails(
 				System.out.println("array length==>"+array.size());
 				BigDecimal whcostTotalAmount=BigDecimal.ZERO;
 				int i=1;
-				for (JsonElement ele1 : array) {
+				for (int ki=0;ki<array.size()-1;ki++) {
+					JsonElement ele1=array.get(ki);
 					boolean saved = false;
 					Vepodetail aVepodetail=new Vepodetail();
 					JsonObject obj = ele1.getAsJsonObject();
@@ -4940,7 +4949,7 @@ public@ResponseBody String getCommissionPaidDetails(
 					aVepodetail.setVendorOrderNumber(vendorOrderNumber);
 					aVepodetail.setPrMasterId(prMasterId);
 					aVepodetail.setVePoid(vePoId);
-					aVepodetail.setPosistion(i);
+					aVepodetail.setPosistion(ki);
 					aVepodetail.setUserId(((UserBean)session.getAttribute(SessionConstants.USER)).getUserId());
 					aVepodetail.setUserName(((UserBean)session.getAttribute(SessionConstants.USER)).getUserName());
 					String Oper="add";

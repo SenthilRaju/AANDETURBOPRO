@@ -25,7 +25,7 @@
 			.weatherWidget{height:215px; overflow-y: hidden; color: #FFF; padding-left: 10px;}
 			.weatherWidget table tr td label{color: #FFF; font-family: Verdana, Arial, sans-serif; font-size: 12px;}
 			.widgetBorders{border-radius : 5px;}
-			.widgetHeader{background: -moz-linear-gradient(-90deg, #8C9BA9, #4A5F71); background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#8C9BA9), to(#4A5F71));}
+			.widgetHeader{ background: -moz-linear-gradient(-90deg, #8C9BA9, #4A5F71);   background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#8C9BA9), to(#4A5F71)); }
 			.ui-autocomplete {
 			    max-height: 200px;
 			    overflow-y: auto;
@@ -37,12 +37,12 @@
 	<form id="homeFormId" name="fname" method="post" >
 <div class="bodyDiv">
 <div><jsp:include page="./headermenu.jsp"></jsp:include></div>
-<table align="center" class="generalSearchTable">
-	<tr align="left">
-		<td class="generalSearchTd">
-			<div id="columns" align="center" class="generalSearchColumns">
+<div class="generalSearchNewTable">
+	
+	
+			<div id="columns" align="center" >
 		        <ul id="column1" class="column">
-		            <li class="widgetForFullNameLable widget widgetBorders" id="intro">
+		            <li class="widgetForFullNameLable widget widgetBorders" id="intro" style="margin-left: 58px;">
 		                <div class="widget-head widgetHeader">
 		                    <h3 class="widget-headForNameDiv">Welcome ${sessionScope.user.fullName}</h3>
 		                </div>
@@ -86,7 +86,7 @@
 										</tr>
 										<tr>
 											<td align="right"><label><b class="rolodexLabel">Inventory:</b></label></td>
-											<td class="rolodexLabelTD"><input type="text" class="rolodexSearchInput" style="border-width: 3px;" onKeydown='Javascript: if (event.keyCode==13) search();'id="inventorysearch" placeholder="Minimum 3 characters required to get Inventory list"></td>
+											<td class="rolodexLabelTD"><input type="text" class="rolodexSearchInput" style="border-width: 3px;" onKeydown='Javascript: if (event.keyCode==13) getInventory();'id="inventorysearch" placeholder="Minimum 3 characters required to get Inventory list"></td>
 											<td><input type="button" value="   Search" class="searchbutton" onclick="getInventory()"> </td>
 											<td><input type="button" value="Advanced" class="advancedSearchInactive" onclick=""> </td>
 										</tr>
@@ -106,22 +106,11 @@
 		            </li>
 				</ul>
 			</div>
-		</td>
-		
-		<td class="rolodexSearchInput">
-	  <!-- <input type="text" name="betweenfrom" id="betweenfrom" >
-		<input type="text" name="betweento" id="betweento" >
-	 <input type="button" name="" id="" value="tempinsert" onclick="insertintoemmaster()"/> -->  
-			<div>
-				<table id="lastOpenedJobs"></table>
-			</div>
-		</td>
-	</tr>
-</table>
-<div align="center" class="realseNotesDiv">
+			<div align="center" class="realseNotesDiv">
 	<table class="home_down">
 		<tr>
-			<td style="width: 300px;">
+		
+			<td style="width: 400px;">
 				<h3 class="versionLableH3">Version <%=ResourceBundle.getBundle("version").getString("app.jdbc.appversion") %>:</h3>
 				<div id="home_down_image" class="down_home" style="width: 320px;">
 					<ul class="realseNotesUl">
@@ -166,16 +155,28 @@
 			<td>
 				<div class="weatherWidget"></div>
 			</td>
-			<td>
-			</td>
 		</tr>
 	</table>
 </div>
+		</div>
+		
+	<!-- 	<td class="rolodexSearchInput"> -->
+	  <!-- <input type="text" name="betweenfrom" id="betweenfrom" >
+		<input type="text" name="betweento" id="betweento" >
+	 <input type="button" name="" id="" value="tempinsert" onclick="insertintoemmaster()"/> -->  
+			<div class="rolodexSearchNewTable"  >
+				<table id="lastOpenedJobs"></table>
+			</div>
+<!-- 		</td>
+	</tr>
+</table> -->
+
 </div>
 		</form>
 		<div class="divHeight"></div>
 	</body>
 	<div class="bodyDiv">
+	
 	<table id="footer">
 		<tr>
 			<td colspan="2">

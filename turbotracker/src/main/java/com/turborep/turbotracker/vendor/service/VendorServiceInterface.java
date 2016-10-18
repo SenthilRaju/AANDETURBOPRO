@@ -205,4 +205,8 @@ public interface VendorServiceInterface {
 
 	public Integer changeTransactionStatus(Integer veBillId);
 
+	public Integer checkPurchaseOrderRecived(Integer vePoid);
+
+	public Boolean checkStausForAllNonInventory(Integer vePoid);
+
 }

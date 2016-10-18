@@ -2,7 +2,7 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="CuInvoiceReport" pageWidth="612" pageHeight="792" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="35de86c0-16af-44d7-b699-f4837f07be00">
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="61"/>
+	<property name="ireport.y" value="106"/>
 	<parameter name="CuInvoice" class="java.lang.String"/>
 	<parameter name="shiptoName" class="java.lang.String"/>
 	<parameter name="shiptoAddress1" class="java.lang.String"/>
@@ -19,12 +19,13 @@
 	<parameter name="incListCol" class="java.lang.Boolean"/>
 	<parameter name="incExtListCol" class="java.lang.Boolean"/>
 	<parameter name="incMultCol" class="java.lang.Boolean"/>
+	<parameter name="printJobName" class="java.lang.Integer"/>
 	<queryString>
 		<![CDATA[SELECT joRelease.ReleaseType,
 cuInvoiceDetail.*, prMaster.ItemCode,
 tsUserLogin.Initials AS SalesRep,
 veShipVia.Description AS ShippedVia,
-(CASE WHEN joMaster.Description  IS NULL THEN cuInvoice.jobnodescription ELSE joMaster.Description  END) AS Job,
+cuInvoice.jobnodescription AS Job,
 cuInvoice.*,
 cuInvoiceDetail.UnitCost*cuInvoiceDetail.QuantityBilled AS ExtList,
 (IFNULL(NULLIF(cuInvoiceDetail.UnitCost, '' ), 0) * IFNULL(NULLIF(cuInvoiceDetail.QuantityBilled, '' ), 0)*IFNULL(NULLIF(cuInvoiceDetail.PriceMultiplier , '' ),1)) AS total,
@@ -360,7 +361,7 @@ WHERE cuInvoice.cuInvoiceID=$P{CuInvoice} ORDER BY cuInvoiceDetail.position;]]>
 		<band splitType="Stretch"/>
 	</background>
 	<title>
-		<band height="222" splitType="Stretch">
+		<band height="237" splitType="Stretch">
 			<rectangle radius="10">
 				<reportElement x="5" y="106" width="281" height="45" uuid="1663e1ae-d157-45c2-89e7-46341daed1b2"/>
 			</rectangle>
@@ -368,10 +369,10 @@ WHERE cuInvoice.cuInvoiceID=$P{CuInvoice} ORDER BY cuInvoiceDetail.position;]]>
 				<reportElement x="448" y="106" width="122" height="45" uuid="5d042e5b-d8cd-4feb-a786-5cd3e33fd2e6"/>
 			</rectangle>
 			<rectangle radius="10">
-				<reportElement x="5" y="153" width="281" height="68" uuid="356560e3-8e70-49ca-b02f-f79e7c50549b"/>
+				<reportElement x="5" y="153" width="281" height="82" uuid="356560e3-8e70-49ca-b02f-f79e7c50549b"/>
 			</rectangle>
 			<rectangle radius="10">
-				<reportElement x="289" y="153" width="280" height="68" uuid="8515e16d-5af8-43b1-912b-f8c5d2e88ae5"/>
+				<reportElement x="289" y="153" width="280" height="82" uuid="8515e16d-5af8-43b1-912b-f8c5d2e88ae5"/>
 			</rectangle>
 			<staticText>
 				<reportElement x="5" y="111" width="30" height="13" uuid="7b91703a-27e2-4fcb-9cef-720617ac6335"/>
@@ -419,11 +420,13 @@ WHERE cuInvoice.cuInvoiceID=$P{CuInvoice} ORDER BY cuInvoiceDetail.position;]]>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement x="343" y="175" width="220" height="16" isRemoveLineWhenBlank="true" isPrintWhenDetailOverflows="true" uuid="75075df3-76c8-4120-aa27-c5e4c10a86fd"/>
 				<textElement markup="html"/>
-				<textFieldExpression><![CDATA[( $P{shiptoAddress1}!=null && !$P{shiptoAddress1}.equals("") ? $P{shiptoAddress1}+"<br>" : "" )
+				<textFieldExpression><![CDATA[($P{printJobName}.intValue()==1)?
+"<b>c/o:</b>"+($F{Job}):
+(( $P{shiptoAddress1}!=null && !$P{shiptoAddress1}.equals("") ? $P{shiptoAddress1}+"<br>" : "" )
 +( $P{shiptoAddress2}!=null && !$P{shiptoAddress2}.equals("") ? $P{shiptoAddress2}+"<br>" : "" )
 +( $P{shiptoCity}!=null && !$P{shiptoCity}.equals("") ? $P{shiptoCity}+", " : "" )
 +( $P{shiptoState}!=null && !$P{shiptoState}.equals("") ? $P{shiptoState}+" " : "" )
-+( $P{shiptoZip}!=null && !$P{shiptoZip}.equals("") ? $P{shiptoZip} : "" )]]></textFieldExpression>
++( $P{shiptoZip}!=null && !$P{shiptoZip}.equals("") ? $P{shiptoZip} : "" ))]]></textFieldExpression>
 			</textField>
 			<elementGroup/>
 			<componentElement>
@@ -571,6 +574,16 @@ WHERE cuInvoice.cuInvoiceID=$P{CuInvoice} ORDER BY cuInvoiceDetail.position;]]>
 +( $F{remitToCity} !=null && !$F{remitToCity}.equals("") ? $F{remitToCity}+"," : "" )
 +( $F{remitToState} !=null && !$F{remitToState}.equals("") ? $F{remitToState}+"," : "" )
 + ( $F{remitToZip} !=null && !$F{remitToZip}.equals("")? $F{remitToZip} : "" )]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="343" y="191" width="220" height="16" isRemoveLineWhenBlank="true" isPrintWhenDetailOverflows="true" uuid="ba833510-6249-4b3d-bb53-aa53b0c7365a"/>
+				<textElement markup="html"/>
+				<textFieldExpression><![CDATA[($P{printJobName}.intValue()==1)?
+(( $P{shiptoAddress1}!=null && !$P{shiptoAddress1}.equals("") ? $P{shiptoAddress1}+"<br>" : "" )
++( $P{shiptoAddress2}!=null && !$P{shiptoAddress2}.equals("") ? $P{shiptoAddress2}+"<br>" : "" )
++( $P{shiptoCity}!=null && !$P{shiptoCity}.equals("") ? $P{shiptoCity}+", " : "" )
++( $P{shiptoState}!=null && !$P{shiptoState}.equals("") ? $P{shiptoState}+" " : "" )
++( $P{shiptoZip}!=null && !$P{shiptoZip}.equals("") ? $P{shiptoZip} : "" )):""]]></textFieldExpression>
 			</textField>
 		</band>
 	</title>
@@ -744,7 +757,7 @@ WHERE cuInvoice.cuInvoiceID=$P{CuInvoice} ORDER BY cuInvoiceDetail.position;]]>
 				<text><![CDATA[No Returns Without Written Approval.]]></text>
 			</staticText>
 			<rectangle radius="10">
-				<reportElement positionType="FixRelativeToBottom" x="366" y="7" width="205" height="85" uuid="8295c2f4-0001-43ef-888f-1d114f498893"/>
+				<reportElement positionType="FixRelativeToBottom" x="365" y="4" width="205" height="85" uuid="8295c2f4-0001-43ef-888f-1d114f498893"/>
 			</rectangle>
 			<staticText>
 				<reportElement positionType="FixRelativeToBottom" x="385" y="10" width="77" height="14" uuid="db01cc93-698f-4972-a751-7ac0dfff8434"/>
@@ -795,11 +808,11 @@ WHERE cuInvoice.cuInvoiceID=$P{CuInvoice} ORDER BY cuInvoiceDetail.position;]]>
 				<textFieldExpression><![CDATA[($F{TaxAmount} == null) ? "" :$F{TaxAmount}.setScale( 2, RoundingMode.FLOOR )]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true">
-				<reportElement x="7" y="55" width="345" height="18" isPrintWhenDetailOverflows="true" uuid="7df565c9-099a-48a7-88bc-399d9f964800"/>
+				<reportElement x="7" y="55" width="349" height="18" isPrintWhenDetailOverflows="true" uuid="7df565c9-099a-48a7-88bc-399d9f964800"/>
 				<textElement>
 					<font size="9"/>
 				</textElement>
-				<textFieldExpression><![CDATA["Interest will be added to past due accounts at1.5%Per month(18% Annual Rate)"]]></textFieldExpression>
+				<textFieldExpression><![CDATA["Interest will be added to past due accounts at 1.0% per month(12% annual rate)"]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" pattern="$ #,##0.00" isBlankWhenNull="true">
 				<reportElement x="468" y="75" width="91" height="15" uuid="514b1e2e-54d1-4a0c-b0d0-f796cede345d"/>

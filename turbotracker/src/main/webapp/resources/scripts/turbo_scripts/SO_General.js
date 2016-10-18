@@ -543,6 +543,7 @@ function resetSOGeneralForm(){
 function chechcustomerisonhold(){
 	var returnvalue=false;
 	var customerid=$("#billToCustomerNameGeneralID").val();
+	alert("customerid:"+customerid);
 	
 	if(customerid!="")
 	{
@@ -858,6 +859,7 @@ function saveSORelease(popupdetail){
 							+'&rxShiptoid='+ $(divflag).contents().find("#shiptoaddrhiddenfromuiid").val()+'&rxShiptomodevalue='+ $(divflag).contents().find("#shiptomoderhiddenid").val()
 							+'&withpriceStatus='+withPriceStatus
 							+'&sotaxfreight='+so_taxfreight;
+		//alert(SoGeneralValues);
 	if(ShipDate != null && ShipDate != "")
 		SoGeneralValues += '&ShipDate='+ShipDate;
  	

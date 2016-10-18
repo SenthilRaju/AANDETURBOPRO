@@ -320,11 +320,13 @@ WHERE cuSO.cuSOID=$P{cusoID} order by cuSODetail.position;]]>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement x="359" y="119" width="200" height="16" isRemoveLineWhenBlank="true" isPrintWhenDetailOverflows="true" uuid="e7380488-93cb-4a42-9f7e-d7b887de87a3"/>
 				<textElement verticalAlignment="Middle" markup="html"/>
-				<textFieldExpression><![CDATA[( $P{billAddress1}!=null && !$P{billAddress1}.equals("") ? $P{billAddress1}+"<br>" : "" )
+				<textFieldExpression><![CDATA[($P{printJobName}.intValue()==1)?
+"<b>c/o:</b>"+(($F{joReleaseID}!=null ? $F{Job} : $F{Tag})):
+(( $P{billAddress1}!=null && !$P{billAddress1}.equals("") ? $P{billAddress1}+"<br>" : "" )
 +( $P{billAddress2}!=null && !$P{billAddress2}.equals("") ? $P{billAddress2}+"<br>" : "" )
 +( $P{billCity}!=null && !$P{billCity}.equals("") ? $P{billCity}+", " : "" )
 +( $P{BilState}!=null && !$P{BilState}.equals("") ? $P{BilState}+" " : "" )
-+( $P{BillZip}!=null && !$P{BillZip}.equals("") ? $P{BillZip} : "" )]]></textFieldExpression>
++( $P{BillZip}!=null && !$P{BillZip}.equals("") ? $P{BillZip} : "" ))]]></textFieldExpression>
 			</textField>
 			<elementGroup/>
 			<componentElement>
@@ -367,7 +369,7 @@ WHERE cuSO.cuSOID=$P{cusoID} order by cuSODetail.position;]]>
 				<imageExpression><![CDATA[$P{HeaderImage}]]></imageExpression>
 			</image>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement x="312" y="164" width="227" height="18" isRemoveLineWhenBlank="true" isPrintWhenDetailOverflows="true" uuid="da2269ce-f27e-4276-a1e9-57c334f0feab"/>
+				<reportElement x="332" y="164" width="227" height="18" isRemoveLineWhenBlank="true" isPrintWhenDetailOverflows="true" uuid="da2269ce-f27e-4276-a1e9-57c334f0feab"/>
 				<textElement textAlignment="Center">
 					<font isBold="true"/>
 				</textElement>
@@ -458,6 +460,16 @@ WHERE cuSO.cuSOID=$P{cusoID} order by cuSODetail.position;]]>
 				<reportElement x="491" y="213" width="79" height="17" uuid="2c62cafb-f5f9-470c-8580-cbe3f3cbe879"/>
 				<textElement verticalAlignment="Middle"/>
 				<textFieldExpression><![CDATA[$F{Initials}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="359" y="135" width="200" height="16" isRemoveLineWhenBlank="true" isPrintWhenDetailOverflows="true" uuid="d1a1a969-95f4-4ce1-a331-99c98fab2a08"/>
+				<textElement verticalAlignment="Middle" markup="html"/>
+				<textFieldExpression><![CDATA[($P{printJobName}.intValue()==1)?
+(( $P{billAddress1}!=null && !$P{billAddress1}.equals("") ? $P{billAddress1}+"<br>" : "" )
++( $P{billAddress2}!=null && !$P{billAddress2}.equals("") ? $P{billAddress2}+"<br>" : "" )
++( $P{billCity}!=null && !$P{billCity}.equals("") ? $P{billCity}+", " : "" )
++( $P{BilState}!=null && !$P{BilState}.equals("") ? $P{BilState}+" " : "" )
++( $P{BillZip}!=null && !$P{BillZip}.equals("") ? $P{BillZip} : "" )):""]]></textFieldExpression>
 			</textField>
 		</band>
 	</title>

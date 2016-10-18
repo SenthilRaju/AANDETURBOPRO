@@ -127,7 +127,7 @@
 				<tr>
 					<td>
 						<label class="headerMenuSearchLabel"><b>Search:</b></label> &nbsp; 
-						<input type="text" id="searchJob" placeholder="Minimum 3 characters required to get Job List"> &nbsp;
+						<input type="text" id="searchJob" placeholder="Minimum 3 characters required to get Job List"   onkeydown="Javascript: if (event.keyCode==13) getJobs();"> &nbsp;
 					</td>
 					<td> 
 						<input type="button" class="go turbo-tan" value="Go" onclick="getJobs()">
@@ -403,6 +403,71 @@
 	<!-- <script type="text/javascript" src="./../resources/scripts/turbo_scripts/minscripts/turbo_headermenu_script.min.js"></script> --> 
 	<script type="text/javascript">
 	var edd_object="";
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	$(function() { var cache = {}; var lastXhr='';
+	$( "#searchJob" ).autocomplete({ minLength: 3,timeout :1000,sortResults: true,
+		open: function(){ $('.ui-autocomplete-loading').removeClass("ui-autocomplete-loading"); },
+		select: function (event, ui) {
+			var name = ui.item.value;
+			var joMasterID=ui.item.id;
+			var value = name.replace("[","`");
+			var job = value.split("`");
+			var jobName = job[0];
+			jobName = "`"+jobName+"`";
+			var number = job[1];
+			var jobNumber = number.replace("]"," ");
+			$.ajax({
+				url:"./search/searchjobcustomer",mType:"GET",data:{'jobnumber':jobNumber,'jobname':jobName,'joMasterID':joMasterID},
+				success: function(data) {
+							
+					$.each(data, function(index, value){
+						status = value.jobStatus;
+						jobCustomer = value.customerName;
+					});
+					if(jobCustomer === null) {
+						jobCustomer = "";
+					}
+					updateJobstatus(jobNumber,status,joMasterID);
+					var urijobname=encodeBigurl(jobName);
+					var uricusname=encodeBigurl(jobCustomer);
+					window.location.href = "./jobflow?token=view&jobNumber="+jobNumber+"&jobName="+urijobname+"&jobCustomer="+uricusname+"&jobStatus="+status+"&joMasterID="+joMasterID;
+				},
+				error: function(Xhr) {
+					var errorText = $(Xhr.responseText).find('u').html();
+					var newDialogDiv = jQuery(document.createElement('div'));
+					jQuery(newDialogDiv).html('<span style="color:red;"><b>Error: '+errorText+'</b></span>');
+					jQuery(newDialogDiv).dialog({modal: true, width:500, height:250, title:"Fatal Error.",buttons: [{height:35,text: "OK",click: function() { $(this).dialog("close"); }}]}).dialog("open");
+				}
+			});
+	      },
+		source: function( request, response ) { var term = request.term;
+			if(term in cache) {response(cache[term] ); return;}
+			lastXhr = $.getJSON( "search/searchjoblist", request, function(data, status, xhr){cache[term]=data; if(xhr===lastXhr){response(data);} });
+		},
+		error: function (result) {
+		     $('.ui-autocomplete-loading').removeClass("ui-autocomplete-loading");
+		}  });
+	});
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	function TinyMCETextEditorForAllInitsetup(ed_width,ed_height,enableornot) {
 		if(enableornot){
 	tinymce.init({
@@ -694,6 +759,7 @@
         	    pasteFromWordRemoveStyles:false,
         	    disableNativeSpellChecker:true,
         	    scayt_minWordLength:3, 
+        	   /*  extraAllowedContent :' p{font-family,font-size}', */
         	
         	   coreStyles_underline:{ element: 'span',overrides: 'u', styles: { 'text-decoration' : 'underline' },
             	    childRule: function( element ) {

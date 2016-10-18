@@ -17,8 +17,12 @@
 		    background: none repeat scroll 50% 50% #2B2922;
 		    opacity: 0.6;
 		}
-		
+		.ui-jqgrid tr.jqgrow td {
+		text-overflow: ellipsis !important;
+        white-space: nowrap !important;
+    }
      </style>
+
        <script type="text/javascript">var _blockjsfiles = true;</script>
     <!--  <link type="text/css" href="./../resources/styles/turbo-css/job_turbo.css" rel="stylesheet"> -->
 </head>
@@ -836,9 +840,8 @@
 	</table>
 	<div id="jqgridLine" style="width:920px; overflow: auto;">
 	<table id="lineItemGrid"></table>
-	<div id="lineItemPager"></div>
+	<div id="lineItemPager" style="display:none;"></div>
 	</div>
-	<br>
 	<!-- <div>
 		<table >
 			<tr>
@@ -862,6 +865,11 @@
 		<button value="Submit" class="turbo-tan savehoverbutton" onclick="uploadJqueryForm()" >Upload</button>
 		<input type="button" id="cancelFormSubmit" class="turbo-tan savehoverbutton" value="Cancel" onclick="cancelFormSubmit()"> <br/>
 	</div>
+			<div style="margin-left:705px;" >
+			<label > <b>Show Received/Invoiced </b> <input type="checkbox" id="showInvoicedReceived" onchange="showInvoicedReceived()" ></label>
+			  
+			  </div>
+	<br>
 	<div id="ackAll" style="display: block; border: 3px 0px #FFFFFF solid;float: right;">	
 			
 		<button value="Acknowledge All" class="turbo-tan savehoverbutton" onclick="openAckShipPopup()" >Acknowledge All</button>		
@@ -905,8 +913,8 @@
 	  		<fieldset class= "ui-widget-content ui-corner-all"  style="padding-bottom: 0px;vertical-align: middle;">
 		    	<table>
 		    		<tr>
-				  		<td align="right" style="padding-right: 7px;"><input type="image" src="./../resources/Icons/PDF_new.png" title="View Purchase Order" onclick="viewPOPDF()"  style="background: #EEDEBC;" id="lineTabPDF"></td> 	
-				  		<td align="right" style="padding-right: 7px;"><input id="contactEmailID" type="image" src="./../resources/Icons/mail_new.png" title="Email Purchase Order" style="background: #EEDEBC" id="lineTabMail" onclick="outsidepoEmailButtonAction()"></td>
+				  		<td align="right" style="padding-right: 7px;"><div id="ImgPOPDF"><input type="image" src="./../resources/Icons/PDF_new.png" title="View Purchase Order" onclick="viewPOPDF()"  style="background: #EEDEBC;" id="lineTabPDF"></div></td> 	
+				  		<td align="right" style="padding-right: 7px;"><div id="ImgPOEmail"><input id="contactEmailID" type="image" src="./../resources/Icons/mail_new.png" title="Email Purchase Order" style="background: #EEDEBC" id="lineTabMail" onclick="outsidepoEmailButtonAction()"></div></td>
 		    		</tr>
 		    	</table>
 	   		</fieldset>
@@ -971,7 +979,7 @@
 
 </div>
 
-<div id= "POInLineItem" style="display: none;">
+<!-- <div id= "POInLineItem" style="display: none;">
 	<form action="" id="POInLineItemID">
 		<table align="right">
 			<tr>
@@ -986,6 +994,27 @@
 			 	<td>
 	   				<input type="button" id="PoSaveInLineItemID" class="savehoverbutton turbo-tan" value="Save" onclick="saveLineItemNote()" style=" width:80px;">
 					<input type="button" class="cancelhoverbutton turbo-tan"  value="Cancel" onclick="cancelLineItemNote()" style="width:80px;">
+	   			</td>
+			</tr>
+		</table>
+	</form>
+</div>  -->
+
+<div id= "POLineItemNote_In">
+	<form action="" id="POInLineItemID">
+		<table align="right">
+			<tr>
+			 	<td>
+	   				<textarea  id="lineItemNoteID_POIn" name="inlineItemName" ></textarea>
+	   				<input id="inlineItemLableId" style="display: none;">
+	   			</td>
+			</tr>
+		</table>
+		<table align="right">
+			<tr>
+			 	<td>
+	   				<input type="button" class="savehoverbutton turbo-tan" id="SaveInlineNoteID_POIn" value="Save" onclick="SavePOLineItemNote_In()" style=" width:80px;display:inline-block;">
+					<input type="button" class="cancelhoverbutton turbo-tan"  value="Cancel" onclick="POCancelInLineNote_In()" style="width:80px;">
 	   			</td>
 			</tr>
 		</table>

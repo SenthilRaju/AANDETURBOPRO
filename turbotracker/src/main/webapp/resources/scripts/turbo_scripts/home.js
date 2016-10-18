@@ -104,7 +104,7 @@ function recentlyOpenedJob(){
 					{name:'jobOpenedDateStr', index:'jobOpenedDateStr', width:80, align:'center',formatter: dateFormatter,hidden:true},
 					{name:'jobBidDateStr', index:'jobBidDateStr', width:80, align:'center',formatter: dateFormatter,hidden:false}
 				 ],
-		rowNum:13,
+		rowNum:25,
 		pgbuttons:true,
 		recordtext:'',
 		viewrecords:true,
@@ -113,7 +113,7 @@ function recentlyOpenedJob(){
 		//shrinkToFit:true,
 		loadtext : 'loading..',
 		sortname:'', sortorder:"asc", imgpath:'themes/basic/images', caption:'Recently Opened Jobs',
-		height: 'auto', draggable: true, position: 'fixed',  modal: true,	width: 320,/* scrollOffset:0, *//* rownumbers:true,*/ altRows: true, altclass:'myAltRowClass', rownumWidth: 45,
+		height: '625', draggable: true, position: 'fixed',  modal: true,	width: 320,/* scrollOffset:0, *//* rownumbers:true,*/ altRows: true, altclass:'myAltRowClass', rownumWidth: 45,
 		loadComplete: function(data) { },
 		loadError : function (jqXHR, textStatus, errorThrown) {	},
 		ondblClickRow: function(rowId) {
@@ -178,7 +178,7 @@ function getWeatherForecast(){
 	        url: theUrl,
 	        async: false,
 	        contentType: "application/json",
-	        dataType: 'jsonp',
+	        dataType: 'json',
 	        success: function(result){
 	        	console.log("Webservice call --->"+result.data);
 				var currentTemp = result.data.current_condition[0].temp_C;
@@ -215,7 +215,7 @@ function getWeatherForecast(){
 				dialogHTML = dialogHTML + '</ul></div>';
 				console.log(dialogHTML);
 				$('.weatherWidget').html(dialogHTML);
-				$('.weatherWidget').append({modal: true, width:500, height:450, title:"Weather Widget", 
+				$('.weatherWidget').append({modal: true, width:100, height:450, title:"Weather Widget", 
 										buttons: [{height:35,text: "OK",click: function() { $(this).dialog("close"); }}]}).dialog("open");
 				
 			},
@@ -615,7 +615,7 @@ function getInventory(){
 		
 	}
 	createtpusage('Home','Search Inventory','Info','Home,Searching Inventory,Inventory:'+inventorySearch);
-	location.href="./inventory?token=view&key="+$('#inventorysearch').val();
+	location.href="./inventory?token=view&key="+$('#inventorysearch').val()+"&inventorySearch=1";
 	return true;
 	
 }

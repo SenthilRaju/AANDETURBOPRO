@@ -17,7 +17,7 @@ jQuery(document).ready(function() {
 		$('#loadingPOAckDiv').css({"visibility": "hidden"});
 		var total=(Number($("#Subtotal_ID").text().replace(/[^0-9\.]+/g,"")) + Number($("#Freight_ID").text().replace(/[^0-9\.]+/g,"")));
 		$("#totalKnowledgeId").val(formatCurrency($("#totalGeneralId").val().replace(/[^0-9\.]+/g,"")));
-		
+		SetoverAllPOTotal();
 		var jobStatus = getUrlVars()["jobStatus"];
 		if(jobStatus.indexOf("Closed")>-1){
 			$('#POReleaseAckSaveButton').css('cursor','default');
@@ -396,32 +396,88 @@ function loadAck(){
 		          	},editrules:{edithidden:false}},
 		           	{name:'description', index:'description', align:'left', width:150, editable:true,hidden:false, edittype:'text', editoptions:{size:40,
 		           		dataEvents: [
-					       			  { type: 'focus', data: { i: 7 }, fn: function(e) { e.target.select(); } },
-					    			  { type: 'click', data: { i: 7 }, fn: function(e) { e.target.select(); } }
+					       			  { type: 'focus', data: { i: 7 }, fn: function(e) {
+					       				  e.target.select(); } },
+					    			  { type: 'click', data: { i: 7 }, fn: function(e) { e.target.select(); } },
+					    			  {
+					                         type: 'keypress',
+					                         fn: function(e) {
+					                        	 var key = e.which;
+					                    		 if(key == 13)  // the enter key code
+					                    		  {
+					                    			 $("#Ack_ilsave").trigger("click");
+					                    		    return false;  
+					                    		  }
+					                         }
+					                        }
 					    			  ]
 		           	},editrules:{edithidden:false}, cellattr: function (rowId, tv, rawObject, cm, rdata)	 {return 'style="white-space: normal" ';}},
 		           	{name:'quantityOrdered', index:'quantityOrdered', align:'right', width:50,hidden:false, editable:false, editoptions:{size:15, alignText:'right',
 		           		dataEvents: [
 					       			  { type: 'focus', data: { i: 7 }, fn: function(e) { e.target.select(); } },
-					    			  { type: 'click', data: { i: 7 }, fn: function(e) { e.target.select(); } }
+					    			  { type: 'click', data: { i: 7 }, fn: function(e) { e.target.select(); } },
+					    			  {
+					                         type: 'keypress',
+					                         fn: function(e) {
+					                        	 var key = e.which;
+					                    		 if(key == 13)  // the enter key code
+					                    		  {
+					                    			 $("#Ack_ilsave").trigger("click");
+					                    		    return false;  
+					                    		  }
+					                         }
+					                        }
 					    			  ]
 		           	},editrules:{edithidden:false}},
 		           	{name:'ackDate', index:'ackDate', align:'center', width:50,hidden:false, editable:true,  editoptions:{size:15, align:'center',
 		           		dataEvents: [
 					       			  { type: 'focus', data: { i: 7 }, fn: function(e) { e.target.select(); } },
-					    			  { type: 'click', data: { i: 7 }, fn: function(e) { e.target.select(); } }
+					    			  { type: 'click', data: { i: 7 }, fn: function(e) { e.target.select(); } },
+					    			  {
+					                         type: 'keypress',
+					                         fn: function(e) {
+					                        	 var key = e.which;
+					                    		 if(key == 13)  // the enter key code
+					                    		  {
+					                    			 $("#Ack_ilsave").trigger("click");
+					                    		    return false;  
+					                    		  }
+					                         }
+					                        }
 					    			  ]
 		           	},editrules:{edithidden:true}},
 					{name:'shipDate', index:'shipDate', align:'center', width:50,hidden:false, editable:true, editoptions:{size:15, alignText:'center',
 						dataEvents: [
 					       			  { type: 'focus', data: { i: 7 }, fn: function(e) { e.target.select(); } },
-					    			  { type: 'click', data: { i: 7 }, fn: function(e) { e.target.select(); } }
+					    			  { type: 'click', data: { i: 7 }, fn: function(e) { e.target.select(); } },
+					    			  {
+					                         type: 'keypress',
+					                         fn: function(e) {
+					                        	 var key = e.which;
+					                    		 if(key == 13)  // the enter key code
+					                    		  {
+					                    			 $("#Ack_ilsave").trigger("click");
+					                    		    return false;  
+					                    		  }
+					                         }
+					                        }
 					    			  ]
 					}, editrules:{edithidden:true}},
 					{name:'vendorOrderNumber', index:'vendorOrderNumber', align:'right', width:50,hidden:false, editable:true, editoptions:{size:15, alignText:'right',
 						dataEvents: [
 					       			  { type: 'focus', data: { i: 7 }, fn: function(e) { e.target.select(); } },
-					    			  { type: 'click', data: { i: 7 }, fn: function(e) { e.target.select(); } }
+					    			  { type: 'click', data: { i: 7 }, fn: function(e) { e.target.select(); } },
+					    			  {
+					                         type: 'keypress',
+					                         fn: function(e) {
+					                        	 var key = e.which;
+					                    		 if(key == 13)  // the enter key code
+					                    		  {
+					                    			 $("#Ack_ilsave").trigger("click");
+					                    		    return false;  
+					                    		  }
+					                         }
+					                        }
 					    			  ]
 					},editrules:{edithidden:true}},
 					{name:'vePoid', index:'vePoid', align:'right', width:50,hidden:true, editable:true, editoptions:{size:15, alignText:'right'},editrules:{edithidden:false}},
@@ -429,7 +485,7 @@ function loadAck(){
 					{name:'vePodetailId', index:'vePodetailId', align:'right', width:50,hidden:true, editable:true, editoptions:{size:15, alignText:'right'},editrules:{edithidden:false}}],
 				rowNum: 0, pgbuttons: false, recordtext: '', rowList: [], pgtext: null, viewrecords: false,
 				sortname: 'vePodetailId', sortorder: "asc", imgpath: 'themes/basic/images', caption: false,
-				height:210,	width: 750, rownumbers:true, altRows: true, altclass:'myAltRowClass', caption: 'Acknowledgment',
+				height:482.5,width: 765, rownumbers:true, altRows: true, altclass:'myAltRowClass', caption: 'Acknowledgment',
 				jsonReader : {
 					root: "rows",
 					page: "page",
@@ -440,7 +496,8 @@ function loadAck(){
 					id: "id",
 					userdata: "userdata"
 				},
-			loadComplete: function(data) { 	},
+			loadComplete: function(data) { 
+			},
 			gridComplete: function () {
 	           	var gridRows = $('#Ack').getRowData();
 	           	poRelease_AckForm =  JSON.stringify(gridRows);
@@ -448,6 +505,8 @@ function loadAck(){
 			loadError : function (jqXHR, textStatus, errorThrown){	},
 			onSelectRow: function(id){ 
 				selectedackrowid=id;
+			},ondblClickRow: function(id){
+				$("#Ack_iledit").trigger("click");
 			},
 			cellsubmit: 'clientArray',
 			editurl: 'clientArray',
@@ -577,8 +636,12 @@ function loadAck(){
 							$("#"+id+"_shipDate").datepicker();
 						
 						}
-					}
+					},restoreAfterSelect :false
 				});
+	 	$("#Ack_ilsave").css({"display":"none"});
+	 	$("#Ack_iladd").css({"display":"none"});
+		$("#Ack_iledit").css({"display":"none"});
+		$("#Ack_ilcancel").css({"display":"none"});
 }
 
 function SaveAcknowledgementPO(popupdetail){
