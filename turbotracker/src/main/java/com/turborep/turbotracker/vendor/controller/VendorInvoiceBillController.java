@@ -2415,7 +2415,7 @@ public class VendorInvoiceBillController {
 		
 		String customDate = "";
 		
-		if((startDate!=null && !startDate.equals("")) && (endDate!=null && !endDate.equals(""))){
+		/*if((startDate!=null && !startDate.equals("")) && (endDate!=null && !endDate.equals(""))){
 			customDate = endDate;		}
 		else if((startDate!=null && !startDate.equals("")) || (endDate!=null && endDate.equals(""))){
 			customDate = startDate;
@@ -2423,8 +2423,17 @@ public class VendorInvoiceBillController {
 			customDate = endDate;
 		}else{
 			customDate = formattedto;
-		}
+		}*/
 
+		if((startDate!=null && !startDate.trim().equals("")) && (endDate!=null && !endDate.trim().equals(""))){
+			customDate = endDate;		}
+		else if((endDate!=null && !endDate.trim().equals(""))){
+			customDate = endDate;
+		}else if((startDate!=null && !startDate.trim().equals(""))){
+			customDate = startDate;
+		}else{
+			customDate = formattedto;
+		}
 		
 		String aVendorBillsListQry = "SELECT vb.veBillID,vb.BillDate,vp.PONumber,vb.InvoiceNumber,vb.rxMasterID,CONCAT(rx.Name, ' ', rx.FirstName) AS PayableTo,"
 		+ " vb.BillAmount,vb.AppliedAmount,vb.vePOID,vb.joReleaseDetailID,vb.DueDate,mo.Reference,mo.TransactionDate,(mLD.Amount+mLD.Discount) AS amountVal,"
@@ -2438,7 +2447,7 @@ public class VendorInvoiceBillController {
 		+ " LEFT OUTER JOIN rxMaster rx ON vb.rxMasterID = rx.rxMasterID LEFT OUTER JOIN vePO vp ON vb.vePOID = vp.vePOID"
 		+ " WHERE (vb.vePOID IS NULL OR vb.vePOID IS NOT NULL) and (vb.TransactionStatus >0 or vb.TransactionStatus=-2) ";
 		         
-		if(searchData !=null && !searchData.equals("")){
+		/*if(searchData !=null && !searchData.equals("")){
 			aVendorBillsListQry+= "And  (vb.veBillID LIKE '%"+searchData+"%' OR PONumber LIKE '%"+searchData+"%' OR InvoiceNumber LIKE '%"+searchData+"%'" +
 					" OR vb.rxMasterID LIKE '%"+searchData+"%' OR CONCAT(rx.Name, ' ', rx.FirstName) LIKE '%"+searchData+"%' OR BillAmount LIKE '%"+searchData+"%'" +
 					" OR AppliedAmount LIKE '%"+searchData+"%' OR vb.vePOID LIKE '%"+searchData+"%' OR vb.joReleaseDetailID LIKE '%"+searchData+"%')";
@@ -2453,9 +2462,25 @@ public class VendorInvoiceBillController {
 		}else{
 			aVendorBillsListQry+= " AND Date(BillDate) <= '"+formattedto+"' GROUP BY vb.veBillID ";
 		}
-				
+		*/
+		if(searchData !=null && !searchData.trim().equals("")){
+			aVendorBillsListQry+= "And  (vb.veBillID LIKE '%"+searchData+"%' OR PONumber LIKE '%"+searchData+"%' OR InvoiceNumber LIKE '%"+searchData+"%'" +
+					" OR vb.rxMasterID LIKE '%"+searchData+"%' OR CONCAT(rx.Name, ' ', rx.FirstName) LIKE '%"+searchData+"%' OR BillAmount LIKE '%"+searchData+"%'" +
+					" OR AppliedAmount LIKE '%"+searchData+"%' OR vb.vePOID LIKE '%"+searchData+"%' OR vb.joReleaseDetailID LIKE '%"+searchData+"%')";
+		}
+		
+		if((startDate!=null && !startDate.trim().equals("")) && (endDate!=null && !endDate.trim().equals(""))){
+			aVendorBillsListQry+= " AND Date(BillDate) >= '"+startDate +"' AND Date(BillDate) <= '"+endDate+"' GROUP BY vb.veBillID ";	}
+		else if((startDate!=null && !startDate.trim().equals(""))){
+			aVendorBillsListQry+= " AND Date(BillDate) >='"+startDate+"' GROUP BY vb.veBillID ";
+		}else if((endDate!=null && !endDate.trim().equals(""))){
+			aVendorBillsListQry+= " AND Date(BillDate) <='"+endDate+"' GROUP BY vb.veBillID ";
+		}else{
+			aVendorBillsListQry+= " AND Date(BillDate) <= '"+formattedto+"' GROUP BY vb.veBillID ";
+		}
+		
 		String orderByIndex="";
-		String orderBy="DESC";
+		String orderBy="ASC";
 		
 		     
 		/*if(sortIndex.equals("billDate")){
