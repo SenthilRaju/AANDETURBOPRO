@@ -1410,6 +1410,9 @@ function FormatShipDate(createdDate){
 }
 function sendPOEmail(poGeneralKey){
 	
+	
+	alert("Email is ready to go..!");
+	
 	console.log('Email form---- SO_General.js---SO_General.js---->'+$('#emailListCU').text()+'  :::  poGeneralKey : '+poGeneralKey);
 	if($('#POtransactionStatus').val() === '-1'){
 		var newDialogDiv = jQuery(document.createElement('div'));
@@ -1447,7 +1450,7 @@ function sendPOEmail(poGeneralKey){
 		
 	if(poGeneralKey == "SOJ")	
 		{
-		
+		//alert("In if part Email is ready to go..!");
 	var rxMasterID = $('#rxCustomer_ID').text();
 	var newDialogDiv = jQuery(document.createElement('div'));
 	var bidderGrid = $("#salesrelease");
@@ -1535,6 +1538,7 @@ function sendPOEmail(poGeneralKey){
 	
 	else
 		{
+		//alert("In else part Email is ready to go..!");
 		
 		
 		var CuInvoice = $('#cuinvoiceIDhidden').val();

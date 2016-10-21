@@ -262,7 +262,9 @@ public class SysServiceImpl implements SysService {
 	
 	@Override
 	public Sysinfo getRoldexCategories(int theUserinfoId) throws UserException {
-		String	aSysPriSelectQry = "SELECT rxMasterCategory1Desc,rxMasterCategory2Desc,rxMasterCategory3Desc,rxMasterCategory4Desc,rxMasterCategory5Desc,rxMasterCategory6Desc,rxMasterCategory7Desc,rxMasterCategory8Desc,prPriceLevel0,prPriceLevel1,prPriceLevel2,prPriceLevel3,prPriceLevel4,prPriceLevel5,prPriceLevel6 FROM sysInfo where sysInfoID="+theUserinfoId;
+		//Updated By Aravind ID#624
+		String	aSysPriSelectQry = "SELECT rxMasterCategory1Desc,rxMasterCategory2Desc,rxMasterCategory3Desc,rxMasterCategory4Desc,rxMasterCategory5Desc,rxMasterCategory6Desc,rxMasterCategory7Desc,rxMasterCategory8Desc,prPriceLevel0,prPriceLevel1,prPriceLevel2,prPriceLevel3,prPriceLevel4,prPriceLevel5,prPriceLevelval0,prPriceLevelval1,prPriceLevelval2,prPriceLevelval3,prPriceLevelval4,prPriceLevelval5"
+				+ " FROM sysInfo where sysInfoID="+theUserinfoId;
 		Session aSession=null;
 		Sysinfo sysinfo=null;
 		try{
@@ -287,6 +289,14 @@ public class SysServiceImpl implements SysService {
 				sysinfo.setPrPriceLevel3((String)aObj[11]);
 				sysinfo.setPrPriceLevel4((String)aObj[12]);
 				sysinfo.setPrPriceLevel5((String)aObj[13]);
+				
+				//Added By Aravind ID#624
+				sysinfo.setPrPriceLevelval0((Integer) aObj[14]);
+				sysinfo.setPrPriceLevelval1((Integer) aObj[15]);
+				sysinfo.setPrPriceLevelval2((Integer) aObj[16]);
+				sysinfo.setPrPriceLevelval3((Integer) aObj[17]);
+				sysinfo.setPrPriceLevelval4((Integer) aObj[18]);
+				sysinfo.setPrPriceLevelval5((Integer) aObj[19]);
 				
 			}
 		} catch(Exception e) {
@@ -875,6 +885,14 @@ public class SysServiceImpl implements SysService {
 			aSysinfo.setPrPriceLevel3(sysassign.getPrPriceLevel3());
 			aSysinfo.setPrPriceLevel4(sysassign.getPrPriceLevel4());
 			aSysinfo.setPrPriceLevel5(sysassign.getPrPriceLevel5());
+			
+			//Added By Aravind ID#624
+			aSysinfo.setPrPriceLevelval0(sysassign.getPrPriceLevelval0());
+			aSysinfo.setPrPriceLevelval1(sysassign.getPrPriceLevelval1());
+			aSysinfo.setPrPriceLevelval2(sysassign.getPrPriceLevelval2());
+			aSysinfo.setPrPriceLevelval3(sysassign.getPrPriceLevelval3());
+			aSysinfo.setPrPriceLevelval4(sysassign.getPrPriceLevelval4());
+			aSysinfo.setPrPriceLevelval5(sysassign.getPrPriceLevelval5());
 			
 			SysinfoSession.update(aSysinfo);
 			transaction.commit();

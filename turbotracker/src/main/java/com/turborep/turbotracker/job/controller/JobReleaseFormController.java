@@ -5109,6 +5109,27 @@ public@ResponseBody String getCommissionPaidDetails(
 
 		}
 		
+		//ID#625 Simon
+		@RequestMapping(value = "/getInvoiceLineItems1", method = RequestMethod.POST)
+		public @ResponseBody
+		Map<String, ArrayList<?>> getLineItems(
+				@RequestParam(value = "prMasterId") Integer prMasterId,
+				@RequestParam(value = "rxMasterID") Integer rxMasterID,
+				HttpServletResponse response, HttpSession session,HttpServletRequest theRequest) throws IOException, MessagingException {
+			Map<String, ArrayList<?>> map = new HashMap<String, ArrayList<?>>();
+			try {
+//				map.put("lineItems", (ArrayList<Prmaster>) itsPurchaseService
+//						.getLineItems(prMasterId));
+				map.put("lineItems", (ArrayList<Prmaster>) itsPurchaseService
+						.getLineItems(prMasterId,rxMasterID));
+			} catch (Exception e) {
+				itsLogger.error(e.getMessage(), e);
+				sendTransactionException("<b>prMasterId:</b>"+prMasterId,"POController",e,session,theRequest);
+			}
+			return map;
+
+		}
+		
 		@RequestMapping(value = "/addInvoiceLog", method = RequestMethod.POST)
 		public @ResponseBody Integer addInvoiceLog(
 				@RequestParam(value = "cuInvoiceID") Integer cuInvoiceID,

@@ -36,6 +36,7 @@ import com.turborep.turbotracker.job.dao.JoInvoiceCost;
 import com.turborep.turbotracker.job.dao.JoQuoteCategory;
 import com.turborep.turbotracker.job.dao.JoQuoteDetail;
 import com.turborep.turbotracker.job.dao.JoQuoteHeader;
+import com.turborep.turbotracker.job.dao.JoQuoteProductsDetail;
 import com.turborep.turbotracker.job.dao.JoQuoteProperties;
 import com.turborep.turbotracker.job.dao.JoQuoteTemplateDetail;
 import com.turborep.turbotracker.job.dao.JoQuoteTemplateProperties;
@@ -1396,4 +1397,9 @@ public interface JobService {
 			throws InventoryException;
 
 	public String getfontSizeNameValueIfChecked();
+
+	public List<JoQuoteProductsDetail> getJoQuoteProductsDetail(
+			Integer joquoteheaderid);
+
+	public Integer saveQuoteProducts(JoQuoteProductsDetail master);
 }

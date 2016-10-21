@@ -602,6 +602,7 @@ function submitemailattachment(){
 }
 
 $(function(){
+	//alert("email dialog is opening...!");
 	$("#emailpopup" ).dialog({
 		autoOpen: false,
 		height: 540,

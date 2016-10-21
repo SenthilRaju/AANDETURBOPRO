@@ -21,6 +21,8 @@ import com.turborep.turbotracker.customer.dao.Cusotemplate;
 import com.turborep.turbotracker.employee.dao.Ecstatement;
 import com.turborep.turbotracker.job.dao.JoReleaseDetail;
 import com.turborep.turbotracker.job.dao.JobsBean;
+import com.turborep.turbotracker.job.dao.JobsNameBean;
+import com.turborep.turbotracker.job.dao.Jomaster;
 import com.turborep.turbotracker.job.exception.JobException;
 import com.turborep.turbotracker.json.AutoCompleteBean;
 import com.turborep.turbotracker.product.dao.Prmaster;
@@ -90,8 +92,9 @@ public interface SalesService {
 	 */
 	
 	public ArrayList<AutoCompleteBean> getCustomerNameList(String theSalesRep);
+	public Cuso getCustomerSalesOrder(Integer cuSOId);
 
-	public Integer updateSalesOrderStatus(Integer cuSOId, Integer status,Integer userID,String userName);
+	public Jomaster updateSalesOrderStatus(Integer cuSOId, Integer status,Integer userID,String userName,String jobNumberNew);
 	
 	public ArrayList<AutoCompleteBean> getSalesOrderList(String salesOrder);
 	
@@ -128,6 +131,8 @@ public interface SalesService {
 
 	public List<String> getListOfCCMailId(Integer userLoginId);
 
-	//public List<JobsNameBean> getAllJobsforThisCustomer(Integer custID);
+	public List<Jomaster> getAllJobsforThisCustomer(Integer custID);
+
+	public String addSOtoRelease(Integer cuSOID, Integer joMasterID);
 }
 	

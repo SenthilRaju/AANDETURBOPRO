@@ -1553,16 +1553,20 @@ public class UserListController {
 	}
 	//savePriceTier
 	@RequestMapping(value = "/savePriceTier", method = RequestMethod.POST)
-	public @ResponseBody String savePriceTier (@RequestParam(value = "prPriceLevel0", required = false) String prPriceLevel0,
+	public @ResponseBody String savePriceTier(@RequestParam(value = "prPriceLevel0", required = false) String prPriceLevel0,
 																@RequestParam(value = "prPriceLevel1", required = false) String prPriceLevel1,
 																@RequestParam(value = "prPriceLevel2", required = false) String prPriceLevel2,
 																@RequestParam(value = "prPriceLevel3", required = false) String prPriceLevel3,
 																@RequestParam(value = "prPriceLevel4", required = false) String prPriceLevel4,
 																@RequestParam(value = "prPriceLevel5", required = false) String prPriceLevel5,
+																//ID#624 Aravind
+																@RequestParam(value = "prPriceLevelval0", required = false) Integer prPriceLevelval0,
+																@RequestParam(value = "prPriceLevelval1", required = false) Integer prPriceLevelval1,
+																@RequestParam(value = "prPriceLevelval2", required = false) Integer prPriceLevelval2,
+																@RequestParam(value = "prPriceLevelval3", required = false) Integer prPriceLevelval3,
+																@RequestParam(value = "prPriceLevelval4", required = false) Integer prPriceLevelval4,
+																@RequestParam(value = "prPriceLevelval5", required = false) Integer prPriceLevelval5,
 																HttpSession theSession, HttpServletResponse response) throws IOException {
-		
-		
-		
 		Sysinfo sysassign=new Sysinfo();
 		/*update Customer categories while changing the categories name in sysAssignment table*/
 		sysassign.setPrPriceLevel0(prPriceLevel0);
@@ -1571,6 +1575,13 @@ public class UserListController {
 		sysassign.setPrPriceLevel3(prPriceLevel3);
 		sysassign.setPrPriceLevel4(prPriceLevel4);
 		sysassign.setPrPriceLevel5(prPriceLevel5);
+		//ID#624 Aravind
+		sysassign.setPrPriceLevelval0(prPriceLevelval0);
+		sysassign.setPrPriceLevelval1(prPriceLevelval1);
+		sysassign.setPrPriceLevelval2(prPriceLevelval2);
+		sysassign.setPrPriceLevelval3(prPriceLevelval3);
+		sysassign.setPrPriceLevelval4(prPriceLevelval4);
+		sysassign.setPrPriceLevelval5(prPriceLevelval5);
 		sysservice.updateTierPriceLevel(sysassign);
 		return "success";
 	}

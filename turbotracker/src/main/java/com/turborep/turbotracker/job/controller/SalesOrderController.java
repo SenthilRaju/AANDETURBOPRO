@@ -12,6 +12,7 @@ import java.math.RoundingMode;
 import java.sql.Blob;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -81,10 +82,12 @@ import com.turborep.turbotracker.customer.dao.Cuso;
 import com.turborep.turbotracker.customer.dao.Cusodetail;
 import com.turborep.turbotracker.customer.service.CustomerService;
 import com.turborep.turbotracker.employee.dao.Ecsplitjob;
+import com.turborep.turbotracker.employee.dao.Emmaster;
 import com.turborep.turbotracker.employee.dao.Rxmaster;
 import com.turborep.turbotracker.finance.dao.Transactionmonitor;
 import com.turborep.turbotracker.job.dao.JoRelease;
 import com.turborep.turbotracker.job.dao.JobSalesOrderBean;
+import com.turborep.turbotracker.job.dao.JobsNameBean;
 import com.turborep.turbotracker.job.dao.Jomaster;
 import com.turborep.turbotracker.job.exception.JobException;
 import com.turborep.turbotracker.job.service.JobService;
@@ -139,6 +142,10 @@ public class SalesOrderController {
 	@Resource(name = "salesServices")
 	private SalesService salesServices;
 
+	
+	@Resource(name="rolodexService")
+	private RolodexService itsRolodexService; 
+	
 	@Resource(name = "companyService")
 	private CompanyService itsCompanyService;
 
@@ -3564,6 +3571,30 @@ if(batchInvoiceCuID.length()>0 && !batchInvoiceCuID.equals("0")){
 			} catch (JobException e2) {
 				e2.printStackTrace();
 			}
+			
+			//added by prasant BartosUat issue fix 3.0.67
+			List<String> addlist=new ArrayList<String>();
+			
+			addlist.add("IncludJobNamein_co_inshiptoaddressonPDForder");
+			
+			 
+			ArrayList<Sysvariable> sysvariablelist=new ArrayList<Sysvariable>();
+						
+			try {
+				sysvariablelist = userService.getInventorySettingsDetails(addlist);
+			} catch (UserException e) {
+				e.printStackTrace();
+			}
+			
+			int i=0;
+			Integer printJobNameStatus=0;
+			
+			if (sysvariablelist.get(0).getValueLong() == 1) {
+				printJobNameStatus = 1;
+			}
+			
+			
+			
 			String ShipToName="";
 			String ShipToAddress1="";
 			String ShipToAddress2="";
@@ -3634,6 +3665,8 @@ if(batchInvoiceCuID.length()>0 && !batchInvoiceCuID.equals("0")){
 				
 			}
 			params.put("billtoName", BillToName);
+			//added by prasant Bartos 3.0.67 Issue Solve
+			params.put("printJobName", printJobNameStatus);
 			params.put("billtoAddress1", BillToAddress1);
 			params.put("billtoAddress2", BillToAddress2);
 			params.put("billtoCity", BillToCity);
@@ -3701,38 +3734,228 @@ if(batchInvoiceCuID.length()>0 && !batchInvoiceCuID.equals("0")){
 //updateSalesOrderStatus cusoID/status
 	@RequestMapping(value = "/setSalesOrderStatus", method = RequestMethod.POST)
 	public @ResponseBody
-	Integer getCuSOID(
+	Jomaster getCuSOID1(
 			@RequestParam(value = "cusoID", required = false) Integer cuSoId,
 			@RequestParam(value = "status", required = false) Integer status,
+			@RequestParam(value = "choose", required = false) String choose,
 			HttpSession session, HttpServletResponse theResponse)
 			throws IOException, JobException {
-		Integer joMasterID=salesServices.updateSalesOrderStatus(cuSoId, status,((UserBean)session.getAttribute(SessionConstants.USER)).getUserId(),((UserBean)session.getAttribute(SessionConstants.USER)).getUserName());
-			return joMasterID;
+		Jomaster joMaster=new Jomaster();	
+		Jomaster joMaster2=new Jomaster();
+		String jobNumberNew="";
+		if(choose.equalsIgnoreCase("No"));
+		{
+		Cuso cuso=salesServices.getCustomerSalesOrder(cuSoId);
+		DateFormat df = new SimpleDateFormat("MM/dd/yyyy");
+		Date today = Calendar.getInstance().getTime();   
+		String date = df.format(today);
+	   jobNumberNew=getNewJobNumberForBookAsJob(cuso,date);
+		}
+		if(status!=4)
+		 joMaster2=salesServices.updateSalesOrderStatus(cuSoId, status,((UserBean)session.getAttribute(SessionConstants.USER)).getUserId(),((UserBean)session.getAttribute(SessionConstants.USER)).getUserName(),jobNumberNew);
+			
+		     joMaster.setJobNumber(joMaster2.getJobNumber());
+			 joMaster.setJoMasterId(joMaster2.getJoMasterId());			 
+			 joMaster2=null;			 
+			 return joMaster;
 		
 	}
 	
 	
+	public String getNewJobNumberForBookAsJob(Cuso cuso,String date)
+	{
+	
+		String aNewJobNumber="";
+		String aNewBookedJobNumber ="";
+		String jobNumberNew="";
+		try{	
+		Date aDate = null;
+		String Gseqnum="0";
+		Integer theCuAssignmentID0=cuso.getCuAssignmentId0();
+	    aDate = DateUtils.parseDate(date, new String[]{"MM/dd/yyyy"});
+		TsUserLogin aUserSalesRep = userService.getUserDetails(theCuAssignmentID0);
+		String aUserInitial = aUserSalesRep.getInitials();
+		String arrVals[] = date.split("/");
+		if(arrVals[0].length() == 1) {arrVals[0] = "0".concat(arrVals[0]); }
+		aNewJobNumber= arrVals[2].substring(2, 4).concat(arrVals[0]).concat("-");
+		
+	   aNewBookedJobNumber = jobService.getNewJobNumber(aNewJobNumber);
+		Date now = new Date(); // java.util.Date, NOT java.sql.Date or java.sql.Timestamp!
+		String format3 = new SimpleDateFormat("yy MM dd").format(now);
+		String[] split = format3.split(" ");
+		aNewBookedJobNumber = "";
+	
+			//aNewBookedJobNumber = aUserInitial.concat(aNewBookedJobNumber);
+			
+			 jobNumberNew = "";
+			if(theCuAssignmentID0 != null)
+			{
+				logger.info("assignmentid========="+theCuAssignmentID0);
+				Emmaster aEmmaster = jobService.getEmployeeDetailLoginID(theCuAssignmentID0);
+				//logger.info("EmMaster : "+aEmmaster.getJobNumberGenerate() +" "+aEmmaster.getJobNumberPrefix() +" "+aEmmaster.getJobNumberSequence());
+				if(aEmmaster!=null)
+				{
+				if(aEmmaster.getJobNumberGenerate())
+				{
+					//jobNumberNew = aEmmaster.getJobNumberPrefix()+"-"+aEmmaster.getJobNumberSequence();
+					
+					if(aEmmaster.getJobNumberPrefix()!=null && aEmmaster.getJobNumberPrefix().length() != 0 && 
+							aEmmaster.getJobNumberSequence() != null && aEmmaster.getJobNumberSequence().length()!=0 )
+					{						
+						if(aEmmaster.getJobNumberSequence().toString().trim().length()> 0){
+							jobNumberNew = aEmmaster.getJobNumberPrefix()+""+aEmmaster.getJobNumberSequence();
+							
+							if(aEmmaster.getJobNumberSequence().toString().trim().length()<= 1)
+								jobNumberNew = aEmmaster.getJobNumberPrefix()+""+aEmmaster.getJobNumberSequence();
+							else if(aEmmaster.getJobNumberSequence().toString().trim().length() <= 2)
+								jobNumberNew = aEmmaster.getJobNumberPrefix()+""+aEmmaster.getJobNumberSequence();
+							else if(aEmmaster.getJobNumberSequence().toString().trim().length() <= 3)
+								jobNumberNew = aEmmaster.getJobNumberPrefix()+""+aEmmaster.getJobNumberSequence();
+							else 
+								jobNumberNew = aEmmaster.getJobNumberPrefix()+""+aEmmaster.getJobNumberSequence();
+						}else{
+							jobNumberNew = aEmmaster.getJobNumberPrefix()+""+aEmmaster.getJobNumberSequence().toString();
+						}
+					}
+					else if(aEmmaster.getJobNumberSequence()==null || aEmmaster.getJobNumberSequence().trim().equals(""))
+					{
+						jobNumberNew = aEmmaster.getJobNumberPrefix()+""+split[0]+""+split[1];
+						logger.info("New Job Number: "+jobNumberNew);
+						String seq = jobService.getJobNumbersequence(jobNumberNew);
+						
+						String sequences = null;
+						if(seq.equals("0")){
+							sequences = jobService.getJobNumberSequenceDate(jobNumberNew);
+							if(!sequences.equals("0")){
+								seq=sequences.substring(sequences.length()-2);
+							}
+						}
+						Integer Seqconver=JobUtil.ConvertintoInteger(seq);
+						Seqconver=Seqconver+1;
+						if(Seqconver.toString().length()==1){
+							jobNumberNew=jobNumberNew+"0"+Seqconver.toString();	
+						}
+						else if(Seqconver.toString().length()>1){ 	
+							jobNumberNew=jobNumberNew+Seqconver.toString();	
+						}
+						Gseqnum=Seqconver.toString();
+						
+					}
+					else if(aEmmaster.getJobNumberPrefix() == null || aEmmaster.getJobNumberPrefix().length() == 0){
+						jobNumberNew = aEmmaster.getJobNumberSequence().toString();
+						String newnum =jobNumberNew;
+						if(newnum.trim().length() > 0){
+							jobNumberNew =newnum;
+						}else{
+							jobNumberNew = String.valueOf(aEmmaster.getJobNumberSequence());
+						}
+					}else{
+						jobNumberNew = split[0]+""+split[1]+"-";
+						String theJobNumber = jobService.getJobNumber(jobNumberNew);
+						if(theJobNumber.trim().length() > 0){
+							String[] sp = theJobNumber.split("-");
+							String sLen = String.valueOf(Integer.valueOf(sp[1])+1);
+							Gseqnum=sLen;						
+							jobNumberNew = getFourDigitNo(sLen, split[0],split[1]);
+						}else{
+							Gseqnum="001";
+							jobNumberNew = split[0]+""+split[1]+"-001";
+						}
+						return theJobNumber;
+					}
+							if(aEmmaster.getJobNumberSequence()!=null){
+						if(!aEmmaster.getJobNumberSequence().equals("")){
+							aEmmaster.setJobNumberSequence((Integer.parseInt(aEmmaster.getJobNumberSequence())+1)+"");
+							aEmmaster = itsRolodexService.updateCommissions(aEmmaster);
+						}
+					}
+				}else{
+					jobNumberNew = split[0]+""+split[1]+"-";
+					String theJobNumber = jobService.getJobNumber(jobNumberNew);
+					if(theJobNumber.trim().length() > 0){
+						String[] sp = theJobNumber.split("-");
+						String sLen = String.valueOf(Integer.valueOf(sp[1])+1);
+						Gseqnum=sLen;						
+						jobNumberNew = getFourDigitNo(sLen, split[0],split[1]);
+					}else{
+						Gseqnum="001";
+						jobNumberNew = split[0]+""+split[1]+"-001";
+					}
+					
+					
+				}
+				}
+			}else{
+				jobNumberNew = split[0]+""+split[1]+"-";
+				String theJobNumber = jobService.getJobNumber(jobNumberNew);
+				if(theJobNumber.trim().length() > 0){
+					String[] sp = theJobNumber.split("-");
+					String sLen = String.valueOf(Integer.valueOf(sp[1])+1);
+					if(sLen.length() <= 1){
+						Gseqnum="00"+sLen;
+						jobNumberNew = split[0]+""+split[1]+"-00"+sLen;
+					}
+					else if(sLen.length() <= 2){
+						Gseqnum="0"+sLen;
+						jobNumberNew = split[0]+""+split[1]+"-0"+sLen;
+					}
+					else {
+						Gseqnum=""+sLen;
+						jobNumberNew = split[0]+""+split[1]+"-"+sLen;
+					}
+					jobNumberNew = sLen;
+				}else{
+					Gseqnum="001";
+					jobNumberNew = split[0]+""+split[1]+"-001";
+				}
+				
+			}
+		}
+			catch (Exception e) {
+				logger.error(e.getMessage());
+			}finally{		}
+		
+	return 	jobNumberNew;
+		}
+		
+		
+		
+		
+	
+	
+	
+
+	private String getFourDigitNo(String sLen, String val1,String val2) {
+		String jobNumberNew;
+		if(sLen.length() <= 1)
+			jobNumberNew = val1+""+val2+"-00"+sLen;
+		else if(sLen.length() <= 2)
+			jobNumberNew = val1+""+val2+"-0"+sLen;
+		/*else if(sLen.length() <= 3)
+			jobNumberNew = val1+""+val2+"-0"+sLen;*/
+		else 
+			jobNumberNew = val1+""+val2+"-"+sLen;
+		
+		System.out.println("Inside getFourDigitNo--------->>>>>" + jobNumberNew);
+		return jobNumberNew;
+	}
+
+	
 	//Added by prasant #512
-		/*@RequestMapping(value = "/getAllJobforthisCustomer", method = RequestMethod.POST)
-		public @ResponseBody List<JobsNameBean> getAllJobs(			
-				@RequestParam(value = "custID", required = false) Integer custID,
+		@RequestMapping(value = "/getAllJobforthisCustomer", method = RequestMethod.POST)
+		public @ResponseBody List<Jomaster> getAllJobs(			
+				@RequestParam(value = "cuSOID", required = false) Integer cuSOID,
 				HttpSession theSession,HttpServletResponse theResponse,HttpServletRequest theRequest)
 				throws IOException, JobException {
-			List<JobsNameBean> jobNames=new ArrayList<JobsNameBean>();
+			List<Jomaster> jobNames=new ArrayList<Jomaster>();
 			
 			System.out.println("hi");
-			if (custID!=null)
-			 jobNames=salesServices.getAllJobsforThisCustomer(custID);
+			if (cuSOID!=null)
+			 jobNames=salesServices.getAllJobsforThisCustomer(cuSOID);
 			
-			//ArrayList<JobsNameBean> myCustomList = .... // list filled with objects
-					JSONArray jsonArray = new JSONArray();
-					for (int i=0; i < joMasterID.size(); i++) {
-					        jsonArray.put(joMasterID.get(i).getJSONObject());
-					}
-			System.out.println("--------------------------------------------->>>>>>>>>"+jobNames.size());
 			return jobNames;
 			
-		}*/
+		}
 	
 	@RequestMapping(value = "/printWarehouseTransferReport", method = RequestMethod.GET)
 	public @ResponseBody
@@ -3974,7 +4197,7 @@ if(batchInvoiceCuID.length()>0 && !batchInvoiceCuID.equals("0")){
 			
 			if (sysvariablelist.get(0).getValueLong() == 1) {
 				printJobNameascoinPdf = 1;
-		    }
+		}
 			
 			
 			/*int i=0;
@@ -4875,6 +5098,37 @@ if(batchInvoiceCuID.length()>0 && !batchInvoiceCuID.equals("0")){
 		}
 		return Exists;
 	}
+	
+	
+	@RequestMapping(value = "/addSalesOrderAsRelease", method = RequestMethod.POST)
+	public @ResponseBody
+	String AddSalesOrderAsRelease(
+			@RequestParam(value = "custID", required = false) Integer cuSOID,
+			@RequestParam(value = "joMasterID", required = false) Integer JoMasterID,
+			
+			HttpServletResponse theResponse,HttpServletRequest theRequest,HttpSession session) throws IOException, MessagingException {
+		String Exists = "";
+		
+		System.out.println("hi ...!"+JoMasterID);
+
+		try {
+			if (cuSOID != 0 && cuSOID != null) {
+				
+				Exists =Exists+salesServices.addSOtoRelease(cuSOID,JoMasterID);
+				
+						}
+			
+			
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+			theResponse.sendError(((JobException) e).getItsErrorStatusCode(), e.getMessage());
+			sendTransactionException("<b>cuSOID:</b>"+cuSOID,"SalesOrderController",e,session,theRequest);
+		}
+		return Exists;
+	}
+	
+	
+	
 	@RequestMapping(value="/getInvoicePDF", method = RequestMethod.POST)
 	public @ResponseBody void getInvoicePDF(@RequestParam(value = "batchInvoiceCuID", required = false) String batchInvoiceCuID,
 			@RequestParam(value = "batchInvoiceFromDate", required = false) String batchInvoiceFromDate,

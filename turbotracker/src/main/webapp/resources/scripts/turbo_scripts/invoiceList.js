@@ -6101,9 +6101,10 @@ function loadCustomerInvoice(loadValue) {
 																var selrowid=$("#customerInvoice_lineitems").jqGrid('getGridParam', 'selrow');
 																 var ID = ui.item.id; var product = ui.item.label; $("#"+selrowid+"_prMasterId").val(ID);
 																	if(product.indexOf('-[') !== -1){var pro = product.split("-["); var pro2 = pro[1].replace("]",""); $("#"+selrowid+"_description").val(pro2);} 
+																	var rxMasterID=$('#rxCustomerID').val();
 																	$.ajax({
-															        url: './jobtabs5/getInvoiceLineItems?prMasterId='+$("#"+selrowid+"_prMasterId").val(),
-															        type: 'POST',       
+															        url: './jobtabs5/getInvoiceLineItems1?prMasterId='+$("#"+selrowid+"_prMasterId").val()+'&rxMasterID='+rxMasterID,
+															        type: 'POST',        
 															        success: function (data) {
 															        	$.each(data, function(key, valueMap) {										
 															        		if("lineItems"==key)
@@ -6111,6 +6112,7 @@ function loadCustomerInvoice(loadValue) {
 																				$.each(valueMap, function(index, value){						
 																					
 																						$("#"+selrowid+"_description").val(value.description);
+																						$("#new_row_unitCost").val(value.salesPrice00);
 																						$("#"+selrowid+"_unitCost").val(value.salesPrice00);
 																						$("#"+selrowid+"_priceMultiplier").val(value.pomult);
 																						$("#"+selrowid+"_amount").val(formatCurrency(0));
@@ -6122,6 +6124,7 @@ function loadCustomerInvoice(loadValue) {
 																							$("#"+selrowid+"_taxable").prop("checked",false);
 																				});
 																				//$("#new_row_description").focus();
+																				$("#"+selrowid+"_quantityBilled").val("1");
 																				$("#"+selrowid+"_description").focus();
 																				setproductWareHouseCost(selrowid,ID);
 																				var productCost=$("#"+selrowid+"_whseCost").val();
@@ -7804,12 +7807,12 @@ function CIGeneralTabSeriallize() {
 	var value28 = $("#CI_Shipto").contents().find("#shiptomoderhiddenid").val();
 	var value29 = $("#customerInvoie_doNotMailID").is(':checked');
 	var value30 = $("#customerInvoice_invoiceDateID").val();
-
+	var value31 = $("#jobnodescription").val();
 	var value = value1 + value2 + value3 + value4 + value5 + value6 + value7
 			+ value8 + value9 + value10 + value11 + value12 + value13 + value14
 			+ value15 + value16 + value17 + value18 + value19 + value20
 			+ value21 + value22 + value23 + value24 + value25 + value26
-			+ value27 + value28 + value29 + value30;
+			+ value27 + value28 + value29 + value30 + value31;
 	return value;
 }
 function loadCUInvoice_ShipTO(CIdivFlag, InvoiceID) {
@@ -8195,6 +8198,18 @@ function cuLineItemChanges_Out(formvalue)
     }
 	return ret_val;
 }
-
+function setproductWareHouseCostBycuMasterID(prMasterID,rxMasterID){
+	var result=null;
+	$.ajax({
+		url: "./salesOrderController/getproductWareHouseCost",
+		type: "POST",
+		async:false,
+		data :{"prMasterID":prMasterID,"rxMasterID":rxMasterID},
+		success: function(data) {
+			result=data;
+		}
+	});
+	return result;
+}
 
 

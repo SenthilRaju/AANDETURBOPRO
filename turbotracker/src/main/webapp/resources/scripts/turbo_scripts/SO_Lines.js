@@ -1256,7 +1256,9 @@ function loadSOLineItemGrid(){
 							source: "jobtabs3/productCodeWithNameList",
 							select: function( event, ui ){
 								var ID = ui.item.id;
+								
 								var product = ui.item.label;
+							
 								$("#prMasterId").val(ID);
 								searchPrMasterId=ID;
 								var aSelectedRowId = $("#SOlineItemGrid").jqGrid('getGridParam', 'selrow');
@@ -1266,6 +1268,7 @@ function loadSOLineItemGrid(){
 			                	$("#new_row_prMasterId").val(id);
 			                	
 			                	var cuSodetailId = ui.item.cuSodetailId;
+			                	//alert(cuSodetailId);
 			                	//$("#"+aSelectedRowId+"_cuSodetailId").val(cuSodetailId);
 			                	$("#new_row_cuSodetailId").val(cuSodetailId);
 			                	
@@ -1276,9 +1279,10 @@ function loadSOLineItemGrid(){
 			                	
 			                	//alert(" >>>>>>>> "+$("#new_row_vePoid").val()+ " || "+$("#"+aSelectedRowId+"_vePoid").val());
 			                	//alert(id+" || "+product+" || "+aSelectedRowId+"_prMasterId = "+$("#"+aSelectedRowId+"_prMasterId").val()+" || new_row_prMasterId = "+$("#new_row_prMasterId").val());
+			                	var rxMasterID=$('#rxCustomer_ID').text();
 								$.ajax({
-							        url: './getLineItemsSO?prMasterId='+ID,
-							        type: 'POST',       
+							        url: './getLineItemsSO?prMasterId='+ID+"&rxMasterID="+rxMasterID,
+							        type: 'POST',      
 							        success: function (data) {
 							        	$.each(data, function(key, valueMap) {										
 											
@@ -1286,11 +1290,22 @@ function loadSOLineItemGrid(){
 											{				
 												$.each(valueMap, function(index, value){						
 													
-													searchProduct=value.itemCode;
+/*													searchProduct=value.itemCode;
 													$("#new_row_description").val(value.description);
 													$("#"+aSelectedRowId+"_description").val(value.description);
 													$("#new_row_unitCost").val(value.lastCost);
-													$("#"+aSelectedRowId+"_unitCost").val(value.lastCost);
+													$("#"+aSelectedRowId+"_unitCost").val(value.lastCost);*/
+													
+													//ID#625 Simon
+													$("#new_row_itemCode").val(value.itemCode);
+													$("#"+aSelectedRowId+"_itemCode").val(value.itemCode);
+													$("#new_row_description").val(value.description);
+													$("#"+aSelectedRowId+"_description").val(value.description);
+													var data=value.lastCost;
+//													$("#new_row_unitCost").val(value.lastCost);
+													$("#new_row_unitCost").text(parseFloat(data).toFixed(2));
+													$("#"+aSelectedRowId+"_unitCost").val(parseFloat(data).toFixed(2));
+//													$("#"+aSelectedRowId+"_unitCost").val(value.lastCost);
 													if(value.pomult != undefined)
 													{
 														//parseFloat(cellValue.toString()).toFixed(4)
@@ -1321,6 +1336,7 @@ function loadSOLineItemGrid(){
 												//$("#new_row_itemCode").val(value.itemCode);
 												$("#new_row_description").focus();
 												$("#"+aSelectedRowId+"_description").focus();
+												$("#new_row_quantityOrdered").val("1");
 												/*$("#new_row_quantityOrdered").focus();
 												$("#"+aSelectedRowId+"_quantityOrdered").focus();*/
 												
@@ -1338,7 +1354,8 @@ function loadSOLineItemGrid(){
 										
 							        }
 							    });
-								},
+								return false;	
+							},
 							error: function (result) {$('.ui-autocomplete-loading').removeClass("ui-autocomplete-loading");	}
 							});
 				},dataEvents: [
@@ -1370,7 +1387,9 @@ function loadSOLineItemGrid(){
 				                    		  {
 				                    			// changePosition(soLines_selectRow);
 				                    		    //return false;  
+				                    			 
 				                    		  }
+				                    		
 				                         }
 				                        }
 				    			  ]
@@ -1380,6 +1399,12 @@ function loadSOLineItemGrid(){
       	{name:'description', index:'description', align:'left', width:140, editable:true,hidden:false, edittype:'text', editoptions:{size:40,maxlength:75,
       		dataEvents: [
 		       			  { type: 'focus', data: { i: 7 }, fn: function(e) {
+		       				//ID#624 Simon
+		       				if(($("#new_row_itemCode").val()!=null) && $("#new_row_itemCode").val().length==0 && ltrim($("#new_row_itemCode").val()).length==0){
+		       					$("#new_row_itemCode").val("");
+		       					$("#new_row_itemCode").focus();
+		       					 return;
+		       				 }
 		       				var rowobji=$(e.target).closest('tr.jqgrow');
 			    			 var textboxid=rowobji.attr('id');
 		    			  		 soLines_selectRow=textboxid;

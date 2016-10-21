@@ -2,7 +2,7 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Print" pageWidth="594" pageHeight="842" columnWidth="554" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" isFloatColumnFooter="true" uuid="8dbe826d-f198-453a-afff-21c8018746c8">
 	<property name="ireport.zoom" value="1.3310000000000006"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="0"/>
+	<property name="ireport.y" value="101"/>
 	<style name="table">
 		<box>
 			<pen lineWidth="1.0" lineColor="#000000"/>
@@ -347,9 +347,7 @@ rxA.Address1 AS Address1 ,rxA.Address2 AS Address2,CONCAT(TRIM(rxA.City),", ",CO
 FROM moVendorCheckTemp mchk,writecheckDetails wcD
 LEFT JOIN rxMaster AS rxm ON  rxm.rxMasterID = wcD.rxMasterID
 LEFT JOIN rxAddress AS rxA ON rxA.rxAddressID = wcD.rxAddressID
- WHERE wcD.moTransactionID = mchk.moTransactionID ORDER BY rxm.Name ASC,wcD.checkno ASC,wcD.invoiceNumber ASC,wcD.PONumber ASC,wcD.moTransactionID ASC, wcD.veBillDate ASC ;
-
-]]>
+ WHERE wcD.moTransactionID = mchk.moTransactionID ORDER BY rxm.Name ASC,wcD.checkno ASC,wcD.invoiceNumber ASC,wcD.PONumber ASC,wcD.moTransactionID ASC, wcD.veBillDate ASC ;]]>
 	</queryString>
 	<field name="PageBreak" class="java.lang.Long"/>
 	<field name="moTransactionID" class="java.lang.Integer">

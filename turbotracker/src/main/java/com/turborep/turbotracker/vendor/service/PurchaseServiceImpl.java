@@ -24,6 +24,7 @@ import org.hibernate.Transaction;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.turborep.turbotracker.Inventory.service.InventoryConstant;
 import com.turborep.turbotracker.Inventory.service.InventoryService;
 import com.turborep.turbotracker.company.Exception.CompanyException;
 import com.turborep.turbotracker.company.dao.CoTaxTerritory;
@@ -33,16 +34,11 @@ import com.turborep.turbotracker.customer.dao.Cuinvoice;
 import com.turborep.turbotracker.customer.dao.Cumaster;
 import com.turborep.turbotracker.customer.service.CustomerService;
 import com.turborep.turbotracker.employee.dao.Rxmaster;
-import com.turborep.turbotracker.job.dao.JoInvoiceCost;
-import com.turborep.turbotracker.job.dao.JoRelease;
 import com.turborep.turbotracker.job.dao.JobPurchaseOrderBean;
-import com.turborep.turbotracker.job.exception.JobException;
 import com.turborep.turbotracker.product.dao.Prmaster;
 import com.turborep.turbotracker.product.dao.WarehouseTransferBean;
-import com.turborep.turbotracker.sales.service.SalesService;
 import com.turborep.turbotracker.user.dao.TsUserLogin;
 import com.turborep.turbotracker.user.dao.TsUserSetting;
-import com.turborep.turbotracker.util.JobUtil;
 import com.turborep.turbotracker.vendor.dao.PurchaseOrdersBean;
 import com.turborep.turbotracker.vendor.dao.VeFactory;
 import com.turborep.turbotracker.vendor.dao.Vepo;
@@ -971,6 +967,116 @@ public class PurchaseServiceImpl implements PurchaseService {
 		
 	}
 	
+	/**
+	 * Added by Simon for ID#625
+	 * Kept the existing function as it is.
+	 */
+	@Override
+	public List<Prmaster> getLineItems(Integer prMasterID,Integer rxMasterID) throws VendorException {
+		/* Prmaster */
+		// SELECT
+		// prMasterID,ItemCode,Description,IsTaxable,PurchasingUnitMultiplier,NewPrice
+		// FROM prMaster
+
+		String aQry = "SELECT prMasterId,itemCode,Description,isTaxable,POMult,lastCost,SalesPrice00 FROM prMaster WHERE prMasterId = "
+				+ prMasterID;
+		Session aSession = null;
+		List<Prmaster> alPrmaster = new ArrayList<Prmaster>();
+		Prmaster objPrmaster = null;
+		try {
+			aSession = itsSessionFactory.openSession();
+			Query aQuery = aSession.createSQLQuery(aQry);
+			Iterator<?> aIterator = aQuery.list().iterator();
+			while (aIterator.hasNext()) {
+				objPrmaster = new Prmaster();
+				Object[] aObj = (Object[]) aIterator.next();
+				objPrmaster.setPrMasterId(Integer.valueOf(((Integer) aObj[0])));
+				objPrmaster.setItemCode((String) aObj[1]);
+				objPrmaster.setDescription((String) aObj[2]);
+				objPrmaster.setIsTaxable(new Byte((aObj[3]).toString()));
+				/*
+				 * Edited By Simon on 22nd June Reason for changing : ID#567
+				 */
+				// objPrmaster.setPOMult(new BigDecimal(aObj[4].toString()));
+				if (null == aObj[4]) {
+					/*
+					 * String sPOMulti = (String)aObj[4]; if(null == sPOMulti ||
+					 * "null".equalsIgnoreCase(sPOMulti) ||
+					 * "".equalsIgnoreCase(sPOMulti)) {
+					 */
+					objPrmaster.setPOMult(new BigDecimal(0));
+					/*
+					 * } else objPrmaster.setPOMult(new
+					 * BigDecimal(aObj[4].toString()));
+					 */
+				} else {
+					objPrmaster.setPOMult(new BigDecimal(aObj[4].toString()));
+				}
+				if (null == aObj[5]) {
+					/*
+					 * String sLastPrice = (String)aObj[5]; if(null ==
+					 * sLastPrice || "null".equalsIgnoreCase(sLastPrice) ||
+					 * "".equalsIgnoreCase(sLastPrice)) {
+					 */
+					objPrmaster.setLastCost(new BigDecimal(0));
+					/*
+					 * } else objPrmaster.setLastCost(new
+					 * BigDecimal(aObj[5].toString()));
+					 */
+				} else {
+					objPrmaster.setLastCost(new BigDecimal(aObj[5].toString()));
+				}
+
+				if (null == aObj[6]) {
+					/*
+					 * String salesPrice00 = (String)aObj[6]; if(null ==
+					 * salesPrice00 || "null".equalsIgnoreCase(salesPrice00) ||
+					 * "".equalsIgnoreCase(salesPrice00)) {
+					 */
+					objPrmaster.setSalesPrice00(new BigDecimal(0));
+					/*
+					 * } else objPrmaster.setSalesPrice00(new
+					 * BigDecimal(aObj[6].toString()));
+					 */
+				} else {
+					BigDecimal salesPrice00 = new BigDecimal(aObj[6].toString());
+					if (rxMasterID != null && rxMasterID != 0) {
+						Integer sysVariableID = InventoryConstant
+								.getConstantSysvariableId("TierPricingAddingWarehouseLineitemstoSOServiceOrderCI");
+						boolean flag = (sysVariableID != 0 ? itscustomerService.isTierPricingEnabled(sysVariableID)
+								: false);
+						Integer tier=getTierLevelOfCustomer(rxMasterID);
+						if ((flag==true) && (tier>-1)) {
+							BigDecimal whseCost = itsInventoryService.getWarehouseCost(prMasterID);
+							if(whseCost!=null && whseCost!=BigDecimal.ZERO)								
+								salesPrice00 = calculateUnitCost(tier, whseCost);
+							
+						} else {
+							salesPrice00 = new BigDecimal(aObj[6].toString());
+						}
+					}
+					objPrmaster.setSalesPrice00(salesPrice00);
+//					objPrmaster.setSalesPrice00(new BigDecimal(aObj[6].toString()));
+				}
+
+				alPrmaster.add(objPrmaster);
+			}
+			// if(aQuery.list().size() > 0)
+			return alPrmaster;
+			/*
+			 * else return null;
+			 */
+		} catch (Exception e) {
+			itsLogger.error(e.getMessage(), e);
+			throw new VendorException(e.getMessage(), e);
+		} finally {
+			aSession.flush();
+			aSession.close();
+			aQry = null;
+		}
+
+	}
+	
 	@Override
 	public List<Rxmaster> getRxMasterName(Integer prMasterID) throws VendorException {
 		/*Rxmaster*/
@@ -1008,67 +1114,149 @@ public class PurchaseServiceImpl implements PurchaseService {
 		
 	}
 	
+//	@Override
+//	public List<Prmaster> getLineItemsSO(Integer prMasterID) throws VendorException {
+//		/*Prmaster*/
+//		//SELECT prMasterID,ItemCode,Description,IsTaxable,PurchasingUnitMultiplier,NewPrice FROM prMaster
+//		
+//		String aQry = "SELECT prMasterId,itemCode,Description,isTaxable,POMult,SalesPrice00,SOPopup FROM prMaster WHERE prMasterId = "+prMasterID;
+//		Session aSession=null;
+//		List<Prmaster> alPrmaster = new ArrayList<Prmaster>();
+//		Prmaster objPrmaster = null;
+//		try{
+//			aSession=itsSessionFactory.openSession();
+//			Query aQuery = aSession.createSQLQuery(aQry);
+//			Iterator<?> aIterator = aQuery.list().iterator();
+//			while(aIterator.hasNext())
+//			{
+//				objPrmaster = new Prmaster();
+//				Object[] aObj = (Object[])aIterator.next();
+//				objPrmaster.setPrMasterId(Integer.valueOf(((Integer)aObj[0])));	
+//				objPrmaster.setItemCode((String) aObj[1]);	
+//				objPrmaster.setDescription((String) aObj[2]);	
+//				objPrmaster.setIsTaxable( new Byte((aObj[3]).toString()));
+//				if(aObj[4]==null){
+//					aObj[4]=0;
+//				}
+//				objPrmaster.setPOMult(new BigDecimal(aObj[4].toString()));
+//				if(aObj[6]!=null){
+//					objPrmaster.setSOPopup((String) aObj[6]);	
+//				}else{
+//					objPrmaster.setSOPopup("");
+//				}
+//				
+//				if(null == aObj[5])
+//				{
+////					String sLastPrice = (String)aObj[5];
+////					if(null == sLastPrice || "null".equalsIgnoreCase(sLastPrice) || "".equalsIgnoreCase(sLastPrice))
+////					{
+//						objPrmaster.setLastCost(new BigDecimal(0));
+////					}
+////					else
+////						objPrmaster.setLastCost(new BigDecimal(aObj[5].toString()));
+//				}
+//				else
+//				{
+//					objPrmaster.setLastCost(new BigDecimal(aObj[5].toString()));
+//				}
+//					
+//				alPrmaster.add(objPrmaster);
+//			}
+//			//if(aQuery.list().size() > 0)
+//			return alPrmaster;
+//			/*else
+//				return null;*/
+//		} catch(Exception e) {
+//			itsLogger.error(e.getMessage(),e);
+//			throw new VendorException(e.getMessage(), e);
+//		} finally {
+//			aSession.flush();
+//			aSession.close();
+//			aQry=null;
+//		}	
+//		
+//	}
+	
 	@Override
-	public List<Prmaster> getLineItemsSO(Integer prMasterID) throws VendorException {
-		/*Prmaster*/
-		//SELECT prMasterID,ItemCode,Description,IsTaxable,PurchasingUnitMultiplier,NewPrice FROM prMaster
-		
-		String aQry = "SELECT prMasterId,itemCode,Description,isTaxable,POMult,SalesPrice00,SOPopup FROM prMaster WHERE prMasterId = "+prMasterID;
-		Session aSession=null;
+	public List<Prmaster> getLineItemsSO(Integer prMasterID, Integer rxMasterID) throws VendorException {
+		/* Prmaster */
+		// SELECT
+		// prMasterID,ItemCode,Description,IsTaxable,PurchasingUnitMultiplier,NewPrice
+		// FROM prMaster
+
+		String aQry = "SELECT prMasterId,itemCode,Description,isTaxable,POMult,SalesPrice00,SOPopup FROM prMaster WHERE prMasterId = "
+				+ prMasterID;
+		Session aSession = null;
 		List<Prmaster> alPrmaster = new ArrayList<Prmaster>();
 		Prmaster objPrmaster = null;
-		try{
-			aSession=itsSessionFactory.openSession();
+		try {
+			aSession = itsSessionFactory.openSession();
 			Query aQuery = aSession.createSQLQuery(aQry);
 			Iterator<?> aIterator = aQuery.list().iterator();
-			while(aIterator.hasNext())
-			{
+			while (aIterator.hasNext()) {
 				objPrmaster = new Prmaster();
-				Object[] aObj = (Object[])aIterator.next();
-				objPrmaster.setPrMasterId(Integer.valueOf(((Integer)aObj[0])));	
-				objPrmaster.setItemCode((String) aObj[1]);	
-				objPrmaster.setDescription((String) aObj[2]);	
-				objPrmaster.setIsTaxable( new Byte((aObj[3]).toString()));
-				if(aObj[4]==null){
-					aObj[4]=0;
+				Object[] aObj = (Object[]) aIterator.next();
+				objPrmaster.setPrMasterId(Integer.valueOf(((Integer) aObj[0])));
+				objPrmaster.setItemCode((String) aObj[1]);
+				objPrmaster.setDescription((String) aObj[2]);
+				objPrmaster.setIsTaxable(new Byte((aObj[3]).toString()));
+				if (aObj[4] == null) {
+					aObj[4] = 0;
 				}
 				objPrmaster.setPOMult(new BigDecimal(aObj[4].toString()));
-				if(aObj[6]!=null){
-					objPrmaster.setSOPopup((String) aObj[6]);	
-				}else{
+				if (aObj[6] != null) {
+					objPrmaster.setSOPopup((String) aObj[6]);
+				} else {
 					objPrmaster.setSOPopup("");
 				}
-				
-				if(null == aObj[5])
-				{
-//					String sLastPrice = (String)aObj[5];
-//					if(null == sLastPrice || "null".equalsIgnoreCase(sLastPrice) || "".equalsIgnoreCase(sLastPrice))
-//					{
-						objPrmaster.setLastCost(new BigDecimal(0));
-//					}
-//					else
-//						objPrmaster.setLastCost(new BigDecimal(aObj[5].toString()));
+
+				if (null == aObj[5]) {
+					// String sLastPrice = (String)aObj[5];
+					// if(null == sLastPrice ||
+					// "null".equalsIgnoreCase(sLastPrice) ||
+					// "".equalsIgnoreCase(sLastPrice))
+					// {
+					objPrmaster.setLastCost(new BigDecimal(0));
+					// }
+					// else
+					// objPrmaster.setLastCost(new
+					// BigDecimal(aObj[5].toString()));
+				} else {
+					BigDecimal lastCost = new BigDecimal(aObj[5].toString());
+					if (rxMasterID != null && rxMasterID != 0) {
+						Integer sysVariableID = InventoryConstant
+								.getConstantSysvariableId("TierPricingAddingWarehouseLineitemstoSOServiceOrderCI");
+						boolean flag = (sysVariableID != 0 ? itscustomerService.isTierPricingEnabled(sysVariableID)
+								: false);
+						Integer tier=getTierLevelOfCustomer(rxMasterID);
+						if ((flag==true) && (tier>-1)) {
+							BigDecimal whseCost = itsInventoryService.getWarehouseCost(prMasterID);
+							if(whseCost!=null && whseCost!=BigDecimal.ZERO)								
+								lastCost = calculateUnitCost(tier, whseCost);
+							
+						} else {
+							lastCost = new BigDecimal(aObj[5].toString());
+						}
+					}
+					objPrmaster.setLastCost(lastCost);
 				}
-				else
-				{
-					objPrmaster.setLastCost(new BigDecimal(aObj[5].toString()));
-				}
-					
+
 				alPrmaster.add(objPrmaster);
 			}
-			//if(aQuery.list().size() > 0)
+			// if(aQuery.list().size() > 0)
 			return alPrmaster;
-			/*else
-				return null;*/
-		} catch(Exception e) {
-			itsLogger.error(e.getMessage(),e);
+			/*
+			 * else return null;
+			 */
+		} catch (Exception e) {
+			itsLogger.error(e.getMessage(), e);
 			throw new VendorException(e.getMessage(), e);
 		} finally {
 			aSession.flush();
 			aSession.close();
-			aQry=null;
-		}	
-		
+			aQry = null;
+		}
+
 	}
 	
 	@Override
@@ -2553,6 +2741,107 @@ public class PurchaseServiceImpl implements PurchaseService {
 		return aQryList;
 	}
 
-	
+	@Override
+	public ArrayList<Prmaster> getQuoteInventoryLineItem(Integer prMasterID) {
+		/*Prmaster*/
+		//SELECT prMasterID,ItemCode,Description,IsTaxable,PurchasingUnitMultiplier,NewPrice FROM prMaster
+		
+		String aQry = "SELECT prMasterId,itemCode,Description,SalesPrice00 FROM prMaster WHERE prMasterId = "+prMasterID;
+		Session aSession=null;
+		ArrayList<Prmaster> alPrmaster = new ArrayList<Prmaster>();
+		Prmaster objPrmaster = null;
+		try{
+			aSession=itsSessionFactory.openSession();
+			Query aQuery = aSession.createSQLQuery(aQry);
+			Iterator<?> aIterator = aQuery.list().iterator();
+			while(aIterator.hasNext())
+			{
+				objPrmaster = new Prmaster();
+				Object[] aObj = (Object[])aIterator.next();
+				objPrmaster.setPrMasterId(Integer.valueOf(((Integer)aObj[0])));	
+				objPrmaster.setItemCode((String) aObj[1]);	
+				objPrmaster.setDescription((String) aObj[2]);	
+				//objPrmaster.setIsTaxable( new Byte((aObj[3]).toString()));
+				
+				
+				if(null == aObj[3])
+				{
+//					String sLastPrice = (String)aObj[5];
+//					if(null == sLastPrice || "null".equalsIgnoreCase(sLastPrice) || "".equalsIgnoreCase(sLastPrice))
+//					{
+						objPrmaster.setLastCost(new BigDecimal(0));
+//					}
+//					else
+//						objPrmaster.setLastCost(new BigDecimal(aObj[5].toString()));
+				}
+				else
+				{
+					objPrmaster.setLastCost(new BigDecimal(aObj[3].toString()));
+				}
+					
+				alPrmaster.add(objPrmaster);
+				
+				objPrmaster.setAverageCost_New(itsInventoryService.getWarehouseCost(prMasterID));
+			}
+			//if(aQuery.list().size() > 0)
+			return alPrmaster;
+			/*else
+				return null;*/
+		} catch(Exception e) {
+			itsLogger.error(e.getMessage(),e);
+			return null;
+			//throw new VendorException(e.getMessage(), e);
+		} finally {
+			aSession.flush();
+			aSession.close();
+			aQry=null;
+		}	
+		
+	}
+
+	//ID#625 Simon
+	private BigDecimal calculateUnitCost(Integer tier, BigDecimal whseCost) {
+		String prPriceLevel = "prPriceLevelval";
+		Session aSession = null;
+		try {
+			aSession = itsSessionFactory.openSession();
+			if ((tier != null) && (tier > -1)) {
+				prPriceLevel = prPriceLevel + tier;
+				String priceLevelValQuery = "select " + prPriceLevel + " FROM sysInfo";
+				List<Integer> sysInfos = aSession.createSQLQuery(priceLevelValQuery).list();
+				Integer priceLevalVal = sysInfos.get(0);
+				if (priceLevalVal != null) {
+					whseCost = whseCost.multiply(new BigDecimal(100)).divide(new BigDecimal(priceLevalVal));
+				}else{
+					whseCost=BigDecimal.ZERO;
+				}
+			}
+		} catch (Exception e) {
+			itsLogger.error(e.getMessage(), e);
+		} finally {
+			aSession.flush();
+			aSession.close();
+		}
+		return whseCost;
+	}
+
+	//ID#625 Simon
+	private Integer getTierLevelOfCustomer(Integer cuMasterID) {
+		Session aSession = null;
+		Integer tier=0;
+		try {
+			aSession = itsSessionFactory.openSession();
+			Query aQuery = aSession
+					.createSQLQuery("SELECT cuMaster.tier FROM cuMaster where cuMaster.cuMasterID=:cuMasterID");
+			aQuery.setParameter("cuMasterID", cuMasterID);
+			tier = (Integer) aQuery.uniqueResult();
+		} catch (Exception e) {
+			itsLogger.error(e.getMessage(), e);
+		} finally {
+			aSession.flush();
+			aSession.close();
+		}
+		return tier - 1;
+	}
 	
 }

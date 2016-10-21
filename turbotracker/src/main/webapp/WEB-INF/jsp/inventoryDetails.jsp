@@ -325,6 +325,16 @@
 					<input type="hidden" id="rxCustomer_ID" name="rxCustomer_ID"> 
 					<input type="hidden" id="Cuso_ID" name="Cuso_ID">
 					<input type="hidden" id="operation" name="operation">
+					
+					<!-- ID#624 Aravind -->
+					
+					<input type="hidden" id="prPriceVal0" value="${requestScope.prPriceLevelval0}">
+					<input type="hidden" id="prPriceVal1" value="${requestScope.prPriceLevelval1}">
+					<input type="hidden" id="prPriceVal2" value="${requestScope.prPriceLevelval2}">
+					<input type="hidden" id="prPriceVal3" value="${requestScope.prPriceLevelval3}">
+					<input type="hidden" id="prPriceVal4" value="${requestScope.prPriceLevelval4}">
+					<input type="hidden" id="prPriceVal5" value="${requestScope.prPriceLevelval5}">
+					<input type="hidden" id="whseCost" value="${requestScope.prWarehouseCost}">
 					</div>
 					<table align="center" id="tierPricingDetails">
 						<tr>
@@ -332,7 +342,7 @@
 								<fieldset  class= " ui-widget-content ui-corner-all" style="width: 946px;height: 145px;">
 									<legend><label><b>Tier Pricing</b></label></legend>
 									<table style="width: 930px;">
-										<tr>
+										<tr style="display: none">
 											<td align="left" style="width: 150px;"><label>Quantity Breaks:</label>
 											<input type="text" name="QuantityName" id="QuantityID" style="width:70px"  class="validate[custom[number]]"  value="${requestScope.prMasterDetails.quantityBreak0}">&nbsp;&nbsp;&nbsp;&nbsp;<label>Over:</label>
 											<input type="text" id="overID" name="overName"  style="width: 50px;" class="validate[custom[number]]"  value="${requestScope.prMasterDetails.quantityBreak1}"></td>
@@ -345,17 +355,18 @@
 									</table>
 									<table>
 										<tr>
-											<td style="width: 80px;"><label id="prPriceLevel0">${requestScope.prPriceLevel0}</label></td><td style="width: 120px;"><input type="text" name="RetailName" id="RetailId" style="width:100px"  class="validate[custom[number]]" value="${requestScope.prMasterDetails.salesPrice01}"></td><td style="width: 80px;"> <label id="retailPercent" ></label></td>
-											<td style="width: 80px;"><label id="prPriceLevel1">${requestScope.prPriceLevel1}</label></td><td style="width: 120px;"><input type="text" name="wholeSaleName" id="wholeSaleId" style="width:100px"  class="validate[custom[number]]" value="${requestScope.prMasterDetails.salesPrice30}"></td><td> <label id="wholeSalePercent" style="width: 80px;"></label></td>
-										</tr>
+											<td style="width: 80px;"><label id="prPriceLevel0">${requestScope.prPriceLevel0}</label></td><td style="width: 120px;"><input type="text" name="RetailName" id="RetailId" style="width:100px;  border-style: none"  class="validate[custom[number]]" value="" readonly ></td><td style="width: 80px;"> <label id="retailPercent" ></label></td>
+											<td style="width: 100px; "><label id="prPriceLevel3">${requestScope.prPriceLevel3}</label></td><td style="width: 120px;"><input type="text" name="special1Name" id="special1Id" style="width:100px;  border-style: none"  class="validate[custom[number]]" value="" readonly></td><td><label id="special1Percent" style="width: 80px;"></label></td>
+											
+																					</tr>
 										<tr>
-											<td style="width: 80px;"><label id="prPriceLevel2">${requestScope.prPriceLevel2}</label></td><td style="width: 120px;"><input type="text" name="dealerName" id="dealerId" style="width:100px"  class="validate[custom[number]]" value="${requestScope.prMasterDetails.salesPrice10}"></td><td> <label id="dealerPercent" style="width: 80px;"></label></td>
-											<td style="width: 80px;"><label id="prPriceLevel4">${requestScope.prPriceLevel4}</label></td><td style="width: 120px;"><input type="text" name="distributorName" id="distributorId" style="width:100px"  class="validate[custom[number]]" value="${requestScope.prMasterDetails.salesPrice20}"></td><td><label id="distPercent" style="width: 80px;"></label></td>
+										    <td style="width: 80px;"><label id="prPriceLevel1">${requestScope.prPriceLevel1}</label></td><td style="width: 120px;"><input type="text" name="wholeSaleName" id="wholeSaleId" style="width:100px;  border-style: none"  class="validate[custom[number]]" value="" readonly></td><td> <label id="wholeSalePercent" style="width: 80px;"></label></td>
+											<td style="width: 80px;"><label id="prPriceLevel4">${requestScope.prPriceLevel4}</label></td><td style="width: 120px;"><input type="text" name="distributorName" id="distributorId" style="width:100px;  border-style: none"  class="validate[custom[number]]" value="" readonly></td><td><label id="distPercent" style="width: 80px;"></label></td>
 											
 										</tr>
 										<tr>
-											<td style="width: 100px;"><label id="prPriceLevel3">${requestScope.prPriceLevel3}</label></td><td style="width: 120px;"><input type="text" name="special1Name" id="special1Id" style="width:100px"  class="validate[custom[number]]" value="${requestScope.prMasterDetails.salesPrice40}"></td><td><label id="special1Percent" style="width: 80px;"></label></td>
-											<td style="width: 80px;"><label id="prPriceLevel5">${requestScope.prPriceLevel5}</label></td><td style="width: 120px;"><input type="text" name="special2Name" id="special2Id" style="width:100px"  class="validate[custom[number]]" value="${requestScope.prMasterDetails.salesPrice50}"></td><td><label id="sp2Percent" style="width: 80px;"></label></td>
+											<td style="width: 80px;"><label id="prPriceLevel2">${requestScope.prPriceLevel2}</label></td><td style="width: 120px;"><input type="text" name="dealerName" id="dealerId" style="width:100px;  border-style: none"  class="validate[custom[number]]" value="" readonly></td><td> <label id="dealerPercent" style="width: 80px;"></label></td>
+											<td style="width: 80px;"><label id="prPriceLevel5">${requestScope.prPriceLevel5}</label></td><td style="width: 120px;"><input type="text" name="special2Name" id="special2Id" style="width:100px;  border-style: none"  class="validate[custom[number]]" value="" readonly></td><td><label id="sp2Percent" style="width: 80px;"></label></td>
 										</tr>
 									</table>
 								</fieldset>
@@ -476,6 +487,8 @@
 		 		allocamount=parseFloat(0);
 			 	}
 		 	$("#allocatedAmount").text(formatCurrency(allocamount));
+		 	//$('#whseCostAmount').text(formatCurrency(${requestScope.getLineItemsSO}));
+		 	//ID#624 Aravind
 		 	$('#whseCostAmount').text(formatCurrency(${requestScope.prWarehouseCost}));
 		 	
 		 	if(isNaN(orderquantity)){

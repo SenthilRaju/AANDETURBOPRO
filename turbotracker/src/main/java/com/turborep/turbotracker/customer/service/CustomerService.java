@@ -155,4 +155,7 @@ public interface CustomerService {
 	public boolean processReversePayments(Integer receiptID,UserBean aUserBean,Integer yearid,Integer periodid)throws CustomerException;
 
 	public String getAllCustomerEmail(int rCuID,int invORstmt);
+	
+	//ID#625 Simon
+	public Boolean isTierPricingEnabled(int sysVariableId);
 }

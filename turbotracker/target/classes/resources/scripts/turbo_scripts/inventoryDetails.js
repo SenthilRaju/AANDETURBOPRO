@@ -74,6 +74,7 @@ jQuery(document).ready(function() {
  		$('#special2Id').css("display","none");
  		$('#sp2Percent').css("display","none");
  	}
+ 	calculateTierPriceValue();
  	calculatePercentage();
  	
  	setTimeout(function() { 
@@ -262,6 +263,7 @@ function saveInventoryDetails(){
             	  createtpusage('Inventory','Inventory Product Update','Info','Inventory,Product Update,prMasterID:'+data.prMasterId);
                     //jQuery(newDialogDiv).html('<span><b style="color:Green;">Inventory Added Successfully.</b></span>');
             }
+             calculateTierPriceValue();
             calculatePercentage();
             /*jQuery(newDialogDiv).dialog({modal: true, width:300, height:150, title:"Success.",
                     buttons: [{height:30,text: "OK",click: function() {  $(this).dialog("close");}}]}).dialog("open");*/
@@ -831,6 +833,80 @@ function showPriceTier()
 	$('.tabs_main').css("height","825px");
 }
 
+function calculateTierPriceValue(){
+	
+	/*Implemented For ID: 624
+	 * Tier Price Value
+	 */
+	var whseCost=Number($('#whseCost').val());
+	var RetailIdVal	='';
+	var wholeSaleIdVal 	='';
+	var dealerIdVal	= '';
+	var distributorIdVal = '';
+	var special1IdVal = '';
+	var special2IdVal = '';
+	
+	if($('#prPriceVal0').val()!='' && $('#prPriceVal0').val()!=null && $('#prPriceVal0').val()!=undefined ){	
+		if($('#prPriceVal0').val()==0){
+			$('#prPriceVal0').val('1');
+			RetailIdVal=whseCost;
+		}else{
+		RetailIdVal	=	Math.abs((whseCost *100) /$('#prPriceVal0').val()).toFixed(2);
+		}
+	}  	
+	 if($('#prPriceVal1').val()!='' && $('#prPriceVal1').val()!=null && $('#prPriceVal1').val()!=undefined ){
+		if($('#prPriceVal1').val()==0){
+			$('#prPriceVal1').val('1');
+			wholeSaleIdVal=whseCost;
+		}else{
+		wholeSaleIdVal	=	Math.abs((whseCost *100) /$('#prPriceVal1').val()).toFixed(2);
+		}
+	}
+	 if($('#prPriceVal2').val()!='' && $('#prPriceVal2').val()!=null && $('#prPriceVal2').val()!=undefined ){
+		if($('#prPriceVal2').val()==0){
+			$('#prPriceVal2').val('1');
+			dealerIdVal=whseCost;
+		}else{
+		dealerIdVal		=	Math.abs((whseCost *100) /$('#prPriceVal2').val()).toFixed(2);
+		}
+	}
+	
+	 if($('#prPriceVal4').val()!='' && $('#prPriceVal4').val()!=null && $('#prPriceVal4').val()!=undefined ){
+		if($('#prPriceVal4').val()==0){
+			$('#prPriceVal4').val('1');
+			distributorIdVal= whseCost;
+		}else{
+		distributorIdVal= 	Math.abs((whseCost *100) /$('#prPriceVal4').val()).toFixed(2);
+		}
+	}
+	 if($('#prPriceVal3').val()!='' &&  $('#prPriceVal3').val()!=null && $('#prPriceVal3').val()!=undefined ){
+		if($('#prPriceVal3').val()==0){
+			$('#prPriceVal3').val('1');
+			special1IdVal=whseCost;
+		}else{
+		special1IdVal	= 	Math.abs((whseCost *100) /$('#prPriceVal3').val()).toFixed(2);
+		}
+    }
+	 if($('#prPriceVal5').val()!='' && $('#prPriceVal5').val()!=null && $('#prPriceVal5').val()!=undefined ){
+		if($('#prPriceVal5').val()==0){
+			$('#prPriceVal5').val('1');
+			special2IdVal= whseCost;
+		}else{
+		special2IdVal	= 	Math.abs((whseCost *100) /$('#prPriceVal5').val()).toFixed(2);
+		}
+	}
+	
+	$('#RetailId').val('$'+RetailIdVal);
+	$('#wholeSaleId').val('$'+wholeSaleIdVal);
+	$('#dealerId').val('$'+dealerIdVal);
+	$('#special1Id').val('$'+special1IdVal);
+	$('#distributorId').val('$'+distributorIdVal);
+	$('#special2Id').val('$'+special2IdVal);
+	
+	
+	
+	
+	}
 function calculatePercentage(){
 	/**
  	 * Implemented for Req : id 81
@@ -846,44 +922,46 @@ function calculatePercentage(){
  	if(isNaN(multiplier)){
  		multiplier=0;
  	}
- 	 var mulValue = multiplier*factoryCost;
+ 	 //var mulValue = multiplier*factoryCost;
+ 	
+ 	var mulValue=Number($('#whseCost').val());
  
  	
- 	if(Number($('#RetailId').val())!=0){
- 		$('#retailPercent').text(getPerecntage($('#RetailId').val(),mulValue)+'%');	
+ 	if(Number($('#RetailId').val().replace(/\$/gi,""))!=0){
+ 		$('#retailPercent').text(getPerecntage($('#RetailId').val().replace(/\$/gi,""),mulValue)+'%');	
  	}else{
  		$('#retailPercent').text('0%');
  	}
- 	if(Number($('#wholeSaleId').val())!=0){
+ 	if(Number($('#wholeSaleId').val().replace(/\$/gi,""))!=0){
 
- 		$('#wholeSalePercent').text(getPerecntage($('#wholeSaleId').val(),mulValue)+'%');
+ 		$('#wholeSalePercent').text(getPerecntage($('#wholeSaleId').val().replace(/\$/gi,""),mulValue)+'%');
  	}else{
  		$('#wholeSalePercent').text('0%');
  	}
  	
- 	 	if(Number($('#dealerId').val())!=0){
- 	 	$('#dealerPercent').text(getPerecntage($('#dealerId').val(),mulValue)+'%');
+ 	 	if(Number($('#dealerId').val().replace(/\$/gi,""))!=0){
+ 	 	$('#dealerPercent').text(getPerecntage($('#dealerId').val().replace(/\$/gi,""),mulValue)+'%');
  	 	}else{
  	 		$('#dealerPercent').text('0%');
  	 	}
  	 	
- 	 	if(Number($('#special1Id').val())!=0){
- 	 		$('#special1Percent').text(getPerecntage($('#special1Id').val(),mulValue)+'%');
+ 	 	if(Number($('#special1Id').val().replace(/\$/gi,""))!=0){
+ 	 		$('#special1Percent').text(getPerecntage($('#special1Id').val().replace(/\$/gi,""),mulValue)+'%');
  	 	}else{
  	 		$('#special1Percent').text('0%');
  	 	}
  	 	
 
  	 	
- 	 	 	if(Number($('#distributorId').val())!=0){
+ 	 	 	if(Number($('#distributorId').val().replace(/\$/gi,""))!=0){
  	 	
- 	 	 		$('#distPercent').text(getPerecntage($('#distributorId').val(),mulValue)+'%');
+ 	 	 		$('#distPercent').text(getPerecntage($('#distributorId').val().replace(/\$/gi,""),mulValue)+'%');
  	 	 	}else{
  	 	 		$('#distPercent').text('0%');
  	 	 	}
  	 	
- 	 	 if(Number($('#special2Id').val())!=0){
- 	 	 		$('#sp2Percent').text(getPerecntage($('#special2Id').val(),mulValue)+'%');
+ 	 	 if(Number($('#special2Id').val().replace(/\$/gi,""))!=0){
+ 	 	 		$('#sp2Percent').text(getPerecntage($('#special2Id').val().replace(/\$/gi,""),mulValue)+'%');
  	 	 			
  	 	 	}else{
  	 	 		$('#sp2Percent').text('0%');
@@ -897,8 +975,9 @@ function calculatePercentage(){
  * Calculating percentage for Tier Pricing
  * 
  */
-function getPerecntage(textValue,factoryCost){
-	
-	var result = parseFloat((Math.abs(textValue-factoryCost)/textValue)*100).toFixed(2);
+function getPerecntage(textValue,whseCost){
+		
+	var result = Math.round((Math.abs(textValue-whseCost)/textValue)*100);
+	//var result = parseFloat((Math.abs(textValue-factoryCost)/textValue)*100).toFixed(2);
 	return result;
 }

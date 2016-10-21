@@ -2427,7 +2427,8 @@ function editBidDetails() {
 	var joRep = grid.jqGrid('getCell', rowId, 'rep');
 	$("#customer_quoteType option[value=" + joQuoteTypeID + "]").attr(
 			"selected", true);
-	//$("#bidderId").val(joBiddderID);
+	//$("#bidderId").val(joBiddderID);	
+	//added by prasant kumar #1578
 	$('#BidDialogCustomForm').find('#bidderId').val(joBiddderID);
 	$("#bidder").val(joBidder);
 	if (joBidderLow === 'Yes') {

@@ -459,7 +459,7 @@ var allText = $('#apacct').html();
 							  jQuery("#InvalidPODlg").dialog("open"); return
 							  true;
 							   }
-                                             // alert("Status:-"+data.Status);
+							 // alert("Status:-"+data.Status);
 							  //check Po Line items recived or not 
 							  //added by prasant #629 date:10/05/16
 							  if(data.Status==0) {									  
@@ -468,13 +468,8 @@ var allText = $('#apacct').html();
 									  $('#InvalidPOMsg').text('Please Receive Line Items for this PO #'+po);
 									  jQuery("#InvalidPODlg").dialog("open");
 									  return  true;
-									   }
-							  
-
-
-
-                                            else{
-							 
+									   }						  
+							  else{				 
 				        		 
 				        	
 				        	console.log("No PO  :: "+data);
@@ -3345,13 +3340,21 @@ function getDueonDayswithDate(dueondaysforrxMasterid,dateValue,poStatus)
 }
 
 
+function checkLatestInvoice(prMasterID)
+{
 
+	
+	alert("prMasterID:"+prMasterID);
+	return true;
+
+}
 
 //New Method
 
 var posit_outside_loadlineItemGrid=0;
 function loadlineItemGrid()
 {
+	//alert("hi it is calling....");
 	var gridstatus=true;
 	var billID ='';
 	var vepoID,query;
@@ -3486,7 +3489,14 @@ function loadlineItemGrid()
 	                       		 if(key == 13)  // the enter key code
 	                       		  {
 	                       			var rowid=$(e.target).closest('tr')[0].id;
+	                       			//var prMasterID=$(e.target).closest('tr')[0].prMasterID;
+	                                var row=  $('#lineItemGrid').jqGrid ('getGridParam', 'selrow');
+	                            	var	prMasterID =  $('#lineItemGrid').jqGrid ('getCell', row, 'prMasterId');
+	                            	console.log("prMasterID:"+$('#lineItemGrid').jqGrid ('getCell', row, 'prMasterId'));
+
+	                            	alert("prMasterID :"+row);
 	                       			Calculategrideditrowvalues_VI(rowid);
+	                       			checkLatestInvoice(prMasterID);
 	                       			 $("#lineItemGrid_ilsave").trigger("click");
 	                       		      return true;
 	                       		  }
@@ -3524,7 +3534,14 @@ function loadlineItemGrid()
 	                       		 if(key == 13)  // the enter key code
 	                       		  {
 	                       			var rowid=$(e.target).closest('tr')[0].id;
+	                       			//var prMasterID=$(e.target).closest('tr')[0].prMasterID;
+	                                var row=  $('#lineItemGrid').jqGrid ('getGridParam', 'selrow');
+	                            	var	prMasterID =  $('#lineItemGrid').jqGrid ('getCell', row, 'prMasterId');
+	                            	console.log("prMasterID:"+$('#lineItemGrid').jqGrid ('getCell', row, 'prMasterId'));
+
+	                            	alert("prMasterID :"+row);
 	                       			Calculategrideditrowvalues_VI(rowid);
+	                       			checkLatestInvoice(prMasterID);
 	                       			 $("#lineItemGrid_ilsave").trigger("click");
 	                       		      return true;
 	                       		  }
@@ -3561,7 +3578,15 @@ function loadlineItemGrid()
 	                       		 if(key == 13)  // the enter key code
 	                       		  {
 	                       			var rowid=$(e.target).closest('tr')[0].id;
+	                       			//var prMasterID=$(e.target).closest('tr')[0].prMasterID;
+	                       			//alert("prMasterID :"+prMasterID);
+	                                var row=  $('#lineItemGrid').jqGrid ('getGridParam', 'selrow');
+	                            	var	prMasterID =  $('#lineItemGrid').jqGrid ('getCell', row, 'prMasterId');
+	                            	console.log("prMasterID:"+$('#lineItemGrid').jqGrid ('getCell', row, 'prMasterId'));
+
+	                            	alert("prMasterID :"+row);
 	                       			Calculategrideditrowvalues_VI(rowid);
+	                       			checkLatestInvoice(prMasterID);
 	                       			$("#lineItemGrid_ilsave").trigger("click")
 	                       		  }
 	                                             }
@@ -3598,8 +3623,16 @@ function loadlineItemGrid()
 	                       		 if(key == 13)  // the enter key code
 	                       		  {
 	                       			var rowid=$(e.target).closest('tr')[0].id;
+	                       			//var prMasterID=$(e.target).closest('tr')[0].prMasterID;
+	                       			//alert("prMasterID :"+prMasterID);
+	                                var row=  $('#lineItemGrid').jqGrid ('getGridParam', 'selrow');
+	                            	var	prMasterID =  $('#lineItemGrid').jqGrid ('getCell', row, 'prMasterId');
+	                            	console.log("prMasterID:"+$('#lineItemGrid').jqGrid ('getCell', row, 'prMasterId'));
+
+	                            	alert("prMasterID :"+row);
+	                      			//alert("prMasterID :"+prMasterID);
 	                       			Calculategrideditrowvalues_VI(rowid);
-		                       		
+	                       			checkLatestInvoice(prMasterID);
 	                       			$("#lineItemGrid_ilsave").trigger("click");
 	                       		  }
 	                                             }
@@ -3630,9 +3663,15 @@ function loadlineItemGrid()
 		                        type: 'keypress',
 		                        fn: function(e) {
 		                         var key = e.which;
-		                  
+		                         var rowid=$(e.target).closest('tr')[0].id;
+                       		//	alert("prMasterID :"+prMasterID);
+		                       var row=  $('#lineItemGrid').jqGrid ('getGridParam', 'selrow');
+		                     	var	prMasterID =  $('#lineItemGrid').jqGrid ('getCell', row, 'prMasterId');
+		                     	console.log("prMasterID:"+$('#lineItemGrid').jqGrid ('getCell', row, 'prMasterId'));
+		                    	alert("prMasterID :"+row);
 		                      if(key == 13)  // the enter key code
 		                       {
+		                    	  checkLatestInvoice(prMasterID);
 		                       $("#lineItemGrid_ilsave").trigger("click");
 		                       }
 		                                         }
@@ -4194,6 +4233,7 @@ function check_productNofromoutside( value, colname ) {
 
 
 function SaveVendorInvoicewithPO(operation){
+	alert("in SaveVendorInvoicewithPO  "+operation);
 	var vendorInvoiceDetails=$("#addNewVendorInvoiceFromPOForm").serialize();
 	var gridRows = $('#lineItemGrid').getRowData();
 	var vendorInvoiceGridDetails= JSON.stringify(gridRows);

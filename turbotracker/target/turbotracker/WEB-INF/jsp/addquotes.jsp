@@ -407,6 +407,7 @@
 			</tr>
 		</table>
 	</div>
+	<jsp:include page="../LineItemProperties.jsp"></jsp:include>
  	<!-- 	<script type="text/javascript" src="./../resources/scripts/turbo_scripts/minscripts/jQuery_jqprint_0.3.min.js"></script>
 	<script type="text/javascript" src="./../resources/scripts/turbo_scripts/addQuotes.js"></script>
    <script type="text/javascript" src="./../resources/scripts/turbo_scripts/minscripts/addQuotes.min.js"></script>   -->

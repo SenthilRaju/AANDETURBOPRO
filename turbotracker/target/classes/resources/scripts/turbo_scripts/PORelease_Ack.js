@@ -17,7 +17,7 @@ jQuery(document).ready(function() {
 		$('#loadingPOAckDiv').css({"visibility": "hidden"});
 		var total=(Number($("#Subtotal_ID").text().replace(/[^0-9\.]+/g,"")) + Number($("#Freight_ID").text().replace(/[^0-9\.]+/g,"")));
 		$("#totalKnowledgeId").val(formatCurrency($("#totalGeneralId").val().replace(/[^0-9\.]+/g,"")));
-		SetoverAllPOTotal();
+		
 		var jobStatus = getUrlVars()["jobStatus"];
 		if(jobStatus.indexOf("Closed")>-1){
 			$('#POReleaseAckSaveButton').css('cursor','default');
@@ -30,95 +30,7 @@ jQuery(document).ready(function() {
 			$('#POReleaseAckSaveButton').css('background','-webkit-gradient(linear, left top, left bottom, from(#b47015), to(#6f4c23))');
 		}
 });
-//added by prasant #1629
-function SetoverAllPOTotal(){
-	var allRowsInGrid = $('#lineItemGrid').jqGrid('getRowData');
-	var aVal = new Array(); 
-	var aTax = new Array();
-	var sum = 0;
-	 var totalamount=0;
-	 var taxamount=0;
-	 var taxcellValue;
-	var aTotal = 0;
 	
-	
-	
-	var ids = $("#lineItemGrid").jqGrid('getDataIDs');
-	/*$.each(allRowsInGrid, function(index, value) {
-		aVal[index] = value.quantityBilled;
-		var number1 = aVal[index].replace("$", "");
-		var number2 = number1.replace(".00", "");
-		var number3 = number2.replace(",", "");
-		var number4 = number3.replace(",", "");
-		var number5 = number4.replace(",", "");
-		var number6 = number5.replace(",", "");
-		
-		var id="#canDeletePOID_"+ids[index];
-		var canDo=$(id).is(':checked');
-		if(!canDo){
-		sum = Number(sum) + Number(number6); 
-		
-		aVal[index] = value.taxable;
-		if (aVal[index] === 'Yes'){
-			aTax[index] = value.quantityBilled;
-			var number1 = aTax[index].replace("$", "");
-			var number2 = number1.replace(".00", "");
-			var number3 = number2.replace(",", "");
-			var number4 = number3.replace(",", "");
-			var number5 = number4.replace(",", "");
-			var number6 = number5.replace(",", "");
-			var taxValue = $('#taxLineId').val();
-			taxAmount = taxAmount + Number(number6)*(taxValue/100);
-		}
-		}
-	});*/
-	
-	
-	for(var i=0;i<ids.length;i++){
-		 var selectedRowId=ids[i];
-		 if(selectedRowId!="new_row"){
-		 cellValue =$("#lineItemGrid").jqGrid ('getCell', selectedRowId, 'quantityBilled');
-		 taxcellValue=$("#lineItemGrid").jqGrid ('getCell', selectedRowId, 'taxable');
-		 var id="#canDeletePOID_"+selectedRowId;
-		 var canDo=$(id).is(':checked');
-		 if(taxcellValue=="Yes"){
-			 var eachamount=parseFloat(floorFigureoverall(cellValue.replace(/[^0-9\.-]+/g,""),2));
-			 var multiplyamount=eachamount*Number(taxpercentage)/100;
-			 if(!canDo){
-			 taxamount=Number(taxamount)+Number(multiplyamount);
-			
-			 }
-		 }
-		var cellvalueamt=Number(parseFloat(cellValue.replace(/[^0-9\.-]+/g,"")).toFixed(3));
-		//alert(parseFloat(cellValue.replace(/[^0-9\.-]+/g,"")).toFixed(2));
-		if(!canDo){
-		 totalamount=cellvalueamt+totalamount;
-		 totalamount=Number(floorFigureoverall(totalamount,2));
-		}
-		 }
-	 }
-	
-	
-	$('#subtotalGeneralId').val(Number(floorFigureoverall(totalamount, 2)));
-	$('#subtotalLineId').val(Number(floorFigureoverall(totalamount,2)));
-	$('#subtotalKnowledgeId').val(Number(floorFigureoverall(totalamount,2)));
-	$('#generalID').val(Number(floorFigureoverall(taxamount,2)));
-	$('#lineID').val(Number(floorFigureoverall(taxamount,2)));
-	$('#KnowledgeID').val(Number(floorFigureoverall(taxamount,2)));
-	
-	var frieghtvalue=Number($("#freightGeneralId").val().replace(/[^0-9\.]+/g,""));
-	if(frieghtvalue==undefined ||frieghtvalue=="" || frieghtvalue==null ||frieghtvalue=="null"){
-		frieghtvalue=0.00;
-		}
-	
-	aTotal = aTotal + totalamount + Number(floorFigureoverall(taxamount,2)) +frieghtvalue;
-	$('#totalGeneralId').val(Number(floorFigureoverall(aTotal,2)));
-	$('#totalLineId').val(Number(floorFigureoverall(aTotal,2)));
-	$('#totalKnowledgeId').val(Number(floorFigureoverall(aTotal,2)));
-	$("#freightLineId").val(Number(floorFigureoverall(frieghtvalue,2)));
-	//$("#taxLineId").val($("#Tax_ID").text());
-}
-
 /*function loadAck(){
 	$("#Ack").jqGrid({
 		datatype: 'JSON',
@@ -228,7 +140,7 @@ function loadSaveAllFunction(){
 	for(var index = 0; index < gridData.length; index++){
 		var rowData = gridData[index];
 		var ackDate = rowData["ackDate"];
-		var shipDate = ro	wData["shipDate"];
+		var shipDate = rowData["shipDate"];
 		var orderNumber = rowData["vendorOrderNumber"];
 		var vePoDetailID = rowData["vePodetailId"];
 		if(ackDate === ''){
@@ -269,15 +181,7 @@ function loadSaveAllFunction(){
 	$("#ackDateTD").val("");
 	$("#shipDateTD").val("");
 	$("#orderNumberTD").val("");
-	// $("#saveAllButton").click(function(e) {
-     //   e.preventDefault();
-     //   alert("it is calling");
-       // $('').show();
-      //  $('#saveAllDialog').css('display','block');
-        jQuery( "#saveAllDialog" ).dialog("open");
-     
-   // });
-	
+	jQuery( "#saveAllDialog" ).dialog("open");
 	return false;
 }
 
@@ -301,13 +205,11 @@ function saveAllAckAndShipDates(){
 }
 
 jQuery(function () {
-	//$('#saveAllDialog').hide();
 	jQuery( "#saveAllDialog" ).dialog({
 		autoOpen: false,
 		width:280,
 		title:"Edit Acknowledgment",
 		modal: true,
-		autoOpen:false,
 		buttons:{	
 			"Submit": function(){
 				saveAllAckAndShipDates();
@@ -494,88 +396,32 @@ function loadAck(){
 		          	},editrules:{edithidden:false}},
 		           	{name:'description', index:'description', align:'left', width:150, editable:true,hidden:false, edittype:'text', editoptions:{size:40,
 		           		dataEvents: [
-					       			  { type: 'focus', data: { i: 7 }, fn: function(e) {
-					       				  e.target.select(); } },
-					    			  { type: 'click', data: { i: 7 }, fn: function(e) { e.target.select(); } },
-					    			  {
-					                         type: 'keypress',
-					                         fn: function(e) {
-					                        	 var key = e.which;
-					                    		 if(key == 13)  // the enter key code
-					                    		  {
-					                    			 $("#Ack_ilsave").trigger("click");
-					                    		    return false;  
-					                    		  }
-					                         }
-					                        }
+					       			  { type: 'focus', data: { i: 7 }, fn: function(e) { e.target.select(); } },
+					    			  { type: 'click', data: { i: 7 }, fn: function(e) { e.target.select(); } }
 					    			  ]
 		           	},editrules:{edithidden:false}, cellattr: function (rowId, tv, rawObject, cm, rdata)	 {return 'style="white-space: normal" ';}},
 		           	{name:'quantityOrdered', index:'quantityOrdered', align:'right', width:50,hidden:false, editable:false, editoptions:{size:15, alignText:'right',
 		           		dataEvents: [
 					       			  { type: 'focus', data: { i: 7 }, fn: function(e) { e.target.select(); } },
-					    			  { type: 'click', data: { i: 7 }, fn: function(e) { e.target.select(); } },
-					    			  {
-					                         type: 'keypress',
-					                         fn: function(e) {
-					                        	 var key = e.which;
-					                    		 if(key == 13)  // the enter key code
-					                    		  {
-					                    			 $("#Ack_ilsave").trigger("click");
-					                    		    return false;  
-					                    		  }
-					                         }
-					                        }
+					    			  { type: 'click', data: { i: 7 }, fn: function(e) { e.target.select(); } }
 					    			  ]
 		           	},editrules:{edithidden:false}},
 		           	{name:'ackDate', index:'ackDate', align:'center', width:50,hidden:false, editable:true,  editoptions:{size:15, align:'center',
 		           		dataEvents: [
 					       			  { type: 'focus', data: { i: 7 }, fn: function(e) { e.target.select(); } },
-					    			  { type: 'click', data: { i: 7 }, fn: function(e) { e.target.select(); } },
-					    			  {
-					                         type: 'keypress',
-					                         fn: function(e) {
-					                        	 var key = e.which;
-					                    		 if(key == 13)  // the enter key code
-					                    		  {
-					                    			 $("#Ack_ilsave").trigger("click");
-					                    		    return false;  
-					                    		  }
-					                         }
-					                        }
+					    			  { type: 'click', data: { i: 7 }, fn: function(e) { e.target.select(); } }
 					    			  ]
 		           	},editrules:{edithidden:true}},
 					{name:'shipDate', index:'shipDate', align:'center', width:50,hidden:false, editable:true, editoptions:{size:15, alignText:'center',
 						dataEvents: [
 					       			  { type: 'focus', data: { i: 7 }, fn: function(e) { e.target.select(); } },
-					    			  { type: 'click', data: { i: 7 }, fn: function(e) { e.target.select(); } },
-					    			  {
-					                         type: 'keypress',
-					                         fn: function(e) {
-					                        	 var key = e.which;
-					                    		 if(key == 13)  // the enter key code
-					                    		  {
-					                    			 $("#Ack_ilsave").trigger("click");
-					                    		    return false;  
-					                    		  }
-					                         }
-					                        }
+					    			  { type: 'click', data: { i: 7 }, fn: function(e) { e.target.select(); } }
 					    			  ]
 					}, editrules:{edithidden:true}},
 					{name:'vendorOrderNumber', index:'vendorOrderNumber', align:'right', width:50,hidden:false, editable:true, editoptions:{size:15, alignText:'right',
 						dataEvents: [
 					       			  { type: 'focus', data: { i: 7 }, fn: function(e) { e.target.select(); } },
-					    			  { type: 'click', data: { i: 7 }, fn: function(e) { e.target.select(); } },
-					    			  {
-					                         type: 'keypress',
-					                         fn: function(e) {
-					                        	 var key = e.which;
-					                    		 if(key == 13)  // the enter key code
-					                    		  {
-					                    			 $("#Ack_ilsave").trigger("click");
-					                    		    return false;  
-					                    		  }
-					                         }
-					                        }
+					    			  { type: 'click', data: { i: 7 }, fn: function(e) { e.target.select(); } }
 					    			  ]
 					},editrules:{edithidden:true}},
 					{name:'vePoid', index:'vePoid', align:'right', width:50,hidden:true, editable:true, editoptions:{size:15, alignText:'right'},editrules:{edithidden:false}},
@@ -583,7 +429,7 @@ function loadAck(){
 					{name:'vePodetailId', index:'vePodetailId', align:'right', width:50,hidden:true, editable:true, editoptions:{size:15, alignText:'right'},editrules:{edithidden:false}}],
 				rowNum: 0, pgbuttons: false, recordtext: '', rowList: [], pgtext: null, viewrecords: false,
 				sortname: 'vePodetailId', sortorder: "asc", imgpath: 'themes/basic/images', caption: false,
-				height:482.5,width: 765, rownumbers:true, altRows: true, altclass:'myAltRowClass', caption: 'Acknowledgment',
+				height:210,	width: 750, rownumbers:true, altRows: true, altclass:'myAltRowClass', caption: 'Acknowledgment',
 				jsonReader : {
 					root: "rows",
 					page: "page",
@@ -594,8 +440,7 @@ function loadAck(){
 					id: "id",
 					userdata: "userdata"
 				},
-			loadComplete: function(data) { 
-			},
+			loadComplete: function(data) { 	},
 			gridComplete: function () {
 	           	var gridRows = $('#Ack').getRowData();
 	           	poRelease_AckForm =  JSON.stringify(gridRows);
@@ -603,8 +448,6 @@ function loadAck(){
 			loadError : function (jqXHR, textStatus, errorThrown){	},
 			onSelectRow: function(id){ 
 				selectedackrowid=id;
-			},ondblClickRow: function(id){
-				$("#Ack_iledit").trigger("click");
 			},
 			cellsubmit: 'clientArray',
 			editurl: 'clientArray',
@@ -734,12 +577,8 @@ function loadAck(){
 							$("#"+id+"_shipDate").datepicker();
 						
 						}
-					},restoreAfterSelect :false
+					}
 				});
-	 	$("#Ack_ilsave").css({"display":"none"});
-	 	$("#Ack_iladd").css({"display":"none"});
-		$("#Ack_iledit").css({"display":"none"});
-		$("#Ack_ilcancel").css({"display":"none"});
 }
 
 function SaveAcknowledgementPO(popupdetail){

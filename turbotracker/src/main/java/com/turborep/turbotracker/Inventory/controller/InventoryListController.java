@@ -28,16 +28,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import net.sf.jasperreports.engine.JRException;
-import net.sf.jasperreports.engine.JasperCompileManager;
-import net.sf.jasperreports.engine.JasperFillManager;
-import net.sf.jasperreports.engine.JasperPrint;
-import net.sf.jasperreports.engine.JasperReport;
-import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
-import net.sf.jasperreports.engine.design.JRDesignQuery;
-import net.sf.jasperreports.engine.design.JasperDesign;
-import net.sf.jasperreports.engine.xml.JRXmlLoader;
-
 import org.apache.log4j.Logger;
 import org.hibernate.connection.ConnectionProvider;
 import org.springframework.stereotype.Controller;
@@ -47,10 +37,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 import com.lowagie.text.DocumentException;
 import com.turborep.turbotracker.Inventory.Exception.InventoryException;
 import com.turborep.turbotracker.Inventory.service.InventoryConstant;
@@ -79,7 +65,6 @@ import com.turborep.turbotracker.user.dao.TsUserSetting;
 import com.turborep.turbotracker.user.dao.UserBean;
 import com.turborep.turbotracker.user.exception.UserException;
 import com.turborep.turbotracker.user.service.UserService;
-import com.turborep.turbotracker.util.JobUtil;
 import com.turborep.turbotracker.util.ReportService;
 import com.turborep.turbotracker.util.SessionConstants;
 import com.turborep.turbotracker.vendor.dao.PurchaseOrdersBean;
@@ -87,6 +72,16 @@ import com.turborep.turbotracker.vendor.dao.SalesOrderBean;
 import com.turborep.turbotracker.vendor.dao.Vepo;
 import com.turborep.turbotracker.vendor.exception.VendorException;
 import com.turborep.turbotracker.vendor.service.PurchaseService;
+
+import net.sf.jasperreports.engine.JRException;
+import net.sf.jasperreports.engine.JasperCompileManager;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.engine.JasperReport;
+import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
+import net.sf.jasperreports.engine.design.JRDesignQuery;
+import net.sf.jasperreports.engine.design.JasperDesign;
+import net.sf.jasperreports.engine.xml.JRXmlLoader;
 
 @Controller
 @RequestMapping("/inventoryList")
@@ -1970,6 +1965,7 @@ public class InventoryListController {
 			@RequestParam(value = "chk_cusCreLiminSalOrdYes",required=false) Integer chk_cusCreLiminSalOrdYes,
 			@RequestParam(value = "chk_cusCreLiminQuickBookYes",required=false) Integer chk_cusCreLiminQuickBookYes,
 			@RequestParam(value = "chk_taxTerCuInvAftSaveYes",required=false) Integer chk_taxTerCuInvAftSaveYes,
+			@RequestParam(value = "chk_cusTierPricingUse",required=false) Integer chk_cusTierPricingUse,
 			@RequestParam(value = "chk_cusReqDivinSalOrdYes",required=false) Integer chk_cusReqDivinSalOrdYes,
 			@RequestParam(value = "chk_cusReqDivinCusInvYes",required=false) Integer chk_cusReqDivinCusInvYes,
 			@RequestParam(value = "chk_cusIncSalTaxYes",required=false) Integer chk_cusIncSalTaxYes,
@@ -2021,7 +2017,14 @@ public class InventoryListController {
 			thesysvariable.setValueLong(chk_taxTerCuInvAftSaveYes);
 			System.out.println("sysvariableid CheckTaxTerritoriesAfterSavingCustomerInvoice==>"+InventoryConstant.getConstantSysvariableId("DoNotAllowTaxTerritoryAfterSavingCustomerInvoice"));
 			thesysvariable.setSysVariableId(InventoryConstant.getConstantSysvariableId("DoNotAllowTaxTerritoryAfterSavingCustomerInvoice"));
-			asysvariable.add(thesysvariable);		
+			asysvariable.add(thesysvariable);	
+			
+			//ID#624 Aravind
+			thesysvariable=new Sysvariable();
+			thesysvariable.setValueLong(chk_cusTierPricingUse);
+			System.out.println("sysvariableid TierPricingAddingWarehouseLineitemstoSOServiceOrderCI==>"+InventoryConstant.getConstantSysvariableId("TierPricingAddingWarehouseLineitemstoSOServiceOrderCI"));
+			thesysvariable.setSysVariableId(InventoryConstant.getConstantSysvariableId("TierPricingAddingWarehouseLineitemstoSOServiceOrderCI"));
+			asysvariable.add(thesysvariable);	
 					
 			thesysvariable=new Sysvariable();
 			thesysvariable.setValueLong(chk_cusReqDivinSalOrdYes);

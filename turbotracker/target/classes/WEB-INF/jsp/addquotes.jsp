@@ -439,6 +439,30 @@ border: 4px solid #09ad7e;
 	<input type="hidden" id="Quoteselrowid" value="">
 	<textarea name="Quoteeditor" class="Quoteeditor" id="Quoteeditor"></textarea>
 	</div>
+	<!-- added by prasant #556 -->
+	<div id="QuoteInventoryEditordivbx" style="display: none;">
+	  <form id="InventoryGridFrom">
+	  <input type="text" style="display: none;" id="joQuoteHeaderDetailMastID1" ></input>
+		<table id="loadInventoryListGrid">
+		<div id="loadInventoryListGridpager" ></div>	
+		<div>	<table align="right">
+			<tr width="100%">
+			<td  width="20%" align="left"><input type="button" class="savehoverbutton turbo-tan" style="width: 100px; opacity: initial;    margin-left: 40px;" id="addproducts" value="add" onclick="AddLineItem1()"></input></td>
+			<td  width="80%" colspan=2 align="right">
+			<input type="button" style="width: 100px; opacity: initial;" class="savehoverbutton turbo-tan" id="saveproducts" value="save" onclick="saveQuoteInventoryProduct()"></input>
+			<input type="button" class="savehoverbutton turbo-tan" style="width: 100px; opacity: initial;" align="right" id="closeGd" value="close" onclick="closeInventoryGrid()"></input>
+			
+			</td>
+			</tr>
+			</table></div>
+			
+				
+		</table>
+		
+	 </form>
+	</div>
+	
+	<!-- added completed -->
 	<div id="quotePropertiesTempDialog">
 		<form id="quoteTempPropertiesFormID">
 			<table>

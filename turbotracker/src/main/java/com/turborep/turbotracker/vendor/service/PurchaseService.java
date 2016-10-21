@@ -2,6 +2,7 @@ package com.turborep.turbotracker.vendor.service;
 
 import java.sql.Date;
 import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.List;
 
 import com.turborep.turbotracker.company.Exception.CompanyException;
@@ -49,6 +50,8 @@ public interface PurchaseService {
 	public List<Rxaddress> getCustomerAddress(Integer rxMasterID) throws VendorException;
 	public List<Rxaddress> getVendorName(Integer rxMasterID) throws VendorException;
 	public List<Prmaster> getLineItems(Integer prMasterID) throws VendorException;
+	//ID#625 Simon
+	public List<Prmaster> getLineItems(Integer prMasterID,Integer rxMasterID) throws VendorException;
 	public String getVendor(Integer theRxMasterId) throws VendorException;
 	public String getManufacture(Integer theRxMasterId) throws VendorException;
 	public CoTaxTerritory getSingleTaxTerritory(String country)	throws CompanyException;
@@ -62,7 +65,9 @@ public interface PurchaseService {
 	public Integer getCuInvoiceRecordsCount();
 	public Integer getCuInvoiceRecordsCountWithDate(String fromdate,String todate,String searchData);
 	public List<Cuinvoice> getAllCuInvoicesList(int from, int to,String sortIndex, String sortOrder,String searchData,String startDate,String endDate) throws VendorException;
-	public List<Prmaster> getLineItemsSO(Integer prMasterID) throws VendorException;
+	//ID#625 Simon
+//	public List<Prmaster> getLineItemsSO(Integer prMasterID) throws VendorException;
+	public List<Prmaster> getLineItemsSO(Integer prMasterID,Integer rxMasterID) throws VendorException;
 	public List<Rxcontact> getEmailList(Integer rxMasterID) throws VendorException;
 	public List<PurchaseOrdersBean> filterPOsList(int from, int to,String searchDate,String startDate,String endDate,String sortIndex,String sortOrder) throws VendorException, ParseException;
 	public List<Rxmaster> getRxMasterName(Integer prMasterID) throws VendorException;
@@ -98,6 +103,8 @@ public interface PurchaseService {
 	public void updateEmailInvoiceDate(Integer cuInvoiceId,Integer invORstmt, Boolean emailStatus);
 
 	public List<Cuinvoice> getAllcuStatementEmailList(String query);
+
+	public ArrayList<Prmaster> getQuoteInventoryLineItem(Integer prMasterId);
 	
 	
 	

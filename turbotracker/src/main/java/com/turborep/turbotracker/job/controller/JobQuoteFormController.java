@@ -35,6 +35,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.turborep.turbotracker.Rolodex.service.RolodexService;
+import com.turborep.turbotracker.banking.exception.BankingException;
 import com.turborep.turbotracker.company.Exception.CompanyException;
 import com.turborep.turbotracker.company.dao.Rxcontact;
 import com.turborep.turbotracker.company.service.CompanyService;
@@ -46,6 +47,7 @@ import com.turborep.turbotracker.customer.service.CustomerService;
 import com.turborep.turbotracker.finance.dao.Transactionmonitor;
 import com.turborep.turbotracker.job.dao.JoQuoteDetail;
 import com.turborep.turbotracker.job.dao.JoQuoteHeader;
+import com.turborep.turbotracker.job.dao.JoQuoteProductsDetail;
 import com.turborep.turbotracker.job.dao.JoQuoteProperties;
 import com.turborep.turbotracker.job.dao.JoQuoteTemplateDetail;
 import com.turborep.turbotracker.job.dao.JoQuoteTemplateProperties;
@@ -70,6 +72,7 @@ import com.turborep.turbotracker.job.service.QuoteTemplateService;
 import com.turborep.turbotracker.json.AutoCompleteBean;
 import com.turborep.turbotracker.json.CustomResponse;
 import com.turborep.turbotracker.mail.SendQuoteMail;
+import com.turborep.turbotracker.product.dao.Prmaster;
 import com.turborep.turbotracker.system.dao.Sysvariable;
 import com.turborep.turbotracker.system.service.SysService;
 import com.turborep.turbotracker.user.dao.TpUsage;
@@ -81,6 +84,9 @@ import com.turborep.turbotracker.user.service.UserService;
 import com.turborep.turbotracker.util.JobUtil;
 import com.turborep.turbotracker.util.SessionConstants;
 import com.turborep.turbotracker.vendor.dao.VeFactory;
+import com.turborep.turbotracker.vendor.dao.Vebill;
+import com.turborep.turbotracker.vendor.dao.Vebilldetail;
+import com.turborep.turbotracker.vendor.dao.Vebilldistribution;
 import com.turborep.turbotracker.vendor.dao.Vepo;
 import com.turborep.turbotracker.vendor.dao.Vepodetail;
 import com.turborep.turbotracker.vendor.exception.VendorException;
@@ -3210,6 +3216,111 @@ public class JobQuoteFormController {
 		return aResponse;
 	}
 	
+	
+	
+	@RequestMapping(value = "/loadInventoryProductsDetail", method = RequestMethod.POST)
+	public @ResponseBody CustomResponse loadInventoryProductsDetail(
+			HttpSession session,HttpServletRequest therequest,
+			HttpServletResponse theResponse,
+			@RequestParam(value = "joquoteheaderid", required = true) Integer joquoteheaderid)
+			throws IOException, MessagingException {
+		CustomResponse aResponse = new CustomResponse();
+		List<JoQuoteProductsDetail> JoQuoteProductsDetail=null;
+		try {
+			
+			
+			
+			System.out.println("insid the loadquotelineitems");
+			if(joquoteheaderid!=null)
+			JoQuoteProductsDetail =jobService.getJoQuoteProductsDetail(joquoteheaderid);
+			
+			aResponse.setRows(JoQuoteProductsDetail);
+			
+		} catch (Exception e) {
+			
+			sendTransactionException("<b>MethodName:</b>loadquoteLineItems","JOB",e,session,therequest);
+			logger.error(e.getMessage(), e);
+			//theResponse.sendError(e.getItsErrorStatusCode(),
+				//	e.getMessage());
+		}
+		return aResponse;
+	}
+	
+	
+	//added by prasant kumar #556 date:10/04/2016
+	
+	@RequestMapping(value = "/saveInventoryProductsDetail",method = RequestMethod.POST)
+	public @ResponseBody Integer saveInventoryProductsDetail(@RequestParam(value="joQuoteDetMastID1", required=false) Integer joQuoteDetMastID1,
+														@RequestParam(value = "dataToSend", required = false) String gridData,
+														@RequestParam(value = "delData[]",required = false) ArrayList<String>  delData,
+													   ModelMap theModel,HttpSession theSession,HttpServletResponse theResponse,HttpServletRequest theRequest) throws IOException, BankingException, MessagingException, CompanyException, JobException
+	{
+		JoQuoteProductsDetail joQuetoProduct=new JoQuoteProductsDetail();
+		
+		System.out.println("delData"+delData);
+		//functionality for delete the grid columns
+		if(delData!=null){
+			for(String detailID:delData){
+				Vebilldetail aVebilldetail=new Vebilldetail();
+				System.out.println("delData[i]"+detailID);
+				Integer vebillDetailID=JobUtil.ConvertintoInteger(detailID);
+				//aVebilldetail.setVeBillDetailId(vebillDetailID);
+				//aVebilldetail.setVeBillId(aVebill.getVeBillId());
+				//vendorService.saveVebillDetail(aVebilldetail,"delete");
+			}
+
+			
+			//insertStatus = vendorService.insertVebillDetail(veBillid,vepoId,aUserBean.getUserId());
+			JsonParser parser = new JsonParser();
+			if ( gridData!=null) {
+				System.out.println("gridData"+gridData);
+				JsonElement ele = parser.parse(gridData);
+				JsonArray array = ele.getAsJsonArray();
+				System.out.println("array length==>"+array.size());
+				for (int ki=0;ki<array.size()-1;ki++) {
+					JsonElement ele1=array.get(ki);
+
+					JoQuoteProductsDetail master=new JoQuoteProductsDetail();
+					
+					JsonObject obj = ele1.getAsJsonObject();
+					String desc=obj.get("description").getAsString();
+					String quantity_String=obj.get("quantity").getAsString().replaceAll("\\$", "");
+					quantity_String=quantity_String.replaceAll(",", "");
+					BigDecimal quantity=JobUtil.ConvertintoBigDecimal(quantity_String);
+					
+					String costeach_String=obj.get("costeach").getAsString().replaceAll("\\$", "");
+					costeach_String=costeach_String.replaceAll(",", "");
+					BigDecimal costeach=JobUtil.ConvertintoBigDecimal(costeach_String);
+					
+					String total_String=obj.get("total").getAsString().replaceAll("\\$", "");
+					total_String=total_String.replaceAll(",", "");
+					BigDecimal total=JobUtil.ConvertintoBigDecimal(total_String);
+					
+					Integer prMaster=obj.get("prMasterID").getAsInt();
+					
+					master.setCostEach(costeach);
+					master.setJoQuoteDetailMstrID(1);
+					master.setPrMasterID(prMaster);
+					master.setQty(quantity);
+					master.setTotal(total);
+					
+					
+					Integer d=jobService.saveQuoteProducts(master);
+					
+					
+					}
+					
+					
+			}
+			
+	
+			}
+		
+		try {}
+		catch (Exception e) {}
+		return 2;
+		}
+		//return 2;
 	
 	public Integer ConvertintoInteger(String Stringvalue){
 		Integer returnvalue=0;

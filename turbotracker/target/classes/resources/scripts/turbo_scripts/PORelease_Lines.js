@@ -2596,7 +2596,7 @@ function copyOption(){
 	 }
 	 else{
 		 var rowid=$('#lineItemGrid').getGridParam('selrow');
-if(rowid != undefined && rowid!='new_row'){
+if(rowid != undefined){
 	try{
 		//$('#lineItemGrid').jqGrid('delRowData','new_row');
 		 $("#lineItemGrid_ilcancel").trigger( "click" );

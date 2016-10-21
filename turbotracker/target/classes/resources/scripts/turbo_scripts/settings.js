@@ -1282,12 +1282,64 @@ function saveColumnQuoteDefaults(){
 }
 }
 function savePriceTier(){
-	var inputdata = 'prPriceLevel0='+$('#prPriceLevel0').val()+'&prPriceLevel1='+$('#prPriceLevel1').val()+'&prPriceLevel2='+$('#prPriceLevel2').val()+'&prPriceLevel3='+$('#prPriceLevel3').val()+'&prPriceLevel4='+$('#prPriceLevel4').val()+'&prPriceLevel5='+$('#prPriceLevel5').val();
-	console.log(inputdata);
+	
+	//ID#624 Aravind
+	var prPriceLevel0 = $('#prPriceLevel0').val();
+	var prPriceLevel1 = $('#prPriceLevel1').val();
+	var prPriceLevel2 = $('#prPriceLevel2').val();
+	var prPriceLevel3 = $('#prPriceLevel3').val();
+	var prPriceLevel4 = $('#prPriceLevel4').val();
+	var prPriceLevel5 = $('#prPriceLevel5').val();
+	var prPriceLevelval0=$('#prPriceLevelval0').val();
+	prPriceLevelval0=prPriceLevelval0.replace(/\./gi,"");
+	if(prPriceLevelval0=="")
+		prPriceLevelval0=0;
+	
+	var prPriceLevelval1=$('#prPriceLevelval1').val();
+	prPriceLevelval1=prPriceLevelval1.replace(/\./gi,"");
+	if(prPriceLevelval1=="")
+		prPriceLevelval1=0;
+	
+	var prPriceLevelval2=$('#prPriceLevelval2').val();
+	prPriceLevelval2=prPriceLevelval2.replace(/\./gi,"");
+	if( prPriceLevelval2=="")
+		prPriceLevelval2=0;
+	
+	var prPriceLevelval3=$('#prPriceLevelval3').val();
+	prPriceLevelval3=prPriceLevelval3.replace(/\./gi,"");
+	if( prPriceLevelval3=="")
+		prPriceLevelval3=0;
+	
+	var prPriceLevelval4=$('#prPriceLevelval4').val();
+	prPriceLevelval4=prPriceLevelval4.replace(/\./gi,"");
+	if(prPriceLevelval4=="")
+		prPriceLevelval4=0;
+	
+	var prPriceLevelval5=$('#prPriceLevelval5').val();
+	prPriceLevelval5=prPriceLevelval5.replace(/\./gi,"");
+	if( prPriceLevelval5=="")
+		prPriceLevelval5=0;
+	
+//	var inputdata = 'prPriceLevel0='+$('#prPriceLevel0').val()+'&prPriceLevel1='+$('#prPriceLevel1').val()+'&prPriceLevel2='+$('#prPriceLevel2').val()+'&prPriceLevel3='+$('#prPriceLevel3').val()+'&prPriceLevel4='+$('#prPriceLevel4').val()+'&prPriceLevel5='+$('#prPriceLevel5').val();
+//	console.log(inputdata);
 	
 	$.ajax({
         url: "./userlistcontroller/savePriceTier",
-        data: inputdata,
+        data: {
+        	'prPriceLevel0':prPriceLevel0,
+        	'prPriceLevel1':prPriceLevel1,
+        	'prPriceLevel2':prPriceLevel2,
+        	'prPriceLevel3':prPriceLevel3,
+        	'prPriceLevel4':prPriceLevel4,
+        	'prPriceLevel5':prPriceLevel5,
+        	'prPriceLevelval0':prPriceLevelval0,
+        	'prPriceLevelval1':prPriceLevelval1,
+        	'prPriceLevelval2':prPriceLevelval2,
+        	'prPriceLevelval3':prPriceLevelval3,
+        	'prPriceLevelval4':prPriceLevelval4,
+        	'prPriceLevelval5':prPriceLevelval5,
+        	
+        },
         type: 'POST',
         success: function(data){
         	createtpusage('Company-Settings','Save Price Tier','Info','Company-Settings,Saving Price Tier');
@@ -1763,10 +1815,17 @@ function saveCompanySettingsSysVariable() {
 	if($('input:radio[id=chk_cusCreLiminQuickBookYes]:checked').val()==="yes"){
 		chk_cusCreLiminQuickBookYes="1";
 	}
-	var chk_taxTerCuInvAftSaveYes="0"
+	
+	var chk_taxTerCuInvAftSaveYes="0";
 	if($('input:radio[id=chk_taxTerCuInvAftSaveYes]:checked').val()==="yes"){
 			chk_taxTerCuInvAftSaveYes="1";
 	}	
+	//ID#624 Aravind
+	var chk_cusTierPricingUse="0";
+	if($('input:radio[id=chk_cusTierPricingUse]:checked').val()==="yes"){
+		chk_cusTierPricingUse="1";
+	}
+	
 	var chk_cusReqDivinSalOrdYes="0";
 	if($('input:radio[id=chk_cusReqDivinSalOrdYes]:checked').val()==="yes"){
 		chk_cusReqDivinSalOrdYes="1";
@@ -1806,8 +1865,6 @@ function saveCompanySettingsSysVariable() {
 	if($('input:radio[id=chk_cusIncMultYes]:checked').val()==="yes"){
 		chk_cusIncMultYes="1";
 	}
-	
-	
 	var chk_cusUseDivAddYes="0";
 	if($('input:radio[id=chk_cusUseDivAddYes]:checked').val()==="yes"){
 		chk_cusUseDivAddYes="1";
@@ -1851,7 +1908,7 @@ function saveCompanySettingsSysVariable() {
       //chk_cusStGpbyJobYes chk_cusStShowBillRemYes chk_cusCreLiminSalOrdYes chk_cusCreLiminQuickBookYes chk_cusReqDivinSalOrdYes chk_cusReqDivinCusInvYes
     	//chk_cusIncSalTaxYes chk_cusIncFreightYes chk_cusUseDivAddYes chk_cusallowblinSalOrdYes chk_cusAllblCusInvYes chk_cusAllblProdinSalOrdYes chk_cusReqProinSalOrderYes
         data: {'chk_cusStGpbyJobYes':chk_cusStGpbyJobYes, 'chk_cusStShowBillRemYes':chk_cusStShowBillRemYes, 'chk_cusCreLiminSalOrdYes':chk_cusCreLiminSalOrdYes,
-        	'chk_cusCreLiminQuickBookYes':chk_cusCreLiminQuickBookYes,'chk_taxTerCuInvAftSaveYes':chk_taxTerCuInvAftSaveYes ,'chk_cusReqDivinSalOrdYes':chk_cusReqDivinSalOrdYes, 'chk_cusReqDivinCusInvYes':chk_cusReqDivinCusInvYes,
+        	'chk_cusCreLiminQuickBookYes':chk_cusCreLiminQuickBookYes,'chk_taxTerCuInvAftSaveYes':chk_taxTerCuInvAftSaveYes ,'chk_cusTierPricingUse':chk_cusTierPricingUse,'chk_cusReqDivinSalOrdYes':chk_cusReqDivinSalOrdYes, 'chk_cusReqDivinCusInvYes':chk_cusReqDivinCusInvYes,
         	'chk_cusIncSalTaxYes':chk_cusIncSalTaxYes, 'chk_cusIncFreightYes':chk_cusIncFreightYes, 'chk_cusIncListYes':chk_cusIncListYes, 'chk_cusIncExtListYes':chk_cusIncExtListYes,
         	 'chk_cusIncMultYes':chk_cusIncMultYes,'chk_cusUseDivAddYes':chk_cusUseDivAddYes, 'chk_cusAllblCusInvYes':chk_cusAllblCusInvYes,
         	'chk_cusAllblCusInvYes':chk_cusAllblCusInvYes, 'chk_cusAllblProdinSalOrdYes':chk_cusAllblProdinSalOrdYes, 'chk_cusReqProinSalOrderYes':chk_cusReqProinSalOrderYes,

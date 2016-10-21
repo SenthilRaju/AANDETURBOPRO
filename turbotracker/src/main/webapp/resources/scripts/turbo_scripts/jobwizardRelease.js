@@ -2304,7 +2304,7 @@ jQuery(function(){
 		closeOnEscape: false,
 		close:function(){$('#openReleaseDigForm').validationEngine('hideAll'); return true;}	
 	});
-}); 
+    }); 
 
 /*$("#ReleasesManuID").keypress(function() {
 	$(function() { var cache = {}; var lastXhr='';
@@ -2477,6 +2477,8 @@ function saveRelease(){
 		if(getrelesetype == "Drop Ship" && $('#releasesTypeID').val()!= 1) {
 			checklineitemvalidation = checklineitemisthere(1,release_vePoId);
 		} else if(getrelesetype == "Stock Order" && $('#releasesTypeID').val()!= 2) {
+			//alert("stockorder is called");
+			resetSOGeneralForm();
 			checklineitemvalidation = checklineitemisthere(2,release_cuSOID);
 		} else if(getrelesetype == "Commission" && $('#releasesTypeID').val()!= 4) {
 			checklineitemvalidation = checklineitemisthere(4,release_vePoId);
@@ -2551,6 +2553,7 @@ function saveRelease(){
 				jQuery(newDialogDiv).dialog({modal: true, width:300, height:150, title:"Success", 
 										buttons: [{height:35,text: "OK",click: function() { $(this).dialog("close"); $("#release").trigger("reloadGrid"); }}]}).dialog("open");*/
 				$("#releaseMessage").html('<span style="color:green;">Success: Release Details Added Sucessfully</span>');
+				resetSOGeneralForm();
 				$("#releaseMessage").show().delay(5000).fadeOut();
 				var gridRows = $('#release').getRowData();
 				var rowid = parseInt(gridRows.length) +1;
@@ -2560,6 +2563,7 @@ function saveRelease(){
 				jQuery(newDialogDiv).dialog({modal: true, width:300, height:150, title:"Success", 
 										buttons: [{height:35,text: "OK",click: function() { $(this).dialog("close"); $("#release").trigger("reloadGrid"); }}]}).dialog("open");*/
 				$("#releaseMessage").html('<span style="color:green;">Success: Release Details Updated Sucessfully</span>');
+				resetSOGeneralForm();
 				$("#releaseMessage").show().delay(5000).fadeOut();
 				boolean = false;
 			}
@@ -11716,12 +11720,12 @@ function CIGeneralTabSeriallize() {
 	var value28 = $("#CI_Shipto").contents().find("#shiptomoderhiddenid").val();
 	var value29 = $("#customerInvoie_doNotMailID").is(':checked');
 	var value30 = $("#customerInvoice_invoiceDateID").val();
-
+    var value31 = $("#jobnodescription").val();
 	var value = value1 + value2 + value3 + value4 + value5 + value6 + value7
 			+ value8 + value9 + value10 + value11 + value12 + value13 + value14
 			+ value15 + value16 + value17 + value18 + value19 + value20
 			+ value21 + value22 + value23 + value24 + value25 + value26
-			+ value27 + value28 + value29 + value30;
+			+ value27 + value28 + value29 + value30 + value31;
 	return value;
 }
 

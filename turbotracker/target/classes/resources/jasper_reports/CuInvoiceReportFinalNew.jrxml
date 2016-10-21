@@ -2,7 +2,7 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="CuInvoiceReport" pageWidth="612" pageHeight="792" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="35de86c0-16af-44d7-b699-f4837f07be00">
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="106"/>
+	<property name="ireport.y" value="91"/>
 	<parameter name="CuInvoice" class="java.lang.String"/>
 	<parameter name="shiptoName" class="java.lang.String"/>
 	<parameter name="shiptoAddress1" class="java.lang.String"/>
@@ -25,7 +25,7 @@
 cuInvoiceDetail.*, prMaster.ItemCode,
 tsUserLogin.Initials AS SalesRep,
 veShipVia.Description AS ShippedVia,
-cuInvoice.jobnodescription AS Job,
+(CASE WHEN joMaster.Description  IS NULL THEN cuInvoice.jobnodescription ELSE joMaster.Description  END) AS Job,
 cuInvoice.*,
 cuInvoiceDetail.UnitCost*cuInvoiceDetail.QuantityBilled AS ExtList,
 (IFNULL(NULLIF(cuInvoiceDetail.UnitCost, '' ), 0) * IFNULL(NULLIF(cuInvoiceDetail.QuantityBilled, '' ), 0)*IFNULL(NULLIF(cuInvoiceDetail.PriceMultiplier , '' ),1)) AS total,
@@ -361,7 +361,7 @@ WHERE cuInvoice.cuInvoiceID=$P{CuInvoice} ORDER BY cuInvoiceDetail.position;]]>
 		<band splitType="Stretch"/>
 	</background>
 	<title>
-		<band height="237" splitType="Stretch">
+		<band height="254" splitType="Stretch">
 			<rectangle radius="10">
 				<reportElement x="5" y="106" width="281" height="45" uuid="1663e1ae-d157-45c2-89e7-46341daed1b2"/>
 			</rectangle>
@@ -369,10 +369,10 @@ WHERE cuInvoice.cuInvoiceID=$P{CuInvoice} ORDER BY cuInvoiceDetail.position;]]>
 				<reportElement x="448" y="106" width="122" height="45" uuid="5d042e5b-d8cd-4feb-a786-5cd3e33fd2e6"/>
 			</rectangle>
 			<rectangle radius="10">
-				<reportElement x="5" y="153" width="281" height="82" uuid="356560e3-8e70-49ca-b02f-f79e7c50549b"/>
+				<reportElement x="7" y="154" width="281" height="98" uuid="356560e3-8e70-49ca-b02f-f79e7c50549b"/>
 			</rectangle>
 			<rectangle radius="10">
-				<reportElement x="289" y="153" width="280" height="82" uuid="8515e16d-5af8-43b1-912b-f8c5d2e88ae5"/>
+				<reportElement x="292" y="154" width="280" height="98" uuid="8515e16d-5af8-43b1-912b-f8c5d2e88ae5"/>
 			</rectangle>
 			<staticText>
 				<reportElement x="5" y="111" width="30" height="13" uuid="7b91703a-27e2-4fcb-9cef-720617ac6335"/>
@@ -601,86 +601,86 @@ WHERE cuInvoice.cuInvoiceID=$P{CuInvoice} ORDER BY cuInvoiceDetail.position;]]>
 	<columnHeader>
 		<band height="19" splitType="Stretch">
 			<staticText>
-				<reportElement x="15" y="2" width="84" height="15" uuid="1b44e84e-3483-4937-8c03-78f28424cd38"/>
+				<reportElement x="7" y="1" width="84" height="15" uuid="1b44e84e-3483-4937-8c03-78f28424cd38"/>
 				<textElement>
 					<font size="11" isBold="false" isUnderline="false" pdfFontName="Helvetica-Bold" isPdfEmbedded="true"/>
 				</textElement>
-				<text><![CDATA[ITEM CODE]]></text>
+				<text><![CDATA[    ITEM CODE]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="100" y="2" width="39" height="15" uuid="fe3f4dcd-7349-4e5c-ab76-14a365abb24e"/>
+				<reportElement x="92" y="2" width="39" height="15" uuid="fe3f4dcd-7349-4e5c-ab76-14a365abb24e"/>
 				<textElement textAlignment="Center">
 					<font size="11" isBold="false" isUnderline="false" pdfFontName="Helvetica-Bold" isPdfEmbedded="true"/>
 				</textElement>
 				<text><![CDATA[QTY]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="140" y="2" width="146" height="15" uuid="43487c45-1eab-486d-aea2-713dafc1baaa"/>
+				<reportElement x="128" y="2" width="141" height="15" uuid="43487c45-1eab-486d-aea2-713dafc1baaa"/>
 				<textElement>
 					<font size="11" isBold="false" isUnderline="false" pdfFontName="Helvetica-Bold" isPdfEmbedded="true"/>
 				</textElement>
-				<text><![CDATA[DESCRIPTION]]></text>
+				<text><![CDATA[ DESCRIPTION]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="282" y="2" width="57" height="15" uuid="3b4723d2-38ce-4d99-8928-b1b149843401">
+				<reportElement x="269" y="2" width="94" height="15" uuid="3b4723d2-38ce-4d99-8928-b1b149843401">
 					<printWhenExpression><![CDATA[$P{incListCol}]]></printWhenExpression>
 				</reportElement>
-				<textElement textAlignment="Right">
+				<textElement textAlignment="Center">
 					<font size="11" isBold="false" isUnderline="false" pdfFontName="Helvetica-Bold" isPdfEmbedded="true"/>
 				</textElement>
 				<text><![CDATA[LIST]]></text>
 			</staticText>
 			<line>
-				<reportElement x="314" y="15" width="25" height="1" uuid="cc4a1c33-b344-4ba5-938f-ec47fc7db1e7">
+				<reportElement x="305" y="17" width="25" height="1" uuid="cc4a1c33-b344-4ba5-938f-ec47fc7db1e7">
 					<printWhenExpression><![CDATA[$P{incListCol}]]></printWhenExpression>
 				</reportElement>
 			</line>
 			<staticText>
-				<reportElement x="343" y="2" width="69" height="15" uuid="4a6855f6-9c2e-4bc7-ab8d-66fbf2e4b90f">
+				<reportElement x="363" y="2" width="79" height="15" uuid="4a6855f6-9c2e-4bc7-ab8d-66fbf2e4b90f">
 					<printWhenExpression><![CDATA[$P{incExtListCol}]]></printWhenExpression>
 				</reportElement>
-				<textElement textAlignment="Right">
+				<textElement textAlignment="Center">
 					<font size="11" isBold="false" isUnderline="false" pdfFontName="Helvetica-Bold" isPdfEmbedded="true"/>
 				</textElement>
 				<text><![CDATA[EXT LIST]]></text>
 			</staticText>
 			<line>
-				<reportElement x="363" y="15" width="48" height="1" uuid="626e30d4-1627-4496-a732-c83c992caca6">
+				<reportElement x="378" y="16" width="48" height="1" uuid="626e30d4-1627-4496-a732-c83c992caca6">
 					<printWhenExpression><![CDATA[$P{incExtListCol}]]></printWhenExpression>
 				</reportElement>
 			</line>
 			<staticText>
-				<reportElement x="417" y="2" width="74" height="15" uuid="cd851a87-878d-4283-9686-86b5901a0c28">
+				<reportElement x="441" y="2" width="44" height="15" uuid="cd851a87-878d-4283-9686-86b5901a0c28">
 					<printWhenExpression><![CDATA[$P{incMultCol}]]></printWhenExpression>
 				</reportElement>
-				<textElement textAlignment="Right">
+				<textElement textAlignment="Center">
 					<font size="11" isBold="false" isUnderline="false" pdfFontName="Helvetica-Bold" isPdfEmbedded="true"/>
 				</textElement>
 				<text><![CDATA[MULT]]></text>
 			</staticText>
 			<line>
-				<reportElement x="462" y="15" width="27" height="1" uuid="5c143028-81bf-49b5-b261-5e1bdb22eb62">
+				<reportElement x="450" y="16" width="27" height="1" uuid="5c143028-81bf-49b5-b261-5e1bdb22eb62">
 					<printWhenExpression><![CDATA[$P{incMultCol}]]></printWhenExpression>
 				</reportElement>
 			</line>
 			<staticText>
-				<reportElement x="491" y="2" width="76" height="15" uuid="e987ad53-52d7-4652-ac04-2d12ac8f7ec6"/>
+				<reportElement x="485" y="2" width="87" height="15" uuid="e987ad53-52d7-4652-ac04-2d12ac8f7ec6"/>
 				<textElement textAlignment="Right">
 					<font size="11" isBold="false" isUnderline="false" pdfFontName="Helvetica-Bold" isPdfEmbedded="true"/>
 				</textElement>
 				<text><![CDATA[TOTAL]]></text>
 			</staticText>
 			<line>
-				<reportElement x="15" y="15" width="64" height="1" uuid="bea32313-a5e9-466a-bdb0-156275bd0e99"/>
+				<reportElement x="17" y="15" width="64" height="1" uuid="bea32313-a5e9-466a-bdb0-156275bd0e99"/>
 			</line>
 			<line>
-				<reportElement x="110" y="15" width="18" height="1" uuid="2f981da5-7989-41d2-aae1-52e07e7bc518"/>
+				<reportElement x="101" y="14" width="18" height="1" uuid="2f981da5-7989-41d2-aae1-52e07e7bc518"/>
 			</line>
 			<line>
-				<reportElement x="148" y="15" width="78" height="1" uuid="de3f8746-67e6-4541-836c-38b10512291a"/>
+				<reportElement x="131" y="15" width="78" height="1" uuid="de3f8746-67e6-4541-836c-38b10512291a"/>
 			</line>
 			<line>
-				<reportElement x="529" y="15" width="38" height="1" uuid="8568a2ae-04f5-48e3-bb5a-3b3be99d803f"/>
+				<reportElement x="532" y="15" width="38" height="1" uuid="8568a2ae-04f5-48e3-bb5a-3b3be99d803f"/>
 			</line>
 		</band>
 	</columnHeader>
@@ -688,43 +688,44 @@ WHERE cuInvoice.cuInvoiceID=$P{CuInvoice} ORDER BY cuInvoiceDetail.position;]]>
 		<band height="16" splitType="Stretch">
 			<printWhenExpression><![CDATA[( $F{prMasterID}!=null ? new Boolean(true) : new Boolean(false) )]]></printWhenExpression>
 			<textField isBlankWhenNull="true">
-				<reportElement x="14" y="0" width="85" height="15" uuid="72c2427a-6a88-443e-bdd1-e5a6609ff5bd"/>
+				<reportElement x="8" y="1" width="85" height="15" uuid="72c2427a-6a88-443e-bdd1-e5a6609ff5bd"/>
+				<textElement textAlignment="Center"/>
 				<textFieldExpression><![CDATA[$F{ItemCode}]]></textFieldExpression>
 			</textField>
 			<textField pattern=" ###0.####" isBlankWhenNull="true">
-				<reportElement x="100" y="0" width="39" height="15" uuid="cf027577-b1de-49e6-8c77-f4c21a8a02e9"/>
+				<reportElement x="92" y="0" width="39" height="15" uuid="cf027577-b1de-49e6-8c77-f4c21a8a02e9"/>
 				<textElement textAlignment="Center"/>
 				<textFieldExpression><![CDATA[$F{QuantityBilled}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement x="142" y="1" width="140" height="15" isPrintWhenDetailOverflows="true" uuid="fdd677be-89f0-401c-be0e-134aae1a361d"/>
+				<reportElement x="128" y="1" width="141" height="15" isPrintWhenDetailOverflows="true" uuid="fdd677be-89f0-401c-be0e-134aae1a361d"/>
 				<textFieldExpression><![CDATA[$F{Description}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0.00" isBlankWhenNull="true">
-				<reportElement x="282" y="1" width="57" height="15" uuid="fec5349a-92b9-4b44-bf87-7830acc0f005">
+				<reportElement x="269" y="1" width="94" height="15" uuid="fec5349a-92b9-4b44-bf87-7830acc0f005">
 					<printWhenExpression><![CDATA[$P{incListCol}]]></printWhenExpression>
 				</reportElement>
-				<textElement textAlignment="Right"/>
+				<textElement textAlignment="Center"/>
 				<textFieldExpression><![CDATA[($F{UnitCost} == null) ? "" : $F{UnitCost}.setScale( 2,RoundingMode.FLOOR )]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="343" y="1" width="69" height="15" uuid="60011ff4-06b3-4ce9-95be-4ac90a683ff6">
+				<reportElement x="363" y="1" width="79" height="15" uuid="60011ff4-06b3-4ce9-95be-4ac90a683ff6">
 					<printWhenExpression><![CDATA[$P{incExtListCol}]]></printWhenExpression>
 				</reportElement>
-				<textElement textAlignment="Right"/>
+				<textElement textAlignment="Center"/>
 				<textFieldExpression><![CDATA[($F{ExtList} == null) ? "" : new java.text.DecimalFormat("$ #,##0.00").format($F{ExtList})]]></textFieldExpression>
 			</textField>
-			<textField isBlankWhenNull="true">
-				<reportElement x="415" y="0" width="76" height="15" uuid="b0097184-7eae-4ca0-8c2c-7771243f453b">
-					<printWhenExpression><![CDATA[$P{incMultCol}]]></printWhenExpression>
-				</reportElement>
-				<textElement textAlignment="Right"/>
-				<textFieldExpression><![CDATA[$F{PriceMultiplier}]]></textFieldExpression>
-			</textField>
 			<textField pattern="$ #,##0.00" isBlankWhenNull="true">
-				<reportElement x="491" y="1" width="76" height="15" uuid="04be1f37-e976-4ad2-90bf-55688f445173"/>
+				<reportElement x="485" y="1" width="85" height="15" uuid="04be1f37-e976-4ad2-90bf-55688f445173"/>
 				<textElement textAlignment="Right"/>
 				<textFieldExpression><![CDATA[$V{eachRowTotal}.setScale( 2,RoundingMode.FLOOR )]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="442" y="0" width="43" height="15" uuid="b0097184-7eae-4ca0-8c2c-7771243f453b">
+					<printWhenExpression><![CDATA[$P{incMultCol}]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{PriceMultiplier}]]></textFieldExpression>
 			</textField>
 		</band>
 		<band height="16">
@@ -757,7 +758,7 @@ WHERE cuInvoice.cuInvoiceID=$P{CuInvoice} ORDER BY cuInvoiceDetail.position;]]>
 				<text><![CDATA[No Returns Without Written Approval.]]></text>
 			</staticText>
 			<rectangle radius="10">
-				<reportElement positionType="FixRelativeToBottom" x="365" y="4" width="205" height="85" uuid="8295c2f4-0001-43ef-888f-1d114f498893"/>
+				<reportElement positionType="FixRelativeToBottom" x="366" y="7" width="205" height="85" uuid="8295c2f4-0001-43ef-888f-1d114f498893"/>
 			</rectangle>
 			<staticText>
 				<reportElement positionType="FixRelativeToBottom" x="385" y="10" width="77" height="14" uuid="db01cc93-698f-4972-a751-7ac0dfff8434"/>

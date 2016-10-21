@@ -94,6 +94,9 @@ function fn_override_taxIDBasedOnCustomer(){
 	function preloadShiptoAddress(divflag,primaryid,addressid,mode,shipindex,customername,coTaxTerritoryID)
 	{
 		toggledivflag = divflag;
+		
+		//added by prasant #1580 9/9/2016
+	
 		//override_taxIDBasedOnCustomer(primaryid)
 		/* if(divflag == "SO_Shipto")
 			{
@@ -211,20 +214,21 @@ function fn_override_taxIDBasedOnCustomer(){
 					getselectedshiptoaddress("jobsite",addressid,divflag,coTaxTerritoryID);
 			}
 			else
-			{
-				var joblocationname="${fn:replace(fn:replace(requestScope.joMasterDetails.locationName, "\\", "\\\\"), "\"", "\\\"")}";
-
-                                //added by prasant #1580 9/9/2016
+			{    var joblocationname="";
+				joblocationname="${fn:replace(fn:replace(requestScope.joMasterDetails.locationName, "\\", "\\\\"), "\"", "\\\"")}";
+			 //added by prasant 
 				if(customername.indexOf("<input type") != -1){
 				customername="";
 				//alert("in my validation code");
-			}
+			     }
 				var name = customername;
-					if(name ==null || name == "" || typeof(name) == 'undefined' )
+				//alert("customer name:-->"+customername);
+					if(name ==null || name == "" || typeof(name) == 'undefined')
 				name = "${fn:replace(fn:replace(requestScope.joMasterDetails.description, "\\", "\\\\"), "\"", "\\\"")}";
 
 				if(joblocationname!=null && joblocationname!=""){
 					name=joblocationname;
+					//alert("jobname-->:"+joblocationname);
 					} 
 				var address1 = "${fn:replace(fn:replace(requestScope.joMasterDetails.locationAddress1, "\\", "\\\\"), "\"", "\\\"")}";
 				var address2 = "${fn:replace(fn:replace(requestScope.joMasterDetails.locationAddress2, "\\", "\\\\"), "\"", "\\\"")}";
@@ -233,7 +237,8 @@ function fn_override_taxIDBasedOnCustomer(){
 				var joMasterId = "${requestScope.joMasterDetails.joMasterId}";
 				var zip = "${fn:replace(fn:replace(requestScope.joMasterDetails.locationZip, "\\", "\\\\"), "\"", "\\\"")}"; 
 				var coTaxTerritoryId = "${requestScope.joMasterDetails.coTaxTerritoryId}";
-	
+				console.log("testing 1..!");
+	           // alert("testing 1..!");
 				$(divflag).contents().find("#shipToName").val(name); 
 				$(divflag).contents().find("#shipToAddress1").val(address1); 
 				$(divflag).contents().find("#shipToAddress2").val(address2); 
@@ -298,6 +303,7 @@ function fn_override_taxIDBasedOnCustomer(){
 			   type : "POST",
 			   data : { 'type': type, 'addressid': addressid},
 			   success : function (data) {
+				  // alert("testing 2..!");
 				   console.log(data.name+"=="+data.address1+"=="+data.address2+"=="+data.city+"=="+data.zip);
 				   $(divflag).contents().find("#shipToName").val(data.name); 
 				   $(divflag).contents().find("#shipToAddress1").val(data.address1); 
@@ -321,7 +327,7 @@ function fn_override_taxIDBasedOnCustomer(){
 	
 	function prWarehousetoggleassin(reminders,shipindex,divflag,coTaxTerritoryID)
 	{
-		
+		//alert("testing 3..!");
 		 $(divflag).contents().find("#shipToName").val(reminders[shipindex].description); 
 		 $(divflag).contents().find("#shipToAddress1").val(reminders[shipindex].address1); 
 		 $(divflag).contents().find("#shipToAddress2").val(reminders[shipindex].address2); 
@@ -345,6 +351,7 @@ function fn_override_taxIDBasedOnCustomer(){
 	
 	function rsAddresstoggleassign(rxAddressarray,shipindex,divflag,coTaxTerritoryID)
 	{
+		//alert("testing 4..!");
 		 $(divflag).contents().find("#shipToName").val(rxAddressarray[shipindex].name); 
 		 $(divflag).contents().find("#shipToAddress1").val(rxAddressarray[shipindex].address1); 
 		 $(divflag).contents().find("#shipToAddress2").val(rxAddressarray[shipindex].address2); 

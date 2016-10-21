@@ -4553,6 +4553,8 @@ function sendPOEmail(poGeneralKey){
 		
 	}
 	$(function(){
+		
+		alert("editpurchaseOrder is calling..!");
 		$("#emailpopup" ).dialog({
 			autoOpen: false,
 			height: 570,

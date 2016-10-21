@@ -494,6 +494,7 @@ public class AccountingCyclesController {
 			if(aCofiscalyear!=null)
 			{
 				closedstatus = aCofiscalyear.getClosedStatus();
+				
 			}
 			
 		} catch (CompanyException e) {

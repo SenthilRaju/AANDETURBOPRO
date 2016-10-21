@@ -2,7 +2,7 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Vendor_PurchaseOrder" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="1b89ec97-40f5-4b62-883f-860b3ad19f78">
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="176"/>
+	<property name="ireport.y" value="118"/>
 	<parameter name="PONUMBER" class="java.lang.String"/>
 	<parameter name="VENDORNAME" class="java.lang.String"/>
 	<parameter name="ADDRESS1" class="java.lang.String"/>
@@ -407,35 +407,35 @@
 		<band height="18" splitType="Stretch">
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement x="0" y="0" width="69" height="18" isPrintWhenDetailOverflows="true" uuid="17f4798f-a24c-4729-aa70-b5da2ea61cf0"/>
-				<textElement textAlignment="Center" verticalAlignment="Bottom">
+				<textElement textAlignment="Center" verticalAlignment="Top">
 					<font size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{ItemCode}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement x="69" y="0" width="220" height="18" isPrintWhenDetailOverflows="true" uuid="ed2af979-d4af-43e2-8e14-a63ab68f6e06"/>
-				<textElement verticalAlignment="Bottom">
+				<textElement verticalAlignment="Top">
 					<font size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{Description}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" pattern=" ###0.####" isBlankWhenNull="true">
 				<reportElement x="289" y="0" width="45" height="18" isPrintWhenDetailOverflows="true" uuid="60e451d4-a8bf-42ca-b734-5516cffea7c4"/>
-				<textElement textAlignment="Center" verticalAlignment="Bottom">
+				<textElement textAlignment="Center" verticalAlignment="Top">
 					<font size="9"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{QuantityOrdered}.setScale( 2,RoundingMode.FLOOR )]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" pattern="###0.0000" isBlankWhenNull="true">
 				<reportElement x="385" y="0" width="51" height="18" isPrintWhenDetailOverflows="true" uuid="bad6a8ec-c331-4c63-afb7-6114c6b34d4c"/>
-				<textElement textAlignment="Center" verticalAlignment="Bottom">
+				<textElement textAlignment="Center" verticalAlignment="Top">
 					<font size="9"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{PriceMultiplier}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" pattern="$ #,##0.00" isBlankWhenNull="true">
 				<reportElement x="436" y="0" width="57" height="18" isPrintWhenDetailOverflows="true" uuid="ca27dcbc-9790-43ff-93e8-cabac54c778d"/>
-				<textElement textAlignment="Center" verticalAlignment="Bottom">
+				<textElement textAlignment="Center" verticalAlignment="Top">
 					<font size="9"/>
 				</textElement>
 				<textFieldExpression><![CDATA[( $F{UnitCost}==null ? BigDecimal.ZERO : $F{UnitCost}.setScale( 2, RoundingMode.FLOOR ) )
@@ -445,14 +445,14 @@
 			</textField>
 			<textField isStretchWithOverflow="true" pattern="$ #,##0.00" isBlankWhenNull="true">
 				<reportElement x="332" y="0" width="53" height="18" isPrintWhenDetailOverflows="true" uuid="9b8a2c79-10ce-435c-9a89-1178744232ac"/>
-				<textElement textAlignment="Center" verticalAlignment="Bottom">
+				<textElement textAlignment="Center" verticalAlignment="Top">
 					<font size="9"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{UnitCost}.setScale( 2, RoundingMode.FLOOR )]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" pattern="$ #,##0.00" isBlankWhenNull="true">
 				<reportElement x="493" y="0" width="62" height="18" isPrintWhenDetailOverflows="true" uuid="e6d1eb76-9207-4e83-bd23-ac0ba33bc752"/>
-				<textElement textAlignment="Center" verticalAlignment="Bottom">
+				<textElement textAlignment="Center" verticalAlignment="Top">
 					<font size="9"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$V{totaleachvalue}.setScale( 2, RoundingMode.FLOOR )]]></textFieldExpression>

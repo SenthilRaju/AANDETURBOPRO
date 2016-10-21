@@ -51,6 +51,7 @@
 				p:minPoolSize="3" 
 				p:testConnectionOnCheckout="true"
 				p:maxConnectionAge="300"
+				
 				 />
 
 	<!-- Declare a transaction manager-->

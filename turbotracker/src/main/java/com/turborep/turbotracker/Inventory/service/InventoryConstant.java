@@ -33,6 +33,8 @@ public class InventoryConstant {
 				RemoveEXTLISTcolumnfromSalesOrderPDF(2014002019),
 				RemoveMULTcolumnfromSalesOrderPDF(2014002020),
 				DoNotAllowTaxTerritoryAfterSavingCustomerInvoice(2014002021),
+				//ID#624 Aravind
+				TierPricingAddingWarehouseLineitemstoSOServiceOrderCI(2014002022),
 				
 				//VendorSettings
 				DefaultPODescItemCode(2014003001),

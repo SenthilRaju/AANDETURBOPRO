@@ -765,11 +765,11 @@
 				creditcount++;
 				creditsTotal= creditsTotal+rowObject['amount'];
 				$('#deposittotal').text(formatCurrency(creditsTotal));
-				clearedbalance = clearedbalance+rowObject['amount'];
-				$('#clearbalanceid').text(formatCurrency(clearedbalance));
+				//clearedbalance = clearedbalance+rowObject['amount'];
+				//$('#clearbalanceid').text(formatCurrency(clearedbalance));
 				var statementend = $('#statementendid').val().replace(/[^0-9\.]+/g,"");
 				 
-				$('#differenceid').text( formatCurrency(parseFloat(clearedbalance) - parseFloat(statementend)));
+				//$('#differenceid').text( formatCurrency(parseFloat(clearedbalance) - parseFloat(statementend)));
 				
 				if(creditcount == options.rowId){
 					 $('#markallcredits').val('Unmark all');

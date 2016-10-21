@@ -81,6 +81,12 @@ public class Sysinfo implements java.io.Serializable {
 	private String salesTaxDist6;
 	private String salesTaxDist7;
 	private String salesTaxDist8;
+	private Integer prPriceLevelval0;
+	private Integer prPriceLevelval1;
+	private Integer prPriceLevelval2;
+	private Integer prPriceLevelval3;
+	private Integer prPriceLevelval4;
+	private Integer prPriceLevelval5;
 
 	public Sysinfo() {
 	}
@@ -774,5 +780,52 @@ public class Sysinfo implements java.io.Serializable {
 	public void setRxMasterCategory8desc(String rxMasterCategory8desc) {
 		this.rxMasterCategory8desc = rxMasterCategory8desc;
 	}
+	@Column(name = "prPriceLevelval0", length = 2)
+	public Integer getPrPriceLevelval0() {
+		return prPriceLevelval0;
+	}
 
+	public void setPrPriceLevelval0(Integer prPriceLevelval0) {
+		this.prPriceLevelval0 = prPriceLevelval0;
+	}
+	@Column(name = "prPriceLevelval1", length = 2)
+	public Integer getPrPriceLevelval1() {
+		return prPriceLevelval1;
+	}
+
+	public void setPrPriceLevelval1(Integer prPriceLevelval1) {
+		this.prPriceLevelval1 = prPriceLevelval1;
+	}
+	@Column(name = "prPriceLevelval2", length = 2)
+	public Integer getPrPriceLevelval2() {
+		return prPriceLevelval2;
+	}
+
+	public void setPrPriceLevelval2(Integer prPriceLevelval2) {
+		this.prPriceLevelval2 = prPriceLevelval2;
+	}
+	@Column(name = "prPriceLevelval3", length = 2)
+	public Integer getPrPriceLevelval3() {
+		return prPriceLevelval3;
+	}
+
+	public void setPrPriceLevelval3(Integer prPriceLevelval3) {
+		this.prPriceLevelval3 = prPriceLevelval3;
+	}
+	@Column(name = "prPriceLevelval4", length = 2)
+	public Integer getPrPriceLevelval4() {
+		return prPriceLevelval4;
+	}
+
+	public void setPrPriceLevelval4(Integer prPriceLevelval4) {
+		this.prPriceLevelval4 = prPriceLevelval4;
+	}
+	@Column(name = "prPriceLevelval5", length = 2)
+	public Integer getPrPriceLevelval5() {
+		return prPriceLevelval5;
+	}
+
+	public void setPrPriceLevelval5(Integer prPriceLevelval5) {
+		this.prPriceLevelval5 = prPriceLevelval5;
+	}
 }

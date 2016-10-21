@@ -511,6 +511,15 @@ public class MediatorController {
 				model.addAttribute("prPriceLevel4", sysinfo.getPrPriceLevel4());
 				model.addAttribute("prPriceLevel5", sysinfo.getPrPriceLevel5());
 				model.addAttribute("prPriceLevel6", sysinfo.getPrPriceLevel6());
+				
+				//ID#624 Aravind
+				model.addAttribute("prPriceLevelval0", sysinfo.getPrPriceLevelval0());
+				model.addAttribute("prPriceLevelval1", sysinfo.getPrPriceLevelval1());
+				model.addAttribute("prPriceLevelval2", sysinfo.getPrPriceLevelval2());
+				model.addAttribute("prPriceLevelval3", sysinfo.getPrPriceLevelval3());
+				model.addAttribute("prPriceLevelval4", sysinfo.getPrPriceLevelval4());
+				model.addAttribute("prPriceLevelval5", sysinfo.getPrPriceLevelval5());
+				
 				}
 				if(sysassignment!=null){
 					model.addAttribute("CustomerCategory1", sysassignment.getCustomerCategory1());
@@ -689,9 +698,12 @@ public class MediatorController {
 				addlist.add("QuotechkfontStyleonTextEditorYN");
 				addlist.add("QuotechkfontSizeonTextEditorYN");
 				
-				
 				//added by prasant date 06/09/2016
 				addlist.add("IncludJobNamein_co_inshiptoaddressonPDForder");
+				
+				//Customer settings
+				//added by Aravind Id 625
+				addlist.add("TierPricingAddingWarehouseLineitemstoSOServiceOrderCI");
 				
 				
 				ArrayList<Sysvariable> sysvariablelist= userService.getInventorySettingsDetails(addlist);
@@ -1117,6 +1129,11 @@ public class MediatorController {
 						model.addAttribute("ckhIncludeJobInShipToAddressOnPDFYN", theSysvariable.getValueLong());
 					}
 					
+					//customer settings newly added by Aravind
+					else if(i==111){
+						logger.info(i+" theSysvariable.getValueString() = "+theSysvariable.getValueLong());
+						model.addAttribute("chk_cusTierPricingUse", theSysvariable.getValueLong());
+					}
 					i=i+1;
 				}
 				
@@ -1997,6 +2014,14 @@ public class MediatorController {
 			theModel.addAttribute("prPriceLevel3",sysinfo.getPrPriceLevel3());
 			theModel.addAttribute("prPriceLevel4",sysinfo.getPrPriceLevel4());
 			theModel.addAttribute("prPriceLevel5",sysinfo.getPrPriceLevel5());
+			
+			//ID#624 Aravind
+			model.addAttribute("prPriceLevelval0", sysinfo.getPrPriceLevelval0());
+			model.addAttribute("prPriceLevelval1", sysinfo.getPrPriceLevelval1());
+			model.addAttribute("prPriceLevelval2", sysinfo.getPrPriceLevelval2());
+			model.addAttribute("prPriceLevelval3", sysinfo.getPrPriceLevelval3());
+			model.addAttribute("prPriceLevelval4", sysinfo.getPrPriceLevelval4());
+			model.addAttribute("prPriceLevelval5", sysinfo.getPrPriceLevelval5());
 	
 			
 			if (itsPrDepartment != null) {

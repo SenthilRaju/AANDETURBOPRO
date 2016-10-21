@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.turborep.turbotracker.Inventory.service.InventoryConstant;
 import com.turborep.turbotracker.company.Exception.CompanyException;
 import com.turborep.turbotracker.company.dao.CoTaxTerritory;
 import com.turborep.turbotracker.company.dao.Codivision;
@@ -192,7 +193,9 @@ public class CustomerDetailedViewFormController {
 		theModel.addAttribute("customerType", getItsCuMasterType());
 		//List<String> customerSales=itsCompanyService.getsalesDetails(theRolodexNumber);
 		
-		
+		Integer sysVariableID=InventoryConstant.getConstantSysvariableId("TierPricingAddingWarehouseLineitemstoSOServiceOrderCI");
+		boolean flag=(sysVariableID!=0 ? itsCuMasterService.isTierPricingEnabled(sysVariableID):false);
+		theModel.addAttribute("istierPricingEnabled", flag);
 		return "rolodexCustomer";
 	}
 

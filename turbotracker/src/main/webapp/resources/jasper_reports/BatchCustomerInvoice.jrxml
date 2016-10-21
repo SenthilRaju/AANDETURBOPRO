@@ -2,7 +2,7 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="BatchCustomerInvoice" language="groovy" pageWidth="612" pageHeight="842" whenNoDataType="NoDataSection" columnWidth="572" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="e8a6ed00-2506-4fd5-a966-62dae8ccf77d">
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="0"/>
+	<property name="ireport.y" value="93"/>
 	<parameter name="subReportPath" class="java.lang.String" isForPrompting="false">
 		<defaultValueExpression><![CDATA["C:\\Users\\velmurugan\\Desktop\\Batch\\BatchInvoiceSubreport.jrxml"]]></defaultValueExpression>
 	</parameter>
@@ -316,49 +316,49 @@ GROUP BY cuInvoice.cuInvoiceID]]>
 		<groupHeader>
 			<band height="20">
 				<staticText>
-					<reportElement x="0" y="1" width="93" height="18" uuid="368d304c-81ce-404a-bd31-fa614df83d32"/>
+					<reportElement x="0" y="1" width="84" height="18" uuid="368d304c-81ce-404a-bd31-fa614df83d32"/>
 					<textElement>
 						<font size="11" isBold="false" isUnderline="true" pdfFontName="Helvetica-Bold" isPdfEmbedded="true"/>
 					</textElement>
 					<text><![CDATA[ITEM CODE]]></text>
 				</staticText>
 				<staticText>
-					<reportElement x="93" y="0" width="39" height="18" uuid="ed8cdf42-a1e4-41f8-a3b5-7b819a2a9488"/>
+					<reportElement x="84" y="1" width="39" height="18" uuid="ed8cdf42-a1e4-41f8-a3b5-7b819a2a9488"/>
 					<textElement textAlignment="Center">
 						<font size="11" isBold="false" isUnderline="true" pdfFontName="Helvetica-Bold" isPdfEmbedded="true"/>
 					</textElement>
 					<text><![CDATA[QTY]]></text>
 				</staticText>
 				<staticText>
-					<reportElement x="274" y="1" width="50" height="18" uuid="f510e569-3b30-41d4-8cd4-d97e32502e05"/>
-					<textElement textAlignment="Right">
+					<reportElement x="265" y="1" width="92" height="18" uuid="f510e569-3b30-41d4-8cd4-d97e32502e05"/>
+					<textElement textAlignment="Center">
 						<font size="11" isBold="false" isUnderline="true" pdfFontName="Helvetica-Bold" isPdfEmbedded="true"/>
 					</textElement>
 					<text><![CDATA[LIST1]]></text>
 				</staticText>
 				<staticText>
-					<reportElement x="132" y="0" width="142" height="18" uuid="93750a36-5d59-457e-9e99-e6d8120ac761"/>
+					<reportElement x="123" y="2" width="142" height="18" uuid="93750a36-5d59-457e-9e99-e6d8120ac761"/>
 					<textElement>
 						<font size="11" isBold="false" isUnderline="true" pdfFontName="Helvetica-Bold" isPdfEmbedded="true"/>
 					</textElement>
 					<text><![CDATA[DESCRIPTION]]></text>
 				</staticText>
 				<staticText>
-					<reportElement x="325" y="1" width="73" height="18" uuid="2300b08d-cf7a-4e0e-a3ff-b29393f43b4b"/>
-					<textElement textAlignment="Right">
+					<reportElement x="357" y="1" width="80" height="18" uuid="2300b08d-cf7a-4e0e-a3ff-b29393f43b4b"/>
+					<textElement textAlignment="Center">
 						<font size="11" isBold="false" isUnderline="true" pdfFontName="Helvetica-Bold" isPdfEmbedded="true"/>
 					</textElement>
 					<text><![CDATA[EXT LIST]]></text>
 				</staticText>
 				<staticText>
-					<reportElement x="398" y="1" width="79" height="18" uuid="da68019f-380c-4e8b-9739-dbede59c365e"/>
-					<textElement textAlignment="Right">
+					<reportElement x="437" y="1" width="44" height="18" uuid="da68019f-380c-4e8b-9739-dbede59c365e"/>
+					<textElement textAlignment="Center">
 						<font size="11" isBold="false" isUnderline="true" pdfFontName="Helvetica-Bold" isPdfEmbedded="true"/>
 					</textElement>
 					<text><![CDATA[MULT]]></text>
 				</staticText>
 				<staticText>
-					<reportElement x="477" y="1" width="76" height="18" uuid="a68e32af-84d3-4fa5-938e-4ffc4698c320"/>
+					<reportElement x="483" y="1" width="89" height="18" uuid="a68e32af-84d3-4fa5-938e-4ffc4698c320"/>
 					<textElement textAlignment="Right">
 						<font size="11" isBold="false" isUnderline="true" pdfFontName="Helvetica-Bold" isPdfEmbedded="true"/>
 					</textElement>
@@ -659,7 +659,7 @@ GROUP BY cuInvoice.cuInvoiceID]]>
 	<detail>
 		<band height="30" splitType="Stretch">
 			<subreport>
-				<reportElement x="0" y="0" width="552" height="30" uuid="1ee153a1-55d0-438b-b5f9-ef859ab106cc"/>
+				<reportElement x="0" y="0" width="572" height="30" uuid="1ee153a1-55d0-438b-b5f9-ef859ab106cc"/>
 				<subreportParameter name="cuInvoiceID">
 					<subreportParameterExpression><![CDATA[$F{cuInvoiceID}]]></subreportParameterExpression>
 				</subreportParameter>

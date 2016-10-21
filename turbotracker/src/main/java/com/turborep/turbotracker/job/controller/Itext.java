@@ -4,18 +4,13 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.StringReader;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import com.itextpdf.text.Chunk;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.Element;
 import com.itextpdf.text.Paragraph;
-import com.itextpdf.text.Phrase;
-import com.itextpdf.text.html.simpleparser.HTMLWorker;
-import com.itextpdf.text.html.simpleparser.StyleSheet;
 import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
@@ -69,10 +64,8 @@ public class Itext {
 				 +"</ul>"
 				 +"</div>");*/
  
- StringReader sr=new StringReader("<div><p style='text-align:center;'>testing</p><ul><li><span style='font-family: Times New Roman, serif; font-size: 10pt;'>test1</span></li><li><span style='font-family: Times New Roman, serif; font-size: 10pt;'>test2</span></li><li><span style='font-family: Times New Roman, serif; font-size: 10pt;'>test3</span></li><li><span style='font-family: Times New Roman, serif; font-size: 10pt;'>test4</span></li></ul></div>");
-
- Map<String, String> pc2 = new HashMap<String, String>();
- StyleSheet styles = new StyleSheet();
+ StringReader sr=new StringReader("<div><font face='arial' size='1'><i><b>10350 Olympic Drive, Dallas TX 75220-6040 (214) 350-6871                         </b></i></font></div><div><font face='arial' size='1'><i><b>3206 Longhorn Blvd, Austin TX 78758  (512) 774-5853  </b></i></font></div><div><font face='arial' size='1'><i><b>2901 Wesley Way, Fort Worth, TX 76118-6955  (682) 253-0122            </b></i></font></div><div><font face='arial' size='1'><i><b>8788 Westpark Drive, Houston TX 77063  (713) 487-0065    </b></i></font></div>");
+ 
  
     // HTML
    /* HtmlPipelineContext htmlContext = new HtmlPipelineContext(null);
@@ -95,7 +88,6 @@ public class Itext {
     fos=new FileOutputStream(dest);
     PdfWriter.getInstance(document, fos);
     document.open();
-//    elements=HTMLWorker.parseToList(sr, styles);
     XMLWorkerHelper.getInstance().parseXHtml(new ElementHandler() {
 			 @Override
 			    public void add(final Writable w) {
@@ -106,12 +98,10 @@ public class Itext {
 
 				
 			}, sr);
-    document.add(new Phrase("test-===="));
     PdfPTable table = new PdfPTable(1);
     PdfPCell cell = new PdfPCell();
     for (Element e : elements) {
-			cell.addElement(e);
-    	//document.add(e);
+			 cell.addElement(e);
     }
     table.addCell(cell);
     document.add(table);

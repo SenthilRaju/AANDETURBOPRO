@@ -490,7 +490,7 @@ LEFT JOIN prWarehouseInventory ON prMaster.prMasterID =prWarehouseInventory.prMa
 				<reportElement positionType="Float" x="346" y="115" width="221" height="16" isPrintWhenDetailOverflows="true" uuid="5fea6b1d-59f9-4bf9-98e9-f49a99bb65d7"/>
 				<textElement verticalAlignment="Middle" markup="html"/>
 				<textFieldExpression><![CDATA[($P{printJobName}.intValue()==1)?
-"<b>c/o:</b>"+(($F{joReleaseID}!=null ? $F{Job} : $F{Tag})):
+"<b>c/o</b>"+(($F{joReleaseID}!=null ? $F{Job} : $F{Tag})):
 (( $P{billAddress1}!=null && !$P{billAddress1}.equals("") ? $P{billAddress1}+"<br>" : "" )
 +( $P{billAddress2}!=null && !$P{billAddress2}.equals("") ? $P{billAddress2}+"<br>" : "" )
 +( $P{billCity}!=null && !$P{billCity}.equals("") ? $P{billCity}+", " : "" )

@@ -393,8 +393,8 @@ function loadLinesItemGrid() {
 													}
 											
 											}); 												
-											$("#new_row_quantityOrdered").focus();
-//											$("#"+aSelectedRowId+"_description").focus();
+											$("#new_row_description").focus();
+											$("#"+aSelectedRowId+"_description").focus();
 										}	
 									});
 																		
@@ -498,11 +498,11 @@ function loadLinesItemGrid() {
 	     		    			  }
 	     		    			   },
 	     		    			  { type: 'change', data: { i: 7 }, fn: function(e) {
-	     		    			  var rowobji=$(e.target).closest('tr.jqgrow');
+	     		    			 /* var rowobji=$(e.target).closest('tr.jqgrow');
 	     			    		  var textboxid=rowobji.attr('id');
 	     			    		poLines_selectRow=textboxid;
 	     			    			jQuery("#lineItemGrid").jqGrid('setSelection',poLines_selectRow, true);
-	     			    			e.target.select();
+	     			    			e.target.select();*/
 	     		    				//changePosition(poLines_selectRow);
 	     		    			  } },
 	     	                        {
@@ -541,11 +541,11 @@ function loadLinesItemGrid() {
 	     		    			  }
 	     		    			   },
 	     		    			  { type: 'change', data: { i: 7 }, fn: function(e) {
-	     		    			  var rowobji=$(e.target).closest('tr.jqgrow');
+	     		    			  /*var rowobji=$(e.target).closest('tr.jqgrow');
 	     			    		  var textboxid=rowobji.attr('id');
 	     			    		poLines_selectRow=textboxid;
 	     			    			jQuery("#lineItemGrid").jqGrid('setSelection',poLines_selectRow, true);
-	     			    			e.target.select();
+	     			    			e.target.select();*/
 	     		    				//changePosition(poLines_selectRow);
 	     		    			  } },
 	     	                        {
@@ -584,11 +584,11 @@ function loadLinesItemGrid() {
 	     		    			  }
 	     		    			   },
 	     		    			  { type: 'change', data: { i: 7 }, fn: function(e) {
-	     		    			  var rowobji=$(e.target).closest('tr.jqgrow');
+	     		    			 /* var rowobji=$(e.target).closest('tr.jqgrow');
 	     			    		  var textboxid=rowobji.attr('id');
 	     			    		poLines_selectRow=textboxid;
 	     			    			jQuery("#lineItemGrid").jqGrid('setSelection',poLines_selectRow, true);
-	     			    			e.target.select();
+	     			    			e.target.select();*/
 	     		    				//changePosition(poLines_selectRow);
 	     		    			  } },
 	     	                        {
@@ -627,11 +627,11 @@ function loadLinesItemGrid() {
 	     		    			  }
 	     		    			   },
 	     		    			  { type: 'change', data: { i: 7 }, fn: function(e) {
-	     		    			  var rowobji=$(e.target).closest('tr.jqgrow');
+	     		    			  /*var rowobji=$(e.target).closest('tr.jqgrow');
 	     			    		  var textboxid=rowobji.attr('id');
 	     			    		poLines_selectRow=textboxid;
 	     			    			jQuery("#lineItemGrid").jqGrid('setSelection',poLines_selectRow, true);
-	     			    			e.target.select();
+	     			    			e.target.select();*/
 	     		    				//changePosition(poLines_selectRow);
 	     		    			  } },
 	     	                        {
@@ -671,11 +671,11 @@ function loadLinesItemGrid() {
 	     		    			  }
 	     		    			   },
 	     		    			  { type: 'change', data: { i: 7 }, fn: function(e) {
-	     		    			  var rowobji=$(e.target).closest('tr.jqgrow');
+	     		    			 /* var rowobji=$(e.target).closest('tr.jqgrow');
 	     			    		  var textboxid=rowobji.attr('id');
 	     			    		poLines_selectRow=textboxid;
 	     			    			jQuery("#lineItemGrid").jqGrid('setSelection',poLines_selectRow, true);
-	     			    			e.target.select();
+	     			    			e.target.select();*/
 	     		    				//changePosition(poLines_selectRow);
 	     		    			  } },
 	     	                        {
@@ -716,11 +716,11 @@ function loadLinesItemGrid() {
 	     		    			  }
 	     		    			   },
 	     		    			  { type: 'change', data: { i: 7 }, fn: function(e) {
-	     		    			  var rowobji=$(e.target).closest('tr.jqgrow');
+	     		    			 /* var rowobji=$(e.target).closest('tr.jqgrow');
 	     			    		  var textboxid=rowobji.attr('id');
 	     			    		poLines_selectRow=textboxid;
 	     			    			jQuery("#lineItemGrid").jqGrid('setSelection',poLines_selectRow, true);
-	     			    			e.target.select();
+	     			    			e.target.select();*/
 	     		    				//changePosition(poLines_selectRow);
 	     		    			  } },
 	     	                        {
@@ -765,11 +765,11 @@ function loadLinesItemGrid() {
 	     		    			  }
 	     		    			   },
 	     		    			  { type: 'change', data: { i: 7 }, fn: function(e) {
-	     		    			  var rowobji=$(e.target).closest('tr.jqgrow');
+	     		    			 /* var rowobji=$(e.target).closest('tr.jqgrow');
 	     			    		  var textboxid=rowobji.attr('id');
 	     			    		poLines_selectRow=textboxid;
 	     			    			jQuery("#lineItemGrid").jqGrid('setSelection',poLines_selectRow, true);
-	     			    			e.target.select();
+	     			    			e.target.select();*/
 	     		    				//changePosition(poLines_selectRow);
 	     		    			  } },
 	     	                        {
@@ -809,11 +809,11 @@ function loadLinesItemGrid() {
 	     		    			  }
 	     		    			   },
 	     		    			  { type: 'change', data: { i: 7 }, fn: function(e) {
-	     		    			  var rowobji=$(e.target).closest('tr.jqgrow');
+	     		    			  /*var rowobji=$(e.target).closest('tr.jqgrow');
 	     			    		  var textboxid=rowobji.attr('id');
 	     			    		poLines_selectRow=textboxid;
 	     			    			jQuery("#lineItemGrid").jqGrid('setSelection',poLines_selectRow, true);
-	     			    			e.target.select();
+	     			    			e.target.select();*/
 	     		    				//changePosition(poLines_selectRow);
 	     		    			  } },
 	     	                        {
@@ -852,11 +852,11 @@ function loadLinesItemGrid() {
 	     		    			  }
 	     		    			   },
 	     		    			  { type: 'change', data: { i: 7 }, fn: function(e) {
-	     		    			  var rowobji=$(e.target).closest('tr.jqgrow');
+	     		    			 /* var rowobji=$(e.target).closest('tr.jqgrow');
 	     			    		  var textboxid=rowobji.attr('id');
 	     			    		poLines_selectRow=textboxid;
 	     			    			jQuery("#lineItemGrid").jqGrid('setSelection',poLines_selectRow, true);
-	     			    			e.target.select();
+	     			    			e.target.select();*/
 	     		    				//changePosition(poLines_selectRow);
 	     		    			  } },
 	     	                        {
@@ -1025,7 +1025,7 @@ function loadLinesItemGrid() {
 		loadError : function (jqXHR, textStatus, errorThrown){	},
 		onSelectRow:  function(id){
 			selectedLineItemGrid=id;
-			id= id.replace(/[^0-9\.]+/g,"");					
+			//id= id.replace(/[^0-9\.]+/g,"");					
 			selectedLineItem = id;
 		},	   
 		ondblClickRow: function(id){
@@ -1100,6 +1100,7 @@ function loadLinesItemGrid() {
 										}
 									}
 									 veaccrrowid= idd;
+									 $("#new_row_itemCode").focus();
 								}
 								if(selectedLineItemGrid=="new_row"){
 									console.log("IFselectedLineItemGrid"+selectedLineItemGrid); 
@@ -1127,12 +1128,22 @@ function loadLinesItemGrid() {
 							    }*/
 							    SetoverAllPOTotal();
 							    POLineItemTabformChanges();
+								$( "#lineItemGrid_iladd" ).trigger( "click" );
+								$("#lineItemGrid").jqGrid('resetSelection');
+								var grid=$("#lineItemGrid");
+								grid.jqGrid('resetSelection');
+							    var dataids = grid.getDataIDs();
+							    for (var i=0, il=dataids.length; i < il; i++) {
+							        grid.jqGrid('setSelection',dataids[i], false);
+							    }
+							    $("#lineItemGrid").jqGrid('setSelection','new_row', true);
+							    
 							    $('#ImgPOPDF').empty();
 								  $('#ImgPOPDF').append('<input type="image" src="./../resources/Icons/PDF_new_disabled.png" title="View Purchase Order" return false;" style="background: #EEDEBC;cursor:default;">');
 								  $('#ImgPOEmail').empty();
 								  $('#ImgPOEmail').append('<input id="contactEmailID" type="image" src="./../resources/Icons/mail_new_disabled.png" title="Email Purchase Order" style="background: #EEDEBC;cursor:default;" return false;">');
 							
-							    $("#lineItemGrid").jqGrid('setSelection','new_row', true);
+							   
 							},
 							errorfunc : function(rowid, response) {
 								return false;
@@ -1161,6 +1172,7 @@ function loadLinesItemGrid() {
 									}
 								}
 								 veaccrrowid= idd;
+								 $("#new_row_itemCode").focus();
 							}
 							console.log("Edit"+selectedLineItemGrid); 
 							if(selectedLineItemGrid=="new_row"){
@@ -1185,12 +1197,22 @@ function loadLinesItemGrid() {
 						    }*/
 						    SetoverAllPOTotal();
 						    POLineItemTabformChanges();
+						    $( "#lineItemGrid_iladd" ).trigger( "click" );
+							$("#lineItemGrid").jqGrid('resetSelection');
+							var grid=$("#lineItemGrid");
+							grid.jqGrid('resetSelection');
+						    var dataids = grid.getDataIDs();
+						    for (var i=0, il=dataids.length; i < il; i++) {
+						        grid.jqGrid('setSelection',dataids[i], false);
+						    }
+						    $("#lineItemGrid").jqGrid('setSelection','new_row', true);
+						    
 						    $('#ImgPOPDF').empty();
 							  $('#ImgPOPDF').append('<input type="image" src="./../resources/Icons/PDF_new_disabled.png" title="View Purchase Order" return false;" style="background: #EEDEBC;cursor:default;">');
 							  $('#ImgPOEmail').empty();
 							  $('#ImgPOEmail').append('<input id="contactEmailID" type="image" src="./../resources/Icons/mail_new_disabled.png" title="Email Purchase Order" style="background: #EEDEBC;cursor:default;" return false;">');
 						
-						    $("#lineItemGrid").jqGrid('setSelection','new_row', true);
+						   
 						},
 						errorfunc : function(rowid, response) {
 							
@@ -1351,7 +1373,7 @@ function SetoverAllPOTotal(){
 	
 	for(var i=0;i<ids.length;i++){
 		 var selectedRowId=ids[i];
-               	 if(selectedRowId!='new_row'){
+		 if(selectedRowId!="new_row"){
 		 cellValue =$("#lineItemGrid").jqGrid ('getCell', selectedRowId, 'quantityBilled');
 		 taxcellValue=$("#lineItemGrid").jqGrid ('getCell', selectedRowId, 'taxable');
 		 var id="#canDeletePOID_"+selectedRowId;
@@ -1370,7 +1392,7 @@ function SetoverAllPOTotal(){
 		 totalamount=cellvalueamt+totalamount;
 		 totalamount=Number(floorFigureoverall(totalamount,2));
 		}
-             }
+		 }
 	 }
 	
 	

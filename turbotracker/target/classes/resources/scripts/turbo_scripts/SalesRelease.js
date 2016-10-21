@@ -1,6 +1,7 @@
 /** PO Realse function **/
 var cuinvoiceID='';
 var so_openornot;
+var joMasterID=0;
 jQuery(document).ready(function() {
 	Loadtab();
 	var jobNumber;
@@ -1284,7 +1285,7 @@ function callSalesOrderStatus(){
 		var dataid = $('#transactionStatus').val();
 	    var newDialogDiv = jQuery(document.createElement('div'));
 	    jQuery(newDialogDiv).attr("id", "showSalesOrderOptions");
-	    jQuery(newDialogDiv).html('<span><input type = "button" class="cancelhoverbutton turbo-tan" style="width: 85%;" id="Void" onclick="onSetSalesStatus(this.value)" value="Void"></span><br><br><span><input type = "button" class="cancelhoverbutton turbo-tan" style="width: 85%;" id="Quote" onclick="onSetSalesStatus(this.value)" value="Quote"></span><br><br><span><input type = "button" class="cancelhoverbutton turbo-tan" style="width: 85%;" id="Hold" onclick="onSetSalesStatus(this.value)" value="OnHold"></span><br><br><span><input type = "button" style="width: 85%;" class="cancelhoverbutton turbo-tan" id="Open" onclick="onSetSalesStatus(this.value)" value="Open"></span><br><span id="Importtojobsspan" style=" display: none;"><br><input type = "button" style="width: 85%;"  class="cancelhoverbutton turbo-tan" id="ImportToJob" onclick="onSetSalesStatus(this.value)" value="Import to Job"></span><span id="bookasjobsspan"><br><input type = "button" style="width: 85%;"  class="cancelhoverbutton turbo-tan" id="BookasJob" onclick="onSetSalesStatus(this.value)" value="Book as Job"></span><br><span><input type = "button" class="cancelhoverbutton turbo-tan" style="width: 85%;" id="Close" onclick="onSetSalesStatus(this.value)" value="Closed" /></span>');
+	    jQuery(newDialogDiv).html('<span><input type = "button" class="cancelhoverbutton turbo-tan" style="width: 85%;" id="Void" onclick="onSetSalesStatus(this.value)" value="Void"></span><br><br><span><input type = "button" class="cancelhoverbutton turbo-tan" style="width: 85%;" id="Quote" onclick="onSetSalesStatus(this.value)" value="Quote"></span><br><br><span><input type = "button" class="cancelhoverbutton turbo-tan" style="width: 85%;" id="Hold" onclick="onSetSalesStatus(this.value)" value="OnHold"></span><br><br><span><input type = "button" style="width: 85%;" class="cancelhoverbutton turbo-tan" id="Open" onclick="onSetSalesStatus(this.value)" value="Open"></span><br><span id="Importtojobsspan"><br><input type = "button" style="width: 85%;"  class="cancelhoverbutton turbo-tan" id="ImportToJob" onclick="onSetSalesStatus(this.value)" value="Import to Job"></span><span id="bookasjobsspan" class="line-break"><br><input type = "button" style="width: 85%;"  class="cancelhoverbutton turbo-tan" id="BookasJob" onclick="onSetSalesStatus(this.value)" value="Book as Job"></span><br><span><input type = "button" class="cancelhoverbutton turbo-tan" style="width: 85%;" id="Close" onclick="onSetSalesStatus(this.value)" value="Closed" /></span>');
 	  
 		jQuery(newDialogDiv).dialog({
 			modal : true,
@@ -1296,6 +1297,9 @@ function callSalesOrderStatus(){
 				$(newDialogDiv).css("height","208");
 				$("#BookasJob").prop('disabled', false);
 				$("#BookasJob").css("opacity", "1");
+				$("#ImportToJob").prop('disabled', false);
+				$("#ImportToJob").css("opacity", "1");
+				
 				if ( !isNaN(sonumber)) {
 				    // Validation failed
 					var cusoid=$('#Cuso_ID').text();
@@ -1308,16 +1312,23 @@ function callSalesOrderStatus(){
 								$("#bookasjobsspan").css("display", "block");
 								$("#BookasJob").prop('disabled', true);
 								$("#BookasJob").css("opacity", "0.5");
-								$(newDialogDiv).css("height","235");
+								$("#ImportToJob").prop('disabled', true);
+								$("#ImportToJob").css("opacity", "0.5");
+								
+								$(newDialogDiv).css("height","270");
+								
+								
 							}else{
 								$("#bookasjobsspan").css("display", "block");
-								$(newDialogDiv).css("height","235");
+								$(newDialogDiv).css("height","270");
 							}
 							}
 						});
 				}else{
 					
 					$("#bookasjobsspan").css("display", "none");
+					$("#Importtojobsspan").css("display", "none");
+					
 				}
 					
 			},
@@ -1379,8 +1390,10 @@ function onSetSalesStatus(e){
 	$("#showSalesOrderOptions").dialog("destroy").remove();
 	var setStatus=0;
 	var cuSoid =  $('#Cuso_ID').text();
+
 	switch(e)
 	{
+	
 	case 'Void':
 		setStatus = -1;
 		$('#withPrice').attr('checked',false);
@@ -1417,8 +1430,11 @@ function onSetSalesStatus(e){
 		setStatus = 4;
 		$('#withPrice').attr('checked',false);
 		$('#withPriceLine').attr('checked',false);
-		withPrice='NotChecked';
-		
+		withPrice='NotChecked';					
+		var elem = $("#ImportToJob").val();
+	      e="Open";
+	  	//alert("button value is changed..!");
+		//alert("button value:-"+);
 		break;
 	default:
 		setStatus = 2;
@@ -1443,31 +1459,82 @@ function onSetSalesStatus(e){
 						}).dialog("open");
 		
 	}
+	//added  by prasant kumar #513 date 23/09/2016
+	
+	if(setStatus==3){	
+		var newDialogDiv4 = jQuery(document.createElement('div'));
+		var errorText = "Would you like to use the existing Sales Order Number";
+		jQuery(newDialogDiv4).html('<span><b ></b></span>');
+		jQuery(newDialogDiv4).html('<span><b ></b></span>');
+		jQuery(newDialogDiv4).html('<span><b style="color:blue;">'+ errorText+ '</b></span>');
+		jQuery(newDialogDiv4).dialog({modal : true, width : 350, height : 170, title : "Book as Job", 
+			buttons : [ {
+								height : 25,
+								width:156,
+								text : "Yes",
+								click: function() { 
+									$(this).dialog("close"); $(this).dialog("destroy").remove();bookAsJob("Yes",e);								
+						               
+								      }
+			},
+			{
+				height : 25,
+				width:156,
+				text : "NO",
+				click: function() {
+					$(this).dialog("close"); $(this).dialog("destroy").remove();bookAsJob("No",e)
+			
+		             }
+					}]
+						}).dialog("open");
+		
+	}
 	
 	
 	
-	/*if(setStatus==4){
-		var customer=$("#CustomerNameGeneral").val();
-		//var data=getProjectsForCustomer(customer);
-		 var newDialogDiv = jQuery(document.createElement('div'));
+	if(setStatus==4){	
+		    var newDialogDiv = jQuery(document.createElement('div'));
 		    jQuery(newDialogDiv).attr("id", "showImportTojobdialog");
-		   jQuery(newDialogDiv).html('<span><select id="Importjobs"></select></span>');
-		  $(newDialogDiv).find('#Importjobs').css({
-			    'width': '306px',
-			    'margin-top': '43px',
-			    'margin-left':'33px'
-			});     
-		  
+		    jQuery(newDialogDiv).append( '<textarea id="textID1" maxlength="134" cols="38" rows="4"></textarea>');
+		    jQuery(newDialogDiv).append('<span><select id="ImportjobsDesc"></select></span>');		  
+		  /* jQuery(newDialogDiv).html('<span><input type=text id="ImportjobsNUM"></select></span>');
+		   jQuery(newDialogDiv).html('<span><input type=text  id="ImportjobsCustID"></select></span>');
+		  */$(newDialogDiv).find('#ImportjobsDesc').css({
+			    'width': '360px',
+			    ' margin-top': '6px',
+			    'margin-top': '5px'
+			}); 		 
+		 $('#ImportjobsDesc').find('option').css({
+			 'width': '360px'
+			}); 			  
+		  $(newDialogDiv).find('#textID1').css({	   
+		    'color': 'blue',
+		    'font-size': '15px',
+		    'border': 'none',
+		    'resize': 'none',
+		   ' margin-left': '6px'
+	      }); 
+		  var data=getProjectsForCustomer();
+		 
+		/*  $(newDialogDiv).find('#ImportjobsNUM').css({
+			   'disply':'none'
+			});   $(newDialogDiv).find('#ImportjobsNUM').css({
+				 'disply':'none'
+			}); */
 		  
 			jQuery(newDialogDiv).dialog({
 				modal : true,
 				width : 400,
 				height : 250,
 				title : "Import Sales Order to Job",
-				buttons : [{height:35,text: "GO",click: function() { $(this).dialog("close");$("#showSalesOrderOptions").dialog("destroy").remove();viewPOPDF();}}]
-	}).dialog("open");
+				buttons : [
+				           {height:35,text: "GO",click: function() { joMasterID=$( "#ImportjobsDesc").val();$(this).dialog("close"); $(this).dialog("destroy").remove();showCustomerRelease();}}
+				           ],close:function(){
+				        	   $(this).dialog("destroy").remove();
+				   			}	
+	}).dialog("open");			
 		
-	}*/
+	}
 	if(setStatus==-1){
 		
 		 var newDialogDiv = jQuery(document.createElement('div'));
@@ -1484,11 +1551,7 @@ function onSetSalesStatus(e){
 				           {height:35,text: "Cancel",click: function() { $(this).dialog("close");$("#showSalesOrderOptions").dialog("destroy").remove();}}]
 			}).dialog("open");
 		
-	}
-	
-
-	
-	
+	}	
 	/*if(setStatus == 3 && ($('#tagJobID').val()==null || $('#tagJobID').val()=="")){
 		
 		    var newDialogDiv2 = jQuery(document.createElement('div'));
@@ -1506,95 +1569,106 @@ function onSetSalesStatus(e){
 							}).dialog("open");
 		
 	}*/
-	$.ajax({
-		url: "./salesOrderController/setSalesOrderStatus",
-		type: "POST",
-		async:false,
-		data :{cusoID:cuSoid,status:setStatus},
-		success: function(data) {
-			$('#showSalesOrderOptions').dialog('destroy').remove();
-			$('#transactionStatus').val(setStatus);
-			$('#soStatusButton').val(e);
-			if(setStatus==3 && cuSoid!=null && cuSoid!=undefined && cuSoid!=""){
-				var urlData="";
-				var urijobname=encodeBigurl($('#tagJobIDwz').val());
-				urlData=urlData+"token=view"+"&jobNumber="+$("#SOnumberGeneral").val()+"&jobName="+urijobname+"&jobStatus='Booked'"+"&joMasterID="+data;
-				var checkpermission=getGrantpermissionprivilage('Main',0);
-				if(checkpermission){
-				document.location.href = "./jobflow?"+urlData;
-				}
-			
-			}
-			
-			
-		}
-	});
-	
+	//alert("cuSOID is "+cuSoid);
+	/*
+	*/
 }
 
-/*
+	//added  by prasant kumar #513 date 23/09/2016	
+function bookAsJob(choose,e1)
+{ 		var cuSoid =  $('#Cuso_ID').text(); 
+			$.ajax({
+				url: "./salesOrderController/setSalesOrderStatus",
+				type: "POST",
+				async:false,
+				data :{cusoID:cuSoid,status:3,choose:choose},
+				success: function(data) 
+				{
+					$('#showSalesOrderOptions').dialog('destroy').remove();
+					$('#transactionStatus').val(3);
+					$('#soStatusButton').val(e1);
+					if( cuSoid!=null && cuSoid!=undefined && cuSoid!=""){
+						var urlData="";
+						var urijobname=encodeBigurl($('#tagJobIDwz').val());
+						urlData=urlData+"token=view"+"&jobNumber="+data.jobNumber+"&jobName="+urijobname+"&jobStatus='Booked'"+"&joMasterID="+data.joMasterId;
+						var checkpermission=getGrantpermissionprivilage('Main',0);
+						if(checkpermission){
+						document.location.href = "./jobflow?"+urlData;
+						}			
+					}			
+				}
+			});
+		}
+		
+		
+		
+function showCustomerRelease()
+{	
+   var urlData="";
+   var urijobname=encodeBigurl($('#tagJobIDwz').val());
+   //var jobNumID=	$( "#ImportjobsDesc").val();
+   //var joMasterID=$( "#ImportjobsDesc").val();
+  // alert("job master ID"+joMasterID);
+   
+   var custID= $('#Cuso_ID').text();     
+   var jobName=	$( "#ImportjobsDesc  option:selected" ).text();
+   var jobNames=jobName.split("[");     
+   var rxmsterID=$( "#rxCustomerID").val();
+   var urlData="";       
+   $.ajax({
+  		 
+    		url: "./salesOrderController/addSalesOrderAsRelease",
+    		type: "POST",
+    		async:false,
+    		data: {"custID":custID,"joMasterID":joMasterID},
+    		success: function(data) 
+    		{	
+    			if(data!="")
+    				{    			
+    			  urlData=urlData+"token=view"+"&jobNumber="+data+"&jobName="+jobNames[0]+"&jobStatus=Booked"+"&joMasterID="+joMasterID;
+    			  document.location.href = "./jobflow?"+urlData;
+    				}
+    		}      
+       });
+}
 function getProjectsForCustomer(customer)
 {
-	alert("calling..1");
-	var custID="";
-	 custID=$('#billToCustomerNameGeneralID').val();
-	if(custID=="")
-		custID=$("#SO_Shipto").contents().find("#shiptoaddrhiddenfromuiid").val();
-	alert("calling..1"+custID);
-	$.ajax({
+	var cuSOID= $('#Cuso_ID').text();   
+	
+	 var custName=$("#CustomerNameGeneral").val();
+	 var So_NO=$("#SOnumberGeneral").val();	
+	
+	 $.ajax({
 		 
  		url: "./salesOrderController/getAllJobforthisCustomer",
  		type: "POST",
- 		data: {"custID":custID},
- 		success: function(data) {
-	 			alert("test");
-	 			 		}	,
-	 	error: function(XMLHttpRequest, textStatus, errorThrown) { 
-	 	                    alert("Status: " + textStatus); alert("Error: " + errorThrown); 
-	 			 		}
-	 });	
-	$.ajax({
-		url: "./salesOrderController/getAllJobforthisCustomer",
-		type: "POST",
-		
-		data :{"customer":customer},
-		success: function(data1) {			
-			console.log(data1);	
-			alert(data1);
-			$.each(data, function( index, value ) {
-				if (index==5)		
-				  alert( index + ": " + value);
-				   
-			//	});
-			
-			$('#showSalesOrderOptions').dialog('destroy').remove();
-			$('#transactionStatus').val(setStatus);
-			$('#soStatusButton').val(e);
-			if(setStatus==3 && cuSoid!=null && cuSoid!=undefined && cuSoid!=""){
-				var urlData="";
-				var urijobname=encodeBigurl($('#tagJobIDwz').val());
-				urlData=urlData+"token=view"+"&jobNumber="+$("#SOnumberGeneral").val()+"&jobName="+urijobname+"&jobStatus='Booked'"+"&joMasterID="+data;
-				var checkpermission=getGrantpermissionprivilage('Main',0);
-				if(checkpermission){
-				document.location.href = "./jobflow?"+urlData;
-				},
-				
-                } 
-	
-			
-		
-	//});
+ 		data: {"cuSOID":cuSOID},
+ 		success: function(data) 
+ 		{	
+ 			var aSalesRepOptions="";
+	 			 for(var i = 0; i < data.length; i++)
+	 			 {	 				 
+	 				aSalesRepOptions = aSalesRepOptions + '<option value="'+data[i].joMasterId+'">'+data[i].description+'['+data[i].jobNumber+']'+'</option>';		
+	 			 
+	 			 }
+	 			$("#ImportjobsDesc").append(aSalesRepOptions);	 			
+	 			var text1="Please select an existing Booked job for "+custName+" to import sales Order #"+So_NO;
+	 			$("#textID1").text(text1);	 			
+	 	}	
+	 });		
+}
 
-
-//}
-*/
-function UsDateFormate(createdDate){
+function UsDateFormate(createdDate)
+{
 	var date = new Date(createdDate);
 	var CreatedOn = date.getDate();
 	var createdMonth = date.getMonth()+1; 
 	var createdYear = date.getFullYear();
 	if(CreatedOn<10){CreatedOn='0'+CreatedOn;}   
-	if(createdMonth<10){createdMonth='0'+createdMonth;} 
+	if(createdMonth<10)
+	{
+		createdMonth='0'+createdMonth;
+	} 
 	createdDate = createdMonth+"/"+CreatedOn+"/"+createdYear;
 	return createdDate;
 }

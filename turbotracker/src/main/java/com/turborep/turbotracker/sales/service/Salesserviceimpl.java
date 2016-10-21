@@ -9,8 +9,11 @@
 package com.turborep.turbotracker.sales.service;
 
 import java.math.BigDecimal;
+import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -42,6 +45,7 @@ import com.turborep.turbotracker.employee.dao.Ecstatement;
 import com.turborep.turbotracker.job.dao.JoRelease;
 import com.turborep.turbotracker.job.dao.JoReleaseDetail;
 import com.turborep.turbotracker.job.dao.JobsBean;
+import com.turborep.turbotracker.job.dao.JobsNameBean;
 import com.turborep.turbotracker.job.dao.Jomaster;
 import com.turborep.turbotracker.job.service.JobService;
 import com.turborep.turbotracker.json.AutoCompleteBean;
@@ -54,6 +58,7 @@ import com.turborep.turbotracker.system.dao.SysUserDefault;
 import com.turborep.turbotracker.system.dao.Sysprivilege;
 import com.turborep.turbotracker.user.dao.TsUserLogin;
 import com.turborep.turbotracker.user.dao.UserBean;
+import com.turborep.turbotracker.util.JobUtil;
 
 /**
  * This Class is service implementation for SalesService.java.
@@ -165,14 +170,15 @@ public class Salesserviceimpl implements SalesService {
 					+ " joMaster.cuAssignmentID3 = " + aSalesRepId + " OR " + " joMaster.cuAssignmentID4 = "
 					+ aSalesRepId + " OR " + " joMaster.cuAssignmentID5 = " + aSalesRepId + " OR "
 					+ " joMaster.cuAssignmentID6 = " + aSalesRepId + " ) AND joMaster.jobStatus in (0,-4,1,6) ";
-
-			// aname2 = "WHERE joMaster.jobStatus in (0,-4,1,6) )";
-
+			
+		//	aname2 = "WHERE joMaster.jobStatus in (0,-4,1,6) )";
+			
 			aname2 = "WHERE " + "(cu.cuAssignmentID0 = " + aSalesRepId + " OR " + "cu.cuAssignmentID1 = " + aSalesRepId
 					+ " OR " + "cu.cuAssignmentID2 = " + aSalesRepId + " OR " + "cu.cuAssignmentID3 = " + aSalesRepId
 					+ " OR " + "cu.cuAssignmentID4 = " + aSalesRepId + ")) AND joMaster.jobStatus in (0,-4,1,6)";
-		} else {
-
+		} 
+		else {
+			
 			aName = "WHERE joMaster.jobStatus in (0,-4,1,6) ";
 			aname2 = "WHERE joMaster.jobStatus in (0,-4,1,6) )";
 		}
@@ -749,14 +755,51 @@ public class Salesserviceimpl implements SalesService {
 		return aQueryList;
 	}
 
+	
+	public Cuso getCustomerSalesOrder(Integer cuSOId)
+	{
+		
+		Session aSession = itsSessionFactory.openSession();
+		Cuso cuso = null;	
+		try {
+			if (cuSOId!=null)
+			cuso = (Cuso) aSession.get(Cuso.class, cuSOId);			
+		    } catch (Exception e) {
+			itsLogger.error(e.getMessage(), e);
+	     	} finally {
+			aSession.flush();
+			aSession.close();
+	     	}
+	    	return  cuso;		
+	}
+	public Jomaster getSpecificJOBNew(Integer cuSOId)
+	{
+		
+		Session aSession = itsSessionFactory.openSession();
+		Jomaster joMaster = null;	
+		try {
+			if (cuSOId!=null)
+				joMaster = (Jomaster) aSession.get(Jomaster.class, cuSOId);			
+		    } catch (Exception e) {
+			itsLogger.error(e.getMessage(), e);
+	     	} finally {
+			aSession.flush();
+			aSession.close();
+	     	}
+	    	return  joMaster;		
+	}
+	
 	@Override
-	public Integer updateSalesOrderStatus(Integer cuSOId, Integer status, Integer userID, String userName) {
+	public Jomaster updateSalesOrderStatus(Integer cuSOId, Integer status, Integer userID, String userName,String jobNumberNew) {
 		Session aSession = itsSessionFactory.openSession();
 		Cuso cuso = null;
 		Transaction aTransaction;
+		Transaction aTransaction1;
+		
 		Integer joMasterID = 0;
 		try {
 			aTransaction = aSession.beginTransaction();
+			aTransaction1 = aSession.beginTransaction();
 			aTransaction.begin();
 			cuso = (Cuso) aSession.get(Cuso.class, cuSOId);
 
@@ -779,17 +822,33 @@ public class Salesserviceimpl implements SalesService {
 				if (prevStatus == -2) {
 					RollBackSalesOrderLineItems(cuso, 1, userID, userName);
 				}
-				JoRelease joReleases = InsertintoaNewJobasSalesOrder(cuso, status, userID, userName);
+				String tag=cuso.getTag();
+				if (tag == null || tag == "") {
+					if (cuso.getRxCustomerId() != null) {
+						tag = itsjobService.getCustomerName(cuso.getRxCustomerId().toString());
+					}
+					cuso.setTag(tag);
+					aSession.update(cuso);
+					aTransaction.commit();
+				}
+		
+				aTransaction1.begin();
+				cuso = (Cuso) aSession.get(Cuso.class, cuSOId);
+				JoRelease joReleases = InsertintoaNewJobasSalesOrder(cuso, status, userID, userName,jobNumberNew);
 				if (joReleases.getJoReleaseId() != null) {
+					if(jobNumberNew!="")
+					cuso.setSonumber(jobNumberNew+"A");
+					else 
 					cuso.setSonumber(cuso.getSonumber() + "A");
 					cuso.setJoReleaseId(joReleases.getJoReleaseId());
 					status = 1;
 					joMasterID = joReleases.getJoMasterId();
 				}
+				
 			}
 			cuso.setTransactionStatus(status);
 			aSession.update(cuso);
-			aTransaction.commit();
+			aTransaction1.commit();
 
 		} catch (Exception e) {
 			itsLogger.error(e.getMessage(), e);
@@ -798,7 +857,8 @@ public class Salesserviceimpl implements SalesService {
 			aSession.flush();
 			aSession.close();
 		}
-		return joMasterID;
+		
+		return getSpecificJOBNew(joMasterID);
 	}
 
 	public void checkSalesOrderInvoice(Integer cuSOId, Integer status, Integer prevStatus) {
@@ -1799,10 +1859,12 @@ public class Salesserviceimpl implements SalesService {
 		}
 	}
 
-	public JoRelease InsertintoaNewJobasSalesOrder(Cuso cuso, Integer newstatus, Integer userID, String userName) {
+	public JoRelease InsertintoaNewJobasSalesOrder(Cuso cuso, Integer newstatus, Integer userID, String userName,String jobNumberNew) {
 		Session aSession = null;
 		Transaction aTransaction;
 		Integer joReleaseID = null;
+		String dataSeq="";
+	
 		JoRelease ajorelease = new JoRelease();
 		try {
 			aSession = itsSessionFactory.openSession();
@@ -1811,11 +1873,7 @@ public class Salesserviceimpl implements SalesService {
 
 			String tag = cuso.getTag();
 			String custponumber = cuso.getCustomerPonumber();
-			if (tag == null || tag == "") {
-				if (cuso.getRxCustomerId() != null) {
-					tag = itsjobService.getCustomerName(cuso.getRxCustomerId().toString());
-				}
-			}
+			
 			if (custponumber == null || custponumber == "") {
 				if (cuso.getRxCustomerId() != null) {
 					custponumber = itsjobService.getCustomerName(cuso.getRxCustomerId().toString());
@@ -1846,7 +1904,30 @@ public class Salesserviceimpl implements SalesService {
 			aJoMaster.setContractAmount(cuso.getSubTotal().add(cuso.getFreight()));
 			aJoMaster.setEstimatedCost(cuso.getCostTotal());
 			aJoMaster.setEstimatedProfit((cuso.getSubTotal().add(cuso.getFreight())).subtract(cuso.getCostTotal()));
+			
+			
+			if(jobNumberNew.equals(""))
 			aJoMaster.setJobNumber(cuso.getSonumber());
+			else {
+				String[] seqNum;
+				Date now = new Date(); // java.util.Date, NOT java.sql.Date or
+										// java.sql.Timestamp!
+				String format3 = new SimpleDateFormat("yy MM dd").format(now);
+				String[] split = format3.split(" ");
+				dataSeq = dataSeq + split[0] + "" + split[1];
+				aJoMaster.setJobNumber(jobNumberNew);
+				if (jobNumberNew.contains("-"))
+					seqNum = jobNumberNew.split("-");
+				else
+				seqNum = jobNumberNew.split(dataSeq);
+				System.out.println("-------------------------------->"+dataSeq);
+				aJoMaster.setSeqnum(seqNum[1]);
+				/*
+				 * jobNumberNew.substring(Math.max(jobNumberNew.length() - 2,
+				 * 0)) getting last two charecter of a string
+				 */
+			}
+
 			aJoMaster.setQuoteNumber(null);
 			aJoMaster.setCreditStatusDate(new Date());
 			aJoMaster.setWho0(userID);
@@ -1914,16 +1995,12 @@ public class Salesserviceimpl implements SalesService {
 			// Iterator<?> aIterator = aQuery.list().iterator();
 			System.out.println(user);
 			if (user != null) {
-				if ((user.getCcaddr1() != null) && (user.getCcaddr1().trim().equals("") == false))
-					ListOfCCmail.add(user.getCcaddr1());
-				if ((user.getCcaddr2() != null) && (user.getCcaddr2().trim().equals("") == false))
-					ListOfCCmail.add(user.getCcaddr2());
-				if ((user.getCcaddr3() != null) && (user.getCcaddr3().trim().equals("") == false))
-					ListOfCCmail.add(user.getCcaddr3());
-				if ((user.getCcaddr4() != null) && (user.getCcaddr4().trim().equals("") == false))
-					ListOfCCmail.add(user.getCcaddr4());
-				if ((user.getBccaddr() != null) && (user.getBccaddr().trim().equals("") == false))
-					ListOfCCmail.add(user.getBccaddr());
+				ListOfCCmail.add(user.getCcaddr1());
+				ListOfCCmail.add(user.getCcaddr2());
+				ListOfCCmail.add(user.getCcaddr3());
+				ListOfCCmail.add(user.getCcaddr4());
+				ListOfCCmail.add(user.getBccaddr());
+
 			}
 
 		} catch (Exception e) {
@@ -1938,42 +2015,116 @@ public class Salesserviceimpl implements SalesService {
 		return ListOfCCmail;
 	}
 
-	/*
-	 * @Override public List<JobsNameBean> getAllJobsforThisCustomer(Integer
-	 * custID) {
-	 * 
-	 * List<JobsNameBean>jobNames=new ArrayList<JobsNameBean>();
-	 * 
-	 * JobsNameBean jobName; String aSalesselectQry =
-	 * "SELECT JobNumber,rxCustomerID,Description FROM joMaster WHERE rxCustomerID=? "
-	 * +" AND JobStatus=3"; Session aSession = null;
-	 * 
-	 * try {
-	 * 
-	 * aSession = itsSessionFactory.openSession(); Query aQuery =
-	 * aSession.createSQLQuery(aSalesselectQry); aQuery.setInteger(0, custID);
-	 * // Iterator<?> aIterator = aQuery.list().iterator();
-	 * 
-	 * // List value=aQuery.list();
-	 * 
-	 * Iterator<?> aIterator = aQuery.list().iterator();
-	 * 
-	 * while(aIterator.hasNext()) { jobName=new JobsNameBean(); Object[]
-	 * objs=(Object[]) aIterator.next(); {
-	 * 
-	 * jobName.setjJobNumber((String)objs[0]);
-	 * jobName.setRxCustomerID(""+objs[1]);
-	 * jobName.setDescription((String)objs[2]);
-	 * 
-	 * 
-	 * } jobNames.add(jobName);
-	 * 
-	 * }
-	 * 
-	 * 
-	 * } catch (Exception e) {
-	 * 
-	 * itsLogger.error(e.getMessage(), e); } finally { aSession.flush();
-	 * aSession.close(); aSalesselectQry = null; } return jobNames; }
-	 */
+	@Override
+	public List<Jomaster> getAllJobsforThisCustomer(Integer custID) {
+		
+	List<Jomaster>jobNames=new ArrayList<Jomaster>();
+		
+		Jomaster jobName;
+		Cuso cuSo=new Cuso();
+		
+		String aSalesselectQry = "SELECT JobNumber,joMasterID,Description FROM joMaster WHERE rxCustomerID = ? "
+				+" AND JobStatus=3 order by Description ";
+		Session aSession = null;
+		
+		try {
+
+			aSession = itsSessionFactory.openSession();
+			cuSo=(Cuso) aSession.get(Cuso.class,custID );
+			Query aQuery = aSession.createSQLQuery(aSalesselectQry);
+			if(cuSo!=null)
+			aQuery.setInteger(0, cuSo.getRxCustomerId());
+			// Iterator<?> aIterator = aQuery.list().iterator();
+	
+		//	List value=aQuery.list();
+			
+			Iterator<?> aIterator = aQuery.list().iterator();
+			
+			while(aIterator.hasNext())
+			{
+				jobName=new Jomaster();
+				Object[] objs=(Object[]) aIterator.next();
+				{					
+						jobName.setJobNumber((String)objs[0]);
+						jobName.setJoMasterId(Integer.parseInt(""+objs[1]));
+						jobName.setDescription((String)objs[2]);					
+				}
+				jobNames.add(jobName);				
+			}
+				
+		} catch (Exception e) {
+
+			itsLogger.error(e.getMessage(), e);
+		} finally {
+			aSession.flush();
+			aSession.close();
+			cuSo=null;
+			aSalesselectQry = null;
+		}
+		return jobNames;
+}
+
+	@Override
+	public String addSOtoRelease(Integer cuSOID, Integer joMasterID) {
+	
+		//String aSalesselectQry = "SELECT JobNumber,seqnum FROM joMaster WHERE joMasterID=? ";
+	    Session aSession = null;
+		
+		
+		Integer JoReleaseID=null;
+		JoRelease joRelease=new JoRelease();
+		Boolean flag=false;
+		Cuso cuSO=new Cuso();
+		String JobNumber="";
+		String query="SELECT MAX(seq_Number) FROM joRelease WHERE joMasterID=?";
+		Integer release_Seq_no=null;
+		//joRelease.setJoReleaseId(JoReleaseID);
+		DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+		
+		Calendar cal = Calendar.getInstance();
+		System.out.println(dateFormat.format(cal.getTime())); //2014/08/06 16:00:22
+		try {
+			
+			
+			aSession = itsSessionFactory.openSession();
+			Jomaster job= (Jomaster) aSession.get(Jomaster.class, joMasterID);
+			Query q=aSession.createSQLQuery(query);
+			q.setInteger(0, joMasterID);
+			release_Seq_no=(Integer) q.uniqueResult();
+			Transaction tx=aSession.beginTransaction();
+			cuSO=(Cuso) aSession.get(Cuso.class, cuSOID);
+			if(job!=null&& cuSO!=null)
+			{
+			joRelease.setReleaseDate(cal.getTime());			
+			joRelease.setReleaseType(2);	
+			
+			joRelease.setEstimatedBilling(cuSO.getSubTotal());
+			joRelease.setJoMasterId(joMasterID);	
+			if(release_Seq_no==null)
+			release_Seq_no=0;
+			joRelease.setSeq_Number(++release_Seq_no);			
+			}
+			JoReleaseID=(Integer) aSession.save(joRelease);
+			if(JoReleaseID!=null)
+			{							
+				cuSO.setJoReleaseId(JoReleaseID);
+				cuSO.setSonumber(job.getJobNumber()+""+JobUtil.IntToLetter(release_Seq_no).toUpperCase());
+				cuSO.setTag(job.getDescription());
+				aSession.update(cuSO);
+				tx.commit();			
+				JobNumber=job.getJobNumber();				
+			}		
+			
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}		
+		 finally {
+				aSession.flush();
+				aSession.close();
+				query = null;
+				cuSO=null;
+			}		
+		return JobNumber;
+	}
 }

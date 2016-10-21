@@ -1489,7 +1489,8 @@ public class EmployeeController {
 				cal.add(Calendar.DATE, 1); // minus number would decrement the days
 				startDate = new SimpleDateFormat("yyyy-MM-dd").format(cal.getTime());
 				itsLogger.info("stDate"+ ecPeriodList.get(1).getPeriodEndingDate());
-			}else{
+			}
+			else{
 				SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
 				String dateInString = "01-06-2004";
 				Date date = sdf.parse(dateInString);

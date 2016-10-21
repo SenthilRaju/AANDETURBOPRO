@@ -29,7 +29,7 @@ import org.hibernate.connection.ConnectionProvider;
 import org.hibernate.engine.SessionFactoryImplementor;
 
 import com.turborep.turbotracker.job.exception.JobException;
-//import com.turborep.turbotracker.job.service.JobServiceImpl_bak;
+import com.turborep.turbotracker.job.service.JobServiceImpl;
 import com.turborep.turbotracker.vendor.dao.Vepo;
 import com.turborep.turbotracker.vendor.exception.VendorException;
 
@@ -144,12 +144,12 @@ public static Double ConvertintoDouble(String Stringvalue){
 public static BigDecimal ConvertintoBigDecimal(String Stringvalue){
 	BigDecimal returnvalue=new BigDecimal(0);
 	try {
-		itsLogger.info("Stringvalue"+Stringvalue);
+		//itsLogger.info("Stringvalue"+Stringvalue);
 		if(Stringvalue.contains("\"")){
 			Stringvalue = Stringvalue.replaceAll("\"", "");
 		}
 		returnvalue=new BigDecimal(Stringvalue);
-		itsLogger.info("PriceMultiplier::"+returnvalue);
+		//itsLogger.info("PriceMultiplier::"+returnvalue);
 		return returnvalue;
 	} catch (Exception e) {
 		return returnvalue;

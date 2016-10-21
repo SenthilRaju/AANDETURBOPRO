@@ -569,11 +569,30 @@ public class POController {
 	public @ResponseBody
 	Map<String, ArrayList<?>> getLineItemsSO(
 			@RequestParam(value = "prMasterId") Integer prMasterId,
+			@RequestParam(value = "rxMasterID",required=false) Integer rxMasterID,
 			HttpServletResponse response, HttpSession session,HttpServletRequest theRequest) throws IOException, MessagingException {
 		Map<String, ArrayList<?>> map = new HashMap<String, ArrayList<?>>();
 		try {
 			map.put("lineItems", (ArrayList<Prmaster>) itsPurchaseService
-					.getLineItemsSO(prMasterId));
+					.getLineItemsSO(prMasterId,rxMasterID));
+		} catch (Exception e) {
+			itsLogger.error(e.getMessage(), e);
+			sendTransactionException("<b>prMasterId:</b>"+prMasterId ,"POController",e,session,theRequest);
+		}
+		return map;
+
+	}
+	
+	//added by prasant #556
+	@RequestMapping(value = "/getQuoteInventoryLineItem", method = RequestMethod.POST)
+	public @ResponseBody
+	Map<String, ArrayList<?>> getQuoteInventoryLineItem(
+			@RequestParam(value = "prMasterId") Integer prMasterId,
+			HttpServletResponse response, HttpSession session,HttpServletRequest theRequest) throws IOException, MessagingException {
+		Map<String, ArrayList<?>> map = new HashMap<String, ArrayList<?>>();
+		try {
+			map.put("lineItems", (ArrayList<Prmaster>) itsPurchaseService
+					.getQuoteInventoryLineItem( prMasterId));
 		} catch (Exception e) {
 			itsLogger.error(e.getMessage(), e);
 			sendTransactionException("<b>prMasterId:</b>"+prMasterId ,"POController",e,session,theRequest);

@@ -2381,6 +2381,10 @@ public class JobSubmittalFormController {
 		return aEmMasterBean;
 	}
 	
+	
+	
+	
+	
 	//Quickbookprojectid,cusoId,QuickbookDivisionid,Quickbookdate,Quickbookjobtype,locationAddressID1,locationAddressID2,locationcityid,locationState,locationZipID,QuickbookCustomerId
 	//salesRepId,customer_PO,QuickbookCSRId,TaxTerritory,contractamount,estimatedcost
 	@RequestMapping(value = "/Quickbookjobsubmit", method = RequestMethod.GET)
@@ -2626,6 +2630,7 @@ public class JobSubmittalFormController {
 									aEmmaster = itsRolodexService.updateCommissions(aEmmaster);
 								}
 							}
+							
 						}else{
 							jobNumberNew = split[0]+""+split[1]+"-";
 							String theJobNumber = jobService.getJobNumber(jobNumberNew);

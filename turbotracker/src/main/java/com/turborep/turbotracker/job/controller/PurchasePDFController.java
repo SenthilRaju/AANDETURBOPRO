@@ -809,11 +809,11 @@ Logger logger = Logger.getLogger(JobQuoteFormController.class);
 				}
 				i = i + 1;
 			}
-			//added by prasanth 
-			 if(aPO.getJoReleaseId()==null)
-			   {
-			    printJobNameStatus=0;
-			  }
+			//added by prasant kumar
+			if(aPO.getJoReleaseId()==null)
+			{
+				printJobNameStatus=0;
+			}			
 			Rxaddress aRxAddress = null;
 			if(aPO.getRxVendorId() != null){
 				aRxAddress = itsJobService.getRxAddress(aPO.getRxVendorId());

@@ -2092,12 +2092,18 @@ public class CustomerServiceImpl implements CustomerService {
 	 * details in customer rolodex page
 	 */
 	@Override
-	public ArrayList<BigDecimal> getCustomerAR(Integer rxCustomerID) {
+	public ArrayList<BigDecimal> getCustomerAR(Integer customerid) {
 		Session session = null;
 		DateFormat inputDF = new SimpleDateFormat("yyyy/MM/dd");
 		Date date = new Date();
 		ArrayList<BigDecimal> dueDetails = new ArrayList<BigDecimal>();
 		String invoiceDate = inputDF.format(date);
+		 long millis=System.currentTimeMillis();  
+	     java.sql.Date date1=new java.sql.Date(millis);  
+	   String   searchDate=date1.toString(); 
+	    String employeeCondn ="AND cuInvoice.rxCustomerID='"+customerid+"' AND DATE(ar.createdOn)<='"+searchDate+"'";
+		String empCond ="AND rxCustomerID='"+customerid+"' AND DATE(ar.createdOn)<='"+searchDate+"'";
+		
 		/*String customerOverallQuery = "SELECT SUM( (CASE WHEN 1>0 THEN Balance ELSE 0 END) ) AS AmtCur"
 				+ " , SUM( (CASE WHEN Days>30 THEN Balance ELSE 0 END) ) AS Amt30"
 				+ " , SUM( (CASE WHEN Days>60 THEN Balance ELSE 0 END) ) AS Amt60"
@@ -2107,13 +2113,60 @@ public class CustomerServiceImpl implements CustomerService {
 				+ "') AS Days"
 				+ " FROM cuInvoice WHERE (TransactionStatus>0) AND (abs(InvoiceAmount-AppliedAmount) > .02) "
 				+ " AND (rxCustomerID=" + rxCustomerID + ")) AS SubQuery";*/
-		String customerOverallQuery="SELECT IFNULL(SUM( (CASE WHEN Days<=30 THEN Balance ELSE 0 END) ),0) AS AmtCur, IFNULL(SUM( (CASE WHEN Days>30 AND Days<=60 THEN Balance ELSE 0 END) ),0) AS Amt30, IFNULL(SUM( (CASE WHEN Days>60 AND Days<=90 THEN Balance ELSE 0 END) ),0) AS Amt60, IFNULL(SUM( (CASE WHEN Days>90 THEN Balance ELSE 0 END) ),0) AS Amt90 FROM (SELECT  InvoiceAmount-(AppliedAmount+IFNULL(DiscountAmt,0)) AS Balance, DATEDIFF('"+invoiceDate+"',InvoiceDate) AS Days FROM cuInvoice WHERE IF(CreditMemo = 0,CreditMemo=0,memoStatus=1) AND TransactionStatus>0 AND (ABS(InvoiceAmount-AppliedAmount) > .01) AND (rxCustomerID="+rxCustomerID+" ) AND (InvoiceDate <= '"+invoiceDate+"') "
+		/*String customerOverallQuery1="SELECT IFNULL(SUM( (CASE WHEN Days<=30 THEN Balance ELSE 0 END) ),0) AS AmtCur, IFNULL(SUM( (CASE WHEN Days>30 AND Days<=60 THEN Balance ELSE 0 END) ),0) AS Amt30, 
+		 * IFNULL(SUM( (CASE WHEN Days>60 AND Days<=90 THEN Balance ELSE 0 END) ),0) AS Amt60,
+		 *  IFNULL(SUM( (CASE WHEN Days>90 THEN Balance ELSE 0 END) ),0) AS Amt90 FROM (SELECT  InvoiceAmount-(AppliedAmount+IFNULL(DiscountAmt,0)) AS Balance,
+		 *   DATEDIFF('"+invoiceDate+"',InvoiceDate) AS Days FROM cuInvoice WHERE IF(CreditMemo = 0,CreditMemo=0,memoStatus=1) AND TransactionStatus>0 AND 
+		 *   (ABS(InvoiceAmount-AppliedAmount) > .01) AND (rxCustomerID="+rxCustomerID+" ) AND (InvoiceDate <= '"+invoiceDate+"') "
 				+ " UNION ALL"
 				+ " (SELECT IFNULL(balance,0) - SUM(Amount) AS Balance ,DATEDIFF('"+invoiceDate+"',ReceiptDate) AS Days"
 				+ " FROM cuReceipt cr LEFT JOIN (SELECT cuReceiptID,SUM(IFNULL(PaymentApplied,0)) AS balance FROM cuLinkageDetail"
 				+ " WHERE rxCustomerID ="+rxCustomerID+" GROUP BY cuReceiptID ORDER BY cuReceiptID) cdl ON cdl.cuReceiptID = cr.cuReceiptID"
 				+ " WHERE cr.rxCustomerID  = "+rxCustomerID+" GROUP BY cr.cuReceiptID HAVING Balance<0 ORDER BY cr.cuReceiptID,ReceiptDate)) AS subquery";
+		*/
+		String customerOverallQuery="SELECT   SUM(AmtCur) as AmtCur ,SUM(Amt30) as Amt30 ,SUM(Amt60) as Amt60 ,SUM(Amt90) as Amt90  FROM( "
+				+ "SELECT InvoiceDate,InvoiceNumber,CustomerPONumber,totalamount,Days,CASE WHEN Days>=0 AND Days<=30 THEN Balance ELSE 0 END AS AmtCur, "
+				+" CASE WHEN Days>30 AND Days<=60 THEN Balance ELSE 0 END AS Amt30, CASE WHEN Days>60 AND Days<=90 THEN Balance ELSE 0 END AS Amt60,"
+				+" CASE WHEN Days>90 THEN Balance ELSE 0 END AS Amt90,cuInvoiceID "
+				+" FROM ("
+				+" SELECT cuInvoice.cuInvoiceID,InvoiceDate,"
+				+" InvoiceNumber,CustomerPONumber,ar.InvoiceAmount AS totalamount,DATEDIFF('"+searchDate+"',InvoiceDate) AS Days,"
+				+" ar.InvoiceAmount-(ar.AppliedAmount+IFNULL(ar.DiscountAmt,0)) AS Balance "
+				+ "From (SELECT MAX(arhistoryID) AS arhistoryID,cuInvoiceID FROM arhistory WHERE DATE(createdOn)<='"+searchDate+"' AND `inv_rec`=0 GROUP BY cuInvoiceID) sub  JOIN `arhistory` ar ON(sub.arhistoryID=ar.arhistoryID)"
+				+" JOIN cuInvoice ON(ar.cuInvoiceID=cuInvoice.cuInvoiceID) "
+				+" LEFT JOIN cuMaster  ON cuMaster.cuMasterID = cuInvoice.rxCustomerID"
+				+" WHERE IF(CreditMemo = 0,CreditMemo=0,memoStatus=1) AND (TransactionStatus>0) AND `inv_rec`=0 "
+				+ employeeCondn
+				+" GROUP BY cuInvoiceID "
+				
+				+" Union All "
+				
+				+" SELECT 0 AS cuInvoiceID, ReceiptDate  AS InvoiceDate,'Unapplied' AS InvoiceNumber, "
+				+" (CASE cuReceiptTypeID WHEN 1 THEN CONCAT('CH-',IFNULL(Reference,'')) WHEN 2 THEN CONCAT('CK-',IFNULL(Reference,'')) WHEN 3 THEN CONCAT('CC-',IFNULL(Reference,''))"
+				+" WHEN 4 THEN CONCAT('OR-',IFNULL(Reference,'')) END) AS CustomerPONumber,"
+				+" (SUM(IFNULL(Appliedamount,0))-receiptamount) AS totalamount , "
+				+" DATEDIFF('"+searchDate+"',ReceiptDate) AS Days, (SUM(IFNULL(Appliedamount,0))-receiptamount) AS Balance FROM ( "
+				+" SELECT ar.arhistoryID,Reference,cuReceiptTypeID,cuReceipt.rxCustomerID,cuReceipt.cuReceiptID,IF(revornot=1,0,Amount) AS receiptamount,DiscountAmt,Appliedamount,revornot,`createdOn`,`ReceiptDate` FROM  "
+				+" (SELECT MAX(arhistoryID) AS arhistoryID,cuInvoiceID FROM arhistory  WHERE  DATE(createdOn)<='"+searchDate+"' AND `inv_rec`=1  GROUP BY cuReceiptID,cuInvoiceID) sub "
+				+" JOIN `arhistory` ar ON(sub.arhistoryID=ar.arhistoryID)   "
+				+" LEFT JOIN cuReceipt ON(ar.cuReceiptID=cuReceipt.cuReceiptID) "
+				+" WHERE `inv_rec`=1 )AS sub LEFT JOIN rxMaster ON(sub.rxCustomerID=rxMaster.rxMasterID) WHERE rxCustomerID='"+customerid+"' GROUP BY cuReceiptID "
+				
+				+" Union All "
 		
+		+"  SELECT 0 AS cuInvoiceID,ar.createdOn AS InvoiceDate,'Unapplied' AS InvoiceNumber,"
+		+" (CASE cuReceiptTypeID WHEN 1 THEN CONCAT('CH-',IFNULL(Reference,'')) WHEN 2 THEN CONCAT('CK-',IFNULL(Reference,'')) WHEN 3 THEN CONCAT('CC-',IFNULL(Reference,''))"
+		+" WHEN 4 THEN CONCAT('OR-',IFNULL(Reference,'')) END) AS CustomerPONumber,"
+		+"ar.Appliedamount AS totalamount,DATEDIFF('"+searchDate+"' ,ar.`createdOn`) AS Days,(ar.Appliedamount*-1) AS Balance "
+		+" FROM  (	"
+		+" SELECT MAX(arhistoryID) AS arhistoryID,inv_rec FROM arhistory WHERE (inv_rec=1 OR inv_rec=2) AND  DATE(createdOn)<='"+searchDate+"' "
+		+" GROUP BY cuReceiptID "
+		+" ) sub JOIN `arhistory` ar ON(sub.arhistoryID=ar.arhistoryID) "  
+		+ " LEFT JOIN cuReceipt ON(ar.cuReceiptID=cuReceipt.cuReceiptID) "
+		+"  LEFT JOIN rxMaster ON(cuReceipt.rxCustomerID=rxMaster.rxMasterID) "
+		+"  LEFT JOIN cuMaster ON cuMaster.cuMasterID = rxMaster.rxMasterID "
+		+" WHERE ar.inv_rec=2 "+empCond
+				+" ) AS SubQuery WHERE Days>=0 and ABS(Balance)>0  )AS s";
 		
 		
 		Query aQuery8 = null;
@@ -3469,5 +3522,23 @@ public class CustomerServiceImpl implements CustomerService {
 				throw aJobException;
 			} 
 			return true;
+		}
+		
+		//ID#625 Simon
+		@Override
+		public Boolean isTierPricingEnabled(int sysVariableId) {
+			Session aSession = null;
+			boolean flag=false;
+			try {
+				aSession = itsSessionFactory.openSession();
+				Sysvariable variable=(Sysvariable) aSession.createQuery("From Sysvariable where sysVariableId=:sysVariableId and valueLong=1").setParameter("sysVariableId", sysVariableId).uniqueResult();
+				flag=(variable!=null ? true:false);
+			} catch (Exception e) {
+				itsLogger.error(e.getMessage(), e);
+			} finally {
+				aSession.flush();
+				aSession.close();
+			}
+			return flag;
 		}
 }
