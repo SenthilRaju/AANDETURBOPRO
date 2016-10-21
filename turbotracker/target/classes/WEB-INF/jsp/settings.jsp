@@ -3476,7 +3476,7 @@ Description             : Inventory Settings fieldset.
 						</div>
 						</fieldset>
 
-<fieldset class= " ui-widget-content ui-corner-all" style="width:120px">
+<fieldset class= " ui-widget-content ui-corner-all" style="width:209px">
 <legend class="custom_legend"><label><b>Tier Pricing Levels</b></label></legend>
 <form name="tierpricingformname" id="tierpricingformid">
 										<table>
