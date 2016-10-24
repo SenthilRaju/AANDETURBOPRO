@@ -55,10 +55,8 @@ $('input[type=text]').on('keyup', function(e) {
 
 $(document).ready(function() {
 	 
-alert("kiliere");
 	
 	loadnewquotesList();
-	alert("helo");
 	// altered by Niaz 2014-09-04 for inline edit enter key need
 //	
 //	$( "#btncopyQuickQuote" ).dblclick(function() {

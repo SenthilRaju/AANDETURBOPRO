@@ -7488,7 +7488,9 @@ var transaction = "";
 										"display": "none"
 									});	
 											},2500);
-											$('#custoemrInvoiceFormTotalID').find("#costdetails").css('display','none');	
+											$('#custoemrInvoiceFormTotalID').find("#costdetails").css('display','none');
+//											alert($("#jobHeader_JobName_id").val());
+											$("#jobnodescription").val($("#jobHeader_JobName_id").val());
 						},
 					"No": function ()	{
 						jQuery(this).dialog("close");
@@ -11829,6 +11831,16 @@ function loadCUInvoice_ShipTO(CIdivFlag,InvoiceID){
 		data : {"cuInvoiceId" : InvoiceID},
 		success:function(data) {
 			var shiptomode = data.shipToMode;
+			/*var jobnodescription=data.jobnoDescription;
+			alert(jobnodescription2);
+			var jobnodescription2=jobnodescription.split(",",2)[1];
+			alert(jobnodescription2);
+			if(jobnodescription2!=null && jobnodescription2!=undefined){				
+				$("#jobnodescription").val(jobnodescription2);
+				alert($("#jobnodescription").val());
+			}else{
+				$("#jobnodescription").val(globaljobDescription);
+			}*/
 			var checkshiptoid;
 			$(CIdivFlag).contents().find("#shiptoaddrhiddenfromdbid").val("");
 			$(CIdivFlag).contents().find("#shiptomodehiddenfromdbid").val("");

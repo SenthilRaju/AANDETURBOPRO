@@ -4153,6 +4153,7 @@ function PreloadDataFromInvoiceTable(initialValue) {
 						$('#customerTaxTerritory').val(
 								data.cuInvoice.coTaxTerritoryId);
 
+						alert(data.cuInvoice.jobnoDescription);
 						$('#jobnodescription').val(
 								data.cuInvoice.jobnoDescription);
 

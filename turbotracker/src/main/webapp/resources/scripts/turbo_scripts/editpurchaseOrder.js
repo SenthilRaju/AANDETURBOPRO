@@ -1284,7 +1284,7 @@ function getProductDetails(){
 	    url: "./userlistcontroller/getVendorProductDetails",
 	    type: 'POST',
 	    success: function(data){
-	    	console.log(']ENI'+data);
+	    	//console.log(']ENI'+data);
 	    	$("#new_row_prMasterId").val(data);
 	    	$.ajax({
 		        url: './getLineItems?prMasterId='+data,

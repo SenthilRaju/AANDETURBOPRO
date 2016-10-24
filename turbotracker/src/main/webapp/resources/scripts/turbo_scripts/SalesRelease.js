@@ -223,7 +223,9 @@ function PreloadDataFromInvoiceTable(){
 			$('#customerInvoice_lineinvoiceNumberId').val(data.cuInvoice.invoiceNumber);
 			$('#customerbillToAddressIDcuInvoice').val(data.CustomerName);
 			$("#shipToCustomerAddressID").val(data.cuInvoice.rxShipToId);
+			//alert(data.cuInvoice.jobnoDescription);
 			$("#jobnodescription").val(data.cuInvoice.jobnoDescription);
+			
 			addressToShipCustomerInvoice();
 			customerinvoiceShiptoAddress(data.cuInvoice.cuInvoiceId,'cuinvoice');
 			if(data.cuInvoice.doNotMail===0)
