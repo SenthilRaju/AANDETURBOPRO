@@ -5,13 +5,12 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.annotation.Resource;
 import javax.mail.MessagingException;
@@ -19,43 +18,26 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import net.sf.jasperreports.web.commands.CommandException;
-
-import org.apache.commons.lang.time.DateUtils;
 import org.apache.log4j.Logger;
-import org.springframework.http.HttpRequest;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
-import com.turborep.turbotracker.banking.dao.Motransaction;
 import com.turborep.turbotracker.banking.exception.BankingException;
 import com.turborep.turbotracker.banking.service.GltransactionService;
 import com.turborep.turbotracker.company.Exception.CompanyException;
-import com.turborep.turbotracker.company.dao.CoTaxTerritory;
-import com.turborep.turbotracker.company.dao.Coaccount;
-import com.turborep.turbotracker.company.dao.Codivision;
-import com.turborep.turbotracker.company.dao.Cofiscalperiod;
-import com.turborep.turbotracker.company.dao.Coledgersource;
 import com.turborep.turbotracker.company.service.AccountingCyclesService;
 import com.turborep.turbotracker.company.service.ChartOfAccountsService;
 import com.turborep.turbotracker.company.service.CompanyService;
 import com.turborep.turbotracker.company.service.TaxTerritoriesService;
-import com.turborep.turbotracker.customer.dao.Cuinvoice;
 import com.turborep.turbotracker.customer.dao.CuLinkageDetail;
+import com.turborep.turbotracker.customer.dao.Cuinvoice;
 import com.turborep.turbotracker.customer.dao.Cureceipt;
-import com.turborep.turbotracker.customer.dao.Cureceipttype;
 import com.turborep.turbotracker.customer.dao.CustomerPaymentBean;
 import com.turborep.turbotracker.customer.exception.CustomerException;
 import com.turborep.turbotracker.customer.service.CustomerService;
-import com.turborep.turbotracker.employee.dao.Ecsplitjob;
 import com.turborep.turbotracker.finance.dao.Transactionmonitor;
 import com.turborep.turbotracker.job.exception.JobException;
 import com.turborep.turbotracker.job.service.JobService;
@@ -64,11 +46,12 @@ import com.turborep.turbotracker.json.CustomResponse;
 import com.turborep.turbotracker.mail.SendQuoteMail;
 import com.turborep.turbotracker.system.dao.Sysinfo;
 import com.turborep.turbotracker.user.dao.TpUsage;
-import com.turborep.turbotracker.user.dao.TsUserLogin;
 import com.turborep.turbotracker.user.dao.TsUserSetting;
 import com.turborep.turbotracker.user.dao.UserBean;
 import com.turborep.turbotracker.user.service.UserService;
 import com.turborep.turbotracker.util.SessionConstants;
+
+import net.sf.jasperreports.web.commands.CommandException;
 
 @Controller
 @RequestMapping("/custpaymentslistcontroller")
@@ -374,8 +357,24 @@ public class CustomerPaymentsController {
 
 	
 		logger.info("Applied Amount: payMultipleInvoice");
+		
+		//added by prasant kumar for #633
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        String strDate = dateFormat.format(receiptDate);
+        String datePerticles[]=strDate.split("-");
+        
 		try {
 			Sysinfo aSysinfo = accountingCyclesService.getSysinfo();
+			
+			//added by prasant kumar for #633
+			Integer yearId=	accountingCyclesService.getYearId(datePerticles[0]);
+			Integer period=Integer.parseInt(datePerticles[1]);
+			Integer periodId=	accountingCyclesService.getPeriodIdForMe(period, yearId);
+			if(periodId==0)
+					periodId=aSysinfo.getCurrentPeriodId();
+			
+			
+			
 			cuReceipt.setRxCustomerId(rxCustomerID);
 			cuReceipt.setAmount(recieptAmt);
 			cuReceipt.setMemo(memo);
@@ -384,7 +383,9 @@ public class CustomerPaymentsController {
 			cuReceipt.setCuReceiptTypeId(cuReceiptTypeId);
 			cuReceipt.setCuReceiptId(receiptID);
 
-			itsCuMasterService.savePayment(cuReceipt,aSysinfo.getCurrentFiscalYearId(),aSysinfo.getCurrentPeriodId(),aUserBean,paidInvoiceDetails,discountAmt);
+			//itsCuMasterService.savePayment(cuReceipt,aSysinfo.getCurrentFiscalYearId(),aSysinfo.getCurrentPeriodId(),aUserBean,paidInvoiceDetails,discountAmt);
+			//edited by prasant #633
+			itsCuMasterService.savePayment(cuReceipt,yearId,periodId,aUserBean,paidInvoiceDetails,discountAmt);
 			
 			
 		} catch (Exception excep) {

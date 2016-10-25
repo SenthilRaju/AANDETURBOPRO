@@ -2896,6 +2896,8 @@ public class JobReleaseFormController {
 			aCuinvoice.setCoDivisionId(theDivision);
 			aCuinvoice.setCuTermsId(theTermsID);
 			aCuinvoice.setReason(reason);
+			//added by prasant #633
+			aCuinvoice.setPaymentMadeOn(DateUtils.parseDate(theInvoiceNameDate, new String[]{"MM/dd/yyyy"}));
 			
 			System.out.println("jobnodescription:::"+jobnodescription);
 			aCuinvoice.setJobnoDescription(jobnodescription);

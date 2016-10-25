@@ -122,6 +122,9 @@ public class Cuinvoice implements java.io.Serializable {
 	private Integer statementEmailStatus;
 	private BigDecimal taxableSales;
 	private BigDecimal nonTaxableSales;
+	//added by prasant #633
+	private Date paymentMadeOn;
+
 	
 	public Cuinvoice() {
 		this.surtaxOverrideCap = false;
@@ -1017,4 +1020,15 @@ public class Cuinvoice implements java.io.Serializable {
 	public void setNonTaxableSales(BigDecimal nonTaxableSales) {
 		this.nonTaxableSales = nonTaxableSales;
 	}
+	@Column(name="PaymentMadeOn")
+	public Date getPaymentMadeOn() {
+		return paymentMadeOn;
+	}
+
+	public void setPaymentMadeOn(Date paymentMadeOn) {
+		this.paymentMadeOn = paymentMadeOn;
+	}
+	
+	
+	
 }

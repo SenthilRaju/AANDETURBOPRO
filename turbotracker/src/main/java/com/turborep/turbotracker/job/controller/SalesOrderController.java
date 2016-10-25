@@ -3743,7 +3743,7 @@ if(batchInvoiceCuID.length()>0 && !batchInvoiceCuID.equals("0")){
 		Jomaster joMaster=new Jomaster();	
 		Jomaster joMaster2=new Jomaster();
 		String jobNumberNew="";
-		if(choose.equalsIgnoreCase("No"));
+		if(choose.equals("Yes")==false)
 		{
 		Cuso cuso=salesServices.getCustomerSalesOrder(cuSoId);
 		DateFormat df = new SimpleDateFormat("MM/dd/yyyy");

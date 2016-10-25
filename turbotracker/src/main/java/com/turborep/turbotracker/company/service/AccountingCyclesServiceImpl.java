@@ -913,6 +913,33 @@ SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 			return true;
 		
 	}
+//added by prasant #633
+	@Override
+	public Integer getPeriodIdForMe(Integer periodId, Integer yearId) {
+		Session aSession = null;
+		Query query = null;
+		Transaction aTransaction = null; 
+		Integer period=0;
+		try{
+		aSession = itsSessionFactory.openSession();
+		aTransaction = aSession.beginTransaction();
+			query = aSession.createSQLQuery("SELECT coFiscalPeriodID FROM cofiscalperiod WHERE  CoFiscalyearID = "+yearId+" AND period = "+periodId);
+
+			Integer res=(Integer) query.uniqueResult();
+			if(res!=null)
+				period=res;
+			
+		aTransaction.commit();
+		
+		}catch (Exception e) {
+			itsLogger.error(e.getMessage(), e);
+		} finally {
+			aSession.flush();
+			aSession.close();
+			query=null;
+		}
+		return period;
+	}
 	
 	
 }

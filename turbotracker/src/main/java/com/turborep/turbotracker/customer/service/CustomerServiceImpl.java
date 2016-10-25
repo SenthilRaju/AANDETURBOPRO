@@ -1770,10 +1770,11 @@ public class CustomerServiceImpl implements CustomerService {
 			{
 				cuRecieptID =(Integer) aSession.save(theCureceipt);
 				theCureceipt.setCuReceiptId(cuRecieptID);
+				aTransaction.commit();
 				itsGltransactionService.postCustomerPaymentDetails(theCureceipt,DiscountAmt,yearID,periodID,aUserBean.getUserName(),aSession);
 				postcuLinkageDetail( theCureceipt,yearID,periodID,aUserBean,paidinvoiceDetails,aSession);
 			}
-			aTransaction.commit();
+			//aTransaction.commit();
 			
 		} catch (Exception e) {
 			itsLogger.error(e.getMessage(), e);
@@ -3092,7 +3093,24 @@ public class CustomerServiceImpl implements CustomerService {
 			
 		}
 		
-
+		public Cureceipt getCuReceiptDetail(Integer cuReciptID)
+		{     Session aSession= itsSessionFactory.openSession();
+		Cureceipt cuReceipt=null;
+			try {
+				 cuReceipt = (Cureceipt)aSession.get(Cureceipt.class, cuReciptID);				
+				
+			} catch (Exception e) {
+				itsLogger.error(e.getMessage(), e);
+				CustomerException aCustomerException = new CustomerException(
+						e.getMessage(), e);
+			
+			} finally {
+				aSession.flush();
+				aSession.close();
+				aSession =null;
+			}
+			return cuReceipt;
+		}
 		public Boolean updateCuInvoiceforsuccessfulpayment(Integer cuReceiptID,Session aSession,UserBean aUserBean,Integer yearID,Integer periodID) throws CustomerException
 		{
 			
@@ -3106,6 +3124,7 @@ public class CustomerServiceImpl implements CustomerService {
 					aQuery = aSession.createSQLQuery(aPaymentsCountStr);
 					List<?> aQueryList =  aQuery.list();
 					Iterator<?> aIterator =aQueryList.iterator();
+					Cureceipt cuRecipt=getCuReceiptDetail(cuReceiptID);
 					while(aIterator.hasNext()) {
 						
 						Object[] aObj = (Object[]) aIterator.next();
@@ -3120,6 +3139,8 @@ public class CustomerServiceImpl implements CustomerService {
 						aCuinvoice.setDiscountApplied((aCuinvoice.getDiscountApplied()==null?BigDecimal.ZERO:aCuinvoice.getDiscountApplied()).add(DiscountApplied));
 						aCuinvoice.setDiscountAmt((aCuinvoice.getDiscountAmt()==null?BigDecimal.ZERO:aCuinvoice.getDiscountAmt()).add(DiscountApplied));
 						aCuinvoice.setTransactionStatus(2);
+						//added by prasant #633
+						aCuinvoice.setPaymentMadeOn(cuRecipt.getReceiptDate());
 						aCuinvoice.setChangedById(aUserBean.getUserId());
 						
 						aSession.update(aCuinvoice);
@@ -3174,6 +3195,8 @@ public class CustomerServiceImpl implements CustomerService {
 						
 						theCuinvoice = itsJobService.getCustomerInvoiceDetails(cuInvoiceID);
 						aCuinvoice = (Cuinvoice) aSession.get(Cuinvoice.class,cuInvoiceID);
+						//added by prasant #633
+						aCuinvoice.setPaymentMadeOn(new Date());
 						
 						
 						if(aCuinvoice.getAppliedAmount().compareTo(BigDecimal.ZERO)==1)
@@ -3292,6 +3315,9 @@ public class CustomerServiceImpl implements CustomerService {
 					theCulinkagedetail.setAmtApplied(new BigDecimal(amtApplied));
 					theCulinkagedetail.setDatePaid(new Date());
 					theCulinkagedetail.setStatusCheck(1);
+					//added by prasant #633
+					theCulinkagedetail.setDatePaid(cuReceiptObj.getReceiptDate());
+					
 					cuLinkID= (Integer)aSession.save(theCulinkagedetail);
 					
 					CuPaymentGlpost aCuPaymentGlpost = new CuPaymentGlpost();

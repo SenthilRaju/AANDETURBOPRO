@@ -10246,6 +10246,10 @@ String aJobSelectQry = "SELECT joMaster.joMasterId, joMaster.jobNumber, joMaster
 			
 			aCuinvoice.setPrToWarehouseId(theCuinvoice.getPrToWarehouseId());
 			aCuinvoice.setTaxfreight(theCuinvoice.getTaxfreight());
+			//aCuinvoice.setPaymentMadeOn(theCuinvoice.getInvoiceDate());
+			//added by prasant #633
+			aCuinvoice.setPaymentMadeOn(theCuinvoice.getInvoiceDate());
+			
 			aSession.update(aCuinvoice);
 			aTransaction.commit();
 		} catch (Exception e) {

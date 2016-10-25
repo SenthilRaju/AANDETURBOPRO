@@ -2111,6 +2111,8 @@ public class Salesserviceimpl implements SalesService {
 				cuSO.setSonumber(job.getJobNumber()+""+JobUtil.IntToLetter(release_Seq_no).toUpperCase());
 				cuSO.setTag(job.getDescription());
 				aSession.update(cuSO);
+				//Modified by prasant #512
+				cuSO.setCreatedOn(cal.getTime());
 				tx.commit();			
 				JobNumber=job.getJobNumber();				
 			}		
