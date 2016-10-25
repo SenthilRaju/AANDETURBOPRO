@@ -2006,7 +2006,7 @@ public class JobQuoteFormController {
 		return aResultQuoteType;
 	}
 
-	@RequestMapping(value = "/getAdvacedSearchChkJobList", method = RequestMethod.POST)
+	@RequestMapping(value = "/getAdvacedSearchChkJobList", method = RequestMethod.GET)
 	public @ResponseBody
 	CustomResponse getAdvacedSearchChkJobList(
 			@RequestParam(value = "page", required = false) Integer thePage,
@@ -2061,7 +2061,7 @@ public class JobQuoteFormController {
 			aJomaster.setDescription(theProjectCode);
 			String aSortBy = "";
 			StringBuilder aJobSearchTotal = new StringBuilder(" WHERE ");
-			if (theDivisionID == -1) {
+			if (theDivisionID!=null && theDivisionID == -1) {
 				aJobSearchTotal.append("");
 			} else {
 				aJobSearchTotal.append("joMaster.coDivisionID = "
@@ -2084,52 +2084,52 @@ public class JobQuoteFormController {
 				aJobSearchTotal.append(" BidDate BETWEEN '" + rangeDate
 						+ "' AND  DATE_ADD('"+thruDate+"', INTERVAL 1 DAY) AND");
 			}
-			if (!theJobNumber.trim().isEmpty() && theJobNumber != null)
+			if (theJobNumber!=null && !theJobNumber.trim().isEmpty() && theJobNumber != null)
 				aJobSearchTotal.append(" joMaster.JobNumber like '%"
 						+ theJobNumber + "%' AND");
-			if (!theCity.trim().isEmpty() && theCity != null)
+			if (theCity!=null && !theCity.trim().isEmpty() && theCity != null)
 				aJobSearchTotal.append(" joMaster.LocationCity like '%"
 						+ JobUtil.removeSpecialcharacterswithslash(theCity) + "%' AND");
-			if (!theProjectCode.trim().isEmpty() && theProjectCode != null)
+			if (theProjectCode!=null && !theProjectCode.trim().isEmpty() && theProjectCode != null)
 				aJobSearchTotal.append(" joMaster.Description like '%"
 						+ JobUtil.removeSpecialcharacterswithslash(theProjectCode) + "%' AND");
-			if (!theCustPONum.trim().isEmpty() && theCustPONum != null)
+			if (theCustPONum!=null && !theCustPONum.trim().isEmpty() && theCustPONum != null)
 				aJobSearchTotal.append(" joMaster.CustomerPONumber like '%"
 						+ JobUtil.removeSpecialcharacterswithslash(theCustPONum) + "%' AND");
-			if (theEmpAssOpt == 1 && theSalesRep != null)
+			if (theEmpAssOpt!=null && theEmpAssOpt == 1 && theSalesRep != null)
 				aJobSearchTotal.append(" joMaster.cuAssignmentID0 = "
 						+ theSalesRep + " AND");
-			if (theEmpAssOpt == 2)
+			if (theEmpAssOpt!=null && theEmpAssOpt == 2)
 				aJobSearchTotal.append(" joMaster.cuAssignmentID1 = " + theCSR
 						+ " AND");
-			if (theEmpAssOpt == 3)
+			if (theEmpAssOpt!=null && theEmpAssOpt == 3)
 				aJobSearchTotal.append(" joMaster.cuAssignmentID2 = "
 						+ theSalesMgr + " AND");
-			if (theEmpAssOpt == 4)
+			if (theEmpAssOpt!=null && theEmpAssOpt == 4)
 				aJobSearchTotal.append(" joMaster.cuAssignmentID3 = "
 						+ theEngineerEmp + " AND");
-			if (theEmpAssOpt == 5)
+			if (theEmpAssOpt!=null && theEmpAssOpt == 5)
 				aJobSearchTotal.append(" joMaster.cuAssignmentID4 = "
 						+ theProjectMgr + " AND");
-			if (theEmpAssOpt == 6)
+			if (theEmpAssOpt!=null && theEmpAssOpt == 6)
 				aJobSearchTotal.append(" joMaster.cuAssignmentID5 = "
 						+ theTakeOff + " AND");
-			if (theEmpAssOpt == 7)
+			if (theEmpAssOpt!=null && theEmpAssOpt == 7)
 				aJobSearchTotal.append(" joMaster.cuAssignmentID6 = "
 						+ theQuoteBy + " AND");
-			if (theTeamStatusOpt == 1 && theCustomerName != "")
+			if (theTeamStatusOpt!=null && theTeamStatusOpt == 1 && theCustomerName != "")
 				aJobSearchTotal.append(" rxm.Name like '%" + JobUtil.removeSpecialcharacterswithslash(theCustomerName)
 						+ "%' AND");
-			if (theTeamStatusOpt == 2)
+			if (theTeamStatusOpt!=null && theTeamStatusOpt == 2)
 				aJobSearchTotal.append(" joMaster.rXCategory1 = "
 						+ theArchitectName + " AND");
-			if (theTeamStatusOpt == 3)
+			if (theTeamStatusOpt!=null && theTeamStatusOpt == 3)
 				aJobSearchTotal.append(" joMaster.rXCategory2 = "
 						+ theEngineerName + " AND");
-			if (theTeamStatusOpt == 4)
+			if (theTeamStatusOpt!=null && theTeamStatusOpt == 4)
 				aJobSearchTotal.append(" joMaster.rXCategory3 = " + theGCName
 						+ " AND");
-			if (theTeamStatusOpt == 5)
+			if (theTeamStatusOpt!=null && theTeamStatusOpt == 5)
 				aJobSearchTotal.append(" j.rxMasterID = " + bidderrxMasterID
 						+ " AND");
 			
@@ -2165,21 +2165,21 @@ public class JobQuoteFormController {
 				aJobSearchTotal = new StringBuilder(aSubString).append(")");
 			}
 
-			if (theSortByName == 1) {
+			if (theSortByName!=null && theSortByName == 1) {
 				aSortBy = "BidDate";
-			} else if (theSortByName == 2) {
+			} else if (theSortByName!=null && theSortByName == 2) {
 				aSortBy = "JobNumber";
-			} else if (theSortByName == 3) {
+			} else if (theSortByName!=null && theSortByName == 3) {
 				aSortBy = "Description";
-			} else if (theSortByName == 4) {
+			} else if (theSortByName!=null && theSortByName == 4) {
 				aSortBy = "LocationCity";
-			} else if (theSortByName == 5) {
+			} else if (theSortByName!=null && theSortByName == 5) {
 				aSortBy = "cuAssignmentID0";
-			} else if (theSortByName == 6) {
+			} else if (theSortByName!=null && theSortByName == 6) {
 				aSortBy = "JobStatus";
-			} else if (theSortByName == 7) {
+			} else if (theSortByName!=null && theSortByName == 7) {
 				aSortBy = "Name";
-			} else if (theSortByName == 8) {
+			} else if (theSortByName!=null && theSortByName == 8) {
 				aSortBy = "CustomerPONumber";
 			}
 			int aFrom = 0, aTo = 0;

@@ -63,7 +63,8 @@ public class Cumaster implements java.io.Serializable {
     private Integer coTaxID;
     private String taxName;
     private String taxRate;
-    
+    //ID#625 Simon
+	private Integer tier;
     
 	public Cumaster() {
 	}
@@ -475,6 +476,14 @@ public class Cumaster implements java.io.Serializable {
 		this.taxRate = taxRate;
 	}
 	
+    @Column(name="tier", nullable=true)
+	public Integer getTier() {
+		return tier;
+	}
+
+	public void setTier(Integer tier) {
+		this.tier = tier;
+	}
 	
 
 }

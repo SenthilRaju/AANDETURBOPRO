@@ -543,7 +543,7 @@ function resetSOGeneralForm(){
 function chechcustomerisonhold(){
 	var returnvalue=false;
 	var customerid=$("#billToCustomerNameGeneralID").val();
-	alert("customerid:"+customerid);
+	//alert("customerid:"+customerid);
 	
 	if(customerid!="")
 	{

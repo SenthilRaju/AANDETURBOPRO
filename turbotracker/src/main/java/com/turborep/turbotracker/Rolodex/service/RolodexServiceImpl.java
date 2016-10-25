@@ -1161,6 +1161,7 @@ public class RolodexServiceImpl implements RolodexService {
 			aExistingCuMaster.setImText(theCuMaster.getImText());
 			aExistingCuMaster.setStatementMethod(theCuMaster.getStatementMethod());
 			aExistingCuMaster.setSmText(theCuMaster.getSmText());
+			aExistingCuMaster.setTier(theCuMaster.getTier());
 			aSession.update(aExistingCuMaster);
 			}
 			else {
@@ -1187,6 +1188,7 @@ public class RolodexServiceImpl implements RolodexService {
 				aExistingCuMaster.setImText(theCuMaster.getImText());
 				aExistingCuMaster.setStatementMethod(theCuMaster.getStatementMethod());
 				aExistingCuMaster.setSmText(theCuMaster.getSmText());
+				aExistingCuMaster.setTier(theCuMaster.getTier());
 				aSession.save(theCuMaster);
 			}
 			aTransaction.commit();

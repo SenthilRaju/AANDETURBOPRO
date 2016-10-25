@@ -394,6 +394,8 @@ public class CustomerListController {
 			@RequestParam(value = "assignedSalesMgrId", required = false) Integer theEmpSalesMgr, 
 			@RequestParam(value = "assignedEngineerId", required = false) Integer theEmpEngineer, 
 			@RequestParam(value = "assignedPrjMgrId", required = false) Integer theEmpPrjMgr,
+			//ID#625 Simon
+			@RequestParam(value = "tier", required = false) Integer tier,
 			/**@throws MessagingException 
 			 * @throws IOException 
 			 * @RequestParam(value = "isCreditApp", required = false) Integer isCreditApp,*/
@@ -423,6 +425,8 @@ public class CustomerListController {
 			aCumaster.setCuAssignmentId3(theEmpEngineer);
 			aCumaster.setCuAssignmentId4(theEmpPrjMgr);
 			aCumaster.setAccountNumber(theCustomerAccountNumber);
+			//ID#625 Simon
+			aCumaster.setTier(tier);
 			if (theFinanceChange != null) {	aCumaster.setFinCharge(theFinanceChange);}
 			if (theStatement != null) { aCumaster.setStatements(theStatement);}
 			aCumaster.setCuTermsId(theCuPaymentTermsId);

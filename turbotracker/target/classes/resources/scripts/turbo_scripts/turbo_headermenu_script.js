@@ -195,12 +195,12 @@ function searchJOB(){
 								"&closed_name="+closechk+"&submitted_name="+submittedchk+"&planning_name="+planningchk+"&lost_name="+lostchk+"" +
 								"&abondoned_name="+abondonedchk+"&reject_name="+rejectchk+"&overBudget_name="+overbudchk+"&customer_name="+customerName+
 								"&architect_name="+architectName+"&engineer_name="+engineerName+"&gc_name="+gcName+"&team_status_name="+teamStatus+"&salesrep_name="+salesRep+"&csr_name="+
-								csr+"&salesMgr_name="+salesMgr+"&engineerEmp_name="+engineerEmp+"&prjMgr_name="+prjMgr+"&takeOff_name="+takeOff+"&quoteBy_name="+quoteBy+"bidder_ID="+bidder_ID
+								csr+"&salesMgr_name="+salesMgr+"&engineerEmp_name="+engineerEmp+"&prjMgr_name="+prjMgr+"&takeOff_name="+takeOff+"&quoteBy_name="+quoteBy+"&bidder_ID="+bidder_ID
 								"&employee_assignee_name="+employeeAssign+"&customer_po_name="+customerPo+"&report_name="+reportnum+"&division_name="+division+"&sort_by_name="+sortBy;
 	
 	$.ajax({
 		url:'./jobtabs2/getAdvacedSearchChkJobList',
-		type: "POST",
+		type: "GET",
 		data : aAdvancedSearchSeri,
 		success: function(data){
 			createtpusage('Home','Advanced Job Search','Info','Home,Searching Job,jobNumber:'+jobNumber+',project:'+project);
@@ -2293,7 +2293,89 @@ $(function() { var cache = {}; var lastXhr='';
 		}
 	}); 
 });
+$(function() {
+	var cache = {};
+	var lastXhr = '';
+	$("#bidderId")
+			.autocomplete(
+					{
+						minLength : 3,
+						timeout : 1000,
+						select : function(event, ui) {
+							var rxMasterid = ui.item.id;
+							$("#bidderRXId").val(rxMasterid);
+							$.ajax({
+								url : "./jobtabs2/filterQuoteTypeID",
+								mType : "GET",
+								data : {
+									'rxMasterId' : rxMasterid
+								},
+								success : function(data) {
+									var quoteTypeID = data.cuMasterTypeId;
+									$(
+											"#customer_quoteType option[value="
+													+ quoteTypeID + "]").attr(
+											"selected", true);
+								}
+							});
+							$
+									.ajax({
+										url : "./jobtabs2/filterBidderList",
+										mType : "GET",
+										data : {
+											'rxMasterId' : rxMasterid
+										},
+										success : function(data) {
+											var select = '<select style="width:227px;margin-left: 3px;" id="contactId" onchange="getContactId()"><option value="-1"></option><option value="-2" style="color:#CB842E;font-family: Verdana,Arial,sans-serif;font-weight: bold;">+ Add New</option>';
+											$
+													.each(
+															data,
+															function(index,
+																	value) {
+																quoteId = value.id;
+																var quoteName = value.value;
+																select += '<option value='
+																		+ quoteId
+																		+ '>'
+																		+ quoteName
+																		+ '</option>';
+															});
+											select += '</select>';
+											$("#contacthiddenID").hide();
+											$('#contactselectID').empty();
+											$('#contactselectID')
+													.append(select);
+										}
+									});
+							getContactId = function() {
+								var contactId = $("#contactId").val();
+								if (contactId === '-2') {
+									openContact();
+								}
+								$("#rxContactId").val(contactId);
+							};
+						},
+						source : function(request, response) {
+							var term = request.term;
+							if (term in cache) {
+								response(cache[term]);
+								return;
+							}
+							lastXhr = $.getJSON("jobtabs2/bidderList", request,
+									function(data, status, xhr) {
+										cache[term] = data;
+										if (xhr === lastXhr) {
+											response(data);
+										}
+									});
+						},
+						error : function(result) {
 
+							$('.ui-autocomplete-loading').removeClass(
+									"ui-autocomplete-loading");
+						}
+					});
+});
 function autoFocus(t){
 	if(t.value.length == 3){
 		$("#exchangeCodeDirID").focus();					
