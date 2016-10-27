@@ -1559,7 +1559,7 @@
 				select: function (event, ui) {
 					var manufacturer = ui.item.manufactureID;
 					$("#vendorBills").jqGrid('GridUnload');
-					alert("method is calling...");
+					//alert("method is calling...");
 					loadVendorBillPay(manufacturer);
 					var html = '<div style="margin-top: -5px;"><img src="../resources/Icons/copyQuote.png" style="margin-top: 0px;width: 20px;height: 14px;cursor: pointer;" onclick="addNewVendorInvoice();">'+
 						'<label style="vertical-align: super;position: relative;top: 2px;cursor: pointer;" onclick="addNewVendorInvoice();">New Bill</label>'+

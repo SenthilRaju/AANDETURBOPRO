@@ -115,13 +115,13 @@ $(document).ready(function() {
 	
    });
 //added by prasant #556
-jQuery("#QuoteInventoryEditordivbx").dialog({
+/*jQuery("#QuoteInventoryEditordivbx").dialog({
 	autoOpen:false,
 	width:745,
    height: 400,
 	title:"Inventory Warehouse Cost",
 	modal:true,
-	/*buttons:{
+	buttons:{
 		"Add":function(){
 			
 		},
@@ -133,13 +133,13 @@ jQuery("#QuoteInventoryEditordivbx").dialog({
 				
 				}
 			
-			},*/
+			},
 	close:function(){
 		//$(this).dialog("close"); $(this).dialog("destroy").remove();
 	//return true;
 		 $(this).dialog("destroy").remove();
 		}	
-      });
+      });*/
 
 function saveQuoteckEditordivbx()
 {
@@ -2528,7 +2528,7 @@ function saveQuoteInventoryProduct()
 		var gridRows = $('#SOlineItemGrid').getRowData();
 		var dataToSend = JSON.stringify(gridRows);
 		var joQuoteDetMastID1= jQuery("#joQuoteHeaderDetailMastID1").val();
-		alert("joQuoteDetMastID1:->"+joQuoteDetMastID1);
+		//alert("joQuoteDetMastID1:->"+joQuoteDetMastID1);
 		$.ajax({
 			url: "./jobtabs2/saveInventoryProductsDetail",
 			type: "POST",
@@ -5694,24 +5694,24 @@ function checkFontSizeStyleClicked()
 
 }
 //added by prasant #556
-function launchInventoryDailog(joQuoteHeader){
-/*	var addclickedornot=$( "#addnewquotesList_iladd" ).hasClass( "ui-state-disabled" );
+/*function launchInventoryDailog(joQuoteHeader){
+	var addclickedornot=$( "#addnewquotesList_iladd" ).hasClass( "ui-state-disabled" );
 	var editclickedornot=$( "#addnewquotesList_iledit" ).hasClass( "ui-state-disabled" );
 		if((addclickedornot || editclickedornot) && $("#"+rowid+"_type").val()==undefined){
 			$("#addnewquotesList_ilsave").trigger("click");
-		}else{*/
+		}else{
 
 
 jQuery("#QuoteInventoryEditordivbx").dialog("open");
 jQuery("#joQuoteHeaderDetailMastID1").val(joQuoteHeader);
 loadnewInventoryProductList(joQuoteHeader);
 
-/*setTimeout(function(){
+setTimeout(function(){
 	jQuery("#QuoteInventoryEditordivbx").dialog("open");
-}, 500);*/
+}, 500);
 //}
 	
-}
+}*/
 function launchTextEditor(rowid){
 	var addclickedornot=$( "#addnewquotesList_iladd" ).hasClass( "ui-state-disabled" );
 	var editclickedornot=$( "#addnewquotesList_iledit" ).hasClass( "ui-state-disabled" );
@@ -5790,7 +5790,7 @@ function myCustomFormatterforlaunchbutton(cellValue, options, rowObject){
 return element;
 }
 function myCustomFormatterforInventorybutton(cellValue, options, rowObject){
-	alert("--------------------"+rowObject.joQuoteDetailMstrID);
+	//alert("--------------------"+rowObject.joQuoteDetailMstrID);
 	var id=options.rowId+"_Inventorybutton";
 	var element = '';
 	if(rowObject['type']!=4 && rowObject['type']!=1){
@@ -5867,7 +5867,7 @@ var posit_job_salesorder=0;
 var soLines_selectRow;
 var checkelement;
 //added by prasant #556
-function loadnewInventoryProductList(joMastrDetailID)
+/*function loadnewInventoryProductList(joMastrDetailID)
 {
 	alert("joMastrDetailID:-->"+joMastrDetailID);
 	$("#loadInventoryListGrid").jqGrid({
@@ -5988,9 +5988,9 @@ function loadnewInventoryProductList(joMastrDetailID)
     		   		 dataEvents: [{
                          type: 'keydown',
                          fn: function(e) {
-                      	   /*if (e.keyCode === 27) {
+                      	   if (e.keyCode === 27) {
                       		   return false;
-                      	   }*/
+                      	   }
                          }
                      }]	 
                  }},
@@ -6011,9 +6011,9 @@ function loadnewInventoryProductList(joMastrDetailID)
 		   		 dataEvents: [{
                      type: 'keydown',
                      fn: function(e) {
-                  	  /* if (e.keyCode === 27) {
+                  	   if (e.keyCode === 27) {
                   		   return false;
-                  	   }*/
+                  	   }
                      }
                  }]	 }},
                 
@@ -6023,9 +6023,9 @@ function loadnewInventoryProductList(joMastrDetailID)
 		   		 dataEvents: [{
                      type: 'keydown',
                      fn: function(e) {
-                  	 /*  if (e.keyCode === 27) {
+                  	   if (e.keyCode === 27) {
                   		   return false;
-                  	   }*/
+                  	   }
                      }
                  }]	 }},		 
 		   	
@@ -6056,16 +6056,16 @@ function loadnewInventoryProductList(joMastrDetailID)
 		userDataOnFooter : true,
 		loadComplete: function(data) {
 			
-			alert("test");
+			//alert("test");
 			$('.footrow').css('color','#1A74FB');
-			alert("test");
+			//alert("test");
 		    $(this).jqGrid('footerData','set',{description:formatCurrency(0), total:formatCurrency(0)});
-		    alert("test");
-		/*    
+		   // alert("test");
+		    
 		 $(this).jqGrid('footerData','set',{
 			   description:"Total Warehouse Cost",
 		    	total:"$0.00"
-		    	});*/
+		    	});
 		},
     	ondblClickRow: function(rowid) {
     		
@@ -6183,12 +6183,12 @@ function loadnewInventoryProductList(joMastrDetailID)
 									}
 									
 									
-									/*var grid=$("#SOlineItemGrid");
+									var grid=$("#SOlineItemGrid");
 									grid.jqGrid('resetSelection');
 								    var dataids = grid.getDataIDs();
 								    for (var i=0, il=dataids.length; i < il; i++) {
 								        grid.jqGrid('setSelection',dataids[i], false);
-								    }*/
+								    }
 //								    $("#del_SOlineItemGrid").removeClass('ui-state-disabled');
 									//setsoLinegridTotal();
 									//soLineItemformChanges();
@@ -6282,16 +6282,16 @@ function loadnewInventoryProductList(joMastrDetailID)
 	 
 		jQuery("#loadInventoryListGrid").jqGrid('sortableRows');
 		jQuery("#loadInventoryListGrid").jqGrid('gridDnD');
-		/*
+		
 		 * Added by Simon
 		 * Reason for Adding : ID#567 (below 5 lines)
-		 */
-	/*	$('#loadInventoryListGrid').jqGrid('navButtonAdd',"#loadInventoryListGridpager",{ caption:"", buttonicon:"ui-icon-folder-collapsed", onClickButton:ShowTemplateList, position: "last", title:"Add template Line items", cursor: "pointer"});
+		 
+		$('#loadInventoryListGrid').jqGrid('navButtonAdd',"#loadInventoryListGridpager",{ caption:"", buttonicon:"ui-icon-folder-collapsed", onClickButton:ShowTemplateList, position: "last", title:"Add template Line items", cursor: "pointer"});
 		$("#loadInventoryListGrid_ilsave").css({"display":"none"});
 		$("#loadInventoryListGrid_iladd").css({"display":"none"});
 		$("#loadInventoryListGrid_iledit").css({"display":"none"});
-		$("#loadInventoryListGrid_ilcancel").css({"display":"none"});*/
-	}
+		$("#loadInventoryListGrid_ilcancel").css({"display":"none"});
+	}*/
 function loadnewquotesList(){
 	
 	var typeload = { '1':'Title','2':'Item2','3':'Item3','4':'Price'};
@@ -6307,7 +6307,7 @@ function loadnewquotesList(){
 			return joquoteheaderid;
 		}},
 		url:'./jobtabs2/loadquoteLineItems',
-	   	colNames:['Type','Launch','','Qty','Description','Textbox','Sell Price','Cost','Manufacturer','Category','<img src="./../resources/images/delete.png" style="vertical-align: middle;" onclick="clickdeleteicon()">','Page','joQuoteDetailMstrID','joQuoteHeaderID','Type','Texteditor','ManufacturerId','Position'],
+	   	colNames:['Type','Launch','Qty','Description','Textbox','Sell Price','Cost','Manufacturer','Category','<img src="./../resources/images/delete.png" style="vertical-align: middle;" onclick="clickdeleteicon()">','Page','joQuoteDetailMstrID','joQuoteHeaderID','Type','Texteditor','ManufacturerId','Position'],
 	   	colModel:[
 		   	 {name:'type',index:'type', width:16,editable:true, hidden:false, editrules:{},formatter:"select",edittype:"select",editoptions:{value: typeload,tabindex:6,
 		   		 dataEvents: [{type: 'change',
@@ -6340,12 +6340,12 @@ function loadnewquotesList(){
                   	   var aSelectedRowId = $("#addnewquotesList").jqGrid('getGridParam', 'selrow');
                      }
                  }]	 }},//added by prasant #556
-                 {name:'Inventorybutton',index:'Inventorybutton', width:25,editable:false, hidden:false,  formatter:myCustomFormatterforInventorybutton,editrules:{required:false}, editoptions:{size:10,
+                /* {name:'Inventorybutton',index:'Inventorybutton', width:25,editable:false, hidden:false,  formatter:myCustomFormatterforInventorybutton,editrules:{required:false}, editoptions:{size:10,
     		   		 dataEvents: [{type: 'change',
                          fn: function(e) {
                       	   var aSelectedRowId = $("#addnewquotesList").jqGrid('getGridParam', 'selrow');
                          }
-                     }]	 }},
+                     }]	 }},*/
 		   	 {name:'quantity',index:'quantity', width:15,editable:true, hidden:false, editrules:{custom:true,custom_func:checkvalidationforquote}, editoptions:{size:10,
 		   		 dataEvents: [{
                      type: 'keydown',
@@ -6583,8 +6583,8 @@ function loadnewquotesList(){
 									$("#new_row_custombutton").attr("id", changerowid+"_custombutton");
 									$("#"+changerowid+"_custombutton").attr("onclick", "launchTextEditor('"+changerowid+"')");
 									//modified by prasant #556
-									$("#new_row_Inventorybutton").attr("id", changerowid+"_Inventorybutton");
-									$("#"+changerowid+"_Inventorybutton").attr("onclick", "launchTextEditor('"+changerowid+"')");
+									//$("#new_row_Inventorybutton").attr("id", changerowid+"_Inventorybutton");
+									//$("#"+changerowid+"_Inventorybutton").attr("onclick", "launchTextEditor('"+changerowid+"')");
 									
 									//$("#canDeleteSOID_new_row").attr("id","canDeleteSOID_"+changeidnum);
 								}else{
@@ -6603,7 +6603,7 @@ function loadnewquotesList(){
 							    $("#"+changerowid+"_linebreak").removeAttr("tabindex");
 							    $("#"+changerowid+"_custombutton").removeAttr("tabindex");	
 							    //modified by prasant #556
-							    $("#"+changerowid+"_Inventorybutton").removeAttr("tabindex");
+							   // $("#"+changerowid+"_Inventorybutton").removeAttr("tabindex");
 							    validatequotedisabledbuttons();
 							    $("#SaveQuoteButtonID").css({ opacity: 'initial'});
 							    $("#SaveQuoteButtonID").attr("disabled", false);
@@ -6646,7 +6646,7 @@ function loadnewquotesList(){
 								 // $("#"+changerowid+"_Inventorybutton").removeAttr("tabindex");
 								
 								//modified by prasant #556
-								 $("#new_row_Inventorybutton").attr("id", changerowid+"_Inventorybutton");
+								// $("#new_row_Inventorybutton").attr("id", changerowid+"_Inventorybutton");
 								$("#"+changerowid+"_Inventorybutton").attr("onclick", "launchTextEditor('"+changerowid+"')");
 								//$("#canDeleteSOID_new_row").attr("id","canDeleteSOID_"+changeidnum);
 								}else{
@@ -6666,7 +6666,7 @@ function loadnewquotesList(){
 						    $("#"+changerowid+"_linebreak").removeAttr("tabindex");
 						    $("#"+changerowid+"_custombutton").removeAttr("tabindex");
 						    //modified by prasant #556
-						    $("#"+changerowid+"_Inventorybutton").removeAttr("tabindex");
+						    //$("#"+changerowid+"_Inventorybutton").removeAttr("tabindex");
 						    
 						    validatequotedisabledbuttons();
 						    $("#SaveQuoteButtonID").css({ opacity: 'initial'});

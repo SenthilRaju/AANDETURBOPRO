@@ -3494,7 +3494,7 @@ function loadlineItemGrid()
 	                            	var	prMasterID =  $('#lineItemGrid').jqGrid ('getCell', row, 'prMasterId');
 	                            	console.log("prMasterID:"+$('#lineItemGrid').jqGrid ('getCell', row, 'prMasterId'));
 
-	                            	alert("prMasterID :"+row);
+	                            	//alert("prMasterID :"+row);
 	                       			Calculategrideditrowvalues_VI(rowid);
 	                       			checkLatestInvoice(prMasterID);
 	                       			 $("#lineItemGrid_ilsave").trigger("click");
@@ -3539,7 +3539,7 @@ function loadlineItemGrid()
 	                            	var	prMasterID =  $('#lineItemGrid').jqGrid ('getCell', row, 'prMasterId');
 	                            	console.log("prMasterID:"+$('#lineItemGrid').jqGrid ('getCell', row, 'prMasterId'));
 
-	                            	alert("prMasterID :"+row);
+	                            	//alert("prMasterID :"+row);
 	                       			Calculategrideditrowvalues_VI(rowid);
 	                       			checkLatestInvoice(prMasterID);
 	                       			 $("#lineItemGrid_ilsave").trigger("click");
@@ -3584,7 +3584,7 @@ function loadlineItemGrid()
 	                            	var	prMasterID =  $('#lineItemGrid').jqGrid ('getCell', row, 'prMasterId');
 	                            	console.log("prMasterID:"+$('#lineItemGrid').jqGrid ('getCell', row, 'prMasterId'));
 
-	                            	alert("prMasterID :"+row);
+	                            	//alert("prMasterID :"+row);
 	                       			Calculategrideditrowvalues_VI(rowid);
 	                       			checkLatestInvoice(prMasterID);
 	                       			$("#lineItemGrid_ilsave").trigger("click")
@@ -3629,7 +3629,7 @@ function loadlineItemGrid()
 	                            	var	prMasterID =  $('#lineItemGrid').jqGrid ('getCell', row, 'prMasterId');
 	                            	console.log("prMasterID:"+$('#lineItemGrid').jqGrid ('getCell', row, 'prMasterId'));
 
-	                            	alert("prMasterID :"+row);
+	                            	//alert("prMasterID :"+row);
 	                      			//alert("prMasterID :"+prMasterID);
 	                       			Calculategrideditrowvalues_VI(rowid);
 	                       			checkLatestInvoice(prMasterID);
@@ -3668,7 +3668,7 @@ function loadlineItemGrid()
 		                       var row=  $('#lineItemGrid').jqGrid ('getGridParam', 'selrow');
 		                     	var	prMasterID =  $('#lineItemGrid').jqGrid ('getCell', row, 'prMasterId');
 		                     	console.log("prMasterID:"+$('#lineItemGrid').jqGrid ('getCell', row, 'prMasterId'));
-		                    	alert("prMasterID :"+row);
+		                    	//alert("prMasterID :"+row);
 		                      if(key == 13)  // the enter key code
 		                       {
 		                    	  checkLatestInvoice(prMasterID);
@@ -4233,7 +4233,7 @@ function check_productNofromoutside( value, colname ) {
 
 
 function SaveVendorInvoicewithPO(operation){
-	alert("in SaveVendorInvoicewithPO  "+operation);
+	//alert("in SaveVendorInvoicewithPO  "+operation);
 	var vendorInvoiceDetails=$("#addNewVendorInvoiceFromPOForm").serialize();
 	var gridRows = $('#lineItemGrid').getRowData();
 	var vendorInvoiceGridDetails= JSON.stringify(gridRows);

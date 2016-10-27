@@ -269,10 +269,10 @@ $(function() {
 						timeout : 1000,
 						select : function(event, ui) {
 							var aValue = ui.item.value;
-							alert(aValue);
+							//alert(aValue);
 							var valuesArray = new Array();
 							valuesArray = aValue.split("|");
-							alert(valuesArray[2]);
+							//alert(valuesArray[2]);
 						//	$("#inventorysearch").val(valuesArray[1]);
 							var id = valuesArray[0];
 							var code = valuesArray[2];
