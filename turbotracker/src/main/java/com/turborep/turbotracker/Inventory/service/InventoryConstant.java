@@ -32,6 +32,8 @@ public class InventoryConstant {
 				IncludeMultcolumnoninvoices(2014002018),
 				RemoveEXTLISTcolumnfromSalesOrderPDF(2014002019),
 				RemoveMULTcolumnfromSalesOrderPDF(2014002020),
+				//added by prasant 2016010026 added date date month and year separated with 0(zero)
+				RemoveLISTcolumnfromSalesOrderPDF(2016010026),
 				DoNotAllowTaxTerritoryAfterSavingCustomerInvoice(2014002021),
 				//ID#624 Aravind
 				TierPricingAddingWarehouseLineitemstoSOServiceOrderCI(2014002022),

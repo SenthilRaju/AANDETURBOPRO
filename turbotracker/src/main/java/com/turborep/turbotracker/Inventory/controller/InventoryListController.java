@@ -2123,10 +2123,16 @@ public class InventoryListController {
 			
 			thesysvariable=new Sysvariable();
 			thesysvariable.setValueLong(chk_cusRemMultfmSalOrdpdfYes);
-			System.out.println("sysvariableid StatementsshallshowBillingRemainder==>"+InventoryConstant.getConstantSysvariableId("RemoveMULTcolumnfromSalesOrderPDF"));
+			System.out.println("sysvariableid RemoveMULTcolumnfromSalesOrderPDF==>"+InventoryConstant.getConstantSysvariableId("RemoveMULTcolumnfromSalesOrderPDF"));
 			thesysvariable.setSysVariableId(InventoryConstant.getConstantSysvariableId("RemoveMULTcolumnfromSalesOrderPDF"));
 			asysvariable.add(thesysvariable);
 			
+			
+			thesysvariable=new Sysvariable();
+			thesysvariable.setValueLong(chk_cusRemMultfmSalOrdpdfYes);
+			System.out.println("sysvariableid RemoveLISTcolumnfromSalesOrderPDF==>"+InventoryConstant.getConstantSysvariableId("RemoveLISTcolumnfromSalesOrderPDF"));
+			thesysvariable.setSysVariableId(InventoryConstant.getConstantSysvariableId("RemoveLISTcolumnfromSalesOrderPDF"));
+			asysvariable.add(thesysvariable);
 			boolean	insertintosysvariable = itsInventoryService.saveInventorysettings(asysvariable);
 			
 		} catch (Exception e) {

@@ -5612,4 +5612,71 @@ l.			 * Table :veBillDetail
 		}
 		return status;
 	}
+	public Boolean checkStausNonInventory(Integer prMasterId) {
+
+		String aQry = "	SELECT isInventory FROM Prmaster WHERE prMasterId= " +prMasterId ;
+		Session aSession = null;
+		boolean status=false;
+		List<Byte> veRcvIDs = null;
+		try {
+			// Retrieve session from Hibernate
+			aSession = itsSessionFactory.openSession();
+			// Create a Hibernate query (HQL)
+			Query query = aSession.createQuery(aQry);
+			// Retrieve all
+			 veRcvIDs = query.list();
+			  //Iterator<Integer> i=veRcvIDs
+			 if(veRcvIDs.size()>0)
+			 {
+				 if(veRcvIDs.get(0).intValue()==1)
+					 status=true;
+			 }
+			 
+			
+		} catch (Exception e) {
+			itsLogger.error(e.getMessage(), e);
+			//throw new JobException(e.getMessage(), e);
+		} finally {
+			aSession.flush();
+			aSession.close();
+			aQry = null;
+			
+		}
+		return status;
+	
+	}
+	@Override
+	public Boolean checkStausForAllNonInventory(Integer vePoid) {
+
+		String aQry = " SELECT prMasterId FROM Vepodetail WHERE vePoid= " +vePoid ;
+		Session aSession = null;
+		boolean status=false;
+		List<Integer> prMasterIDs = null;
+		try {
+			// Retrieve session from Hibernate
+			aSession = itsSessionFactory.openSession();
+			// Create a Hibernate query (HQL)
+			Query query = aSession.createQuery(aQry);
+			// Retrieve all
+			prMasterIDs = query.list();
+	for(Integer prmasterID:prMasterIDs)
+	{
+		status=checkStausNonInventory(prmasterID);
+		if (status==true)
+			break;
+	}
+		
+			
+		} catch (Exception e) {
+			itsLogger.error(e.getMessage(), e);
+			//throw new JobException(e.getMessage(), e);
+		} finally {
+			aSession.flush();
+			aSession.close();
+			aQry = null;
+		}
+		return status;
+	
+	}
+	
 }

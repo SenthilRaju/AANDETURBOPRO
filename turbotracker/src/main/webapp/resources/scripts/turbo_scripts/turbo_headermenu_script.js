@@ -222,7 +222,7 @@ function searchJOB(){
 				"&abondoned_name="+abondonedchk+"&reject_name="+rejectchk+"&overBudget_name="+overbudchk+"&customer_name="+customerName+
 				"&architect_name="+architectName+"&engineer_name="+engineerName+"&gc_name="+gcName+"&team_status_name="+teamStatus+"&salesrep_name="+salesRep+"&csr_name="+
 				csr+"&salesMgr_name="+salesMgr+"&engineerEmp_name="+engineerEmp+"&prjMgr_name="+prjMgr+"&takeOff_name="+takeOff+"&quoteBy_name="+quoteBy+
-				"&employee_assignee_name="+employeeAssign+"&customer_po_name="+customerPo+"&report_name="+reportnum+"&division_name="+division+"&sort_by_name="+sortBy;
+				"&employee_assignee_name="+employeeAssign+"&customer_po_name="+customerPo+"&report_name="+reportnum+"&division_name="+division+"&sort_by_name="+sortBy+"&bidder_ID="+bidder_ID;
 			}
 		}
 	});

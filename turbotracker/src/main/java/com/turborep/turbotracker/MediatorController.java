@@ -706,6 +706,10 @@ public class MediatorController {
 				addlist.add("TierPricingAddingWarehouseLineitemstoSOServiceOrderCI");
 				
 				
+				//added  by prasant #630
+				addlist.add("RemoveLISTcolumnfromSalesOrderPDF");
+				
+				
 				ArrayList<Sysvariable> sysvariablelist= userService.getInventorySettingsDetails(addlist);
 				int i=0;
 				for(Sysvariable theSysvariable:sysvariablelist){
@@ -1134,6 +1138,12 @@ public class MediatorController {
 						logger.info(i+" theSysvariable.getValueString() = "+theSysvariable.getValueLong());
 						model.addAttribute("chk_cusTierPricingUse", theSysvariable.getValueLong());
 					}
+					else if(i==112){
+						logger.info(i+" theSysvariable.getValueString() = "+theSysvariable.getValueLong());
+						model.addAttribute("chk_cusRemMultfmSalOrdpdfYes", theSysvariable.getValueLong());
+					}
+					//added by prasant 
+					
 					i=i+1;
 				}
 				

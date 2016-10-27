@@ -969,6 +969,12 @@ public class VendorInvoiceBillController {
 			Integer status=vendorService.checkPurchaseOrderRecived(aVepo.getVePoid());
 			map.put("Status",status);
 			
+			Boolean NonInventory=true;
+			NonInventory=vendorService.checkStausForAllNonInventory(aVepo.getVePoid());			
+			if(!NonInventory)
+				status=2;
+				map.put("Status",status);
+			
 			if(aVepo.getPonumber() != null && aVepo.getPonumber().length() > 0)
 			{
 				invoiceStatus=itsGltransactionService.getAllVeBillDetailswithvePoid(aVepo.getVePoid());

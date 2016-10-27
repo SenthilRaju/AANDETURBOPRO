@@ -1572,7 +1572,23 @@ Description             : Vendor Settings fieldset UI.
 						</td>
 						<td width="27%"></td>
 						</tr>	
-										
+						added By prasant for #630
+							<tr>
+						<td width="70%">
+						<div Style="width:75%;display:block;float:left;line-height:24px;"><span>Remove LIST column from Sales Order PDF?</span></div>
+						<div Style="width:25%;display:block;float:right;">
+							<c:if test="${requestScope.chk_cusRemListfmSalOrdpdfYes==1 }">
+								<span><input type="radio" id="chk_cusRemMultfmSalOrdpdfYes" name="chk_cusRemMultfmSalOrdpdfStatus" style="vertical-align: top;" checked="checked" value="yes"></span>&nbsp;<span style="color:#00377A;">Yes</span>
+								<span style="margin-left:75px;"><input type="radio" id="chk_cusRemMultfmSalOrdpdfYes" name="chk_cusRemMultfmSalOrdpdfStatus" value="no" style="vertical-align: top;"></span>&nbsp;<span style="color:#00377A;">No</span>
+							</c:if>
+							<c:if test="${requestScope.chk_cusRemListfmSalOrdpdfYes==0 || empty requestScope.chk_cusRemListfmSalOrdpdfYes}">
+								<span><input type="radio" id="chk_cusRemMultfmSalOrdpdfYes" name="chk_cusRemMultfmSalOrdpdfStatus" style="vertical-align: top;"  value="yes"></span>&nbsp;<span style="color:#00377A;">Yes</span>
+								<span style="margin-left:75px;"><input type="radio" id="chk_cusRemMultfmSalOrdpdfYes" name="chk_cusRemMultfmSalOrdpdfStatus" checked="checked" value="no" style="vertical-align: top;"></span>&nbsp;<span style="color:#00377A;">No</span>
+							</c:if>
+						</div>	
+						</td>
+						<td width="27%"></td>
+						</tr>					
 						<tr>
 						<td width="70%">
 						<div Style="width:75%;display:block;float:left;line-height:24px;"><span>Require Division in Sales Order(Outside of Job)?</span></div>
