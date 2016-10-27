@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Print" pageWidth="612" pageHeight="792" columnWidth="572" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" isFloatColumnFooter="true" uuid="8dbe826d-f198-453a-afff-21c8018746c8">
-	<property name="ireport.zoom" value="1.5"/>
+	<property name="ireport.zoom" value="2.0"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
 	<style name="table">
@@ -428,21 +428,21 @@ LEFT JOIN rxAddress AS rxA ON rxA.rxAddressID = wcD.rxAddressID
 					<reportElement x="8" y="19" width="555" height="23" backcolor="#8EC5E9" uuid="19b77d45-84a7-4ee3-9ced-33a36b964fb3"/>
 				</rectangle>
 				<staticText>
-					<reportElement stretchType="RelativeToBandHeight" x="8" y="19" width="71" height="22" uuid="a1cf888b-c34e-4def-ab1d-dcdde618d02a"/>
+					<reportElement stretchType="RelativeToBandHeight" x="8" y="19" width="71" height="23" uuid="a1cf888b-c34e-4def-ab1d-dcdde618d02a"/>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
 						<font size="9" isBold="true"/>
 					</textElement>
 					<text><![CDATA[PO#]]></text>
 				</staticText>
 				<staticText>
-					<reportElement stretchType="RelativeToBandHeight" x="80" y="19" width="70" height="22" uuid="cf929eec-c42b-4efa-b16d-45454ce0519d"/>
+					<reportElement stretchType="RelativeToBandHeight" x="80" y="19" width="70" height="23" uuid="cf929eec-c42b-4efa-b16d-45454ce0519d"/>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
 						<font size="9" isBold="true"/>
 					</textElement>
 					<text><![CDATA[ Invoice Date]]></text>
 				</staticText>
 				<staticText>
-					<reportElement x="151" y="19" width="81" height="22" uuid="d10ba2b0-7130-4bb2-ba59-8817ba8b1fe0"/>
+					<reportElement x="151" y="19" width="81" height="23" uuid="d10ba2b0-7130-4bb2-ba59-8817ba8b1fe0"/>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
 						<font size="9" isBold="true"/>
 					</textElement>
@@ -456,21 +456,21 @@ LEFT JOIN rxAddress AS rxA ON rxA.rxAddressID = wcD.rxAddressID
 					<text><![CDATA[Invoice Amount]]></text>
 				</staticText>
 				<staticText>
-					<reportElement x="313" y="19" width="84" height="22" uuid="ac3ea493-3522-464f-bd44-a12f90ecbb09"/>
+					<reportElement x="313" y="19" width="84" height="23" uuid="ac3ea493-3522-464f-bd44-a12f90ecbb09"/>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
 						<font size="9" isBold="true"/>
 					</textElement>
 					<text><![CDATA[Payment Amount]]></text>
 				</staticText>
 				<staticText>
-					<reportElement x="398" y="19" width="87" height="22" uuid="74858001-129a-47d6-81bb-d31d6297a530"/>
+					<reportElement x="398" y="19" width="87" height="23" uuid="74858001-129a-47d6-81bb-d31d6297a530"/>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
 						<font size="9" isBold="true"/>
 					</textElement>
 					<text><![CDATA[Discount Amount]]></text>
 				</staticText>
 				<staticText>
-					<reportElement stretchType="RelativeToTallestObject" x="487" y="19" width="76" height="22" isPrintWhenDetailOverflows="true" uuid="f2cf03c8-ad8b-44f0-a7dc-f376fb4ce382"/>
+					<reportElement stretchType="RelativeToTallestObject" x="486" y="19" width="77" height="23" isPrintWhenDetailOverflows="true" uuid="f2cf03c8-ad8b-44f0-a7dc-f376fb4ce382"/>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
 						<font size="9" isBold="true"/>
 					</textElement>
@@ -509,7 +509,7 @@ LEFT JOIN rxAddress AS rxA ON rxA.rxAddressID = wcD.rxAddressID
 					<textFieldExpression><![CDATA['$'+$V{AppliedAmount_1}.toString()]]></textFieldExpression>
 				</textField>
 				<textField isBlankWhenNull="true">
-					<reportElement x="233" y="0" width="79" height="16" uuid="0de954e7-9ca9-4d76-8566-2570dba0dc3e"/>
+					<reportElement x="232" y="0" width="80" height="16" uuid="0de954e7-9ca9-4d76-8566-2570dba0dc3e"/>
 					<textElement textAlignment="Right">
 						<font size="9"/>
 					</textElement>
@@ -655,7 +655,7 @@ LEFT JOIN rxAddress AS rxA ON rxA.rxAddressID = wcD.rxAddressID
 				<text><![CDATA[***$]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="507" y="113" width="51" height="20" uuid="35fd4a5e-69db-4242-9914-593f79541711"/>
+				<reportElement x="507" y="113" width="56" height="20" uuid="35fd4a5e-69db-4242-9914-593f79541711"/>
 				<textFieldExpression><![CDATA[( $F{voidStatus} == 1 ? "VOID" : '$'+($F{Amount}.multiply(new BigDecimal(-1))).toString())]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
