@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Print" pageWidth="612" pageHeight="792" columnWidth="572" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" isFloatColumnFooter="true" uuid="8dbe826d-f198-453a-afff-21c8018746c8">
-	<property name="ireport.zoom" value="1.5"/>
-	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="0"/>
+	<property name="ireport.zoom" value="4.0"/>
+	<property name="ireport.x" value="166"/>
+	<property name="ireport.y" value="144"/>
 	<style name="table">
 		<box>
 			<pen lineWidth="1.0" lineColor="#000000"/>
@@ -423,141 +423,141 @@ LEFT JOIN rxAddress AS rxA ON rxA.rxAddressID = wcD.rxAddressID
 		<groupExpression><![CDATA[$F{Reference}]]></groupExpression>
 		<groupHeader>
 			<band/>
-			<band height="42">
+			<band height="36">
 				<rectangle>
-					<reportElement x="8" y="19" width="555" height="23" backcolor="#8EC5E9" uuid="19b77d45-84a7-4ee3-9ced-33a36b964fb3"/>
+					<reportElement x="8" y="19" width="555" height="17" backcolor="#8EC5E9" uuid="19b77d45-84a7-4ee3-9ced-33a36b964fb3"/>
 				</rectangle>
 				<staticText>
-					<reportElement stretchType="RelativeToBandHeight" x="8" y="19" width="71" height="22" uuid="a1cf888b-c34e-4def-ab1d-dcdde618d02a"/>
+					<reportElement stretchType="RelativeToBandHeight" x="8" y="19" width="60" height="17" uuid="a1cf888b-c34e-4def-ab1d-dcdde618d02a"/>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
 						<font size="9" isBold="true"/>
 					</textElement>
 					<text><![CDATA[PO#]]></text>
 				</staticText>
 				<staticText>
-					<reportElement stretchType="RelativeToBandHeight" x="80" y="19" width="70" height="22" uuid="cf929eec-c42b-4efa-b16d-45454ce0519d"/>
+					<reportElement stretchType="RelativeToBandHeight" x="68" y="19" width="72" height="17" uuid="cf929eec-c42b-4efa-b16d-45454ce0519d"/>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
 						<font size="9" isBold="true"/>
 					</textElement>
 					<text><![CDATA[ Invoice Date]]></text>
 				</staticText>
 				<staticText>
-					<reportElement x="151" y="19" width="81" height="22" uuid="d10ba2b0-7130-4bb2-ba59-8817ba8b1fe0"/>
+					<reportElement x="141" y="19" width="83" height="17" uuid="d10ba2b0-7130-4bb2-ba59-8817ba8b1fe0"/>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
 						<font size="9" isBold="true"/>
 					</textElement>
 					<text><![CDATA[Invoice Number]]></text>
 				</staticText>
 				<staticText>
-					<reportElement x="233" y="19" width="79" height="23" uuid="b1e1ad74-7e92-4d5e-b573-734720ee877b"/>
+					<reportElement x="225" y="19" width="81" height="17" uuid="b1e1ad74-7e92-4d5e-b573-734720ee877b"/>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
 						<font size="9" isBold="true"/>
 					</textElement>
 					<text><![CDATA[Invoice Amount]]></text>
 				</staticText>
 				<staticText>
-					<reportElement x="313" y="19" width="84" height="22" uuid="ac3ea493-3522-464f-bd44-a12f90ecbb09"/>
+					<reportElement x="307" y="19" width="88" height="17" uuid="ac3ea493-3522-464f-bd44-a12f90ecbb09"/>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
 						<font size="9" isBold="true"/>
 					</textElement>
 					<text><![CDATA[Payment Amount]]></text>
 				</staticText>
 				<staticText>
-					<reportElement x="398" y="19" width="87" height="22" uuid="74858001-129a-47d6-81bb-d31d6297a530"/>
+					<reportElement x="395" y="19" width="87" height="17" uuid="74858001-129a-47d6-81bb-d31d6297a530"/>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
 						<font size="9" isBold="true"/>
 					</textElement>
 					<text><![CDATA[Discount Amount]]></text>
 				</staticText>
 				<staticText>
-					<reportElement stretchType="RelativeToTallestObject" x="487" y="19" width="76" height="22" isPrintWhenDetailOverflows="true" uuid="f2cf03c8-ad8b-44f0-a7dc-f376fb4ce382"/>
+					<reportElement stretchType="RelativeToTallestObject" x="482" y="19" width="81" height="17" isPrintWhenDetailOverflows="true" uuid="f2cf03c8-ad8b-44f0-a7dc-f376fb4ce382"/>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
 						<font size="9" isBold="true"/>
 					</textElement>
 					<text><![CDATA[Invoice Balance]]></text>
 				</staticText>
 				<line>
-					<reportElement x="150" y="19" width="1" height="23" uuid="ba4fef07-6334-4c20-bc62-a94bcf72205d"/>
+					<reportElement x="140" y="19" width="1" height="17" uuid="ba4fef07-6334-4c20-bc62-a94bcf72205d"/>
 				</line>
 				<line>
-					<reportElement x="232" y="19" width="1" height="23" uuid="5b1c2216-e3b0-4f37-9cb2-f8ef259796f0"/>
+					<reportElement x="224" y="19" width="1" height="17" uuid="5b1c2216-e3b0-4f37-9cb2-f8ef259796f0"/>
 				</line>
 				<line>
-					<reportElement x="397" y="19" width="1" height="23" uuid="7b978ef2-94e6-4fea-bb91-368e50a164bd"/>
+					<reportElement x="395" y="19" width="1" height="17" uuid="7b978ef2-94e6-4fea-bb91-368e50a164bd"/>
 				</line>
 				<line>
-					<reportElement x="485" y="19" width="1" height="23" uuid="27cbbe03-ad80-4c44-a633-d6dd525ebc7e"/>
+					<reportElement x="482" y="19" width="1" height="17" uuid="27cbbe03-ad80-4c44-a633-d6dd525ebc7e"/>
 				</line>
 				<line>
-					<reportElement x="79" y="19" width="1" height="23" uuid="aa72fecc-239a-4f11-902e-714e8d4cffc4"/>
+					<reportElement x="67" y="19" width="1" height="17" uuid="aa72fecc-239a-4f11-902e-714e8d4cffc4"/>
 				</line>
 				<line>
-					<reportElement x="312" y="19" width="1" height="23" uuid="6785e0ea-d844-4e0d-a609-8d06793e3b07"/>
+					<reportElement x="306" y="19" width="1" height="17" uuid="6785e0ea-d844-4e0d-a609-8d06793e3b07"/>
 				</line>
 			</band>
 		</groupHeader>
 		<groupFooter>
 			<band height="16">
 				<rectangle>
-					<reportElement x="232" y="0" width="331" height="16" printWhenGroupChanges="vendor" uuid="11a2a189-6aba-45c7-8d5a-a70fb2af33d5"/>
+					<reportElement x="224" y="0" width="339" height="16" printWhenGroupChanges="vendor" uuid="11a2a189-6aba-45c7-8d5a-a70fb2af33d5"/>
 				</rectangle>
 				<textField isBlankWhenNull="true">
-					<reportElement x="313" y="0" width="84" height="16" uuid="0e599b45-5a51-41e3-b2f6-fcb449d26834"/>
+					<reportElement x="307" y="0" width="88" height="16" uuid="0e599b45-5a51-41e3-b2f6-fcb449d26834"/>
 					<textElement textAlignment="Right">
 						<font size="9"/>
 					</textElement>
 					<textFieldExpression><![CDATA['$'+$V{AppliedAmount_1}.toString()]]></textFieldExpression>
 				</textField>
 				<textField isBlankWhenNull="true">
-					<reportElement x="233" y="0" width="79" height="16" uuid="0de954e7-9ca9-4d76-8566-2570dba0dc3e"/>
+					<reportElement x="225" y="0" width="81" height="16" uuid="0de954e7-9ca9-4d76-8566-2570dba0dc3e"/>
 					<textElement textAlignment="Right">
 						<font size="9"/>
 					</textElement>
 					<textFieldExpression><![CDATA['$'+$V{BillAmount_2}.toString()]]></textFieldExpression>
 				</textField>
 				<textField isBlankWhenNull="true">
-					<reportElement x="398" y="0" width="87" height="16" uuid="6fa0d2c2-c5fa-4852-94f5-3f42ee920bde"/>
+					<reportElement x="396" y="0" width="86" height="16" uuid="6fa0d2c2-c5fa-4852-94f5-3f42ee920bde"/>
 					<textElement textAlignment="Right">
 						<font size="9"/>
 					</textElement>
 					<textFieldExpression><![CDATA['$'+$V{Discount_1}.toString()]]></textFieldExpression>
 				</textField>
 				<textField pattern="" isBlankWhenNull="true">
-					<reportElement x="486" y="0" width="77" height="16" uuid="c3478dc1-8ed9-46a7-9533-38883cf533e4"/>
+					<reportElement x="483" y="0" width="80" height="16" uuid="c3478dc1-8ed9-46a7-9533-38883cf533e4"/>
 					<textElement textAlignment="Right">
 						<font size="9"/>
 					</textElement>
 					<textFieldExpression><![CDATA['$'+$V{rxMasterID_1}.toString()]]></textFieldExpression>
 				</textField>
 				<staticText>
-					<reportElement x="92" y="0" width="38" height="16" uuid="b9df1cf8-f5fa-4f2f-be9a-bbc9644f9cce"/>
+					<reportElement x="85" y="0" width="38" height="16" uuid="b9df1cf8-f5fa-4f2f-be9a-bbc9644f9cce"/>
 					<textElement>
 						<font size="9" isBold="true"/>
 					</textElement>
 					<text><![CDATA[Paying]]></text>
 				</staticText>
 				<textField isBlankWhenNull="true">
-					<reportElement x="129" y="0" width="14" height="16" uuid="a8544e76-0c4e-4d9f-8a78-3622e9ecbfcc"/>
+					<reportElement x="122" y="0" width="14" height="16" uuid="a8544e76-0c4e-4d9f-8a78-3622e9ecbfcc"/>
 					<textElement>
 						<font size="9" isBold="true"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$V{vendor_COUNT}]]></textFieldExpression>
 				</textField>
 				<staticText>
-					<reportElement x="150" y="0" width="82" height="16" uuid="c972cd27-073c-48b1-99f7-1e190d08c0db"/>
+					<reportElement x="143" y="0" width="81" height="16" uuid="c972cd27-073c-48b1-99f7-1e190d08c0db"/>
 					<textElement>
 						<font size="9" isBold="true"/>
 					</textElement>
 					<text><![CDATA[ITEMS , Totals :]]></text>
 				</staticText>
 				<line>
-					<reportElement x="312" y="0" width="1" height="15" uuid="9f08372f-5969-4d29-adf8-bf8b37e74e2e"/>
+					<reportElement x="306" y="0" width="1" height="15" uuid="9f08372f-5969-4d29-adf8-bf8b37e74e2e"/>
 				</line>
 				<line>
-					<reportElement x="397" y="0" width="1" height="16" uuid="36214152-8b8a-4e96-bedd-a73192de6947"/>
+					<reportElement x="395" y="0" width="1" height="16" uuid="36214152-8b8a-4e96-bedd-a73192de6947"/>
 				</line>
 				<line>
-					<reportElement x="485" y="0" width="1" height="16" uuid="fa96ec66-6e71-4557-a049-3713e6e36325"/>
+					<reportElement x="482" y="0" width="1" height="16" uuid="fa96ec66-6e71-4557-a049-3713e6e36325"/>
 				</line>
 			</band>
 		</groupFooter>
@@ -572,71 +572,71 @@ LEFT JOIN rxAddress AS rxA ON rxA.rxAddressID = wcD.rxAddressID
 				<reportElement x="8" y="0" width="555" height="17" uuid="515bf578-5e5b-4d4e-9172-d868d798cbf8"/>
 			</rectangle>
 			<textField isBlankWhenNull="true">
-				<reportElement x="8" y="0" width="71" height="17" uuid="c3ac0f6d-251f-4270-b2af-48ddff877573"/>
+				<reportElement x="8" y="0" width="60" height="17" uuid="c3ac0f6d-251f-4270-b2af-48ddff877573"/>
 				<textElement>
 					<font size="9"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{PONumber}]]></textFieldExpression>
 			</textField>
 			<textField pattern="" isBlankWhenNull="true">
-				<reportElement x="151" y="0" width="81" height="17" uuid="17285322-bc2a-4f2d-9f6c-1183eb402ecf"/>
+				<reportElement x="141" y="0" width="83" height="17" uuid="17285322-bc2a-4f2d-9f6c-1183eb402ecf"/>
 				<textElement textAlignment="Center">
 					<font size="9"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{InvoiceNumber}]]></textFieldExpression>
 			</textField>
 			<textField pattern="" isBlankWhenNull="true">
-				<reportElement x="233" y="0" width="79" height="17" uuid="2d4ddf95-2f38-4d18-bc30-b71754a41a5f"/>
+				<reportElement x="225" y="0" width="81" height="17" uuid="2d4ddf95-2f38-4d18-bc30-b71754a41a5f"/>
 				<textElement textAlignment="Right">
 					<font size="9"/>
 				</textElement>
 				<textFieldExpression><![CDATA['$'+$F{BillAmountwithcommas}.toString()]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="486" y="0" width="77" height="17" uuid="dd129055-effa-4845-ad88-afd22b2e134f"/>
+				<reportElement x="482" y="0" width="81" height="17" uuid="dd129055-effa-4845-ad88-afd22b2e134f"/>
 				<textElement textAlignment="Right">
 					<font size="9"/>
 				</textElement>
 				<textFieldExpression><![CDATA['$'+$F{balancewithcommas}.toString()]]></textFieldExpression>
 			</textField>
 			<line>
-				<reportElement x="79" y="0" width="1" height="17" uuid="03dc8de1-20fc-4d48-a55f-45514d1197fb"/>
+				<reportElement x="67" y="0" width="1" height="17" uuid="03dc8de1-20fc-4d48-a55f-45514d1197fb"/>
 			</line>
 			<line>
-				<reportElement x="150" y="0" width="1" height="17" uuid="3cf2fe86-3a73-4ec8-96a6-7e5b95963d02"/>
+				<reportElement x="140" y="0" width="1" height="17" uuid="3cf2fe86-3a73-4ec8-96a6-7e5b95963d02"/>
 			</line>
 			<line>
-				<reportElement x="232" y="0" width="1" height="17" uuid="0867bfd3-5250-4003-82d4-688f9edb3c9c"/>
+				<reportElement x="224" y="0" width="1" height="17" uuid="0867bfd3-5250-4003-82d4-688f9edb3c9c"/>
 			</line>
 			<line>
-				<reportElement x="312" y="0" width="1" height="17" uuid="d3e897b6-4a7a-4bd7-a520-721a3a3bd0d5"/>
+				<reportElement x="306" y="0" width="1" height="17" uuid="d3e897b6-4a7a-4bd7-a520-721a3a3bd0d5"/>
 			</line>
 			<line>
-				<reportElement x="397" y="0" width="1" height="17" uuid="90669f67-ce45-4452-9732-094ff5c2d6f0"/>
+				<reportElement x="395" y="0" width="1" height="17" uuid="90669f67-ce45-4452-9732-094ff5c2d6f0"/>
 			</line>
 			<textField pattern="¤ #,##0.00" isBlankWhenNull="true">
-				<reportElement x="313" y="0" width="84" height="17" uuid="2b897568-9e30-4c8e-ba4c-3e6b64c0433d"/>
+				<reportElement x="307" y="0" width="88" height="17" uuid="2b897568-9e30-4c8e-ba4c-3e6b64c0433d"/>
 				<textElement textAlignment="Right">
 					<font size="9"/>
 				</textElement>
 				<textFieldExpression><![CDATA['$'+$F{AmtPaidwithcommas}.toString()]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="398" y="0" width="87" height="17" uuid="eb572c7b-c4c8-4bfa-a6c3-82ea7abbfe92"/>
+				<reportElement x="395" y="0" width="87" height="17" uuid="eb572c7b-c4c8-4bfa-a6c3-82ea7abbfe92"/>
 				<textElement textAlignment="Right">
 					<font size="9"/>
 				</textElement>
 				<textFieldExpression><![CDATA['$'+$F{Discountwithcommas}.toString()]]></textFieldExpression>
 			</textField>
 			<textField pattern="MM/dd/yyyy">
-				<reportElement x="80" y="0" width="70" height="17" uuid="dd3f13d6-6888-40d7-a562-ddc8d394f645"/>
+				<reportElement x="68" y="0" width="72" height="17" uuid="dd3f13d6-6888-40d7-a562-ddc8d394f645"/>
 				<textElement textAlignment="Center">
 					<font size="9"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{BillDate}]]></textFieldExpression>
 			</textField>
 			<line>
-				<reportElement x="485" y="0" width="1" height="17" uuid="54e644be-570e-4c40-aa9f-01f24e0af223"/>
+				<reportElement x="482" y="0" width="1" height="17" uuid="54e644be-570e-4c40-aa9f-01f24e0af223"/>
 			</line>
 		</band>
 	</detail>
@@ -655,7 +655,7 @@ LEFT JOIN rxAddress AS rxA ON rxA.rxAddressID = wcD.rxAddressID
 				<text><![CDATA[***$]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="507" y="113" width="51" height="20" uuid="35fd4a5e-69db-4242-9914-593f79541711"/>
+				<reportElement x="507" y="113" width="56" height="20" uuid="35fd4a5e-69db-4242-9914-593f79541711"/>
 				<textFieldExpression><![CDATA[( $F{voidStatus} == 1 ? "VOID" : '$'+($F{Amount}.multiply(new BigDecimal(-1))).toString())]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
