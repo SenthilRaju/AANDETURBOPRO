@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Print" pageWidth="612" pageHeight="792" columnWidth="572" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" isFloatColumnFooter="true" uuid="8dbe826d-f198-453a-afff-21c8018746c8">
-	<property name="ireport.zoom" value="2.0"/>
-	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="0"/>
+	<property name="ireport.zoom" value="4.0"/>
+	<property name="ireport.x" value="166"/>
+	<property name="ireport.y" value="144"/>
 	<style name="table">
 		<box>
 			<pen lineWidth="1.0" lineColor="#000000"/>
@@ -428,14 +428,14 @@ LEFT JOIN rxAddress AS rxA ON rxA.rxAddressID = wcD.rxAddressID
 					<reportElement x="8" y="19" width="555" height="17" backcolor="#8EC5E9" uuid="19b77d45-84a7-4ee3-9ced-33a36b964fb3"/>
 				</rectangle>
 				<staticText>
-					<reportElement stretchType="RelativeToBandHeight" x="8" y="19" width="64" height="17" uuid="a1cf888b-c34e-4def-ab1d-dcdde618d02a"/>
+					<reportElement stretchType="RelativeToBandHeight" x="8" y="19" width="60" height="17" uuid="a1cf888b-c34e-4def-ab1d-dcdde618d02a"/>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
 						<font size="9" isBold="true"/>
 					</textElement>
 					<text><![CDATA[PO#]]></text>
 				</staticText>
 				<staticText>
-					<reportElement stretchType="RelativeToBandHeight" x="73" y="19" width="67" height="17" uuid="cf929eec-c42b-4efa-b16d-45454ce0519d"/>
+					<reportElement stretchType="RelativeToBandHeight" x="68" y="19" width="72" height="17" uuid="cf929eec-c42b-4efa-b16d-45454ce0519d"/>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
 						<font size="9" isBold="true"/>
 					</textElement>
@@ -489,7 +489,7 @@ LEFT JOIN rxAddress AS rxA ON rxA.rxAddressID = wcD.rxAddressID
 					<reportElement x="482" y="19" width="1" height="17" uuid="27cbbe03-ad80-4c44-a633-d6dd525ebc7e"/>
 				</line>
 				<line>
-					<reportElement x="72" y="19" width="1" height="17" uuid="aa72fecc-239a-4f11-902e-714e8d4cffc4"/>
+					<reportElement x="67" y="19" width="1" height="17" uuid="aa72fecc-239a-4f11-902e-714e8d4cffc4"/>
 				</line>
 				<line>
 					<reportElement x="306" y="19" width="1" height="17" uuid="6785e0ea-d844-4e0d-a609-8d06793e3b07"/>
@@ -572,7 +572,7 @@ LEFT JOIN rxAddress AS rxA ON rxA.rxAddressID = wcD.rxAddressID
 				<reportElement x="8" y="0" width="555" height="17" uuid="515bf578-5e5b-4d4e-9172-d868d798cbf8"/>
 			</rectangle>
 			<textField isBlankWhenNull="true">
-				<reportElement x="8" y="0" width="64" height="17" uuid="c3ac0f6d-251f-4270-b2af-48ddff877573"/>
+				<reportElement x="8" y="0" width="60" height="17" uuid="c3ac0f6d-251f-4270-b2af-48ddff877573"/>
 				<textElement>
 					<font size="9"/>
 				</textElement>
@@ -600,7 +600,7 @@ LEFT JOIN rxAddress AS rxA ON rxA.rxAddressID = wcD.rxAddressID
 				<textFieldExpression><![CDATA['$'+$F{balancewithcommas}.toString()]]></textFieldExpression>
 			</textField>
 			<line>
-				<reportElement x="72" y="0" width="1" height="17" uuid="03dc8de1-20fc-4d48-a55f-45514d1197fb"/>
+				<reportElement x="67" y="0" width="1" height="17" uuid="03dc8de1-20fc-4d48-a55f-45514d1197fb"/>
 			</line>
 			<line>
 				<reportElement x="140" y="0" width="1" height="17" uuid="3cf2fe86-3a73-4ec8-96a6-7e5b95963d02"/>
@@ -629,7 +629,7 @@ LEFT JOIN rxAddress AS rxA ON rxA.rxAddressID = wcD.rxAddressID
 				<textFieldExpression><![CDATA['$'+$F{Discountwithcommas}.toString()]]></textFieldExpression>
 			</textField>
 			<textField pattern="MM/dd/yyyy">
-				<reportElement x="73" y="0" width="67" height="17" uuid="dd3f13d6-6888-40d7-a562-ddc8d394f645"/>
+				<reportElement x="68" y="0" width="72" height="17" uuid="dd3f13d6-6888-40d7-a562-ddc8d394f645"/>
 				<textElement textAlignment="Center">
 					<font size="9"/>
 				</textElement>
