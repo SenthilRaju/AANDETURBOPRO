@@ -370,7 +370,12 @@ public class ChartOfAccountsServiceImpl implements ChartOfAccountsService {
 						aCoAcc.setBankOpeningBalance(BigDecimal.ZERO);
 						else
 						aCoAcc.setBankOpeningBalance((BigDecimal)aObj[3]);
-					aCoAcc.setBankClosingBalance((BigDecimal) aObj[4]);  
+					BigDecimal bankClosingBalance=(BigDecimal) aObj[4];
+					if(bankClosingBalance!=null){						
+						aCoAcc.setBankClosingBalance(bankClosingBalance);  
+					}else{
+						aCoAcc.setBankClosingBalance(BigDecimal.ZERO);
+					}
 				}
 				else
 				{

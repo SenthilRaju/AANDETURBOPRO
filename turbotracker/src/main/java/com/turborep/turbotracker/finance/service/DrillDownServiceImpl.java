@@ -61,7 +61,7 @@ public class DrillDownServiceImpl implements DrillDownService  {
 		Integer searchPeriodFrom =Integer.parseInt(periodFromID);
 		Integer searchPeriodTo =Integer.parseInt(periodTo);
 		//Integer searchYear =Integer.parseInt(yearID);
-		fiscalYearInt = getCurrentFiscalYear("SELECT coy.coFiscalYearId FROM coFiscalYear coy where coy.fiscalYear = "+yearID);
+		fiscalYearInt = getCurrentFiscalYear("SELECT coy.coFiscalYearId FROM coFiscalYear coy where coy.fiscalYear = '"+yearID+"'");
 		fiscalPeriod = getCurrentFiscalPeriod("SELECT cop.coFiscalPeriodId FROM coFiscalPeriod cop where cop.period = "+periodTo+" and cop.coFiscalYearId = "+fiscalYearInt);
 		
 		
@@ -154,7 +154,7 @@ public class DrillDownServiceImpl implements DrillDownService  {
 					List<GlTransaction> lstLedgerDetail =chartOfAccountsService.getLedgerDetailsPeriod(coAccountsID, (Integer)aObj[3], (Integer)aObj[4]);
 					if(lstLedgerDetail.size()>0)
 					{
-					if((lstLedgerDetail.get(0).getBankClosingBalance()).compareTo(BigDecimal.ZERO)<0)
+					if((lstLedgerDetail.get(0).getBankClosingBalance()!=null) && ((lstLedgerDetail.get(0).getBankClosingBalance()).compareTo(BigDecimal.ZERO)<0))
 					glRepAccObj.setyBalance(lstLedgerDetail.get(0).getBankClosingBalance().negate()+" CR");
 					else
 					glRepAccObj.setyBalance(lstLedgerDetail.get(0).getBankClosingBalance()+" DB");
@@ -196,7 +196,7 @@ public class DrillDownServiceImpl implements DrillDownService  {
 				List<GlTransaction> lstLedgerDetail =chartOfAccountsService.getLedgerDetailsPeriod(coAccountsID, fiscalPeriod,fiscalYearInt);
 				if(lstLedgerDetail.size()>0)
 				{
-				if((lstLedgerDetail.get(0).getBankClosingBalance()).compareTo(BigDecimal.ZERO)<0)
+				if((lstLedgerDetail.get(0).getBankClosingBalance()!=null) && ((lstLedgerDetail.get(0).getBankClosingBalance()).compareTo(BigDecimal.ZERO)<0))
 				glRepAccObj.setyBalance(lstLedgerDetail.get(0).getBankClosingBalance().negate()+" CR");
 				else
 				glRepAccObj.setyBalance(lstLedgerDetail.get(0).getBankClosingBalance()+" DB");
