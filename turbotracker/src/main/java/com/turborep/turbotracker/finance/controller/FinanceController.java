@@ -674,10 +674,10 @@ public class FinanceController {
             
             accDetailsQueryString = "SELECT coAccountID,Number,Description,accountType,FinancialStatus,((pdebits+pcredits)*100)/"+accountList.get(0)+" as PeriodRatio,"
 	            		 //+ "(pdebits+pcredits) AS PeriodAmount,"
-	            		 +" IF(FinancialStatus IN(1,2),IF((pdebits-pcredits)>0,(pdebits+pcredits)*-1,(pdebits+pcredits)),IF((pdebits+pcredits)>0,(pdebits+pcredits),(pdebits+pcredits)*-1)) AS PeriodAmount,"
+	            		 +" IF(FinancialStatus IN(1,2),IF((pdebits-pcredits)>0,(pdebits+pcredits)*-1,(pdebits+pcredits)),IF((pdebits-pcredits)>0,(pdebits+pcredits),(pdebits+pcredits)*-1)) AS PeriodAmount,"
 	            		 + "((ydebits+ycredits)*100)/"+accountList.get(1)+" AS YearRatio,"
             			// + "(ydebits+ycredits) AS YearAmount "
-            			+" IF(FinancialStatus IN(1,2),IF((ydebits-ycredits)>0,(ydebits+ycredits)*-1,(ydebits+ycredits)),IF((ydebits+ycredits)>0,(ydebits+ycredits),(ydebits+ycredits)*-1)) AS YearAmount"
+            			+" IF(FinancialStatus IN(1,2),IF((ydebits-ycredits)>0,(ydebits+ycredits)*-1,(ydebits+ycredits)),IF((ydebits-ycredits)>0,(ydebits+ycredits),(ydebits+ycredits)*-1)) AS YearAmount"
              			 + " FROM ("
                          + " SELECT  cA.coAccountID,cA.Number,cA.Description,cA.accountType,cA.FinancialStatus, IF(pdebits-pcredits>0,pdebits-pcredits,0) AS pdebits,IF(pcredits-pdebits>0,pcredits-pdebits,0) AS pcredits,"
                          + " IF(ydebits-ycredits>0,ydebits-ycredits,0) AS ydebits, IF(ycredits-ydebits>0,ycredits-ydebits,0) AS ycredits FROM coAccount cA LEFT JOIN "
