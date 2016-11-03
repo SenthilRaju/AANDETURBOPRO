@@ -373,6 +373,8 @@ public class CustomerPaymentsController {
 			if(periodId==0)
 					periodId=aSysinfo.getCurrentPeriodId();
 			
+			if(yearId==0)
+				yearId=aSysinfo.getCurrentFiscalYearId();
 			
 			
 			cuReceipt.setRxCustomerId(rxCustomerID);
@@ -556,7 +558,10 @@ public class CustomerPaymentsController {
 		try{
 			reversePayment=itsCuMasterService.getreversePaymentvalidation(receiptID);
 		}catch(Exception ex){
-			ex.printStackTrace();}
+			
+			ex.printStackTrace();
+			
+			}
 		
 		
 		return reversePayment;
