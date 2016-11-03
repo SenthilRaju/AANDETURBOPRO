@@ -3564,6 +3564,28 @@ if(batchInvoiceCuID.length()>0 && !batchInvoiceCuID.equals("0")){
 			} catch (JobException e2) {
 				e2.printStackTrace();
 			}
+			
+			//added by prasant  issue fix 3.0.67
+			List<String> addlist=new ArrayList<String>();
+			
+			addlist.add("IncludJobNamein_co_inshiptoaddressonPDForder");
+			
+			 
+			ArrayList<Sysvariable> sysvariablelist=new ArrayList<Sysvariable>();
+						
+			try {
+				sysvariablelist = userService.getInventorySettingsDetails(addlist);
+			} catch (UserException e) {
+				e.printStackTrace();
+			}
+			
+			int i=0;
+			Integer printJobNameStatus=0;
+			
+			if (sysvariablelist.get(0).getValueLong() == 1) {
+				printJobNameStatus = 1;
+			}
+			
 			String ShipToName="";
 			String ShipToAddress1="";
 			String ShipToAddress2="";
@@ -3578,6 +3600,7 @@ if(batchInvoiceCuID.length()>0 && !batchInvoiceCuID.equals("0")){
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
+			
 			Rxaddress aRxAddressShipto = null;
 			Rxaddress aRxAddressBillto = null;
 			Jomaster aJomaster = null;
@@ -3633,6 +3656,8 @@ if(batchInvoiceCuID.length()>0 && !batchInvoiceCuID.equals("0")){
 				}
 				
 			}
+			//added by prasant  3.0.67 Issue Solve
+			params.put("printJobName", printJobNameStatus);
 			params.put("billtoName", BillToName);
 			params.put("billtoAddress1", BillToAddress1);
 			params.put("billtoAddress2", BillToAddress2);
