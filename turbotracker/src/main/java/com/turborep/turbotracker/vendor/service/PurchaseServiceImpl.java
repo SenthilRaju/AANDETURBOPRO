@@ -2,6 +2,7 @@ package com.turborep.turbotracker.vendor.service;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.math.RoundingMode;
 import java.sql.Date;
 import java.sql.Timestamp;
 import java.text.ParseException;
@@ -2811,7 +2812,7 @@ public class PurchaseServiceImpl implements PurchaseService {
 				List<Integer> sysInfos = aSession.createSQLQuery(priceLevelValQuery).list();
 				Integer priceLevalVal = sysInfos.get(0);
 				if (priceLevalVal != null) {
-					whseCost = whseCost.multiply(new BigDecimal(100)).divide(new BigDecimal(priceLevalVal));
+					whseCost = whseCost.multiply(new BigDecimal(100)).divide(new BigDecimal(priceLevalVal),2, RoundingMode.HALF_UP);
 				}else{
 					whseCost=BigDecimal.ZERO;
 				}

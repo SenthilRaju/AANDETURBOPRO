@@ -1764,7 +1764,8 @@ public class CustomerServiceImpl implements CustomerService {
 			
 			if(theCureceipt.getCuReceiptId()!=null &&theCureceipt.getCuReceiptId()!=0)
 			{
-				postcuLinkageDetail( theCureceipt,yearID,periodID,aUserBean,paidinvoiceDetails,aSession);
+				postcuLinkageDetailUnAppliedPayment( theCureceipt,yearID,periodID,aUserBean,paidinvoiceDetails,aSession);
+				aTransaction.commit();
 			}
 			else
 			{
@@ -1790,6 +1791,139 @@ public class CustomerServiceImpl implements CustomerService {
 			
 		}
 		return cuRecieptID;
+	}
+//added by prasant #633 2nd time
+	private void postcuLinkageDetailUnAppliedPayment(Cureceipt cuReceiptObj, Integer yearID, Integer periodID,
+			UserBean aUserBean, String paidInvoiceDetails, Session aSession) {
+		
+		try {
+		JsonParser parser = new JsonParser();
+		boolean stausbit = false;
+		if ( paidInvoiceDetails !=null) {
+			System.out.println("gridData"+paidInvoiceDetails);
+			JsonElement ele = parser.parse(paidInvoiceDetails);
+			JsonArray array = ele.getAsJsonArray();
+			System.out.println("array length==>"+array.size());
+			for (JsonElement ele1 : array) {
+				JsonObject obj = ele1.getAsJsonObject();
+				
+				String paymentApplied=obj.get("paymentApplied").getAsString().replaceAll("[$,]", "")==""?"0":obj.get("paymentApplied").getAsString().replaceAll("[$,]", "");
+				String discountAmount = obj.get("preDiscountUsed").getAsString().replaceAll("[$,]", "")==""?"0":obj.get("preDiscountUsed").getAsString().replaceAll("[$,]", "");
+				String amtApplied = obj.get("invoiceBalance").getAsString().replaceAll("[$,]", "")==""?"0":obj.get("invoiceBalance").getAsString().replaceAll("[$,]", "");
+				Integer cuLinkID =0;
+				
+				CuLinkageDetail theCulinkagedetail = new CuLinkageDetail();
+				
+				theCulinkagedetail.setCuReceiptId(cuReceiptObj.getCuReceiptId());
+				theCulinkagedetail.setCuInvoiceId(obj.get("cuInvoiceID").getAsInt());
+				theCulinkagedetail.setRxCustomerId(cuReceiptObj.getRxCustomerId());
+				theCulinkagedetail.setPaymentApplied(new BigDecimal(paymentApplied));
+				theCulinkagedetail.setDiscountUsed(new BigDecimal(discountAmount));
+				theCulinkagedetail.setRefInvoiceID(obj.get("cuInvoiceID").getAsInt());
+				theCulinkagedetail.setAmtApplied(new BigDecimal(amtApplied));
+				//theCulinkagedetail.setDatePaid(new Date());
+				theCulinkagedetail.setStatusCheck(1);
+				//added by prasant #633
+				theCulinkagedetail.setDatePaid(new Date());
+				
+				cuLinkID= (Integer)aSession.save(theCulinkagedetail);
+				
+				CuPaymentGlpost aCuPaymentGlpost = new CuPaymentGlpost();
+				aCuPaymentGlpost.setCuLinkageDetailID(theCulinkagedetail.getCuLinkageDetailId());
+				aCuPaymentGlpost.setGroupID(1);
+				aCuPaymentGlpost.setRxCustomerID(theCulinkagedetail.getRxCustomerId());
+				aCuPaymentGlpost.setCuInvoiceID(theCulinkagedetail.getCuInvoiceId());
+				aSession.save(aCuPaymentGlpost);
+				
+				stausbit = true;
+				
+				}	
+			}
+		
+		if(stausbit)
+		{
+		String aPaymentsCountStr = "SELECT MAX(groupID)+1 AS count FROM cuPaymentGlpost";
+		BigInteger maxval = new BigInteger("0");
+	
+		Query aGroupQuery = aSession.createSQLQuery(aPaymentsCountStr);
+		List<?> aList = aGroupQuery.list();
+		maxval =  (BigInteger) aList.get(0);
+	
+		String hql = "UPDATE CuPaymentGlpost set postStatus = 1, groupID = "+maxval+" WHERE postStatus = 0";
+		Query query = aSession.createQuery(hql);
+		query.executeUpdate();
+		updateCuInvoiceforsuccessfulpaymentUnappliedPayment(cuReceiptObj.getCuReceiptId(), aSession, aUserBean, yearID, periodID);
+		}
+		
+		} 
+		catch (Exception e) {
+			e.printStackTrace();
+			}
+		
+	}
+
+	private boolean updateCuInvoiceforsuccessfulpaymentUnappliedPayment(Integer cuReceiptID, Session aSession,
+			UserBean aUserBean, Integer yearID, Integer periodID) {
+		
+		try {
+			
+			String aPaymentsCountStr = "SELECT * from cuLinkageDetail where cuReceiptID = "+cuReceiptID+" and statusCheck = 1 and deletedStatus<>1";
+			Cuinvoice aCuinvoice = new Cuinvoice();
+			Cuinvoice theCuinvoice = null;
+			Query aQuery = null;
+		
+				aQuery = aSession.createSQLQuery(aPaymentsCountStr);
+				List<?> aQueryList =  aQuery.list();
+				Iterator<?> aIterator =aQueryList.iterator();
+				Cureceipt cuRecipt=getCuReceiptDetail(cuReceiptID);
+				while(aIterator.hasNext()) {
+					
+					Object[] aObj = (Object[]) aIterator.next();
+					Integer cuInvoiceID = 	(Integer) aObj[1];
+					BigDecimal paymentApplied = (BigDecimal) aObj[4];
+					BigDecimal DiscountApplied = (BigDecimal) aObj[5];
+					theCuinvoice = new Cuinvoice();
+					theCuinvoice = itsJobService.getCustomerInvoiceDetails(cuInvoiceID);
+					
+					aCuinvoice = (Cuinvoice) aSession.get(Cuinvoice.class,cuInvoiceID);
+					aCuinvoice.setAppliedAmount(aCuinvoice.getAppliedAmount().add(paymentApplied));
+					aCuinvoice.setDiscountApplied((aCuinvoice.getDiscountApplied()==null?BigDecimal.ZERO:aCuinvoice.getDiscountApplied()).add(DiscountApplied));
+					aCuinvoice.setDiscountAmt((aCuinvoice.getDiscountAmt()==null?BigDecimal.ZERO:aCuinvoice.getDiscountAmt()).add(DiscountApplied));
+					aCuinvoice.setTransactionStatus(2);
+					//added by prasant #633
+					aCuinvoice.setPaymentMadeOn(new Date());
+					aCuinvoice.setChangedById(aUserBean.getUserId());
+					
+					aSession.update(aCuinvoice);
+					if(aCuinvoice.getDiscountAmt().compareTo(BigDecimal.ZERO)!=0)
+						itsJobService.saveCustomerInvoiceLog(theCuinvoice,aCuinvoice,"CI-Edited-Payment",1,periodID,yearID);
+					else
+						itsJobService.saveCustomerInvoiceLog(theCuinvoice,aCuinvoice,"CI-Edited-Payment",0,periodID,yearID);
+					
+					if(aCuinvoice.getJoReleaseDetailId()!=null && aCuinvoice.getJoReleaseDetailId()!=0 ){
+					JoReleaseDetail joReleaseDetail = (JoReleaseDetail ) aSession.get(JoReleaseDetail.class,aCuinvoice.getJoReleaseDetailId());
+					Date curDate = new Date();
+					itsLogger.info("Null Pointer Error Date: "+curDate);
+					joReleaseDetail.setPaymentDate(curDate);
+				//	joReleaseDetail.setBalanceDue(appliedNew.subtract(aCuinvoice.getInvoiceAmount()));
+					aSession.update(joReleaseDetail);
+					
+					}
+				}
+				if(aQueryList.size()>0)
+				aSession.createSQLQuery("update cuLinkageDetail set statusCheck = 0 where cuReceiptID = "+cuReceiptID).executeUpdate();	
+					
+		} catch (Exception e) {
+			itsLogger.error(e.getMessage(), e);
+			CustomerException aCustomerException = new CustomerException(
+					e.getMessage(), e);
+			
+		} finally {
+			aSession.flush();
+			aSession.clear(); 
+			
+		}
+		return true;
 	}
 
 	/**
@@ -3156,6 +3290,7 @@ public class CustomerServiceImpl implements CustomerService {
 						joReleaseDetail.setPaymentDate(curDate);
 					//	joReleaseDetail.setBalanceDue(appliedNew.subtract(aCuinvoice.getInvoiceAmount()));
 						aSession.update(joReleaseDetail);
+						
 						}
 					}
 					if(aQueryList.size()>0)
@@ -3313,7 +3448,7 @@ public class CustomerServiceImpl implements CustomerService {
 					theCulinkagedetail.setDiscountUsed(new BigDecimal(discountAmount));
 					theCulinkagedetail.setRefInvoiceID(obj.get("cuInvoiceID").getAsInt());
 					theCulinkagedetail.setAmtApplied(new BigDecimal(amtApplied));
-					theCulinkagedetail.setDatePaid(new Date());
+					//theCulinkagedetail.setDatePaid(new Date());
 					theCulinkagedetail.setStatusCheck(1);
 					//added by prasant #633
 					theCulinkagedetail.setDatePaid(cuReceiptObj.getReceiptDate());

@@ -3743,7 +3743,7 @@ if(batchInvoiceCuID.length()>0 && !batchInvoiceCuID.equals("0")){
 		Jomaster joMaster=new Jomaster();	
 		Jomaster joMaster2=new Jomaster();
 		String jobNumberNew="";
-		if(choose.equals("Yes")==false)
+		if((choose!=null) && (choose.equals("Yes")==false))
 		{
 		Cuso cuso=salesServices.getCustomerSalesOrder(cuSoId);
 		DateFormat df = new SimpleDateFormat("MM/dd/yyyy");
@@ -3753,9 +3753,10 @@ if(batchInvoiceCuID.length()>0 && !batchInvoiceCuID.equals("0")){
 		}
 		if(status!=4)
 		 joMaster2=salesServices.updateSalesOrderStatus(cuSoId, status,((UserBean)session.getAttribute(SessionConstants.USER)).getUserId(),((UserBean)session.getAttribute(SessionConstants.USER)).getUserName(),jobNumberNew);
-			
-		     joMaster.setJobNumber(joMaster2.getJobNumber());
-			 joMaster.setJoMasterId(joMaster2.getJoMasterId());			 
+			if(joMaster2!=null){
+			     joMaster.setJobNumber(joMaster2.getJobNumber());
+				 joMaster.setJoMasterId(joMaster2.getJoMasterId());	
+			}			 
 			 joMaster2=null;			 
 			 return joMaster;
 		

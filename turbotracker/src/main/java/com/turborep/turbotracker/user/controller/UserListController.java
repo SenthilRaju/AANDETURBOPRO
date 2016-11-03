@@ -12,6 +12,7 @@ package com.turborep.turbotracker.user.controller;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Date;
@@ -1560,12 +1561,12 @@ public class UserListController {
 																@RequestParam(value = "prPriceLevel4", required = false) String prPriceLevel4,
 																@RequestParam(value = "prPriceLevel5", required = false) String prPriceLevel5,
 																//ID#624 Aravind
-																@RequestParam(value = "prPriceLevelval0", required = false) Integer prPriceLevelval0,
-																@RequestParam(value = "prPriceLevelval1", required = false) Integer prPriceLevelval1,
-																@RequestParam(value = "prPriceLevelval2", required = false) Integer prPriceLevelval2,
-																@RequestParam(value = "prPriceLevelval3", required = false) Integer prPriceLevelval3,
-																@RequestParam(value = "prPriceLevelval4", required = false) Integer prPriceLevelval4,
-																@RequestParam(value = "prPriceLevelval5", required = false) Integer prPriceLevelval5,
+																@RequestParam(value = "prPriceLevelval0", required = false) BigDecimal prPriceLevelval0,
+																@RequestParam(value = "prPriceLevelval1", required = false) BigDecimal prPriceLevelval1,
+																@RequestParam(value = "prPriceLevelval2", required = false) BigDecimal prPriceLevelval2,
+																@RequestParam(value = "prPriceLevelval3", required = false) BigDecimal prPriceLevelval3,
+																@RequestParam(value = "prPriceLevelval4", required = false) BigDecimal prPriceLevelval4,
+																@RequestParam(value = "prPriceLevelval5", required = false) BigDecimal prPriceLevelval5,
 																HttpSession theSession, HttpServletResponse response) throws IOException {
 		Sysinfo sysassign=new Sysinfo();
 		/*update Customer categories while changing the categories name in sysAssignment table*/

@@ -812,13 +812,14 @@ function reasonfordelete(oper){
 				checkdatachangesornotinform=false;		
 				}
 				}
-			else
+			//BID1657 Simon
+			/*else
 				{			
 				if(oldformSerialize.trim() == newformSerialize.trim())
 				{
 				checkdatachangesornotinform=false;		
 				}
-				}
+				}*/
 			if(checkdatachangesornotinform){	
 			//	alert(mulaccbtn_status);
 			if(mulaccbtn_status==1){

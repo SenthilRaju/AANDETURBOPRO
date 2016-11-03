@@ -658,9 +658,11 @@ public class GltransactionServiceImpl implements GltransactionService {
 		glTransaction.setyEndDate(aCofiscalyear.getEndDate());
 		glTransaction.setJournalId(aColedgersource.getJournalID());
 		glTransaction.setJournalDesc(aColedgersource.getDescription());
-		glTransaction.setEntrydate(new Date());
+		//added by prasant kumar #633
+		glTransaction.setEntrydate(aCureceipt.getReceiptDate());
 		glTransaction.setEnteredBy(userName);
-		glTransaction.setTransactionDate(new Date());
+		//added by prasant kumar #633
+		glTransaction.setTransactionDate(aCureceipt.getReceiptDate());
 		
 		Rxmaster liRxmasters = getTransactionDescriptionfromrxMasterID(aCureceipt
 				.getRxCustomerId());

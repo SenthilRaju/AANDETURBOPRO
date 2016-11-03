@@ -23,7 +23,7 @@ import javax.persistence.Transient;
 @Entity
 @Table(name = "coFiscalPeriod", catalog = "")
 public class Cofiscalperiod implements java.io.Serializable {
-
+	
 	private Integer coFiscalPeriodId;
 	private Integer coFiscalYearId;
 	private Date startDate;

@@ -851,7 +851,7 @@ function calculateTierPriceValue(){
 			$('#prPriceVal0').val('1');
 			RetailIdVal=whseCost;
 		}else{
-		RetailIdVal	=	Math.abs((whseCost *100) /$('#prPriceVal0').val()).toFixed(2);
+		RetailIdVal	=	Math.abs((whseCost) /$('#prPriceVal0').val()).toFixed(2);
 		}
 	}  	
 	 if($('#prPriceVal1').val()!='' && $('#prPriceVal1').val()!=null && $('#prPriceVal1').val()!=undefined ){
@@ -859,7 +859,7 @@ function calculateTierPriceValue(){
 			$('#prPriceVal1').val('1');
 			wholeSaleIdVal=whseCost;
 		}else{
-		wholeSaleIdVal	=	Math.abs((whseCost *100) /$('#prPriceVal1').val()).toFixed(2);
+		wholeSaleIdVal	=	Math.abs((whseCost) /$('#prPriceVal1').val()).toFixed(2);
 		}
 	}
 	 if($('#prPriceVal2').val()!='' && $('#prPriceVal2').val()!=null && $('#prPriceVal2').val()!=undefined ){
@@ -867,7 +867,7 @@ function calculateTierPriceValue(){
 			$('#prPriceVal2').val('1');
 			dealerIdVal=whseCost;
 		}else{
-		dealerIdVal		=	Math.abs((whseCost *100) /$('#prPriceVal2').val()).toFixed(2);
+		dealerIdVal		=	Math.abs((whseCost) /$('#prPriceVal2').val()).toFixed(2);
 		}
 	}
 	
@@ -876,7 +876,7 @@ function calculateTierPriceValue(){
 			$('#prPriceVal4').val('1');
 			distributorIdVal= whseCost;
 		}else{
-		distributorIdVal= 	Math.abs((whseCost *100) /$('#prPriceVal4').val()).toFixed(2);
+		distributorIdVal= 	Math.abs((whseCost) /$('#prPriceVal4').val()).toFixed(2);
 		}
 	}
 	 if($('#prPriceVal3').val()!='' &&  $('#prPriceVal3').val()!=null && $('#prPriceVal3').val()!=undefined ){
@@ -884,7 +884,7 @@ function calculateTierPriceValue(){
 			$('#prPriceVal3').val('1');
 			special1IdVal=whseCost;
 		}else{
-		special1IdVal	= 	Math.abs((whseCost *100) /$('#prPriceVal3').val()).toFixed(2);
+		special1IdVal	= 	Math.abs((whseCost) /$('#prPriceVal3').val()).toFixed(2);
 		}
     }
 	 if($('#prPriceVal5').val()!='' && $('#prPriceVal5').val()!=null && $('#prPriceVal5').val()!=undefined ){
@@ -892,21 +892,25 @@ function calculateTierPriceValue(){
 			$('#prPriceVal5').val('1');
 			special2IdVal= whseCost;
 		}else{
-		special2IdVal	= 	Math.abs((whseCost *100) /$('#prPriceVal5').val()).toFixed(2);
+		special2IdVal	= 	Math.abs((whseCost) /$('#prPriceVal5').val()).toFixed(2);
 		}
 	}
 	
-	$('#RetailId').val('$'+RetailIdVal);
-	$('#wholeSaleId').val('$'+wholeSaleIdVal);
-	$('#dealerId').val('$'+dealerIdVal);
-	$('#special1Id').val('$'+special1IdVal);
-	$('#distributorId').val('$'+distributorIdVal);
-	$('#special2Id').val('$'+special2IdVal);
-	
-	
-	
-	
+	$('#RetailId').val(RetailIdVal);
+	$('#wholeSaleId').val(wholeSaleIdVal);
+	$('#dealerId').val(dealerIdVal);
+	$('#special1Id').val(special1IdVal);
+	$('#distributorId').val(distributorIdVal);
+	$('#special2Id').val(special2IdVal);
+
+	$('#price0').text('$'+RetailIdVal);
+	$('#price1').text('$'+wholeSaleIdVal);
+	$('#price2').text('$'+dealerIdVal);
+	$('#price3').text('$'+special1IdVal);
+	$('#price4').text('$'+distributorIdVal);
+	$('#price5').text('$'+special2IdVal);
 	}
+
 function calculatePercentage(){
 	/**
  	 * Implemented for Req : id 81
