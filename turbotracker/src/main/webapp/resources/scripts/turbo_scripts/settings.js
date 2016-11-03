@@ -1291,32 +1291,32 @@ function savePriceTier(){
 	var prPriceLevel4 = $('#prPriceLevel4').val();
 	var prPriceLevel5 = $('#prPriceLevel5').val();
 	var prPriceLevelval0=$('#prPriceLevelval0').val();
-	prPriceLevelval0=prPriceLevelval0.replace(/\./gi,"");
+	prPriceLevelval0="0"+prPriceLevelval0;
 	if(prPriceLevelval0=="")
 		prPriceLevelval0=0;
 	
 	var prPriceLevelval1=$('#prPriceLevelval1').val();
-	prPriceLevelval1=prPriceLevelval1.replace(/\./gi,"");
+	prPriceLevelval1="0"+prPriceLevelval1;
 	if(prPriceLevelval1=="")
 		prPriceLevelval1=0;
 	
 	var prPriceLevelval2=$('#prPriceLevelval2').val();
-	prPriceLevelval2=prPriceLevelval2.replace(/\./gi,"");
+	prPriceLevelval2="0"+prPriceLevelval2;
 	if( prPriceLevelval2=="")
 		prPriceLevelval2=0;
 	
 	var prPriceLevelval3=$('#prPriceLevelval3').val();
-	prPriceLevelval3=prPriceLevelval3.replace(/\./gi,"");
+	prPriceLevelval3="0"+prPriceLevelval3;
 	if( prPriceLevelval3=="")
 		prPriceLevelval3=0;
 	
 	var prPriceLevelval4=$('#prPriceLevelval4').val();
-	prPriceLevelval4=prPriceLevelval4.replace(/\./gi,"");
+	prPriceLevelval4="0"+prPriceLevelval4;
 	if(prPriceLevelval4=="")
 		prPriceLevelval4=0;
 	
 	var prPriceLevelval5=$('#prPriceLevelval5').val();
-	prPriceLevelval5=prPriceLevelval5.replace(/\./gi,"");
+	prPriceLevelval5="0"+prPriceLevelval5;
 	if( prPriceLevelval5=="")
 		prPriceLevelval5=0;
 	

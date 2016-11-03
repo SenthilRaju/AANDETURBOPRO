@@ -355,18 +355,17 @@
 									</table>
 									<table>
 										<tr>
-											<td style="width: 80px;"><label id="prPriceLevel0">${requestScope.prPriceLevel0}</label></td><td style="width: 120px;"><input type="text" name="RetailName" id="RetailId" style="width:100px;  border-style: none"  class="validate[custom[number]]" value="" readonly ></td><td style="width: 80px;"> <label id="retailPercent" ></label></td>
-											<td style="width: 100px; "><label id="prPriceLevel3">${requestScope.prPriceLevel3}</label></td><td style="width: 120px;"><input type="text" name="special1Name" id="special1Id" style="width:100px;  border-style: none"  class="validate[custom[number]]" value="" readonly></td><td><label id="special1Percent" style="width: 80px;"></label></td>
-											
-																					</tr>
+											<td style="width: 80px;"><label id="prPriceLevel0">${requestScope.prPriceLevel0}</label></td><td style="width: 120px;"><input type="text" name="RetailName" id="RetailId" style="width:100px;  border-style: none;display: none;"  class="validate[custom[number]]" value="" readonly><label id="price0"></label></td><td style="width: 80px;"> <label id="retailPercent" ></label></td>
+											<td style="width: 100px; "><label id="prPriceLevel3">${requestScope.prPriceLevel3}</label></td><td style="width: 120px;"><input type="text" name="special1Name" id="special1Id" style="width:100px;  border-style: none;display: none;"  class="validate[custom[number]]" value="" readonly><label id="price3"></label></td><td><label id="special1Percent" style="width: 80px;"></label></td>
+									</tr>
 										<tr>
-										    <td style="width: 80px;"><label id="prPriceLevel1">${requestScope.prPriceLevel1}</label></td><td style="width: 120px;"><input type="text" name="wholeSaleName" id="wholeSaleId" style="width:100px;  border-style: none"  class="validate[custom[number]]" value="" readonly></td><td> <label id="wholeSalePercent" style="width: 80px;"></label></td>
-											<td style="width: 80px;"><label id="prPriceLevel4">${requestScope.prPriceLevel4}</label></td><td style="width: 120px;"><input type="text" name="distributorName" id="distributorId" style="width:100px;  border-style: none"  class="validate[custom[number]]" value="" readonly></td><td><label id="distPercent" style="width: 80px;"></label></td>
+										    <td style="width: 80px;"><label id="prPriceLevel1">${requestScope.prPriceLevel1}</label></td><td style="width: 120px;"><input type="text" name="wholeSaleName" id="wholeSaleId" style="width:100px;  border-style: none;display: none;"  class="validate[custom[number]]" value="" readonly><label id="price1"></label></td><td> <label id="wholeSalePercent" style="width: 80px;"></label></td>
+											<td style="width: 80px;"><label id="prPriceLevel4">${requestScope.prPriceLevel4}</label></td><td style="width: 120px;"><input type="text" name="distributorName" id="distributorId" style="width:100px;  border-style: none;display: none;"  class="validate[custom[number]]" value="" readonly><label id="price4"></label></td><td><label id="distPercent" style="width: 80px;"></label></td>
 											
 										</tr>
 										<tr>
-											<td style="width: 80px;"><label id="prPriceLevel2">${requestScope.prPriceLevel2}</label></td><td style="width: 120px;"><input type="text" name="dealerName" id="dealerId" style="width:100px;  border-style: none"  class="validate[custom[number]]" value="" readonly></td><td> <label id="dealerPercent" style="width: 80px;"></label></td>
-											<td style="width: 80px;"><label id="prPriceLevel5">${requestScope.prPriceLevel5}</label></td><td style="width: 120px;"><input type="text" name="special2Name" id="special2Id" style="width:100px;  border-style: none"  class="validate[custom[number]]" value="" readonly></td><td><label id="sp2Percent" style="width: 80px;"></label></td>
+											<td style="width: 80px;"><label id="prPriceLevel2">${requestScope.prPriceLevel2}</label></td><td style="width: 120px;"><input type="text" name="dealerName" id="dealerId" style="width:100px;  border-style: none;display: none;"  class="validate[custom[number]]" value="" readonly><label id="price2"></label></td><td> <label id="dealerPercent" style="width: 80px;"></label></td>
+											<td style="width: 80px;"><label id="prPriceLevel5">${requestScope.prPriceLevel5}</label></td><td style="width: 120px;"><input type="text" name="special2Name" id="special2Id" style="width:100px;  border-style: none;display: none;"  class="validate[custom[number]]" value="" readonly><label id="price5"></label></td><td><label id="sp2Percent" style="width: 80px;"></label></td>
 										</tr>
 									</table>
 								</fieldset>
