@@ -3897,9 +3897,7 @@ l.			 * Table :veBillDetail
 				for(Vebilldetail loopVebilldetail1:aVebilldetail){
 					NoOfLineItems=NoOfLineItems.add(loopVebilldetail1.getQuantityBilled());					
 				}
-				//calculating the avg of each lineItems
-			    TotalAvgForInv=(avebill.getBillAmount()).divide(NoOfLineItems,2,RoundingMode.HALF_UP);				
-				//
+				
 		     	for(Vebilldetail loopVebilldetail:aVebilldetail){
 		     		
 		     	statusPurseOrder=BigDecimal.ZERO;				
@@ -3910,8 +3908,11 @@ l.			 * Table :veBillDetail
 				if(loopVebilldetail.getVePodetailId()!=null)				
 					statusPurseOrder=getNumberOfProductReceived(loopVebilldetail.getVePodetailId(),loopVebilldetail.getPrMasterId());
 			
-					
-					
+				
+				//calculating the avg of each lineItems new Calcualtion 				
+				TotalAvgForInv=((loopVebilldetail.getUnitCost().multiply((loopVebilldetail.getPriceMultiplier()==null||loopVebilldetail.getPriceMultiplier().compareTo(BigDecimal.ZERO)==0)?new BigDecimal(1):loopVebilldetail.getPriceMultiplier())).multiply(quanti_billed)).add(freightamount).setScale(2,BigDecimal.ROUND_FLOOR);
+				
+				
 				if(quanti_billed!=null && quanti_billed.compareTo(BigDecimal.ZERO)!=0) // if quatity is zero nothing to updated as per eric request
 				{
 					if(freightamount.compareTo(new BigDecimal(0))>0){
@@ -3929,23 +3930,23 @@ l.			 * Table :veBillDetail
 				
 					BigDecimal NewInventoryOnHand=objPrmaster.getInventoryOnHand().setScale(2, BigDecimal.ROUND_FLOOR);
 					BigDecimal OldInventoryOnHand=objPrmaster.getInventoryOnHand().setScale(2, BigDecimal.ROUND_FLOOR);
-					//NewInventoryOnHand=NewInventoryOnHand.add(objPrmaster.getInventoryOnHand().setScale(2, BigDecimal.ROUND_FLOOR));
-					//OldInventoryOnHand=OldInventoryOnHand.add(objPrmaster.getInventoryOnHand().setScale(2, BigDecimal.ROUND_FLOOR));
 					if (statusPurseOrder.compareTo(BigDecimal.ZERO)>0){
 						t2=objPrmaster.getInventoryOnHand().setScale(2, BigDecimal.ROUND_FLOOR);						
 						OldInventoryOnHand=t2.subtract(statusPurseOrder);				     					
 					}
 					//Regarding need to update only is inventory product
 					if(objPrmaster.getIsInventory()==1){
+						
+						
 						if(objPrmaster.getAverageCost()!=null && objPrmaster.getAverageCost().compareTo(new BigDecimal(0))>0){
 							//old inventory product avg calculate formula
 							//productcost=productcost.add(objPrmaster.getAverageCost().setScale(2, BigDecimal.ROUND_FLOOR)).divide(new BigDecimal(2)).setScale(2, BigDecimal.ROUND_FLOOR);
-							BigDecimal RcvItemTotalvalue=TotalAvgForInv.multiply(loopVebilldetail.getQuantityBilled());
+							//BigDecimal RcvItemTotalvalue=TotalAvgForInv;  //.multiply(loopVebilldetail.getQuantityBilled());
 							System.out.println("========================================================================");
-							System.out.println("NewInventoryOnHand:->"+NewInventoryOnHand+"   OldInventoryOnHand:->"+OldInventoryOnHand+" TotalAvgForInv:"+TotalAvgForInv+"  RcvItemTotalvalue:->"+RcvItemTotalvalue);
+							System.out.println("NewInventoryOnHand:->"+NewInventoryOnHand+"   OldInventoryOnHand:->"+OldInventoryOnHand+" TotalAvgForInv:"+TotalAvgForInv);
 							System.out.println("========================================================================");	
 							if(NewInventoryOnHand.compareTo(BigDecimal.ZERO)!=0)
-				            productcost=((objPrmaster.getAverageCost().setScale(2, BigDecimal.ROUND_FLOOR).multiply(OldInventoryOnHand)).add(RcvItemTotalvalue)).divide(NewInventoryOnHand,2,RoundingMode.HALF_UP);
+				            productcost=((objPrmaster.getAverageCost().setScale(2, BigDecimal.ROUND_FLOOR).multiply(OldInventoryOnHand)).add(TotalAvgForInv)).divide(NewInventoryOnHand,2,RoundingMode.HALF_UP);
 							else
 								productcost= BigDecimal.ZERO;
 							
@@ -3957,6 +3958,8 @@ l.			 * Table :veBillDetail
 					}
 					aTransaction.commit();
 				}
+				TotalAvgForInv=BigDecimal.ZERO;
+						
 			}
 			
 			
@@ -4103,6 +4106,10 @@ l.			 * Table :veBillDetail
 					eachprofreightamount = BigDecimal.ZERO;
 				}
 				
+
+				TotalAvgForInv=((loopVebilldetail.getUnitCost().multiply((loopVebilldetail.getPriceMultiplier()==null||loopVebilldetail.getPriceMultiplier().compareTo(BigDecimal.ZERO)==0)?new BigDecimal(1):loopVebilldetail.getPriceMultiplier())).multiply(loopVebilldetail.getQuantityBilled())).add(freightamount).setScale(2,BigDecimal.ROUND_FLOOR);
+				
+				
 				BigDecimal productcost=loopVebilldetail.getUnitCost().multiply(loopVebilldetail.getPriceMultiplier()).add(eachprofreightamount).setScale(2,BigDecimal.ROUND_FLOOR);
 				BigDecimal oldavgcost = BigDecimal.ZERO;
 				aTransaction = aVePOSession.beginTransaction();
@@ -4131,7 +4138,7 @@ l.			 * Table :veBillDetail
 					System.out.println("========================================================================");	
 					if(NewInventoryOnHand.compareTo(BigDecimal.ZERO)!=0)
 					if(OldInventoryOnHand.compareTo(BigDecimal.ZERO)!=0)
-		            productcost=((objPrmaster.getAverageCost().setScale(2, BigDecimal.ROUND_FLOOR).multiply(NewInventoryOnHand)).subtract(RcvItemTotalvalue)).divide(OldInventoryOnHand,2,RoundingMode.HALF_UP);
+		            productcost=((objPrmaster.getAverageCost().setScale(2, BigDecimal.ROUND_FLOOR).multiply(NewInventoryOnHand)).subtract(TotalAvgForInv)).divide(OldInventoryOnHand,2,RoundingMode.HALF_UP);
 			           // ((objPrmaster.getAverageCost().setScale(2, BigDecimal.ROUND_FLOOR).multiply(OldInventoryOnHand)).add(RcvItemTotalvalue)).divide(NewInventoryOnHand,2,RoundingMode.HALF_UP);
 				   else
 						productcost= BigDecimal.ZERO;
