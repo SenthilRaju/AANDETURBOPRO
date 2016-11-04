@@ -8330,6 +8330,7 @@ String aJobSelectQry = "SELECT joMaster.joMasterId, joMaster.jobNumber, joMaster
 				aCuinvoicedetail.setTaxTotal((BigDecimal) aObj[9]);
 				aCuinvoicedetail.setNote((String) aObj[10]);
 				aCuinvoicedetail.setNoteImage((String) aObj[10]);
+				
 				aCuinvoicedetail.setWhseCost( itsInventoryService.getWarehouseCost(aCuinvoicedetail.getPrMasterId()));
 				aQueryList.add(aCuinvoicedetail);
 			}

@@ -11012,9 +11012,10 @@ function loadCustomerInvoice(){
 										select : function(event, ui) {
 											var selrowid=$("#customerInvoice_lineitems").jqGrid('getGridParam', 'selrow');
 											 var ID = ui.item.id; var product = ui.item.label; $("#"+selrowid+"_prMasterId").val(ID);
-												if(product.indexOf('-[') !== -1){var pro = product.split("-["); var pro2 = pro[1].replace("]",""); $("#"+selrowid+"_description").val(pro2);} 
+												if(product.indexOf('-[') !== -1){var pro = product.split("-["); var pro2 = pro[1].replace("]",""); $("#"+selrowid+"_description").val(pro2);}
+												var rxMasterID=$('#rxCustomer_ID').text();
 												$.ajax({
-										        url: './jobtabs5/getInvoiceLineItems?prMasterId='+$("#"+selrowid+"_prMasterId").val(),
+										        url: './jobtabs5/getInvoiceLineItems1?prMasterId='+$("#"+selrowid+"_prMasterId").val()+"&rxMasterID="+rxMasterID,
 										        type: 'POST',       
 										        success: function (data) {
 										        	$.each(data, function(key, valueMap) {										
@@ -11023,6 +11024,7 @@ function loadCustomerInvoice(){
 															$.each(valueMap, function(index, value){						
 																
 																	$("#"+selrowid+"_description").val(value.description);
+																	$("#new_row_unitCost").val(value.salesPrice00);
 																	$("#"+selrowid+"_unitCost").val(value.salesPrice00);
 																	$("#"+selrowid+"_priceMultiplier").val(value.pomult);
 																	$("#"+selrowid+"_amount").val(formatCurrency(0));
