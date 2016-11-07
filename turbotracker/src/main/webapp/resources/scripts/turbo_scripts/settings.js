@@ -1421,7 +1421,8 @@ function savePriceTier(){
 			$("#tierpricingmsgdiv").text("Tier Pricing Details updated.");
 			setTimeout(function(){
 				$('#tierpricingmsgdiv').html("");
-				},3000);       	
+				},3000);  
+			location.reload();
         }
    });	
 }

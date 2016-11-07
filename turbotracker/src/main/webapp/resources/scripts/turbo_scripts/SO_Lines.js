@@ -2331,6 +2331,7 @@ function setshowWarehouseCost(id){
 
 
 function saveLineDetails(popupdetail){
+	//BID1633 Simon
 	 $("#SaveLineSOReleaseID").prop('disabled', true);
 	 var itemCode=$("#new_row_itemCode").val();
 //	 if(itemCode.length==0){
@@ -2410,6 +2411,7 @@ function saveLineDetails(popupdetail){
 		  }
 	}
 	*/
+	//BID1633 Simon
 	 setTimeout(function(){
 		 $("#SaveLineSOReleaseID").prop('disabled', false);		
 			},3000);
