@@ -562,6 +562,30 @@ public class VendorService implements VendorServiceInterface{
 		return aRxcontact;
 	}
 	
+	//BID1654 Simon
+	@Override
+	public Rxcontact getContactDetailsByRxMasterId(Integer rxMasterID) throws VendorException {
+		Rxcontact aRxcontact = new Rxcontact();
+		Session aSession = null;
+		try {
+			aSession = itsSessionFactory.openSession();
+			 Query query = aSession.createQuery("from Rxcontact WHERE rxMasterId=:rxMasterID");
+			 query.setParameter("rxMasterID", rxMasterID);
+			 List<Rxcontact> list=query.list();
+			 if(list!=null && list.size()>0){
+				 aRxcontact=list.get(0);
+			 }
+		} catch (Exception e) {
+			itsLogger.error(e.getMessage(), e);
+			VendorException aVendorException = new VendorException(e.getCause().getMessage(), e);
+			throw aVendorException;
+		} finally {
+			aSession.flush();
+			aSession.close();
+		}
+		return aRxcontact;
+	}
+	
 	public Veshipvia getVeShipVia(Integer theShipViaID) throws VendorException {
 		Veshipvia aVeshipvia = new Veshipvia();
 		Session aSession = null;
@@ -1900,7 +1924,7 @@ l.			 * Table :veBillDetail
 		+ " IF(DATE(mo.TransactionDate)>'"+customDate+"',vb.BillAmount-(vb.AppliedAmount-(mLD.Amount+mLD.Discount)),vb.BillAmount-vb.AppliedAmount)AS balance"
 		+ " FROM veBill vb LEFT JOIN moLinkageDetail mLD ON vb.veBillID = mLD.veBillID LEFT JOIN moTransaction mo ON mLD.moTransactionID = mo.moTransactionID AND mo.Void <>1"
 		+ " LEFT OUTER JOIN rxMaster rx ON vb.rxMasterID = rx.rxMasterID LEFT OUTER JOIN vePO vp ON vb.vePOID = vp.vePOID"
-		+ " WHERE (vb.vePOID IS NULL OR vb.vePOID IS NOT NULL) and vb.TransactionStatus >0 or vb.TransactionStatus=-2";
+		+ " WHERE (vb.vePOID IS NULL OR vb.vePOID IS NOT NULL) and (vb.TransactionStatus >0 or vb.TransactionStatus=-2)";
 		         
 		if(searchData !=null && !searchData.equals("")){
 			aVendorBillsListQry+= "And  (vb.veBillID LIKE '%"+searchData+"%' OR PONumber LIKE '%"+searchData+"%' OR InvoiceNumber LIKE '%"+searchData+"%'" +
@@ -1918,18 +1942,18 @@ l.			 * Table :veBillDetail
 			aVendorBillsListQry+= " AND Date(BillDate) <= '"+formattedto+"' GROUP BY vb.veBillID HAVING (balance >0.01 OR balance < -0.01)";
 		}*/
 		
-		if(!startDate.equals("")&& !endDate.equals("")){
+		if((startDate!=null && !startDate.equals("")) && (endDate!=null && !endDate.equals(""))){
 			aVendorBillsListQry+= " AND Date(BillDate) >= '"+startDate +"' AND Date(BillDate) <= '"+endDate+"' GROUP BY vb.veBillID ";	}
-		else if(!startDate.equals("") && endDate.equals("")){
+		else if((startDate!=null && !startDate.equals(""))){
 			aVendorBillsListQry+= " AND Date(BillDate) >='"+startDate+"' GROUP BY vb.veBillID ";
-		}else if(!endDate.equals("") && startDate.equals("")){
+		}else if((endDate!=null && !endDate.equals(""))){
 			aVendorBillsListQry+= " AND Date(BillDate) <='"+endDate+"' GROUP BY vb.veBillID ";
 		}else{
 			aVendorBillsListQry+= " AND Date(BillDate) <= '"+formattedto+"' GROUP BY vb.veBillID ";
 		}
 				
 		String orderByIndex="";
-		String orderBy="DESC";
+		String orderBy="ASC";
 		
 		itsLogger.info("sortIndex::["+sortIndex+"]");
 		     
