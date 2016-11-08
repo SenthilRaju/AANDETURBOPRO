@@ -2223,7 +2223,7 @@ function SaveLinesPurchaseOrder(popupdetail){
 	});
 	//BID1633 Simon
 	 setTimeout(function(){
-	 $("#SaveLineSOReleaseID").prop('disabled', false);		
+	 $("#SaveLinesPOButton").prop('disabled', false);		
 	 },3000);
 }
 

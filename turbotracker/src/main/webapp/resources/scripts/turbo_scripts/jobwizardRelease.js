@@ -10332,6 +10332,8 @@ function chechjobcustomerisonhold(){
 } 
 function callvendorinvoicesave()
 {
+	//BID1633 Simon
+	$("#vendorinvoiceidbutton").prop("disabled",true);
 	var aInvoiceDetails = $("#openvendorinvoiceFormID").serialize();
 	var title = $('#openvendorinvoice').dialog('option', 'title');
 	
@@ -10407,6 +10409,10 @@ function callvendorinvoicesave()
 				   // return false;
 				}}}).dialog("open");
 	 }
+	//BID1633 Simon
+	 setTimeout(function(){
+	 $("#vendorinvoiceidbutton").prop('disabled', false);		
+	 },3000);
 }
 
 function noticeContact(){
