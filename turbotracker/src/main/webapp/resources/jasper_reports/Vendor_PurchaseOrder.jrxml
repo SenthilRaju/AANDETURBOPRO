@@ -353,14 +353,14 @@
 	<columnHeader>
 		<band height="18" splitType="Stretch">
 			<staticText>
-				<reportElement x="0" y="0" width="55" height="18" uuid="721a4b52-8695-4b4a-a2c9-5197784cf627"/>
+				<reportElement x="0" y="0" width="59" height="18" uuid="721a4b52-8695-4b4a-a2c9-5197784cf627"/>
 				<textElement textAlignment="Center" verticalAlignment="Top">
 					<font size="10" isBold="true" isUnderline="false"/>
 				</textElement>
 				<text><![CDATA[ITEM]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="54" y="0" width="201" height="18" uuid="f1fa941c-a6a0-43d1-a008-2bd5e7846368"/>
+				<reportElement x="59" y="0" width="196" height="18" uuid="f1fa941c-a6a0-43d1-a008-2bd5e7846368"/>
 				<textElement verticalAlignment="Top">
 					<font size="10" isBold="true" isUnderline="false"/>
 				</textElement>
@@ -406,18 +406,22 @@
 	<detail>
 		<band height="24" splitType="Stretch">
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement positionType="Float" x="0" y="0" width="55" height="18" isPrintWhenDetailOverflows="true" uuid="17f4798f-a24c-4729-aa70-b5da2ea61cf0"/>
+				<reportElement positionType="Float" x="0" y="0" width="59" height="18" isPrintWhenDetailOverflows="true" uuid="17f4798f-a24c-4729-aa70-b5da2ea61cf0"/>
 				<textElement textAlignment="Center" verticalAlignment="Top">
 					<font size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{ItemCode}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement positionType="Float" x="55" y="0" width="200" height="18" isPrintWhenDetailOverflows="true" uuid="ed2af979-d4af-43e2-8e14-a63ab68f6e06"/>
+				<reportElement positionType="Float" x="59" y="0" width="196" height="18" isPrintWhenDetailOverflows="true" uuid="ed2af979-d4af-43e2-8e14-a63ab68f6e06"/>
 				<textElement verticalAlignment="Top" markup="html">
 					<font size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{Description}+"<br/>"+(($F{Note}==null)?"".trim():$F{Note})]]></textFieldExpression>
+				<textFieldExpression><![CDATA["<p>"+$F{Description}+"</p>"+
+(($F{Note}==null)?("<p>&nbsp;</p>"):
+    ($F{Note}.contains("<div")?($F{Note}.replaceAll("div","p")):
+     ("<p>"+$F{Note}+"</p"))
+    )]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" pattern=" ###0.####" isBlankWhenNull="true">
 				<reportElement positionType="Float" x="255" y="0" width="34" height="18" isPrintWhenDetailOverflows="true" uuid="60e451d4-a8bf-42ca-b734-5516cffea7c4"/>
