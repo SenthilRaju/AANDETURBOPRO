@@ -42,6 +42,7 @@ import com.turborep.turbotracker.vendor.dao.Vepodetail;
 import com.turborep.turbotracker.vendor.dao.Vereceive;
 import com.turborep.turbotracker.vendor.dao.Vereceivedetail;
 import com.turborep.turbotracker.vendor.exception.VendorException;
+import com.turborep.turbotracker.vendor.service.VendorService;
 import com.turborep.turbotracker.vendor.service.VendorServiceInterface;
 
 @Controller
@@ -155,6 +156,28 @@ public class VendorRolodexFormController {
 		return aFactory;
 	}
 	
+	
+	//added by prasant #645
+	@RequestMapping(value = "checkStatusReceiveInventory", method = RequestMethod.POST)
+	public @ResponseBody
+	Integer checkStatusReceiveInventory(
+			@RequestParam(value = "prMasterID", required = true) Integer prMasterID,
+			@RequestParam(value = "quantityReceived", required = false) BigDecimal quantityReceived,
+			@RequestParam(value = "vePoidID", required = false) Integer vePOID,
+			HttpSession session) throws VendorException {
+		
+		
+	int aFactory=0;
+		
+		aFactory=itsVendorService.checkVePOIsInvoicedOrNOR(vePOID,quantityReceived,prMasterID); 
+		
+		
+		return aFactory;
+	}
+	
+	
+	
+	
 	@RequestMapping(value = "updateReceiveAllInventory", method = RequestMethod.POST)
 	public @ResponseBody
 	Integer updateReceiveAllInventory(@RequestParam(value = "gridData", required = false) String gridData,
@@ -167,6 +190,9 @@ public class VendorRolodexFormController {
 		Vepo vepo=new Vepo();
 		Integer aFactory = 0;
 		System.out.println("gridData "+gridData);
+		
+		//aFactory=itsVendorService.checkVePOIsInvoicedOrNOR(vePoid); 
+		//aFactory=0;
 		
 		
 		if ( gridData!=null) {
@@ -181,6 +207,7 @@ public class VendorRolodexFormController {
 				
 				aVeFactory.setVePodetailId(obj.get("vePodetailId").getAsInt());
 				aVeFactory.setPrMasterId(obj.get("prMasterId").getAsInt());
+				
 				aVeFactory.setQuantityReceived(JobUtil.ConvertintoBigDecimal(obj.get("quantityReceived").getAsString()));
 				
 				itsVendorService.vepoDetailReceiveInventory(aVeFactory,JobUtil.ConvertintoBigDecimal(obj.get("quantityReceived").getAsString()),veReceiveID,theReceivedDate);
@@ -190,7 +217,7 @@ public class VendorRolodexFormController {
 		vepo.setVePoid(vePoid);
 		vepo.setreceiveddate(theReceivedDate);
 		aFactory = itsVendorService.vepoReceiveInventoryDate(vepo,veReceiveID,((UserBean)session.getAttribute(SessionConstants.USER)).getUserId(),((UserBean)session.getAttribute(SessionConstants.USER)).getUserName());
-
+		
 		return aFactory;
 	}
 

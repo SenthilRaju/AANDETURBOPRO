@@ -120,7 +120,7 @@
 		<tr>
 			<td>
 				<input type="button" value="Email" class="savehoverbutton turbo-blue" onclick="sendBulkEmail()" style="height: 27px !important;width: 50px; display:none"  />
-				<input type="button" value="Print" class="savehoverbutton turbo-blue" onclick="printStatements()" style="height: 27px !important;width: 50px"  />
+				<input type="button" value="Print" class="savehoverbutton turbo-blue" onclick="printStatementsforAllCustomer()" style="height: 27px !important;width: 50px"  />
 				<!-- <input type="button" value="Email First Statement" class="savehoverbutton turbo-blue" onclick="deleteWareHouses()"  style="height: 29px !important;" /> -->
 			</td>
 		</tr>

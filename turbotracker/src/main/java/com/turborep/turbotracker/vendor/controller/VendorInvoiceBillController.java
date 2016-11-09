@@ -102,6 +102,7 @@ import com.turborep.turbotracker.vendor.dao.Vebillpay;
 import com.turborep.turbotracker.vendor.dao.Vemaster;
 import com.turborep.turbotracker.vendor.dao.VendorBillsBean;
 import com.turborep.turbotracker.vendor.dao.Vepo;
+import com.turborep.turbotracker.vendor.dao.Vepodetail;
 import com.turborep.turbotracker.vendor.exception.VendorException;
 import com.turborep.turbotracker.vendor.service.VendorServiceInterface;
 
@@ -237,6 +238,7 @@ public class VendorInvoiceBillController {
 		logger.info("vePOID: "+vePoID);
 		Vepo aVepo = new Vepo();
 		boolean invStatus = false ;
+		Integer transactionStatus=0;
 		
 		Integer vepoID;
 		if(vePoID!=null){
@@ -247,13 +249,14 @@ public class VendorInvoiceBillController {
 		try {
 				aVepo = vendorService.getVePo(vepoID);
 				invStatus = vendorService.checkInvoiceNumberExist(invNo,vepoID);
+				 transactionStatus=vendorService.getTransactionDailogStatus(vepoID);
 				
 		} catch (VendorException e) {
 			logger.error(e.getMessage());
 			theResponse.sendError(e.getItsErrorStatusCode(), e.getMessage());
 			sendTransactionException( vePoID+"","VendorInvoiceBillController",e,theSession,theRequest);
 		}
-		return aVepo.getSubtotal()+"-*-"+invStatus;
+		return aVepo.getSubtotal()+"-*-"+invStatus+"-*-"+transactionStatus;
 	}
 	
 	@RequestMapping(value="/updateVendorInvoiceDetails", method = RequestMethod.POST)
@@ -969,6 +972,15 @@ public class VendorInvoiceBillController {
 			Integer status=vendorService.checkPurchaseOrderRecived(aVepo.getVePoid());
 			map.put("Status",status);
 			Boolean NonInventory=true;
+			Integer allow=0;
+			//added by prasant #629
+			List<Vepodetail> Vepodetails=vendorService.getPOLineDetails(aVepo.getVePoid());
+			
+			if(Vepodetails.size()<=0)
+			allow=1;
+			map.put("allow",allow);
+			
+			
 			NonInventory=vendorService.checkStausForAllNonInventory(aVepo.getVePoid());			
 			if(!NonInventory)
 				status=2;
@@ -1608,6 +1620,65 @@ public class VendorInvoiceBillController {
 						 * convert the object to JSON
 						 */
 	}
+	
+	@RequestMapping(value = "/checkVendorInvoiceFromPO",method = RequestMethod.POST)
+	public @ResponseBody String checkVendorInvoiceFromPO(@RequestParam(value = "recDateIdPO", required = false) String recDateIdPO,
+			@RequestParam(value = "datePO", required = false) String datePO,
+			@RequestParam(value = "duePO", required = false) String duePO,
+			@RequestParam(value = "shipviaPO", required = false) Integer shipviaPO,
+			@RequestParam(value = "vendorInvoicePO", required = false) String vendorInvoicePO,
+			@RequestParam(value = "apacctPO", required = false) Integer apacctPO,
+			@RequestParam(value = "postdatePO", required = false) String postdatePO,
+			@RequestParam(value = "postDate1PO", required = false) String postDate1PO,
+			@RequestParam(value = "shipDatePO", required = false) String shipDatePO,
+			@RequestParam(value = "proPO", required = false) String proPO,
+			@RequestParam(value = "subtotalGeneralId", required = false) BigDecimal subtotalGeneralId,
+			@RequestParam(value = "freightGeneralId", required = false) BigDecimal freightGeneralId,
+			@RequestParam(value = "taxGeneralId", required = false) BigDecimal taxGeneralId,
+			@RequestParam(value = "totalGeneralId", required = false) BigDecimal totalGeneralId,
+			@RequestParam(value = "balDuePO", required = false) BigDecimal balDuePO,
+			@RequestParam(value = "vepoId", required = false) Integer vepoId,
+			@RequestParam(value = "veBillIdPO", required = false) Integer veBillIdPO,
+			@RequestParam(value = "prMasterIDPO", required = false) Integer prMasterIDPO,
+			@RequestParam(value = "rxMasterIDPayablePO", required = false) Integer rxMasterIDPayablePO,
+			@RequestParam(value = "buttonValue", required = false) String buttonValue,
+			@RequestParam(value = "updatePO", required = false) String updatePO,
+			@RequestParam(value = "reason", required = false) String reason,
+			@RequestParam(value = "joreleasedetid", required = false) Integer joreleasedetid,
+			@RequestParam(value = "operatorStatus", required = false) String operatorStatus,
+			@RequestParam(value = "gridData", required = false) String gridData,
+			 @RequestParam(value = "delData[]",required = false) ArrayList<String>  delData,
+			ModelMap theModel, HttpSession theSession,HttpServletResponse theResponse,HttpServletRequest theRequest) throws IOException, JobException, ParseException, BankingException, CompanyException, MessagingException
+	{
+		int flag=0;
+		String status="match";
+		JsonParser parser = new JsonParser();
+		if ( gridData!=null) {
+			System.out.println("gridData"+gridData);
+			JsonElement ele = parser.parse(gridData);
+			JsonArray array = ele.getAsJsonArray();
+			System.out.println("array length==>"+array.size());
+			for (int ki=0;ki<array.size()-1;ki++) {
+				JsonElement ele1=array.get(ki);
+				Prmaster master=new Prmaster();
+				JsonObject obj = ele1.getAsJsonObject();
+				String desc=obj.get("description").getAsString();
+				String note=obj.get("note").getAsString();
+				master.setItemCode(note);
+				BigDecimal quantityOrder=obj.get("quantityOrdered").getAsBigDecimal();
+				Integer prMasterID=obj.get("prMasterId").getAsInt();
+				master.setPrMasterId(prMasterID);
+				if(vendorService. getNumberOfProductReceived1(vepoId,prMasterID,quantityOrder)==false)
+				{
+					status="Mismatch";
+					break;
+				}
+			
+			}
+		}
+		return status;
+	}
+	
 	@RequestMapping(value = "/addVendorInvoiceFromPO",method = RequestMethod.POST)
 	public @ResponseBody Vebill addVendorInvoiceFromPO(@RequestParam(value = "recDateIdPO", required = false) String recDateIdPO,
 			@RequestParam(value = "datePO", required = false) String datePO,
@@ -1726,6 +1797,9 @@ public class VendorInvoiceBillController {
 			 * Reason for Adding ID#573 for differentiating purchases.
 			 */
 			ArrayList<Prmaster> prMaster=new ArrayList<Prmaster>();
+			
+			//below code is to add a new vendor Invoice for a PO
+			
 			if(veBillIdPO==null || veBillIdPO == 0)
 			{
 				if(vepoId!=null&&vepoId!=0){
@@ -1850,6 +1924,7 @@ public class VendorInvoiceBillController {
 			}		
 			}
 			}
+			//below code is to add a new vendor Invoice for a PO
 			else
 			{
 			//update the edited vendor invoice	
@@ -2113,6 +2188,9 @@ public class VendorInvoiceBillController {
 		try {
 				
 			Status= vendorService.getPoTotalequalsvendorinvoice(vepoID);
+			Integer s=vendorService.getTransactionDailogStatus(vepoID);
+			if(s==0)
+				Status = true;
 				
 		} catch (Exception e) {
 			logger.error(e.getMessage());

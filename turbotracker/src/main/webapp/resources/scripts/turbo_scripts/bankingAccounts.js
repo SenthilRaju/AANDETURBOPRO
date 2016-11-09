@@ -813,13 +813,13 @@ function reasonfordelete(oper){
 				}
 				}
 			//BID1657 Simon
-			/*else
+			else
 				{			
 				if(oldformSerialize.trim() == newformSerialize.trim())
 				{
 				checkdatachangesornotinform=false;		
 				}
-				}*/
+				}
 			if(checkdatachangesornotinform){	
 			//	alert(mulaccbtn_status);
 			if(mulaccbtn_status==1){

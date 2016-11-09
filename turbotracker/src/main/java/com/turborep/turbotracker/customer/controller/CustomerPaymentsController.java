@@ -365,21 +365,7 @@ public class CustomerPaymentsController {
         String strDate = dateFormat.format(receiptDate);
         String datePerticles[]=strDate.split("-");
         
-        
-
-	//    GregorianCalendar gc = new GregorianCalendar(Integer.parseInt(datePerticles[0]),Integer.parseInt(datePerticles[0])-1, 1);
-   //     java.util.Date monthStartDate = new java.util.Date(gc.getTime().getTime());
-   //  Calendar calendar = Calendar.getInstance();
-   //  calendar.setTime(monthStartDate);
-   //  calendar.add(calendar.MONTH, 1);
-    // calendar.add(calendar.DAY_OF_MONTH, -1);
-      //  java.util.Date monthEndDate = calendar.getTime();       
-        
-       // java.sql.Date sqlDate1 = new java.sql.Date(monthStartDate.getTime());
-       // java.sql.Date sqlDate2 = new java.sql.Date(monthEndDate.getTime());
-      //  java.sql.Timestamp monthStartDate1 = new java.sql.Timestamp(sqlDate1.getTime());
-       //java.sql.Timestamp monthEndDate2 = new java.sql.Timestamp(sqlDate2.getTime());
-        
+        //added by prasant to get startdate and end date #633
         String monthStartDate1=datePerticles[0]+"-"+datePerticles[1]+"-"+1;
         String monthEndDate2=datePerticles[0]+"-"+datePerticles[1]+"-"+31;
         

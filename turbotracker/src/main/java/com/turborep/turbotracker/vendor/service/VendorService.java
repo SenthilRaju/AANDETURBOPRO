@@ -3447,7 +3447,7 @@ l.			 * Table :veBillDetail
 
 			}else{
 			
-			aPOLineItemListQry = "SELECT ve.vePODetailID," + " ve.vePOID,"
+/*			aPOLineItemListQry = "SELECT ve.vePODetailID," + " ve.vePOID,"
 					+ " ve.prMasterID," + " ve.Description,"
 					+ " (IF (ve.QuantityOrdered - IFNULL (a.quaninv,0)>=0,ve.QuantityOrdered - IFNULL (a.quaninv,0),0))AS QuantityOrdered," + " ve.Taxable," + " ve.UnitCost,"
 					+ " ve.PriceMultiplier," + " ve.posistion,"
@@ -3460,7 +3460,24 @@ l.			 * Table :veBillDetail
 					+ " LEFT JOIN (SELECT vePODetailID,SUM(quantityInvoiced) AS quaninv FROM veBillHistory WHERE vePOID="+theVepoID+" GROUP BY vePODetailID ) a ON a.vePODetailID = ve.vePODetailID"
 					+ " Right Join vePO vepo on vepo.vePOID = ve.vePOID"
 					+ " where ve.vePOID = " + theVepoID
-					+ " ORDER BY ve.posistion";
+					+ " ORDER BY ve.posistion";*/
+				
+				//changed by prasant kuamr #645	
+				aPOLineItemListQry = "SELECT * FROM ( SELECT ve.vePODetailID," + " ve.vePOID,"
+						+ " ve.prMasterID," + " ve.Description,"
+						+ " (IF (veR.QuantityReceived - IFNULL (a.quaninv,0)>=0,ve.QuantityReceived - IFNULL (a.quaninv,0),0))AS QuantityOrdered," + " ve.Taxable," + " ve.UnitCost,"
+						+ " ve.PriceMultiplier," + " ve.posistion,"
+						+ " pr.ItemCode, " + " vepo.TaxTotal, " + " ve.Note, "
+						+ " ve.EstimatedShipDate," + "ve.AcknowledgementDate,"
+						+ " ve.VendorOrderNumber," + "ve.QuantityReceived,"
+						+ "(ve.QuantityOrdered-ve.QuantityReceived) "
+						+ " FROM vePODetail ve "
+						+ " Left Join veReceiveDetail veR on (veR.vePODetailID=ve.vePODetailID)"
+						+ " Left Join prMaster pr on ve.prMasterID = pr.prMasterID"					
+						+ " LEFT JOIN (SELECT vePODetailID,SUM(quantityInvoiced) AS quaninv FROM veBillHistory WHERE vePOID="+theVepoID+" GROUP BY vePODetailID ) a ON	a.vePODetailID = ve.vePODetailID"
+						+ " Right Join vePO vepo on vepo.vePOID = ve.vePOID"
+						+ " where ve.vePOID = " + theVepoID + " ORDER BY ve.posistion  )AS d WHERE QuantityOrdered >0";	
+				
 			}
 		}
 		Session aSession = null;
@@ -5685,5 +5702,152 @@ l.			 * Table :veBillDetail
 		}
 		return status;
 	
+	}
+
+	@Override
+	public boolean getNumberOfProductReceived1(Integer vepoId, Integer prMasterID,BigDecimal quantityOrder) {
+		
+		boolean receicveItemCount=true;
+		
+		if(checkStausNonInventory(prMasterID)==true)
+		{
+			
+			String aQry = "   SELECT veReceiveId FROM Vereceive WHERE vePoid= " +vepoId;
+			
+		    String aQry1 = " ";
+			Session aSession = null;
+		
+		
+		
+		List<Integer> veRcvIDs = null;
+		List<BigDecimal> InventoryRcvt = null;
+		try {
+			// Retrieve session from Hibernate
+			aSession = itsSessionFactory.openSession();
+			// Create a Hibernate query (HQL)
+			Query query = aSession.createQuery(aQry);
+			// Retrieve all
+			 veRcvIDs = query.list();
+			if(veRcvIDs.size() > 0){
+				System.out.println("veRciptID :"+veRcvIDs.get(0));
+				aQry1 = "   SELECT quantityReceived FROM Vereceivedetail WHERE veReceiveId= " +veRcvIDs.get(0) +"and prMasterId= "+prMasterID;
+				Query query1 = aSession.createQuery(aQry1); 
+				InventoryRcvt= query1.list();
+				
+				
+			}
+			if(quantityOrder.compareTo(InventoryRcvt.get(0))!=0)
+				receicveItemCount=false;
+				
+		//	aQry1 = "   SELECT quantityReceived FROM Vereceivedetail WHERE vePodetailId= " +vePodetailId +"and prMasterId= "+prMasterID;
+			
+			
+			
+		   } catch (Exception e) {
+			itsLogger.error(e.getMessage(), e);
+			//throw new JobException(e.getMessage(), e);
+		   } finally {
+			aSession.flush();
+			aSession.close();
+			aQry = null;
+		}
+		
+		}//if end
+		return receicveItemCount;
+		
+	}
+
+	public Integer checkVePOIsInvoicedOrNOR(Integer vePoid, BigDecimal quantityReceived, Integer prMasterID) {
+
+		String aQry = "FROM Vepodetail  WHERE vePoid= " + vePoid + " and prMasterId= " + prMasterID;
+
+		String aQry1 = " ";
+		Session aSession = null;
+
+		int flag = 0;
+
+		List<Vepodetail> Vepodetail_list = null;
+		List<Vebilldetail> vebilldetails = null;
+		BigDecimal totalQtysInvoiced = BigDecimal.ZERO;
+		try {
+		
+			aSession = itsSessionFactory.openSession();
+			Query query = aSession.createQuery(aQry);
+			Vepodetail_list = query.list();
+			Iterator it = Vepodetail_list.iterator();
+			Vepodetail vepodetaild = (Vepodetail) it.next();
+			aQry1 = " FROM Vebilldetail WHERE vePodetailId= " + vepodetaild.getVePodetailId() + "AND prMasterId= "
+					+ vepodetaild.getPrMasterId();
+			Query query1 = aSession.createQuery(aQry1);
+			vebilldetails = query1.list();
+			Iterator<Vebilldetail> veBill_iterator = vebilldetails.iterator();
+			while (veBill_iterator.hasNext()) {
+				Vebilldetail vebill = veBill_iterator.next();
+				BigDecimal d2=vebill.getQuantityBilled();
+				if (vebill.getQuantityBilled() == null) {
+					totalQtysInvoiced=totalQtysInvoiced.add(BigDecimal.ZERO);
+				} else
+					totalQtysInvoiced=totalQtysInvoiced.add(vebill.getQuantityBilled());
+
+			}
+			if (quantityReceived.compareTo(totalQtysInvoiced) == -1) {
+				flag = totalQtysInvoiced.intValue();
+
+			}
+
+		} catch (Exception e) {
+			itsLogger.error(e.getMessage(), e);
+		} finally {
+			aSession.flush();
+			aSession.close();
+			aQry = null;
+			aQry1=null;
+		}
+
+		return flag;
+	}
+
+	@Override
+	public Integer getTransactionDailogStatus(Integer vepoID) {
+		
+		String Qry="from Vepodetail where vePoid = "+vepoID;
+			Session aSession = null;
+			int status=0;
+		
+		
+		
+		List<Vepodetail> vepodetails = null;
+		try {
+			// Retrieve session from Hibernate
+			aSession = itsSessionFactory.openSession();
+			
+			// Create a Hibernate query (HQL)
+			Query query = aSession.createQuery(Qry);
+			// Retrieve all
+			vepodetails = query.list();
+		   Iterator<Vepodetail>vepodetails_iterator=vepodetails.iterator();
+			
+			while(vepodetails_iterator.hasNext())
+			{
+				Vepodetail vepoDetail=vepodetails_iterator.next();
+				if(vepoDetail.getQuantityOrdered().compareTo(vepoDetail.getQuantityReceived())!=0)
+				{
+					status=1;
+					break;
+				}
+			}
+			
+		   } catch (Exception e) {
+			itsLogger.error(e.getMessage(), e);
+			//throw new JobException(e.getMessage(), e);
+		   } finally {
+			aSession.flush();
+			aSession.close();
+			Qry = null;
+		}
+		
+	
+		// TODO Auto-generated method stub
+		return status;
 	}
 }
