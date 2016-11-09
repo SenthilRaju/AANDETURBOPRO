@@ -4289,6 +4289,8 @@ function check_productNofromoutside( value, colname ) {
 
 
 function SaveVendorInvoicewithPO(operation){
+	//BID1633 Simon
+	$("#addNewVeInvFmDlgbuttonsave").prop("disabled",true);
 	//alert("in SaveVendorInvoicewithPO  "+operation);
 	var vendorInvoiceDetails=$("#addNewVendorInvoiceFromPOForm").serialize();
 	var gridRows = $('#lineItemGrid').getRowData();
@@ -4365,6 +4367,10 @@ function SaveVendorInvoicewithPO(operation){
 					}}}).dialog("open");
 		 }
 		}
+	//BID1633 Simon
+	 setTimeout(function(){
+		 $("#addNewVeInvFmDlgbuttonsave").prop('disabled', false);		
+			},3000);
 }
 function removedollarsymbol(value,id){
 	if(value!=null && value!=""){

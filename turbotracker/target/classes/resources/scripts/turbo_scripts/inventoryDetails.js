@@ -903,12 +903,19 @@ function calculateTierPriceValue(){
 	$('#distributorId').val(distributorIdVal);
 	$('#special2Id').val(special2IdVal);
 
-	$('#price0').text('$'+RetailIdVal);
-	$('#price1').text('$'+wholeSaleIdVal);
-	$('#price2').text('$'+dealerIdVal);
-	$('#price3').text('$'+special1IdVal);
-	$('#price4').text('$'+distributorIdVal);
-	$('#price5').text('$'+special2IdVal);
+//	$('#price0').text('$'+RetailIdVal);
+//	$('#price1').text('$'+wholeSaleIdVal);
+//	$('#price2').text('$'+dealerIdVal);
+//	$('#price3').text('$'+special1IdVal);
+//	$('#price4').text('$'+distributorIdVal);
+//	$('#price5').text('$'+special2IdVal);
+	
+	$('#price0').text('$'+parseFloat(RetailIdVal).toFixed(2));
+	$('#price1').text('$'+parseFloat(wholeSaleIdVal).toFixed(2));
+	$('#price2').text('$'+parseFloat(dealerIdVal).toFixed(2));
+	$('#price3').text('$'+parseFloat(special1IdVal).toFixed(2));
+	$('#price4').text('$'+parseFloat(distributorIdVal).toFixed(2));
+	$('#price5').text('$'+parseFloat(special2IdVal).toFixed(2));
 	}
 
 function calculatePercentage(){
