@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="memo" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="97890909-8856-4e8d-81ee-d19af251bd44">
-	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.zoom" value="2.0"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="0"/>
+	<property name="ireport.y" value="144"/>
 	<parameter name="type" class="java.lang.String"/>
 	<parameter name="invoiceID" class="java.lang.Integer"/>
 	<queryString>
@@ -13,7 +13,7 @@ cI.Description AS desc1,cI.Note,cI.Subtotal AS subtotal, cI.Freight AS frieght,c
 FROM cuInvoice cI,coDivision cD,rxMaster rM,rxAddress rA,tsUserLogin tuL,tsUserSetting tuS
 WHERE cD.coDivisionID=cI.coDivisionID
 AND tuL.UserLoginID=cI.cuAssignmentID0
-AND rA.rxAddressID=rM.rxMasterID
+AND rM.rxMasterID=rA.rxMasterID
 AND rM.rxMasterID=cI.rxCustomerID
 AND cI.cuInvoiceID=$P{invoiceID}]]>
 	</queryString>
@@ -69,7 +69,7 @@ AND cI.cuInvoiceID=$P{invoiceID}]]>
 		<band height="1" splitType="Stretch"/>
 	</title>
 	<pageHeader>
-		<band height="174" splitType="Stretch">
+		<band height="173" splitType="Stretch">
 			<componentElement>
 				<reportElement x="144" y="0" width="226" height="83" uuid="ff315e07-a237-4695-94a9-850429d3aee4"/>
 				<hc:html xmlns:hc="http://jasperreports.sourceforge.net/htmlcomponent" xsi:schemaLocation="http://jasperreports.sourceforge.net/htmlcomponent http://jasperreports.sourceforge.net/xsd/htmlcomponent.xsd" scaleType="RetainShape" horizontalAlign="Left" verticalAlign="Middle">
@@ -151,21 +151,13 @@ AND cI.cuInvoiceID=$P{invoiceID}]]>
 				<textElement textAlignment="Center"/>
 				<textFieldExpression><![CDATA[$F{InvoiceDate}]]></textFieldExpression>
 			</textField>
-			<textField>
-				<reportElement x="101" y="146" width="69" height="17" uuid="a73c0545-aa46-4607-9f34-69494749ce79"/>
-				<textFieldExpression><![CDATA[$F{cuCity}]]></textFieldExpression>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="101" y="154" width="158" height="17" uuid="a73c0545-aa46-4607-9f34-69494749ce79"/>
+				<textFieldExpression><![CDATA[$F{cuCity}+", "+$F{cuState}+" "+$F{cuZip}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="101" y="130" width="158" height="13" uuid="2640ee31-6993-470a-8644-3e2d3127dc01"/>
 				<textFieldExpression><![CDATA[$F{cuAddr1}]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="170" y="143" width="53" height="20" uuid="b84c7819-353c-4897-b0e1-f5f7c31c6060"/>
-				<textFieldExpression><![CDATA[$F{cuState}]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="223" y="146" width="36" height="17" uuid="4d51d816-b03e-4405-b85b-9fc5024ae35a"/>
-				<textFieldExpression><![CDATA[$F{cuZip}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="101" y="111" width="158" height="20" uuid="188ca8ba-e4eb-446c-8831-1f46d46ddea7"/>
@@ -179,6 +171,10 @@ AND cI.cuInvoiceID=$P{invoiceID}]]>
 				<reportElement positionType="Float" x="0" y="0" width="144" height="90" uuid="70b84307-9913-41d3-84f6-d171600b4a6b"/>
 				<imageExpression><![CDATA[$F{companyLogo}]]></imageExpression>
 			</image>
+			<textField isBlankWhenNull="true">
+				<reportElement x="101" y="142" width="158" height="13" uuid="4678e1fa-4ef0-467c-85b7-9269d15bc9a8"/>
+				<textFieldExpression><![CDATA[$F{cuAddr2}]]></textFieldExpression>
+			</textField>
 		</band>
 	</pageHeader>
 	<columnHeader>

@@ -439,7 +439,8 @@ function formatCustomCurrency(strValue)
 	dblValue = parseFloat(strValue);
 	//console.log('dblValue::'+dblValue);
 	blnSign = (dblValue == (dblValue = Math.abs(dblValue)));
-	dblValue = 	Math.floor(dblValue*100).toFixed(2);
+	//BID1666 Simon
+	dblValue = (dblValue*100).toFixed(2);
 	//console.log('dblValue##2::'+dblValue);
 	intCents = dblValue%100;
 	strCents = intCents.toString();
