@@ -2192,7 +2192,7 @@ public class VendorInvoiceBillController {
 		}
 		try {
 				
-			Status= vendorService.getPoTotalequalsvendorinvoice(vepoID);
+			 vendorService.getPoTotalequalsvendorinvoice(vepoID);
 			Integer s=vendorService.getTransactionDailogStatus(vepoID);
 			if(s==0)
 				Status = true;

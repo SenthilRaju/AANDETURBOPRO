@@ -1496,8 +1496,10 @@ var allText = $('#apacct').html();
 								success: function(data) {
 									
 									if(operatorStatus=="close")
-									{if(data=="true"){
-										 var newDialogDiv = jQuery(document.createElement('div'));
+									{
+									
+										if(data==true){
+											 var newDialogDiv = jQuery(document.createElement('div'));
 										jQuery(newDialogDiv).html('<span><b style="color:Green;">Do You want to close the PO transaction Status?</b></span>');
 										jQuery(newDialogDiv).dialog({modal: true, width:300, height:150, title:"Success.", 
 										buttons:{
@@ -1512,7 +1514,9 @@ var allText = $('#apacct').html();
 												 saveVendorInvoicesfromPO($("#datePO").val(),generalValues,"no",operatorStatus,reasonVal);
 												
 											return false;	
-											}}}).dialog("open");
+											}
+											}
+										}).dialog("open");
 									}
 									else
 										{
@@ -1529,7 +1533,7 @@ var allText = $('#apacct').html();
 										 saveVendorInvoicesfromPO($("#datePO").val(),generalValues,"no",operatorStatus);
 									}
 								}
-						
+								   
 								});
 						 
 				}		
@@ -3408,6 +3412,7 @@ function checkLatestInvoice(prMasterID)
 //New Method
 
 var posit_outside_loadlineItemGrid=0;
+var global_Qty=0;
 function loadlineItemGrid()
 {
 	//alert("hi it is calling....");
@@ -3562,7 +3567,7 @@ function loadlineItemGrid()
 		},editrules:{edithidden:false},  
 			cellattr: function (rowId, tv, rawObject, cm, rdata)	 {return 'style="white-space: normal" ';}},
 
-		{name:'quantityOrdered', index:'quantityOrdered', align:'center', width:20,hidden:false, editable:false, editoptions:{size:5, alignText:'left',maxlength:7,
+		{name:'quantityOrdered', index:'quantityOrdered', align:'center', width:20,hidden:false, editable:true, editoptions:{size:5, alignText:'left',maxlength:7,
 			dataEvents: [
   			  { type: 'focus', data: { i: 7 }, fn: function(e) { 
   				  var rowobji=$(e.target).closest('tr.jqgrow');
@@ -3590,11 +3595,30 @@ function loadlineItemGrid()
 	                       		 if(key == 13)  // the enter key code
 	                       		  {
 	                       			var rowid=$(e.target).closest('tr')[0].id;
+	                       			//var colid=$(e.target).closest('td')[4].id;
 	                       			//var prMasterID=$(e.target).closest('tr')[0].prMasterID;
 	                                var row=  $('#lineItemGrid').jqGrid ('getGridParam', 'selrow');
 	                            	var	prMasterID =  $('#lineItemGrid').jqGrid ('getCell', row, 'prMasterId');
 	                            	console.log("prMasterID:"+$('#lineItemGrid').jqGrid ('getCell', row, 'prMasterId'));
-
+	                            	
+	                            	//var	vePodetailId_afterSave=$('#lineItemGrid').jqGrid ('getCell', rowid, 'vePodetailId');
+	                            	var vePodetailId_beforeSave=$('#'+row+'_vePodetailId').val();
+	                            	if(vePodetailId_beforeSave !="")
+        							{ 
+        							var newDialogDiv = jQuery(document.createElement('div'));
+        						    jQuery(newDialogDiv).attr("id","msgDlg");
+        							jQuery(newDialogDiv).html('<span><b style="color:Green;">All lineItems are Received so you cannot edit</b></span>');
+        							jQuery(newDialogDiv).dialog({modal: true, width:320, height:170, title:"Warning",
+        							buttons: [{height:35,text: "OK",click: function() { $(this).dialog("close")        						
+        							$("#lineItemGrid").jqGrid('setCell',row,'quantityOrdered', global_Qty);       							
+        							global_Qty=0;
+        							}}]}).dialog("open");
+        							
+        							//$("#" + rowId).find('td').eq('4').html('newText')
+        						//	$("#lineItemGrid").trigger("reloadGrid");
+        						//	$('#lineItemGrid').jqGrid('restoreCell', rowid, colid, true);
+        			 
+        							}
 	                            	//alert("prMasterID :"+row);
 	                       			Calculategrideditrowvalues_VI(rowid);
 	                       			checkLatestInvoice(prMasterID);
@@ -3811,6 +3835,10 @@ function loadlineItemGrid()
 				//console.log("veBillDetailId :: "+veBillDetailId);
 			},
 			ondblClickRow: function(rowid) {
+		    global_Qty=	$('#lineItemGrid').jqGrid('getCell',rowid,'quantityOrdered');//$("#"+rowid+"_quantityOrdered").val();
+			
+			//alert(global_Qty);
+				
 				if(rowid=="new_row"){
 					 
 				 }else{
