@@ -66,7 +66,8 @@ $("#lineItemGrid").trigger("reloadGrid");
 	                    			   // alert("vePoidID:"+ rowData.vePoid);
 	                    			    
 	                    			   // additionalInfo="&prMasterID="+prMasterID+"&vePoidID="+vePoidID+"&quantityReceived="+quantityReceived;
-	                    				if(quantityOrdered > quantityReceived)
+	                    				//added by prasant kumar #645
+	                    			    	if(quantityOrdered > quantityReceived)
 	                    					{
 	                    			    $.ajax({
 	                    					url: "./rolodexforms/checkStatusReceiveInventory",

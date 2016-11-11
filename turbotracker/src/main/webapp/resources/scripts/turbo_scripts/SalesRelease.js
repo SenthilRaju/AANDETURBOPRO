@@ -1469,13 +1469,15 @@ function onSetSalesStatus(e){
 		jQuery(newDialogDiv4).html('<span><b ></b></span>');
 		jQuery(newDialogDiv4).html('<span><b ></b></span>');
 		jQuery(newDialogDiv4).html('<span><b style="color:blue;">'+ errorText+ '</b></span>');
-		jQuery(newDialogDiv4).dialog({modal : true, width : 350, height : 170, title : "Book as Job", 
+		jQuery(newDialogDiv4).dialog({ modal : true, width : 350, height : 170, title : "Book as Job", 
 			buttons : [ {
 								height : 25,
 								width:156,
 								text : "Yes",
 								click: function() { 
-									$(this).dialog("close"); $(this).dialog("destroy").remove();bookAsJob("Yes",e);								
+									$(this).dialog("close");
+									$(this).dialog("destroy").remove();
+									bookAsJob("Yes",e);								
 						               
 								      }
 			},
@@ -1484,7 +1486,9 @@ function onSetSalesStatus(e){
 				width:156,
 				text : "NO",
 				click: function() {
-					$(this).dialog("close"); $(this).dialog("destroy").remove();bookAsJob("No",e)
+					$(this).dialog("close");
+					$(this).dialog("destroy").remove();
+					bookAsJob("No",e);
 			
 		             }
 					}]
@@ -1574,17 +1578,20 @@ function onSetSalesStatus(e){
 	/*
 	*/
 	//BID#1644 Simon
-	$.ajax({
-		url: "./salesOrderController/setSalesOrderStatus",
-		type: "POST",
-		data :{cusoID:cuSoid,status:setStatus},
-		success: function(data) {
-			$('#showSalesOrderOptions').dialog('destroy').remove();
-			$('#transactionStatus').val(setStatus);
-			$('#soStatusButton').val(e);
-			$("#release").trigger( 'reloadGrid' );
-		}
-	});
+	if(setStatus!=3){
+		$.ajax({
+			url: "./salesOrderController/setSalesOrderStatus",
+			type: "POST",
+			data :{cusoID:cuSoid,status:setStatus},
+			success: function(data) {
+				$('#showSalesOrderOptions').dialog('destroy').remove();
+				$('#transactionStatus').val(setStatus);
+				$('#soStatusButton').val(e);
+				$("#release").trigger( 'reloadGrid' );
+			}
+		});
+	}
+	
 }
 
 	//added  by prasant kumar #513 date 23/09/2016	

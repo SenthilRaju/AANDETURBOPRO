@@ -5732,7 +5732,7 @@ public Boolean checkStausNonInventory(Integer prMasterId) {
 		return receicveItemCount;
 		
 	}
-
+//added by prasant kumar #645
 	public Integer checkVePOIsInvoicedOrNOR(Integer vePoid, BigDecimal quantityReceived, Integer prMasterID) {
 
 		String aQry = "FROM Vepodetail  WHERE vePoid= " + vePoid + " and prMasterId= " + prMasterID;
@@ -5782,7 +5782,7 @@ public Boolean checkStausNonInventory(Integer prMasterId) {
 
 		return flag;
 	}
-
+//added by prasant #645
 	@Override
 	public Integer getTransactionDailogStatus(Integer vepoID) {
 		
