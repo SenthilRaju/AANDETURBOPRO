@@ -233,7 +233,7 @@ function saveReceivedInventory(){
 		},
 		success: function(data) {
 			
-			if(data==1)
+			/*if(data==1)
 				{
 				var newDialogDiv = jQuery(document.createElement('div'));
 				jQuery(newDialogDiv).html('<span><b style="color:red;"> All items are Invoiced .You can not edit the Receive Inventory</b></span>');
@@ -241,14 +241,14 @@ function saveReceivedInventory(){
 										buttons: [{text: "OK",click: function(){$(this).dialog("close"); }}]
 									}).dialog("open");
 				$("#LoadingDialog").hide();
-				}
-			else{
+				}*/
+		/*	else{*/
 			createtpusage('Receive Inventory','Receive Inventory ALL','Info','Receive Inventory,Receive Inventory All,receivedInventorydate:'+recDate);
 			document.location.href="./showReceivedInventory?vePOID="+vepoid+"&veReceiveID="+data;
 			$("#veReceivedID").val(data);
 			$("#LoadingDialog").hide();
 			//location.reload();
-			}
+			//}
 			
 		}
 	});

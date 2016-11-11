@@ -585,6 +585,7 @@ public class VendorService implements VendorServiceInterface{
 //		}
 //		return aRxcontact;
 //	}
+
 	
 	public Veshipvia getVeShipVia(Integer theShipViaID) throws VendorException {
 		Veshipvia aVeshipvia = new Veshipvia();
@@ -3500,7 +3501,26 @@ l.			 * Table :veBillDetail
 						+ " Left Join prMaster pr on ve.prMasterID = pr.prMasterID"					
 						+ " LEFT JOIN (SELECT vePODetailID,SUM(quantityInvoiced) AS quaninv FROM veBillHistory WHERE vePOID="+theVepoID+" GROUP BY vePODetailID ) a ON	a.vePODetailID = ve.vePODetailID"
 						+ " Right Join vePO vepo on vepo.vePOID = ve.vePOID"
-						+ " where ve.vePOID = " + theVepoID + " ORDER BY ve.posistion  )AS d WHERE QuantityOrdered >0";	
+						+ " where ve.vePOID = " + theVepoID + " ORDER BY ve.posistion  )AS d WHERE QuantityOrdered >0"
+				
+				
+				        + " UNION ALL"
+				   
+			             + " SELECT * FROM ( SELECT ve.vePODetailID, ve.vePOID, ve.prMasterID, ve.Description, "
+			             + " (IF (ve.QuantityOrdered - IFNULL (a.quaninv,0)>=0,ve.QuantityOrdered - IFNULL (a.quaninv,0),0))AS QuantityOrdered,"
+			             + " ve.Taxable, ve.UnitCost, ve.PriceMultiplier, ve.posistion, pr.ItemCode,  vepo.TaxTotal,  ve.Note, "
+			             + " ve.EstimatedShipDate,ve.AcknowledgementDate, ve.VendorOrderNumber,ve.QuantityReceived,"
+			             + " (ve.QuantityOrdered-ve.QuantityReceived)  FROM vePODetail ve  "
+
+			             + " LEFT JOIN prMaster pr ON ve.prMasterID = pr.prMasterID LEFT JOIN "
+			             + "(SELECT vePODetailID,SUM(quantityInvoiced)"
+			             + " AS quaninv FROM veBillHistory WHERE vePOID="+theVepoID+" GROUP BY vePODetailID ) a ON"
+			             + " a.vePODetailID = ve.vePODetailID RIGHT JOIN vePO vepo ON vepo.vePOID = ve.vePOID WHERE ve.vePOID = "+theVepoID+" AND pr.IsInventory=0"
+			             + "  ORDER BY ve.posistion  )AS d WHERE QuantityOrdered >0";
+				
+				
+				
+				
 				
 			}
 		}
@@ -5854,11 +5874,13 @@ l.			 * Table :veBillDetail
 			while(vepodetails_iterator.hasNext())
 			{
 				Vepodetail vepoDetail=vepodetails_iterator.next();
+				if(checkStausNonInventory(vepoDetail.getPrMasterId())==true){
 				if(vepoDetail.getQuantityOrdered().compareTo(vepoDetail.getQuantityReceived())!=0)
 				{
 					status=1;
 					break;
 				}
+			}//check only for inventory products if end 
 			}
 			
 		   } catch (Exception e) {
