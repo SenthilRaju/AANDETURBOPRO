@@ -6163,6 +6163,8 @@ function loadCustomerInvoice(loadValue) {
 																				 }
 																				 var margintotal=Number(subTotalIDLine)-Number(grandTotal);
 																				 $("#salesorder_total").val(formatCurrency(margintotal));
+																				 $("#CuInvoiceSaveID").prop("disabled",true);
+																				 $("#CuInvoiceSaveID").css("background","rgb(204, 204, 204)");
 																			}								
 																		});
 															        }
@@ -6261,6 +6263,8 @@ function loadCustomerInvoice(loadValue) {
 						  		                 			     searchProduct=null;
 						  		                    			 setcustomerInvoicelineitemtotal(cuLines_selectRow);
 						  		                    			 $("#customerInvoice_lineitems_ilsave").trigger("click");
+						  		                    			$("#CuInvoiceSaveID").prop("disabled",false);
+																 $("#CuInvoiceSaveID").css("background","");
 						  		                 			 //   $( "#customerInvoice_lineitems_iladd" ).trigger( "click" );
 						  		                    		    return false;  
 						  		                    		  }
@@ -6334,6 +6338,8 @@ function loadCustomerInvoice(loadValue) {
 									              			     searchProduct=null;
 									                 			 setcustomerInvoicelineitemtotal(cuLines_selectRow);
 									                 			 $("#customerInvoice_lineitems_ilsave").trigger("click");
+									                 			$("#CuInvoiceSaveID").prop("disabled",false);
+																 $("#CuInvoiceSaveID").css("background","");
 									              			 //   $( "#customerInvoice_lineitems_iladd" ).trigger( "click" );
 									                 		    return false;  
 									                 		  }
@@ -6398,6 +6404,8 @@ function loadCustomerInvoice(loadValue) {
 							                 			    searchProduct=null;
 							                    			 setcustomerInvoicelineitemtotal(cuLines_selectRow);
 							                    			 $("#customerInvoice_lineitems_ilsave").trigger("click");
+							                    			 $("#CuInvoiceSaveID").prop("disabled",false);
+															 $("#CuInvoiceSaveID").css("background","");
 							                 			  //  $( "#customerInvoice_lineitems_iladd" ).trigger( "click" );
 							                    		    return false;  
 							                    		  }
@@ -6459,6 +6467,8 @@ function loadCustomerInvoice(loadValue) {
 								                 			    searchProduct=null;
 								                    			 setcustomerInvoicelineitemtotal(cuLines_selectRow);
 								                    			 $("#customerInvoice_lineitems_ilsave").trigger("click");
+								                    			 $("#CuInvoiceSaveID").prop("disabled",false);
+																 $("#CuInvoiceSaveID").css("background","");
 								                 			  //  $( "#customerInvoice_lineitems_iladd" ).trigger( "click" );
 								                    		    return false;  
 								                    		  }

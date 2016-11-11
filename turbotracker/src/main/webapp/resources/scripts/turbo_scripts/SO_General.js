@@ -177,7 +177,6 @@ function loadSOcategories(){
 }
 
 function PreloadSOGeneralData(cusoid){
-	console.log("SimonSimonSimonSimonSimonSimonSimonSimonSimonSimonSimonSimonSimonSimonSimonSimonSimonSimonSimonSimonSimonSimon");
 	$('#salesreleasetab').tabs({ selected: 0 });
 	$('#salesreleasetab').tabs({ active: 0 });
 	resetSOGeneralForm();
