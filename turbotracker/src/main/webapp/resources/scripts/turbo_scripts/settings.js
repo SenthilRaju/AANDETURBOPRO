@@ -1281,8 +1281,28 @@ function saveColumnQuoteDefaults(){
 	alert(err.message);
 }
 }
+//ID624 Simon
+$('.tierPriceValue').keyup(function(){
+	if($('#prPriceLevelval0').val().trim().length==0 || $('#prPriceLevelval0').val()[0]!='.' || $('#prPriceLevelval0').val()[1]=='.'){
+		$('#prPriceLevelval0').val('.');
+	}
+	if($('#prPriceLevelval1').val().trim().length==0 || ($('#prPriceLevelval1').val()[0]!='.') || ($('#prPriceLevelval1').val()[1]=='.')){
+		$('#prPriceLevelval1').val('.');
+	}
+	if($('#prPriceLevelval2').val().trim().length==0 || ($('#prPriceLevelval2').val()[0]!='.') || ($('#prPriceLevelval2').val()[1]=='.')){
+		$('#prPriceLevelval2').val('.');
+	}
+	if($('#prPriceLevelval3').val().trim().length==0 || ($('#prPriceLevelval3').val()[0]!='.') || ($('#prPriceLevelval3').val()[1]=='.')){
+		$('#prPriceLevelval3').val('.');
+	}
+	if($('#prPriceLevelval4').val().trim().length==0 || ($('#prPriceLevelval4').val()[0]!='.') || ($('#prPriceLevelval4').val()[1]=='.')){
+		$('#prPriceLevelval4').val('.');
+	}
+	if($('#prPriceLevelval5').val().trim().length==0 || ($('#prPriceLevelval5').val()[0]!='.') || ($('#prPriceLevelval5').val()[1]=='.')){
+		$('#prPriceLevelval5').val('.');
+	}
+});
 function savePriceTier(){
-	
 	//ID#624 Aravind
 	var prPriceLevel0 = $('#prPriceLevel0').val();
 	var prPriceLevel1 = $('#prPriceLevel1').val();
@@ -1291,32 +1311,86 @@ function savePriceTier(){
 	var prPriceLevel4 = $('#prPriceLevel4').val();
 	var prPriceLevel5 = $('#prPriceLevel5').val();
 	var prPriceLevelval0=$('#prPriceLevelval0').val();
-	prPriceLevelval0=prPriceLevelval0.replace(/\./gi,"");
+	if(prPriceLevelval0.trim().length!=0 && prPriceLevelval0[0]!='.' ){
+		$('#prPriceLevelval0').val(".");
+		$('#prPriceLevelval0').focus();
+		return false;
+	}
+	if((prPriceLevelval0[1]!=null && isNaN(prPriceLevelval0[1])) || (prPriceLevelval0[2]!=null && isNaN(prPriceLevelval0[2]))){
+		$('#prPriceLevelval0').focus();
+		return false;
+	}
+	prPriceLevelval0="0"+prPriceLevelval0;
 	if(prPriceLevelval0=="")
 		prPriceLevelval0=0;
 	
 	var prPriceLevelval1=$('#prPriceLevelval1').val();
-	prPriceLevelval1=prPriceLevelval1.replace(/\./gi,"");
+	if(prPriceLevelval1.trim().length!=0 && prPriceLevelval1[0]!='.' ){
+		$('#prPriceLevelval1').val(".");
+		$('#prPriceLevelval1').focus();
+		return false;
+	}
+	if((prPriceLevelval1[1]!=null && isNaN(prPriceLevelval1[1])) || (prPriceLevelval1[2]!=null && isNaN(prPriceLevelval1[2]))){
+		$('#prPriceLevelval1').focus();
+		return false;
+	}
+	prPriceLevelval1="0"+prPriceLevelval1;
 	if(prPriceLevelval1=="")
 		prPriceLevelval1=0;
 	
 	var prPriceLevelval2=$('#prPriceLevelval2').val();
-	prPriceLevelval2=prPriceLevelval2.replace(/\./gi,"");
+	if(prPriceLevelval2.trim().length!=0 && prPriceLevelval2[0]!='.' ){
+		$('#prPriceLevelval2').val(".");
+		$('#prPriceLevelval2').focus();
+		return false;
+	}
+	if((prPriceLevelval2[1]!=null && isNaN(prPriceLevelval2[1])) || (prPriceLevelval2[2]!=null && isNaN(prPriceLevelval2[2]))){
+		$('#prPriceLevelval2').focus();
+		return false;
+	}
+	prPriceLevelval2="0"+prPriceLevelval2;
 	if( prPriceLevelval2=="")
 		prPriceLevelval2=0;
 	
 	var prPriceLevelval3=$('#prPriceLevelval3').val();
-	prPriceLevelval3=prPriceLevelval3.replace(/\./gi,"");
+	if(prPriceLevelval3.trim().length!=0 && prPriceLevelval3[0]!='.' ){
+		$('#prPriceLevelval3').val(".");
+		$('#prPriceLevelval3').focus();
+		return false;
+	}
+	if((prPriceLevelval3[1]!=null && isNaN(prPriceLevelval3[1])) || (prPriceLevelval3[2]!=null && isNaN(prPriceLevelval3[2]))){
+		$('#prPriceLevelval3').focus();
+		return false;
+	}
+	prPriceLevelval3="0"+prPriceLevelval3;
 	if( prPriceLevelval3=="")
 		prPriceLevelval3=0;
 	
 	var prPriceLevelval4=$('#prPriceLevelval4').val();
-	prPriceLevelval4=prPriceLevelval4.replace(/\./gi,"");
+	if(prPriceLevelval4.trim().length!=0 && prPriceLevelval4[0]!='.' ){
+		$('#prPriceLevelval4').val(".");
+		$('#prPriceLevelval4').focus();
+		return false;
+	}
+	if((prPriceLevelval4[1]!=null && isNaN(prPriceLevelval4[1])) || (prPriceLevelval4[2]!=null && isNaN(prPriceLevelval4[2]))){
+		$('#prPriceLevelval4').focus();
+		return false;
+	}
+	prPriceLevelval4="0"+prPriceLevelval4;
 	if(prPriceLevelval4=="")
 		prPriceLevelval4=0;
 	
 	var prPriceLevelval5=$('#prPriceLevelval5').val();
-	prPriceLevelval5=prPriceLevelval5.replace(/\./gi,"");
+	if(prPriceLevelval5.trim().length!=0 && prPriceLevelval5[0]!='.' ){
+		$('#prPriceLevelval5').val(".");
+		$('#prPriceLevelval5').focus();
+		return false;
+	}
+	if((prPriceLevelval5[1]!=null && isNaN(prPriceLevelval5[1])) || (prPriceLevelval5[2]!=null && isNaN(prPriceLevelval5[2]))){
+		$('#prPriceLevelval5').focus();
+		return false;
+	}
+	prPriceLevelval5="0"+prPriceLevelval5;
 	if( prPriceLevelval5=="")
 		prPriceLevelval5=0;
 	
@@ -1347,7 +1421,8 @@ function savePriceTier(){
 			$("#tierpricingmsgdiv").text("Tier Pricing Details updated.");
 			setTimeout(function(){
 				$('#tierpricingmsgdiv').html("");
-				},3000);       	
+				},3000);  
+			location.reload();
         }
    });	
 }

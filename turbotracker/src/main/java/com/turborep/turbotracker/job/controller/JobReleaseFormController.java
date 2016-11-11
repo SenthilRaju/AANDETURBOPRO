@@ -494,7 +494,7 @@ public class JobReleaseFormController {
 		return aInteger;
 	}
 	
-	@RequestMapping(value = "shipping" , method = RequestMethod.GET)
+	@RequestMapping(value = "/shipping" , method = RequestMethod.GET)
 	public @ResponseBody CustomResponse getShipingList(@RequestParam(value="jobNumber", required=false) String theJobNumber,
 																				@RequestParam(value="joDetailsID", required=false) Integer theJoDetailsID, 
 																				@RequestParam(value="releaseType", required=false) String releaseType,

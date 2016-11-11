@@ -3318,6 +3318,8 @@ function loadTaxTerritoryRate(coTaxTerritoryId) {
 }
 
 function savecustomerinvoice(operation) {
+	//BID1633 Simon
+	$("#CuInvoiceSaveID").prop('disabled', true);
 	var customerInvoice_TaxTerritory = $("#customerInvoice_TaxTerritory").val();
 	
 	if(operation == 'closedialog')
@@ -3958,6 +3960,10 @@ function savecustomerinvoice(operation) {
 
 	$('#imgInvoiceEmail').empty();
 	$('#imgInvoiceEmail').append(' <input id="contactEmailID" type="image" src="./../resources/Icons/mail_new.png" title="Email Customer Invoice" style="background:#EEDEBC;" onclick="sendPOEmail(\'CuInvoice\');return false;">');
+	//BID1633 Simon
+	 setTimeout(function(){
+	 $("#CuInvoiceSaveID").prop('disabled', false);		
+	 },3000);
 }
 
 function cancelcustomerinvoice() {
@@ -4153,7 +4159,7 @@ function PreloadDataFromInvoiceTable(initialValue) {
 						$('#customerTaxTerritory').val(
 								data.cuInvoice.coTaxTerritoryId);
 
-						alert(data.cuInvoice.jobnoDescription);
+						//alert(data.cuInvoice.jobnoDescription);
 						$('#jobnodescription').val(
 								data.cuInvoice.jobnoDescription);
 

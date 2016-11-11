@@ -1176,7 +1176,7 @@ function populateFreightCharges()
 			});
 			/* $.each(data, function(index, value){
 				var coAccountID = value.veFreightChargesId;
-				alert("id--"+coAccountID);
+				//alert("id--"+coAccountID);
 				sHtml+='<option value='+value.veFreightChargesId+'>'+value.description+'</option>';
 			
 			}); */
@@ -2320,7 +2320,7 @@ function populateFreightCharges()
 	}
 
 	function loadAck(data){
-		alert("inside the loadAck");	
+		//alert("inside the loadAck");	
 		var schgrid='<table id="Ack"></table><div id="Ackpager"></div>';	
 		$('#jqgridAck').empty();
 		$('#jqgridAck').append(schgrid);

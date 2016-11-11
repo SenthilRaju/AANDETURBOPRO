@@ -5,6 +5,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.math.RoundingMode;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.text.DateFormat;
@@ -513,12 +514,12 @@ public class MediatorController {
 				model.addAttribute("prPriceLevel6", sysinfo.getPrPriceLevel6());
 				
 				//ID#624 Aravind
-				model.addAttribute("prPriceLevelval0", sysinfo.getPrPriceLevelval0());
-				model.addAttribute("prPriceLevelval1", sysinfo.getPrPriceLevelval1());
-				model.addAttribute("prPriceLevelval2", sysinfo.getPrPriceLevelval2());
-				model.addAttribute("prPriceLevelval3", sysinfo.getPrPriceLevelval3());
-				model.addAttribute("prPriceLevelval4", sysinfo.getPrPriceLevelval4());
-				model.addAttribute("prPriceLevelval5", sysinfo.getPrPriceLevelval5());
+				model.addAttribute("prPriceLevelval0", sysinfo.getPrPriceLevelval0().toString().replaceFirst("0.", "."));
+				model.addAttribute("prPriceLevelval1", sysinfo.getPrPriceLevelval1().toString().replaceFirst("0.", "."));
+				model.addAttribute("prPriceLevelval2", sysinfo.getPrPriceLevelval2().toString().replaceFirst("0.", "."));
+				model.addAttribute("prPriceLevelval3", sysinfo.getPrPriceLevelval3().toString().replaceFirst("0.", "."));
+				model.addAttribute("prPriceLevelval4", sysinfo.getPrPriceLevelval4().toString().replaceFirst("0.", "."));
+				model.addAttribute("prPriceLevelval5", sysinfo.getPrPriceLevelval5().toString().replaceFirst("0.", "."));
 				
 				}
 				if(sysassignment!=null){
@@ -2026,12 +2027,12 @@ public class MediatorController {
 			theModel.addAttribute("prPriceLevel5",sysinfo.getPrPriceLevel5());
 			
 			//ID#624 Aravind
-			model.addAttribute("prPriceLevelval0", sysinfo.getPrPriceLevelval0());
-			model.addAttribute("prPriceLevelval1", sysinfo.getPrPriceLevelval1());
-			model.addAttribute("prPriceLevelval2", sysinfo.getPrPriceLevelval2());
-			model.addAttribute("prPriceLevelval3", sysinfo.getPrPriceLevelval3());
-			model.addAttribute("prPriceLevelval4", sysinfo.getPrPriceLevelval4());
-			model.addAttribute("prPriceLevelval5", sysinfo.getPrPriceLevelval5());
+			model.addAttribute("prPriceLevelval0", sysinfo.getPrPriceLevelval0().toString().replaceFirst("0.", "."));
+			model.addAttribute("prPriceLevelval1", sysinfo.getPrPriceLevelval1().toString().replaceFirst("0.", "."));
+			model.addAttribute("prPriceLevelval2", sysinfo.getPrPriceLevelval2().toString().replaceFirst("0.", "."));
+			model.addAttribute("prPriceLevelval3", sysinfo.getPrPriceLevelval3().toString().replaceFirst("0.", "."));
+			model.addAttribute("prPriceLevelval4", sysinfo.getPrPriceLevelval4().toString().replaceFirst("0.", "."));
+			model.addAttribute("prPriceLevelval5", sysinfo.getPrPriceLevelval5().toString().replaceFirst("0.", "."));
 	
 			
 			if (itsPrDepartment != null) {

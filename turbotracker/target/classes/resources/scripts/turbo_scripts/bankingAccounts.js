@@ -812,6 +812,7 @@ function reasonfordelete(oper){
 				checkdatachangesornotinform=false;		
 				}
 				}
+			//BID1657 Simon
 			else
 				{			
 				if(oldformSerialize.trim() == newformSerialize.trim())

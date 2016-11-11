@@ -1552,7 +1552,6 @@ function onSetSalesStatus(e){
 				           {height:35,text: "No",click: function() { $(this).dialog("close");$("#showSalesOrderOptions").dialog("destroy").remove();}},
 				           {height:35,text: "Cancel",click: function() { $(this).dialog("close");$("#showSalesOrderOptions").dialog("destroy").remove();}}]
 			}).dialog("open");
-		
 	}	
 	/*if(setStatus == 3 && ($('#tagJobID').val()==null || $('#tagJobID').val()=="")){
 		
@@ -1574,6 +1573,18 @@ function onSetSalesStatus(e){
 	//alert("cuSOID is "+cuSoid);
 	/*
 	*/
+	//BID#1644 Simon
+	$.ajax({
+		url: "./salesOrderController/setSalesOrderStatus",
+		type: "POST",
+		data :{cusoID:cuSoid,status:setStatus},
+		success: function(data) {
+			$('#showSalesOrderOptions').dialog('destroy').remove();
+			$('#transactionStatus').val(setStatus);
+			$('#soStatusButton').val(e);
+			$("#release").trigger( 'reloadGrid' );
+		}
+	});
 }
 
 	//added  by prasant kumar #513 date 23/09/2016	

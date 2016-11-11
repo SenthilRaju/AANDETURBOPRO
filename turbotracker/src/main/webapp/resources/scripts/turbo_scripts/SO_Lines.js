@@ -1363,6 +1363,33 @@ function loadSOLineItemGrid(){
 							},
 							error: function (result) {$('.ui-autocomplete-loading').removeClass("ui-autocomplete-loading");	}
 							});
+					
+//					$("#autocomplete").autocomplete({
+//					    autoSelect: true,
+//					    autoFocus: true,
+//					    delay: 200,
+//					    source: function (request, response) {
+//					        $.ajax({
+//					            url: "/Country/Find", type: "GET", dataType: "json",
+//					            data: { search: request.term, maxResults: 10 },
+//					            success: function (data) {
+//					                //Check the length of the returned list if it's empty 
+//					                if (data.length == 0) {
+//					                    //Remove the last character from the input
+//					                    $("#autocomplete").val(function (index, value) {
+//					                        return value.substr(0, value.length - 1);
+//					                    })
+//					                    //Rerun search with the modified shortened input
+//					                    $("#autocomplete").autocomplete("search");
+//					                }
+//					                response($.map(data, function (item) {
+//					                    return { label: item, value: item }
+//					                }))
+//					            }
+//					        })
+//					    }
+//					});
+					
 				},dataEvents: [
 				       			  { type: 'focus', data: { i: 7 }, fn: function(e) { 
 				       			  
@@ -2309,6 +2336,8 @@ function setshowWarehouseCost(id){
 
 
 function saveLineDetails(popupdetail){
+	//BID1633 Simon
+	 $("#SaveLineSOReleaseID").prop('disabled', true);
 	 var itemCode=$("#new_row_itemCode").val();
 //	 if(itemCode.length==0){
 	 if(itemCode!=undefined){
@@ -2387,7 +2416,10 @@ function saveLineDetails(popupdetail){
 		  }
 	}
 	*/
-	
+	//BID1633 Simon
+	 setTimeout(function(){
+		 $("#SaveLineSOReleaseID").prop('disabled', false);		
+			},3000);
 }
 
 function closeSOLineItemTab(){

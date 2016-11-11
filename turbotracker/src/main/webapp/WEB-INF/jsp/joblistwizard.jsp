@@ -278,7 +278,7 @@ String.prototype.replaceAll = function(target, replacement) {
 
 		
 		/* function myCustomInitInstance(ed) {  
-			alert("inis");
+			//alert("inis");
 			  try{
 			    ed.execCommand("fontName", false, "Helvetica");    
 			    ed.execCommand("fontSize", false, "10pt");    

@@ -85,5 +85,7 @@ public interface AccountingCyclesService {
 	
 	public List<Cofiscalperiod> getcofiperiodvalues(Integer closeperiodid,Integer currentperiodid)throws CompanyException;
 
-	public Integer getPeriodIdForMe(Integer period, Integer yearId);
+	//public Integer getPeriodIdForMe(Integer period, Integer yearId);
+
+	public Integer getPeriodIdForMe(String StartDate, String EndDate, Integer yearId);
 }

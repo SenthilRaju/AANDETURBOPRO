@@ -1411,7 +1411,7 @@ function FormatShipDate(createdDate){
 function sendPOEmail(poGeneralKey){
 	
 	
-	alert("Email is ready to go..!");
+	//alert("Email is ready to go..!");
 	
 	console.log('Email form---- SO_General.js---SO_General.js---->'+$('#emailListCU').text()+'  :::  poGeneralKey : '+poGeneralKey);
 	if($('#POtransactionStatus').val() === '-1'){

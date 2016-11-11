@@ -61,7 +61,7 @@ public class DrillDownServiceImpl implements DrillDownService  {
 		Integer searchPeriodFrom =Integer.parseInt(periodFromID);
 		Integer searchPeriodTo =Integer.parseInt(periodTo);
 		//Integer searchYear =Integer.parseInt(yearID);
-		fiscalYearInt = getCurrentFiscalYear("SELECT coy.coFiscalYearId FROM coFiscalYear coy where coy.fiscalYear = "+yearID);
+		fiscalYearInt = getCurrentFiscalYear("SELECT coy.coFiscalYearId FROM coFiscalYear coy where coy.fiscalYear = '"+yearID+"'");
 		fiscalPeriod = getCurrentFiscalPeriod("SELECT cop.coFiscalPeriodId FROM coFiscalPeriod cop where cop.period = "+periodTo+" and cop.coFiscalYearId = "+fiscalYearInt);
 		
 		
@@ -154,7 +154,7 @@ public class DrillDownServiceImpl implements DrillDownService  {
 					List<GlTransaction> lstLedgerDetail =chartOfAccountsService.getLedgerDetailsPeriod(coAccountsID, (Integer)aObj[3], (Integer)aObj[4]);
 					if(lstLedgerDetail.size()>0)
 					{
-					if((lstLedgerDetail.get(0).getBankClosingBalance()).compareTo(BigDecimal.ZERO)<0)
+					if((lstLedgerDetail.get(0).getBankClosingBalance()!=null) && ((lstLedgerDetail.get(0).getBankClosingBalance()).compareTo(BigDecimal.ZERO)<0))
 					glRepAccObj.setyBalance(lstLedgerDetail.get(0).getBankClosingBalance().negate()+" CR");
 					else
 					glRepAccObj.setyBalance(lstLedgerDetail.get(0).getBankClosingBalance()+" DB");
@@ -196,7 +196,7 @@ public class DrillDownServiceImpl implements DrillDownService  {
 				List<GlTransaction> lstLedgerDetail =chartOfAccountsService.getLedgerDetailsPeriod(coAccountsID, fiscalPeriod,fiscalYearInt);
 				if(lstLedgerDetail.size()>0)
 				{
-				if((lstLedgerDetail.get(0).getBankClosingBalance()).compareTo(BigDecimal.ZERO)<0)
+				if((lstLedgerDetail.get(0).getBankClosingBalance()!=null) && ((lstLedgerDetail.get(0).getBankClosingBalance()).compareTo(BigDecimal.ZERO)<0))
 				glRepAccObj.setyBalance(lstLedgerDetail.get(0).getBankClosingBalance().negate()+" CR");
 				else
 				glRepAccObj.setyBalance(lstLedgerDetail.get(0).getBankClosingBalance()+" DB");
@@ -1150,7 +1150,7 @@ public class DrillDownServiceImpl implements DrillDownService  {
 	@Override
 	public BigDecimal getNetProfitAmount(Integer cofiscalPeriodID) throws DrillDownException {
 
-		String aSalesselectQry = "SELECT SUM(diff) AS netprofiloss FROM ("
+		/*String aSalesselectQry = "SELECT SUM(diff) AS netprofiloss FROM ("
  +"SELECT accountType,SUM(credit)-SUM(debit) AS diff FROM coAccount JOIN glTransaction USING (coAccountID) LEFT JOIN coFiscalPeriod USING(coFiscalPeriodId)  "
  +"WHERE accountType IN('Income','Expense') "
  +"and  (glTransaction.fyear<(SELECT SUBSTRING_INDEX(`fiscalYear`,'-',1) FROM `coFiscalPeriod` JOIN coFiscalYear USING(coFiscalYearID) WHERE coFiscalPeriodId="+cofiscalPeriodID+") "
@@ -1160,7 +1160,21 @@ public class DrillDownServiceImpl implements DrillDownService  {
  //+ "AND glTransaction.period<>13 "
  + " AND InActive <> 1 "
  //+" AND glTransaction.fyear <=(SELECT `fiscalYear` FROM `coFiscalPeriod` JOIN coFiscalYear USING(coFiscalYearID) WHERE coFiscalPeriodId="+cofiscalPeriodID+")"
- +"GROUP BY accountType) AS test";
+ +"GROUP BY accountType) AS test";*/
+		
+		// BID1667 Edited by Simon
+		String aSalesselectQry = "SELECT SUM(diff) AS netprofiloss FROM ("
+						 +"SELECT accountType,SUM(credit)-SUM(debit) AS diff FROM coAccount JOIN glTransaction USING (coAccountID) LEFT JOIN coFiscalPeriod USING(coFiscalPeriodId)  "
+						 +"WHERE accountType IN('Income','Expense') "
+						 +"AND  glTransaction.period <=(SELECT period FROM coFiscalPeriod WHERE coFiscalPeriodId="+cofiscalPeriodID+")"
+						 +" and glTransaction.coFiscalYearId = (SELECT coFiscalYearID FROM coFiscalPeriod WHERE coFiscalPeriodId="+cofiscalPeriodID+")"
+						 +"AND glTransaction.period<>13"
+						  //+" AND glTransaction.period <= (SELECT period FROM coFiscalPeriod WHERE coFiscalPeriodId="+cofiscalPeriodID+")"
+						 //+ "AND glTransaction.period<>13 "
+						 + " AND InActive <> 1 "
+						 //+" AND glTransaction.fyear <=(SELECT `fiscalYear` FROM `coFiscalPeriod` JOIN coFiscalYear USING(coFiscalYearID) WHERE coFiscalPeriodId="+cofiscalPeriodID+")"
+						 +"GROUP BY accountType) AS test";
+		
 		Session aSession = null;
 		Query aQuery = null;
 		BigDecimal TotalCount=BigDecimal.ZERO ;

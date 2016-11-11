@@ -186,8 +186,8 @@ SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 		try{
 			
 			aSession = itsSessionFactory.openSession();
-			query = aSession.createQuery("from Cofiscalyear c where fiscalYear=:fiscalYear");
-			query.setParameter("fiscalYear", coFiscalYear);
+			query = aSession.createQuery("from Cofiscalyear c where fiscalYear= "+coFiscalYear);
+			//query.setParameter("fiscalYear", coFiscalYear);
 			aCofiscalyear =  (Cofiscalyear) query.uniqueResult();
 			
 			if(aCofiscalyear != null)
@@ -915,19 +915,29 @@ SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 	}
 //added by prasant #633
 	@Override
-	public Integer getPeriodIdForMe(Integer periodId, Integer yearId) {
+	public Integer getPeriodIdForMe(String startDate,String endDate, Integer yearId) {
 		Session aSession = null;
 		Query query = null;
 		Transaction aTransaction = null; 
 		Integer period=0;
+		
+		aSession = itsSessionFactory.openSession();
+		Cofiscalperiod coFiscalPeriod;
+	/*	query = aSession.createQuery("from Cofiscalyear c where fiscalYear= "+coFiscalYear);
+		//query.setParameter("fiscalYear", coFiscalYear);
+		aCofiscalyear =  (Cofiscalyear) query.uniqueResult();SELECT coFiscalPeriodId
+		
+		if(aCofiscalyear != null)startDate;
+	private Date endDate;
+			yearId = aCofiscalyear.getCoFiscalYearId();*/
 		try{
 		aSession = itsSessionFactory.openSession();
 		aTransaction = aSession.beginTransaction();
-			query = aSession.createSQLQuery("SELECT coFiscalPeriodID FROM cofiscalperiod WHERE  CoFiscalyearID = "+yearId+" AND period = "+periodId);
+			query = aSession.createQuery("from Cofiscalperiod c WHERE  coFiscalYearId = "+yearId+" AND startDate >= "+"'"+startDate+"'"+ " AND endDate <="+"'"+endDate+"'");
 
-			Integer res=(Integer) query.uniqueResult();
-			if(res!=null)
-				period=res;
+			 coFiscalPeriod=(Cofiscalperiod)query.uniqueResult();
+			if(coFiscalPeriod!=null)
+				period=coFiscalPeriod.getCoFiscalPeriodId();
 			
 		aTransaction.commit();
 		

@@ -44,7 +44,71 @@ $("#lineItemGrid").trigger("reloadGrid");
 		{name:'note',index:'note',align:'left',width:60,editable:false,hidden:false, edittype:'text', editoptions:{size:40},editrules:{edithidden:false,required: true}},
        	{name:'description', index:'description', align:'left', width:80, editable:false,hidden:false, edittype:'text', editoptions:{size:40,maxlength:50},editrules:{edithidden:false}, cellattr: function (rowId, tv, rawObject, cm, rdata) {return 'style="white-space: normal" ';}},
 		{name:'quantityOrdered', index:'quantityOrdered', align:'center', width:50,hidden:false, editable:false, editoptions:{readOnly:true,size:5, alignText:'left',maxlength:7},editrules:{number:true,required: true}},
-		{name:'quantityReceived', index:'quantityReceived', align:'center', width:50,hidden:false, editable:true, editoptions:{size:5, alignText:'right',maxlength:7},editrules:{number:true,required: true}},
+		{name:'quantityReceived', index:'quantityReceived', align:'center', width:50,hidden:false, editable:true, editoptions:{size:5, alignText:'right',maxlength:7,
+			
+			dataEvents: [
+			        	 { type: 'keydown', data: { i: 7 }, fn: function(e) {
+	   		    				var key = e.which;
+	   		    			 var rowobji=$(e.target).closest('tr.jqgrow');
+	  	  	   		       		var textboxid=rowobji.attr('id');
+	                    		 if(key == 13)  // the enter key code
+	                    		  {
+	                    			  var rowData = jQuery('#lineItemGrid').jqGrid ('getRowData', textboxid);
+	                    			    $("#"+textboxid+"_quantityReceived").val()
+	                    			    
+	                    			    var prMasterID=rowData.prMasterId;
+	                    			    	var vePoidID=rowData.vePoid;
+	                    			    	var quantityReceived=($("#"+textboxid+"_quantityReceived").val())*1;
+	                    			    	var quantityOrdered=(rowData.quantityOrdered)*1;
+	                    			    	
+	                    			   // alert("it is calling data:"+ $("#"+textboxid+"_quantityReceived").val());
+	                    			    //alert("prMasterID:"+ rowData.prMasterId);
+	                    			   // alert("vePoidID:"+ rowData.vePoid);
+	                    			    
+	                    			   // additionalInfo="&prMasterID="+prMasterID+"&vePoidID="+vePoidID+"&quantityReceived="+quantityReceived;
+	                    				if(quantityOrdered > quantityReceived)
+	                    					{
+	                    			    $.ajax({
+	                    					url: "./rolodexforms/checkStatusReceiveInventory",
+	                    					type: "POST",
+	                    					data : {"prMasterID":prMasterID,"vePoidID":vePoidID,"quantityReceived":quantityReceived},
+	                    					
+	                    					success: function(data) {
+	                    						
+	                    						if(data!=0)
+	                    							{ 
+	                    							var newDialogDiv = jQuery(document.createElement('div'));
+	                    						    jQuery(newDialogDiv).attr("id","msgDlg");
+	                    							jQuery(newDialogDiv).html('<span><b style="color:Green;">A Vendor Invoice has been created for ('+data+') of this Item,you cannot receive less</b></span>');
+	                    							jQuery(newDialogDiv).dialog({modal: true, width:320, height:170, title:"Warning",
+	                    							buttons: [{height:35,text: "OK",click: function() { $(this).dialog("close");}}]}).dialog("open");
+	                    							
+	                    							$("#lineItemGrid").trigger("reloadGrid");
+	                    			 
+	                    							}}
+	                    				})
+	                    				}
+	                    			  
+	                    			    
+	                    			 $("#lineItemGrid_ilsave").trigger("click");
+//		                 			    $( "#vendorinvoice1_iladd" ).trigger( "click" );
+		                    		    return false;  
+	                    		  }} 
+	   		    			 },
+		    			  { type: 'click', data: { i: 7 }, fn: function(e) {
+		    				 var rowobji=$(e.target).closest('tr.jqgrow');
+	  	  	   		       		var textboxid=rowobji.attr('id');
+	  	  	   		       		
+	  		   		       		jQuery("#customerInvoice_lineitems").jqGrid('setSelection',textboxid, true);
+	  		   		       		e.target.select();
+		    				  
+		    			  } }
+	   		    		
+		    			  ]
+		},editrules:{number:true,required: true}
+			
+},
+		
 		{name:'difference', index:'difference', align:'center', width:50,hidden:false, editable:false, editoptions:{readOnly:true,size:5, alignText:'left',maxlength:7},editrules:{number:true,required: true}},
 		{name:'quantityBilled', index:'quantityBilled', align:'right', width:50,hidden:false, editable:false, formatter:customCurrencyFormatter, editoptions:{size:15, alignText:'right'},editrules:{edithidden:true}},
 		{name:'vePoid', index:'vePoid', align:'right', width:50,hidden:true, editable:true, editoptions:{size:15, alignText:'right'},editrules:{edithidden:false,required: false}},
@@ -71,6 +135,10 @@ $("#lineItemGrid").trigger("reloadGrid");
 		_globalValue = value;
 	},
 	beforeSaveCell:function(rowid,cellname,value,iRow,iCol) {
+		
+		
+		
+		
 		var rowData = jQuery("#lineItemGrid").getRowData(rowid);
 		var receivedQuantity =$("#"+rowid+"_quantityReceived").val();
 		var quantityOrdered = rowData['quantityOrdered'];
@@ -154,6 +222,8 @@ function saveReceivedInventory(){
 	
 	additionalInfo="&recDate="+recDate+"&veReceiveID="+veReceiveID+"&vePOID="+vepoid;
 	
+	
+	
 	$.ajax({
 		url: "./rolodexforms/updateReceiveAllInventory?"+additionalInfo,
 		type: "POST",
@@ -163,11 +233,22 @@ function saveReceivedInventory(){
 		},
 		success: function(data) {
 			
+			/*if(data==1)
+				{
+				var newDialogDiv = jQuery(document.createElement('div'));
+				jQuery(newDialogDiv).html('<span><b style="color:red;"> All items are Invoiced .You can not edit the Receive Inventory</b></span>');
+				jQuery(newDialogDiv).dialog({modal: true, width:300, height:150, title:"Information.", 
+										buttons: [{text: "OK",click: function(){$(this).dialog("close"); }}]
+									}).dialog("open");
+				$("#LoadingDialog").hide();
+				}*/
+		/*	else{*/
 			createtpusage('Receive Inventory','Receive Inventory ALL','Info','Receive Inventory,Receive Inventory All,receivedInventorydate:'+recDate);
 			document.location.href="./showReceivedInventory?vePOID="+vepoid+"&veReceiveID="+data;
 			$("#veReceivedID").val(data);
 			$("#LoadingDialog").hide();
 			//location.reload();
+			//}
 			
 		}
 	});

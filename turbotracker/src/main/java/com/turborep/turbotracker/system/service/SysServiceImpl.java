@@ -1,5 +1,6 @@
 package com.turborep.turbotracker.system.service;
 
+import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -291,12 +292,20 @@ public class SysServiceImpl implements SysService {
 				sysinfo.setPrPriceLevel5((String)aObj[13]);
 				
 				//Added By Aravind ID#624
-				sysinfo.setPrPriceLevelval0((Integer) aObj[14]);
-				sysinfo.setPrPriceLevelval1((Integer) aObj[15]);
-				sysinfo.setPrPriceLevelval2((Integer) aObj[16]);
-				sysinfo.setPrPriceLevelval3((Integer) aObj[17]);
-				sysinfo.setPrPriceLevelval4((Integer) aObj[18]);
-				sysinfo.setPrPriceLevelval5((Integer) aObj[19]);
+//				sysinfo.setPrPriceLevelval0((Integer) aObj[14]);
+//				sysinfo.setPrPriceLevelval1((Integer) aObj[15]);
+//				sysinfo.setPrPriceLevelval2((Integer) aObj[16]);
+//				sysinfo.setPrPriceLevelval3((Integer) aObj[17]);
+//				sysinfo.setPrPriceLevelval4((Integer) aObj[18]);
+//				sysinfo.setPrPriceLevelval5((Integer) aObj[19]);
+				
+				sysinfo.setPrPriceLevelval0((BigDecimal) aObj[14]);
+				sysinfo.setPrPriceLevelval1((BigDecimal) aObj[15]);
+				sysinfo.setPrPriceLevelval2((BigDecimal) aObj[16]);
+				sysinfo.setPrPriceLevelval3((BigDecimal) aObj[17]);
+				sysinfo.setPrPriceLevelval4((BigDecimal) aObj[18]);
+				sysinfo.setPrPriceLevelval5((BigDecimal) aObj[19]);
+				
 				
 			}
 		} catch(Exception e) {

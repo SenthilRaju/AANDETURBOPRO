@@ -16,6 +16,7 @@ import java.sql.SQLException;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -851,11 +852,14 @@ public class QuotePDFController1 {
 					 apdfpcell.setBorder(Rectangle.NO_BORDER);
 					 apdfpcell.setHorizontalAlignment(Element.ALIGN_RIGHT);
 		             table.addCell(apdfpcell);
-            table.completeRow();
+                    // table.completeRow();
             		 apdfpcell=new PdfPCell();
             		 apdfpcell.setBorder(Rectangle.NO_BORDER);
             		 	List<Element> p=new ArrayList();
+            		 	String header=aUserLoginSetting.getHeaderText();
+            		 //	String afterChange=chngeString(header);
             		 	StringReader strReader = new StringReader("<div>"+aUserLoginSetting.getHeaderText()+"</div>");
+            		 	System.out.println(header);
             		 	if(alternatext_bool){
             		 		strReader = new StringReader(alternatetext);
             		 	}
@@ -878,7 +882,23 @@ public class QuotePDFController1 {
 		    table.completeRow();
 		    document.add(table);
 	 }
-	 
+	/* public static String chngeString(String nm)
+		{
+		 System.out.println(nm);
+			String str1=nm;
+			String str =nm;
+			str = nm.replaceAll("[^0-9]+", " "); 
+		String []as=str.trim().split(" ");
+			System.out.println(Arrays.asList(str.trim().split(" ")));
+			int s=Integer.parseInt(as[0]);
+			s=s+zz;
+			str=str1.replace(as[0],String.valueOf(s));
+			
+			System.out.println(str);
+			
+			
+			return str;
+		}*/
 	 private void getProjectInformation(String theProjectNamePDF, String theQuoteName, String theBidderContact, String theJobNumber, String theBidDate, String theArchitect, String thePlanDate, String theJoQuoteRev, Font theBoldFont, Font theNormalFont, 
 				Font theBoldTitleFont, String theState, String theCity, String theEnginner, Document theDocument, TsUserSetting theUserLoginSetting,String quotestype,HttpServletRequest therequest) throws DocumentException, IOException {
 		 String aText = "";

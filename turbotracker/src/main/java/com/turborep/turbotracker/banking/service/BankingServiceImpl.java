@@ -1365,8 +1365,7 @@ public class BankingServiceImpl implements BankingService {
 					
 					//added by prasant 
 					if(payBean.get(j).getApplyingAmount().signum()<0)
-					{
-						
+					{		
 						
 
 						System.out.println("=======================================================================================================");

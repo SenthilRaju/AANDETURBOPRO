@@ -1114,19 +1114,19 @@ function insertintoemmaster(){
 		type: "GET",
 		data: {'betweenfrom':betweenfrom,'betweento':betweento},
 		success: function (data) {
-			alert("completed insert");
+			//alert("completed insert");
 		}
 	});
 }
 
 function updateposition(){
-	alert("start");
+	//alert("start");
 	$.ajax({
 		//url: './requestForInsertintoemmaster',
 		url:'./updateposition',
 		type: "GET",
 		success: function (data) {
-			alert("completed insert");
+			//alert("completed insert");
 		}
 	});
 }
@@ -1138,7 +1138,7 @@ function insertintogl()
 		type: "POST",
 		data:{"fromId":$("#fromid").val(),"toId":$("#toid").val()},
 		success: function (data) {
-			alert(data);
+			//alert(data);
 		}
 	});
 }
