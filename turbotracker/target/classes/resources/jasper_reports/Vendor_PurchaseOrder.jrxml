@@ -2,7 +2,7 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Vendor_PurchaseOrder" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="1b89ec97-40f5-4b62-883f-860b3ad19f78">
 	<property name="ireport.zoom" value="2.0"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="599"/>
+	<property name="ireport.y" value="651"/>
 	<parameter name="PONUMBER" class="java.lang.String"/>
 	<parameter name="VENDORNAME" class="java.lang.String"/>
 	<parameter name="ADDRESS1" class="java.lang.String"/>
@@ -419,7 +419,7 @@
 				</textElement>
 				<textFieldExpression><![CDATA["<p>"+$F{Description}+"</p>"+
 (($F{Note}==null)?("<p>&nbsp;</p>"):
-    ($F{Note}.contains("<div")?($F{Note}.replaceAll("div","p")):
+    ($F{Note}.contains("<div>")?($F{Note}.replaceAll("<div>","<p>").contains("</div>")?($F{Note}.replaceAll("</div>","</p>")):("<p>"+$F{Note}+"</p")):
      ("<p>"+$F{Note}+"</p"))
     )]]></textFieldExpression>
 			</textField>

@@ -2,7 +2,7 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="memo" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="97890909-8856-4e8d-81ee-d19af251bd44">
 	<property name="ireport.zoom" value="2.0"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="144"/>
+	<property name="ireport.y" value="240"/>
 	<parameter name="type" class="java.lang.String"/>
 	<parameter name="invoiceID" class="java.lang.Integer"/>
 	<queryString>
@@ -15,7 +15,9 @@ WHERE cD.coDivisionID=cI.coDivisionID
 AND tuL.UserLoginID=cI.cuAssignmentID0
 AND rM.rxMasterID=rA.rxMasterID
 AND rM.rxMasterID=cI.rxCustomerID
-AND cI.cuInvoiceID=$P{invoiceID}]]>
+AND rA.isMailing=1
+AND cI.cuInvoiceID=$P{invoiceID}
+ORDER BY rA.rxAddressId ASC LIMIT 1]]>
 	</queryString>
 	<field name="rxCustomerID" class="java.lang.Integer">
 		<fieldDescription><![CDATA[]]></fieldDescription>
@@ -80,8 +82,8 @@ AND cI.cuInvoiceID=$P{invoiceID}]]>
 				<reportElement x="0" y="105" width="270" height="68" uuid="3f540858-960d-4276-aafe-5690c872158c"/>
 			</rectangle>
 			<staticText>
-				<reportElement x="17" y="111" width="84" height="20" uuid="a3c8cd51-600b-4925-bba0-5dbf554cbe85"/>
-				<textElement textAlignment="Right">
+				<reportElement x="5" y="111" width="57" height="20" uuid="a3c8cd51-600b-4925-bba0-5dbf554cbe85"/>
+				<textElement>
 					<font size="11" isBold="true" pdfFontName="Helvetica-Bold" isPdfEmbedded="true"/>
 				</textElement>
 				<text><![CDATA[SOLD TO: ]]></text>
@@ -152,15 +154,15 @@ AND cI.cuInvoiceID=$P{invoiceID}]]>
 				<textFieldExpression><![CDATA[$F{InvoiceDate}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement x="101" y="154" width="158" height="17" uuid="a73c0545-aa46-4607-9f34-69494749ce79"/>
-				<textFieldExpression><![CDATA[$F{cuCity}+", "+$F{cuState}+" "+$F{cuZip}]]></textFieldExpression>
+				<reportElement x="62" y="137" width="158" height="13" uuid="a73c0545-aa46-4607-9f34-69494749ce79"/>
+				<textFieldExpression><![CDATA[(($F{cuAddr2}==null)?($F{cuCity}+", "+$F{cuState}+" "+$F{cuZip}):($F{cuAddr2}+"\n"+$F{cuCity}+", "+$F{cuState}+" "+$F{cuZip}))]]></textFieldExpression>
 			</textField>
-			<textField>
-				<reportElement x="101" y="130" width="158" height="13" uuid="2640ee31-6993-470a-8644-3e2d3127dc01"/>
+			<textField isBlankWhenNull="true">
+				<reportElement x="62" y="124" width="158" height="13" uuid="2640ee31-6993-470a-8644-3e2d3127dc01"/>
 				<textFieldExpression><![CDATA[$F{cuAddr1}]]></textFieldExpression>
 			</textField>
-			<textField>
-				<reportElement x="101" y="111" width="158" height="20" uuid="188ca8ba-e4eb-446c-8831-1f46d46ddea7"/>
+			<textField isBlankWhenNull="true">
+				<reportElement x="62" y="111" width="158" height="13" uuid="188ca8ba-e4eb-446c-8831-1f46d46ddea7"/>
 				<textFieldExpression><![CDATA[$F{customer}]]></textFieldExpression>
 			</textField>
 			<textField>
@@ -171,10 +173,6 @@ AND cI.cuInvoiceID=$P{invoiceID}]]>
 				<reportElement positionType="Float" x="0" y="0" width="144" height="90" uuid="70b84307-9913-41d3-84f6-d171600b4a6b"/>
 				<imageExpression><![CDATA[$F{companyLogo}]]></imageExpression>
 			</image>
-			<textField isBlankWhenNull="true">
-				<reportElement x="101" y="142" width="158" height="13" uuid="4678e1fa-4ef0-467c-85b7-9269d15bc9a8"/>
-				<textFieldExpression><![CDATA[$F{cuAddr2}]]></textFieldExpression>
-			</textField>
 		</band>
 	</pageHeader>
 	<columnHeader>
@@ -187,7 +185,7 @@ AND cI.cuInvoiceID=$P{invoiceID}]]>
 				<text><![CDATA[TOTAL]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="17" y="2" width="100" height="20" uuid="c76b87b4-82fc-41ce-87cc-33c3021143eb"/>
+				<reportElement x="17" y="3" width="100" height="20" uuid="c76b87b4-82fc-41ce-87cc-33c3021143eb"/>
 				<textElement>
 					<font isBold="true" isUnderline="true"/>
 				</textElement>
@@ -196,18 +194,18 @@ AND cI.cuInvoiceID=$P{invoiceID}]]>
 		</band>
 	</columnHeader>
 	<detail>
-		<band height="42" splitType="Stretch">
+		<band height="40" splitType="Stretch">
 			<textField pattern="###0.00;-###0.00">
-				<reportElement x="444" y="4" width="100" height="20" uuid="ee8d4760-0971-46f1-9c85-917b5602854f"/>
+				<reportElement x="455" y="0" width="100" height="20" uuid="ee8d4760-0971-46f1-9c85-917b5602854f"/>
 				<textElement textAlignment="Right"/>
 				<textFieldExpression><![CDATA[$F{InvoiceAmount}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="17" y="22" width="100" height="20" uuid="ab0bc7fa-af83-4a69-ade5-9536fb3ce6fe"/>
+				<reportElement x="17" y="20" width="100" height="20" uuid="ab0bc7fa-af83-4a69-ade5-9536fb3ce6fe"/>
 				<textFieldExpression><![CDATA[$F{Note}]]></textFieldExpression>
 			</textField>
-			<textField>
-				<reportElement x="17" y="4" width="100" height="20" uuid="4bb9cc81-0fed-4bed-b429-cd4946040353"/>
+			<textField isBlankWhenNull="true">
+				<reportElement x="17" y="0" width="100" height="20" uuid="4bb9cc81-0fed-4bed-b429-cd4946040353"/>
 				<textFieldExpression><![CDATA[$F{desc1}]]></textFieldExpression>
 			</textField>
 		</band>

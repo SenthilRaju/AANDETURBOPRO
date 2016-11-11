@@ -177,6 +177,7 @@ function loadSOcategories(){
 }
 
 function PreloadSOGeneralData(cusoid){
+	console.log("SimonSimonSimonSimonSimonSimonSimonSimonSimonSimonSimonSimonSimonSimonSimonSimonSimonSimonSimonSimonSimonSimon");
 	$('#salesreleasetab').tabs({ selected: 0 });
 	$('#salesreleasetab').tabs({ active: 0 });
 	resetSOGeneralForm();
@@ -303,7 +304,7 @@ function PreloadSOGeneralData(cusoid){
 			console.log('SO_General.js CustomerID:'+data.Cuso.rxCustomerId);
 			billtoAddess();
 			$("#SOnumberGeneral").val(data.Cuso.sonumber);
-			$('#SOGeneral_subTotalID').val(formatCurrency(0));
+			$('#SOGeneral_subTotalID').val(formatCurrency(data.Cuso.subTotal));
 			$('#SOGeneral_totalID').val(formatCurrency(0));
 			$('#termhiddenID').val(data.Cuso.cuTermsId);
 			$('#poID').val(data.Cuso.trackingNumber);
@@ -431,10 +432,10 @@ function PreloadSOGeneralData(cusoid){
 			var shipDate = data.Cuso.shipDate;
 			if (typeof (shipDate) != 'undefined') 
 				FormatShipDate(shipDate);
-			if (typeof(data.Cusodetail) != "undefined" && data.Cusodetail != null){
-				$('#SOGeneral_subTotalID').val(formatCurrency(data.Cusodetail.taxTotal));
-				$('#SOGeneral_totalID').val(formatCurrency(data.Cusodetail.taxTotal));
-				}
+//			if (typeof(data.Cusodetail) != "undefined" && data.Cusodetail != null){
+//				$('#SOGeneral_subTotalID').val(formatCurrency(data.Cusodetail.taxTotal));
+//				$('#SOGeneral_totalID').val(formatCurrency(data.Cusodetail.taxTotal));
+//				}
 			else{
 				$('#SOGeneral_subTotalID').val(formatCurrency(0));
 				$('#SOGeneral_totalID').val(formatCurrency(0));
@@ -444,7 +445,7 @@ function PreloadSOGeneralData(cusoid){
 				formattax(data.Cuso.freight);
 			}
 			setTimeout(function(){
-				$("#so_taxfreight").val(data.Cuso.taxfreight);
+				//$("#so_taxfreight").val(data.Cuso.freight);
 				setTaxTotal_SO();
 				if($('#promisedID').val()!=""){
 					console.log(data.Cuso.prFromWarehouseId);
@@ -780,6 +781,7 @@ function saveSORelease(popupdetail){
  	
 	if(promisedID === null || promisedID === ''){
 		var validateMsg = "Please&nbsp;Provide&nbsp;Promised&nbsp;Date."
+			$( "#salesreleasetab ul li:nth-child(2)" ).addClass("ui-state-disabled");
 			$('#soPromisedId').html(validateMsg);
 			$('#soPromisedIdwz').html(validateMsg);
 			setTimeout(function(){
@@ -794,6 +796,8 @@ function saveSORelease(popupdetail){
 		*/
 		return false;		
 	
+	}else{
+		$( "#salesreleasetab ul li:nth-child(2)" ).removeClass("ui-state-disabled");
 	}
 	
 	

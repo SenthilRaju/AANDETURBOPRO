@@ -856,7 +856,6 @@ public class CustomerServiceImpl implements CustomerService {
 				+ cuMasterID + ") Order By I.InvoiceNumber;");// edited
 
 	//	String aPaymentGridQuery = ap.toString();
-		
 		String aPaymentGridQuery ="";
 		String sortByOption = "";
 		
