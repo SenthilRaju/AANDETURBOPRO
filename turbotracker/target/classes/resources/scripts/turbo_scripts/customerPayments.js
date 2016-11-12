@@ -1238,10 +1238,31 @@ function payToLedger(){
 			}
 	
 }
-
+function showDeniedPopup1()
+{
+	var information = "You are not authorized to enter this area.  Please contact your System Administrator.";
+	var newDialogDiv = jQuery(document.createElement('div'));
+	jQuery(newDialogDiv).html('<span><b style="color:green;">'+information+'</b></span>');
+	jQuery(newDialogDiv).dialog({modal: true, width:340, height:170, title:"Information", 
+							buttons: [{height:35,text: "OK",click: function() { 
+									$(this).dialog("close"); }}]}).dialog("open");
+	return true;
+}
 function applypayments()
 {
+	var checkpermission=getGrantpermissionprivilage('OpenPeriod_PostingOnly',0);
+	$('#paymentdateid').val();
 
+	var month=$('#paymentdateid').val();
+	var res = month.split("/");
+	var date=new  Date();
+	
+	//alert("sdfasf:"+())
+	if(checkpermission!="Admin" && checkpermission!="true")
+	if((date.getMonth()==res[0])==true ? checkpermission=true:checkpermission=false)
+		
+	
+	
 	$("#LoadingDialog").css({"display":"inherit"});
 	//Get Paid Rows only
 	var rows = jQuery("#customerPaymets").getDataIDs();
@@ -1265,10 +1286,10 @@ function applypayments()
 	 console.log(paidInvoiceDetails);
 	 
 	 
-	var checkpermission=getGrantpermissionprivilage('OpenPeriod_PostingOnly',0);
+	
 	 
 	//Check period is open
-/*	$.ajax({
+	$.ajax({
 		url: "./checkAccountingCyclePeriods",
 		data:{"datetoCheck":$("#paymentdateid").val(),"UserStatus":checkpermission},
 		type: "POST",
@@ -1278,8 +1299,9 @@ function applypayments()
 	
 					periodid=data.cofiscalperiod.coFiscalPeriodId;
 					yearid = data.cofiscalperiod.coFiscalYearId;
-					*/
+					
 					//Apply Payment 
+	
 					$.ajax({
 					url: "./custpaymentslistcontroller/payMultipleInvoice",
 					data:{
@@ -1305,8 +1327,8 @@ function applypayments()
 		   				console.log('error');
 		   				}
 		   			});
-					
-		/*		}
+	}
+	
 				else
 				{
 				
@@ -1322,14 +1344,14 @@ function applypayments()
 				else
 				{
 					$("#LoadingDialog").css({"display":"none"});
-					showDeniedPopup();
+					showDeniedPopup1();
 				}
 				}
 			},
    			error:function(data){
    				console.log('error');
    				}
-   		});*/
+   		});
 	
 }
    	

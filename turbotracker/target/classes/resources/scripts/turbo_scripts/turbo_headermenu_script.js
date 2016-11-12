@@ -1783,11 +1783,15 @@ function getGrantpermissionprivilage(accesspage,groupid){
 	    	console.log(data.Value);
 	    	
 	    	if(data.Value == "granted")
-	    	{
-	    		returnvalue=true;
+	    	{   		
+	    		returnvalue=true;	    		
 	    	}
-	    	else if(data.Value == "deniedforOP"){
-	    		returnvalue=false;
+	    	else if(data.Value == "deniedforOP"){	    		
+	    		returnvalue=false;	
+	    		
+	    	}	    	
+	      else if(data.Value == "deniedforOPA"){	    		
+	    		returnvalue="Admin";
 	    	}
 	    	else
 	    	{

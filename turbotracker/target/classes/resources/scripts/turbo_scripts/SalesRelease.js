@@ -1574,6 +1574,7 @@ function onSetSalesStatus(e){
 	/*
 	*/
 	//BID#1644 Simon
+	if(setStatus!=3){
 	$.ajax({
 		url: "./salesOrderController/setSalesOrderStatus",
 		type: "POST",
@@ -1585,6 +1586,7 @@ function onSetSalesStatus(e){
 			$("#release").trigger( 'reloadGrid' );
 		}
 	});
+	}
 }
 
 	//added  by prasant kumar #513 date 23/09/2016	

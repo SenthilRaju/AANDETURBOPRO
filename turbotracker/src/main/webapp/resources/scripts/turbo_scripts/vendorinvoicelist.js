@@ -1585,6 +1585,13 @@ var allText = $('#apacct').html();
 				var oper = 'add';
 				var reasonVal=$("textarea#invreasonttextid").val();
 				
+				
+				
+				
+				
+				
+				
+				
 				console.log("veBillId---->"+veBillIdPO);
 				if(veBillIdPO == null || veBillIdPO == '')
 					veBillIdPO = 0;				
@@ -1595,7 +1602,11 @@ var allText = $('#apacct').html();
 					+'&oper='+oper+'&prMasterIDPO='+prMasterIDPO+'&rxMasterIDPayablePO='+rxMasterIDPayablePO+'&buttonValue='+$('#viStatusButtonPO').val()
 				    +'&joreleasedetid='+joreleasedetid+'&operatorStatus='+operStatus;
 				
-				$.ajax({
+				
+				 saveVendorInvoicesfromPO($("#datePO").val(),generalValues,"no",operStatus,reasonVal);
+				
+				
+		/*		$.ajax({
 					url: "./veInvoiceBillController/getPoTotal?vePoID="+vepoId,
 					type: "POST",
 					// data : aVendorInvoiceDetails,
@@ -1629,8 +1640,23 @@ var allText = $('#apacct').html();
 				
 						
 						
-				});
+				});*/
 			}
+			
+			function UpdatePOStatusfromPO(vepoId,status)
+			{
+				$.ajax({
+					url: "./veInvoiceBillController/UpdatePOStatusfromPO?vePoID="+vepoId,
+					type: "POST",
+					success: function(data) {
+					
+					}
+				
+				})
+			}
+			
+			
+			
 			
 			function saveVendorInvoicesfromPO(datetoCheck,generalValues,updateStatus,operatorStatus,reasonVal)
 			{
@@ -1692,9 +1718,67 @@ var allText = $('#apacct').html();
 							        url: './veInvoiceBillController/addVendorInvoiceFromPO?'+generalValues,
 							        type: 'POST',   
 							        //data: generalValues+"&updatePO=yes"+"&coFiscalPeriodId="+periodid+"&coFiscalYearId="+yearid,
-							            data: {'updatePO':'yes','coFiscalPeriodId':periodid,'coFiscalYearId':yearid,
+							            data: {'updatePO':updateStatus,'coFiscalPeriodId':periodid,'coFiscalYearId':yearid,
 							        	'gridData':dataToSend,'delData':deleteveBillDetailIDDetailId,"reason":reasonVal},
 							        success: function (data) {
+							        	
+							        	
+							        	
+							        	var vepoId = $('#vepoidPO').val();
+							        	
+							        	//added by prasant
+							        	
+										$.ajax({
+											url: "./veInvoiceBillController/getPoTotal?vePoID="+vepoId,
+											type: "POST",
+											// data : aVendorInvoiceDetails,
+											success: function(data) {
+												var transactionStatus = data.split("-*-");
+												if((transactionStatus[2])*1==0){
+												var newDialogDiv = jQuery(document.createElement('div'));
+											jQuery(newDialogDiv).html('<span><b style="color:Green;">Do You want to close the PO transaction Status?</b></span>');
+											jQuery(newDialogDiv).dialog({modal: true, width:300, height:150, title:"Success.", 
+											buttons:{
+												"OK": function(){
+													
+													jQuery(this).dialog("close");
+													UpdatePOStatusfromPO(vepoId,2);
+													
+												},
+												Cancel: function ()	{
+													jQuery(this).dialog("close");
+													 //saveVendorInvoicesfromPO(vepoId);
+													
+												return false;	
+												}
+												}
+											}).dialog("open");
+											}//added by prasant #645
+												else{
+													 saveVendorInvoicesfromPO($("#datePO").val(),generalValues,"no",operStatus,reasonVal);
+												    }
+											}
+										
+										
+												
+												
+										});
+										
+										//added
+							        	
+							        	
+							        	
+							        	
+							        	
+							        	
+							        	
+							        	
+							        	
+							        	
+							        	
+							        	
+							        	
+							        	
 							        	
 							        	deleteveBillDetailIDDetailId==new Array();
 							        	if(operatorStatus!="save")

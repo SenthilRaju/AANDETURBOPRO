@@ -1237,6 +1237,11 @@ var posit_job_salesorder=0;
 var soLines_selectRow;
 var checkelement;
 function loadSOLineItemGrid(){	
+	
+	
+	
+	
+	alert("Soline items callingt");
 	$("#SOlineItemGrid").jqGrid('GridUnload');
 	var cuSOID = $('#Cuso_ID').text();
 	try {
@@ -1252,7 +1257,10 @@ function loadSOLineItemGrid(){
 			editoptions: {
 				dataInit : function(elem) {
 					$(elem).autocomplete({
-						minLength: 1,timeout :1000,autoFocus: true,
+						//addded by prasant #1589
+						 delay: 300,				    
+						minLength: 1,timeout :1000,/*autoFocus: true,*/
+						tabDisabled:true,
 							source: "jobtabs3/productCodeWithNameList",
 							select: function( event, ui ){
 								var ID = ui.item.id;
@@ -1275,11 +1283,13 @@ function loadSOLineItemGrid(){
 			                	var celValue = $('#cuSOid').val();
 			                	
 
-//			                	alert(id+" || "+celValue+" || "+cuSodetailId);
+                             //alert(id+" || "+celValue+" || "+cuSodetailId);
 			                	
 			                	//alert(" >>>>>>>> "+$("#new_row_vePoid").val()+ " || "+$("#"+aSelectedRowId+"_vePoid").val());
 			                	//alert(id+" || "+product+" || "+aSelectedRowId+"_prMasterId = "+$("#"+aSelectedRowId+"_prMasterId").val()+" || new_row_prMasterId = "+$("#new_row_prMasterId").val());
 			                	var rxMasterID=$('#rxCustomer_ID').text();
+			                	//addded by prasant #1589
+			                	clearTimeout(ui);
 								$.ajax({
 							        url: './getLineItemsSO?prMasterId='+ID+"&rxMasterID="+rxMasterID,
 							        type: 'POST',      

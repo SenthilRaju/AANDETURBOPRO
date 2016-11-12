@@ -67,6 +67,7 @@ import com.turborep.turbotracker.vendor.dao.Vepodetail;
 import com.turborep.turbotracker.vendor.dao.Vereceive;
 import com.turborep.turbotracker.vendor.dao.Vereceivedetail;
 import com.turborep.turbotracker.vendor.dao.Veshipvia;
+import com.turborep.turbotracker.vendor.dao.veBillHistory;
 import com.turborep.turbotracker.vendor.exception.VendorException;
 
 @Service("vendorService")
@@ -5853,34 +5854,41 @@ l.			 * Table :veBillDetail
 	@Override
 	public Integer getTransactionDailogStatus(Integer vepoID) {
 		
-		String Qry="from Vepodetail where vePoid = "+vepoID;
-			Session aSession = null;
-			int status=0;
-		
-		
-		
+
+		Session aSession = null;
+		int status=0;
+		BigDecimal vePODetails_Qty=BigDecimal.ZERO;
+		BigDecimal veBillDetais_Qtys=BigDecimal.ZERO;	
 		List<Vepodetail> vepodetails = null;
+		List<veBillHistory>vebillHistorys=null;
+		String Qry="from Vepodetail where vePoid = "+vepoID;
+		String Qry2="from veBillHistory where vePOID ="+vepoID;
 		try {
 			// Retrieve session from Hibernate
-			aSession = itsSessionFactory.openSession();
-			
+			aSession = itsSessionFactory.openSession();			
 			// Create a Hibernate query (HQL)
 			Query query = aSession.createQuery(Qry);
+			Query query2= aSession.createQuery(Qry2);
 			// Retrieve all
 			vepodetails = query.list();
+			vebillHistorys=query2.list();
 		   Iterator<Vepodetail>vepodetails_iterator=vepodetails.iterator();
-			
+		   Iterator<veBillHistory>vebillHistorys_iterator=vebillHistorys.iterator();
+		 //checking total number of Quantity purchased 
 			while(vepodetails_iterator.hasNext())
 			{
 				Vepodetail vepoDetail=vepodetails_iterator.next();
-				if(checkStausNonInventory(vepoDetail.getPrMasterId())==true){
-				if(vepoDetail.getQuantityOrdered().compareTo(vepoDetail.getQuantityReceived())!=0)
-				{
-					status=1;
-					break;
-				}
-			}//check only for inventory products if end 
+				vePODetails_Qty=vePODetails_Qty.add(vepoDetail.getQuantityOrdered());				 
 			}
+			//checking total number of QuantityInvoiced 
+			while(vebillHistorys_iterator.hasNext())
+			{				
+				veBillHistory veBillhistory=vebillHistorys_iterator.next();
+				veBillDetais_Qtys=veBillDetais_Qtys.add(veBillhistory.getQuantityInvoiced());				
+			}
+			if (vePODetails_Qty.compareTo(veBillDetais_Qtys)!=0)
+				status=1;
+			
 			
 		   } catch (Exception e) {
 			itsLogger.error(e.getMessage(), e);

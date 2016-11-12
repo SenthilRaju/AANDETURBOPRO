@@ -66,7 +66,8 @@ $("#lineItemGrid").trigger("reloadGrid");
 	                    			   // alert("vePoidID:"+ rowData.vePoid);
 	                    			    
 	                    			   // additionalInfo="&prMasterID="+prMasterID+"&vePoidID="+vePoidID+"&quantityReceived="+quantityReceived;
-	                    				if(quantityOrdered > quantityReceived)
+	                    				//ADDED BY PRASANT KUAMR #645
+	                    			    	if(quantityOrdered > quantityReceived)
 	                    					{
 	                    			    $.ajax({
 	                    					url: "./rolodexforms/checkStatusReceiveInventory",
