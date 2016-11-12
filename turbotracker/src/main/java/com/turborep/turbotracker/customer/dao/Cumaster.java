@@ -64,7 +64,7 @@ public class Cumaster implements java.io.Serializable {
     private String taxName;
     private String taxRate;
     //ID#625 Simon
-	private Integer tier;
+	private Integer tier=0;
     
 	public Cumaster() {
 	}

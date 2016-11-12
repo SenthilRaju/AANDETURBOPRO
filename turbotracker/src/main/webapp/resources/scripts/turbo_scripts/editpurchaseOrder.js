@@ -395,6 +395,7 @@ function loadLinesItemGrid() {
 											}); 												
 											$("#new_row_description").focus();
 											$("#"+aSelectedRowId+"_description").focus();
+											
 										}	
 									});
 																		
@@ -1470,6 +1471,8 @@ function ReOrderButtonClick(){
 	} 
 
 function SaveLinesPurchaseOrder(popupdetail){
+	//BID1633 Simon
+	$("#SaveLinesPOButton").prop('disabled', true);
 	var newDialogDiv = jQuery(document.createElement('div'));
 	
 	var vePOID = $("#vePOID").val();
@@ -1530,6 +1533,10 @@ function SaveLinesPurchaseOrder(popupdetail){
 			// $( "#salesreleasetab ul li:nth-child(1)" ).removeClass("ui-state-disabled");
 		}
 	});
+	//BID1633 Simon
+	 setTimeout(function(){
+	 $("#SaveLinesPOButton").prop('disabled', false);		
+	 },3000);
 }
 
 
