@@ -1357,7 +1357,8 @@ function loadSOLineItemGrid(){
 												setproductWareHouseCost(aSelectedRowId,ID);
 							                	$("#new_row_quantityOrdered").val("1");
 							                	CalculatesoLinegrideditrowvalues(soLines_selectRow);
-												
+							                	$("#SaveLineSOReleaseID").prop("disabled",true);
+							                	$("#SaveLineSOReleaseID").css("background","rgb(204, 204, 204)");
 											}	
 										});
 																			
@@ -1484,6 +1485,8 @@ function loadSOLineItemGrid(){
 		                    			 CalculatesoLinegrideditrowvalues(soLines_selectRow);
 		                    			 $("#SOlineItemGrid_ilsave").trigger("click");
 		                 			    $( "#SOlineItemGrid_iladd" ).trigger( "click" );
+		                 			   $("#SaveLineSOReleaseID").prop("disabled",false);
+		                 			  $("#SaveLineSOReleaseID").css("background","");
 		                    		    return false;  
 		                    		  }
 		                         }
@@ -1540,6 +1543,8 @@ function loadSOLineItemGrid(){
 		                    			 CalculatesoLinegrideditrowvalues(soLines_selectRow);
 		                    			 $("#SOlineItemGrid_ilsave").trigger("click");
 		                 			    $( "#SOlineItemGrid_iladd" ).trigger( "click" );
+		                 			   $("#SaveLineSOReleaseID").prop("disabled",false);
+		                 			  $("#SaveLineSOReleaseID").css("background","");
 		                    		    return false;  
 		                    		  }
 		                         }
@@ -1590,6 +1595,8 @@ function loadSOLineItemGrid(){
 		                    			 CalculatesoLinegrideditrowvalues(soLines_selectRow);
 		                    			 $("#SOlineItemGrid_ilsave").trigger("click");
 		                 			    $( "#SOlineItemGrid_iladd" ).trigger( "click" );
+		                 			   $("#SaveLineSOReleaseID").prop("disabled",false);
+		                 			  $("#SaveLineSOReleaseID").css("background","");
 		                    		    return false;  
 		                    		  }
 		                         }
@@ -1639,6 +1646,8 @@ function loadSOLineItemGrid(){
 		                    			 CalculatesoLinegrideditrowvalues(soLines_selectRow);
 		                    			 $("#SOlineItemGrid_ilsave").trigger("click");
 		                 			    $( "#SOlineItemGrid_iladd" ).trigger( "click" );
+		                 			    $("#SaveLineSOReleaseID").prop("disabled",false);
+		                 			   $("#SaveLineSOReleaseID").css("background","");
 		                    		    return false;  
 		                    		  }
 		                         }

@@ -2842,6 +2842,7 @@ public class PurchaseServiceImpl implements PurchaseService {
 			aSession.flush();
 			aSession.close();
 		}
+		tier=(tier!=null?tier:0);
 		return tier - 1;
 	}
 	
