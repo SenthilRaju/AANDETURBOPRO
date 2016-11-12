@@ -3604,6 +3604,8 @@ function loadlineItemGrid()
 										
 										$("#new_row_description").focus();
 										$("#"+aSelectedRowId+"_description").focus();
+										$("#addNewVeInvFmDlgbuttonsave").prop("disabled",true);
+										$("#addNewVeInvFmDlgbuttonsave").css("background","rgb(204, 204, 204)");
 									}							        		
 								});
 					        }
@@ -3643,6 +3645,8 @@ function loadlineItemGrid()
 	                       			Calculategrideditrowvalues_VI(rowid);
 	                       			checkLatestInvoice(prMasterID);
 	                       			 $("#lineItemGrid_ilsave").trigger("click");
+	                       			 $("#addNewVeInvFmDlgbuttonsave").prop("disabled",false);
+									 $("#addNewVeInvFmDlgbuttonsave").css("background","");
 	                       		      return true;
 	                       		  }
 	                                             }
@@ -3707,6 +3711,8 @@ function loadlineItemGrid()
 	                       			Calculategrideditrowvalues_VI(rowid);
 	                       			checkLatestInvoice(prMasterID);
 	                       			 $("#lineItemGrid_ilsave").trigger("click");
+	                       			 $("#addNewVeInvFmDlgbuttonsave").prop("disabled",false);
+									 $("#addNewVeInvFmDlgbuttonsave").css("background","");
 	                       		      return true;
 	                       		  }
 	                                             }
@@ -3752,6 +3758,8 @@ function loadlineItemGrid()
 	                       			Calculategrideditrowvalues_VI(rowid);
 	                       			checkLatestInvoice(prMasterID);
 	                       			$("#lineItemGrid_ilsave").trigger("click")
+	                       		    $("#addNewVeInvFmDlgbuttonsave").prop("disabled",false);
+								    $("#addNewVeInvFmDlgbuttonsave").css("background","");
 	                       		  }
 	                                             }
 	                            }   
@@ -3798,6 +3806,8 @@ function loadlineItemGrid()
 	                       			Calculategrideditrowvalues_VI(rowid);
 	                       			checkLatestInvoice(prMasterID);
 	                       			$("#lineItemGrid_ilsave").trigger("click");
+	                       		    $("#addNewVeInvFmDlgbuttonsave").prop("disabled",false);
+								    $("#addNewVeInvFmDlgbuttonsave").css("background","");
 	                       		  }
 	                                             }
 	                            }
@@ -3837,6 +3847,8 @@ function loadlineItemGrid()
 		                       {
 		                    	  checkLatestInvoice(prMasterID);
 		                       $("#lineItemGrid_ilsave").trigger("click");
+		                       $("#addNewVeInvFmDlgbuttonsave").prop("disabled",false);
+							   $("#addNewVeInvFmDlgbuttonsave").css("background","");
 		                       }
 		                                         }
 		                        } 

@@ -1575,7 +1575,7 @@ function onSetSalesStatus(e){
 	*/
 	//BID#1644 Simon
 	if(setStatus!=3){
-<<<<<<< HEAD
+
 	$.ajax({
 		url: "./salesOrderController/setSalesOrderStatus",
 		type: "POST",
@@ -1587,7 +1587,7 @@ function onSetSalesStatus(e){
 			$("#release").trigger( 'reloadGrid' );
 		}
 	});
-=======
+
 		releaseGridRowId=$("#release").jqGrid('getGridParam', 'selrow');
 		$.ajax({
 			url: "./salesOrderController/setSalesOrderStatus",
@@ -1600,7 +1600,7 @@ function onSetSalesStatus(e){
 				$("#release").trigger( 'reloadGrid' );
 			}
 		});	
->>>>>>> a72cb011469f9d8d3262df17611816dee21e5ef9
+
 	}
 }
 
