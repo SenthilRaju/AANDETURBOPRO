@@ -1241,7 +1241,7 @@ function loadSOLineItemGrid(){
 	
 	
 	
-	alert("Soline items callingt");
+	//alert("Soline items callingt");
 	$("#SOlineItemGrid").jqGrid('GridUnload');
 	var cuSOID = $('#Cuso_ID').text();
 	try {
@@ -1258,8 +1258,8 @@ function loadSOLineItemGrid(){
 				dataInit : function(elem) {
 					$(elem).autocomplete({
 						//addded by prasant #1589
-						 delay: 300,				    
-						minLength: 1,timeout :1000,/*autoFocus: true,*/
+						 delay: 0,				    
+						minLength: 1,timeout :1000,autoFocus: true,
 						tabDisabled:true,
 							source: "jobtabs3/productCodeWithNameList",
 							select: function( event, ui ){

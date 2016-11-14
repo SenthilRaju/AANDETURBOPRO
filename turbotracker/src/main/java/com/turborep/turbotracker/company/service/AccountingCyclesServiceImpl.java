@@ -648,11 +648,11 @@ SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 		Session aSession = null;
 		Query query = null;
 		Cofiscalperiod aCofiscalperiod = null;
+		String HQlQ="from Cofiscalperiod c where c.startDate <= :Date and c.endDate >= :Date and coFiscalYearID =:yearID and coFiscalPeriodID =:periodID and  c.openStatus = TRUE";
 		try {
 
 			aSession = itsSessionFactory.openSession();
-			query = aSession
-					.createQuery("from Cofiscalperiod c where c.startDate <= :Date and c.endDate >= :Date and coFiscalYearID =:yearID and coFiscalPeriodID =:periodID and  c.openStatus = TRUE");
+			query = aSession.createQuery(HQlQ);
 			query.setParameter("Date", dateto);
 			query.setParameter("yearID", yearID);
 			query.setParameter("periodID", periodID);
