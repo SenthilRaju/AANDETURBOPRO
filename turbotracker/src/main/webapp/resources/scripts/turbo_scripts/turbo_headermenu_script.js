@@ -1790,8 +1790,8 @@ function getGrantpermissionprivilage(accesspage,groupid){
 	    		returnvalue=false;	
 	    		
 	    	}	    	
-	      else if(data.Value == "deniedforOPA"){	    		
-	    		returnvalue="Admin";
+	        else if(data.Value == "deniedforOPA"){	    		
+	    		returnvalue=true;
 	    	}
 	    	else
 	    	{

@@ -1252,17 +1252,50 @@ function applypayments()
 {
 	var checkpermission=getGrantpermissionprivilage('OpenPeriod_PostingOnly',0);
 	$('#paymentdateid').val();
-
+     var flag=0;
 	var month=$('#paymentdateid').val();
 	var res = month.split("/");
 	var date=new  Date();
+	var UserLoginID=  $("#userLogin_Id").val();
 	
 	//alert("sdfasf:"+())
-	if(checkpermission!="Admin" && checkpermission!="true")
-	if((date.getMonth()==res[0])==true ? checkpermission=true:checkpermission=false)
+	
+	
+	
+	//to check is Admin
+  $.ajax({
+    url: "./usercontroller/checkAdminOrNot",
+    async:false,
+    data: { 'UserLoginID':UserLoginID},
+    type: 'POST',
+    success: function(data){
+    	if(data==1)
+    		{
+    	checkpermission=true;
+    	flag=1;
+    		}
+    	}
+	});
+  
+
+  
+	var prevMonth=date.getMonth()*1;
+	var paymentMonth=res[0]*1;
+	
+	if( (prevMonth+1)==paymentMonth &&  flag!=1)
+	{
+		checkpermission=true;;
+	}
+	
+
+	
+		if(checkpermission==false)
+		{
+		   // $("#LoadingDialog").css({"display":"none"});
+			showDeniedPopup1();
+		}
 		
-	
-	
+	else{
 	$("#LoadingDialog").css({"display":"inherit"});
 	//Get Paid Rows only
 	var rows = jQuery("#customerPaymets").getDataIDs();
@@ -1288,10 +1321,10 @@ function applypayments()
 	 
 	
 	 
-	//Check period is open
+	//Check period is openy
 	$.ajax({
 		url: "./checkAccountingCyclePeriods",
-		data:{"datetoCheck":$("#paymentdateid").val(),"UserStatus":checkpermission},
+		data:{"datetoCheck":$("#paymentdateid").val(),"UserStatus":checkpermission,"flag":"allow"},
 		type: "POST",
 		success: function(data) { 
 				if(data.cofiscalperiod!=null && typeof(data.cofiscalperiod.period) !== "undefined" )
@@ -1327,7 +1360,11 @@ function applypayments()
 		   				console.log('error');
 		   				}
 		   			});
-	}
+					
+					
+		}		
+					
+	
 	
 				else
 				{
@@ -1352,6 +1389,9 @@ function applypayments()
    				console.log('error');
    				}
    		});
+					
+					
+		}
 	
 }
    	

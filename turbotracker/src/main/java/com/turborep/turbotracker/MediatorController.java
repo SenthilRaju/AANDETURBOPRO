@@ -4585,7 +4585,7 @@ public class MediatorController {
 		}
 		return map;
 	}
-	
+
 	@RequestMapping(value = "/getSysPrivilage", method = RequestMethod.POST)
 	public @ResponseBody  Map<String, String> getSysPrivilage (
 			@RequestParam(value = "accessPage", required = false) String accessPage,
@@ -4626,13 +4626,13 @@ public class MediatorController {
 			else
 				str = "denied";
 			//added by prasant #633
-			if(accessPage.equals("OpenPeriod_PostingOnly"))
+			if(accessPage.equals("OpenPeriod_PostingOnly")&& obj!=null && obj.getPrivilegeValue()==-1)
 				str = "granted";
 			
 			if(accessPage.equals("OpenPeriod_PostingOnly") && obj!=null && obj.getPrivilegeValue()==1&& aUserLogin.getSystemAdministrator() != 1)
                 str = "deniedforOP";
 			
-			if(accessPage.equals("OpenPeriod_PostingOnly") &&obj!=null  && obj.getPrivilegeValue()==1 && aUserLogin.getSystemAdministrator() == 1)
+			if(accessPage.equals("OpenPeriod_PostingOnly")  && aUserLogin.getSystemAdministrator() == 1)
                 str = "deniedforOPA";
 			
 			map.put("Value", str);

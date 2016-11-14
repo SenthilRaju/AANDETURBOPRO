@@ -141,4 +141,6 @@ public interface UserService {
 
 	public Integer getTaxTerritorySettingsValue(Integer sysVariableId);
 
+	public Integer checkUserAdminOrNot(Integer userLoginID);
+
 }
