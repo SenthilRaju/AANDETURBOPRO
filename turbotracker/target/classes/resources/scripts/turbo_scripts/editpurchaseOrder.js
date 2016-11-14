@@ -1528,7 +1528,8 @@ function SaveLinesPurchaseOrder(popupdetail){
 			  $('#ImgPOPDF').append('<input type="image" src="./../resources/Icons/PDF_new.png" title="View Purchase Order" onclick="viewPOPDF();"	style="background: #EEDEBC;" id="lineTabPDF">');
 
 			  $('#ImgPOEmail').empty();
-			  $('#ImgPOEmail').append(' <input id="contactEmailID" type="image" src="./../resources/Icons/mail_new.png" title="Email Purchase Order" style="background: #EEDEBC" id="lineTabMail" onclick="onclick="outsidepoEmailButtonAction();">');
+			  //3.0.68 fix
+			  $('#ImgPOEmail').append(' <input id="contactEmailID" type="image" src="./../resources/Icons/mail_new.png" title="Email Purchase Order" style="background: #EEDEBC" id="lineTabMail" onclick="outsidepoEmailButtonAction();">');
 			
 			// $( "#salesreleasetab ul li:nth-child(1)" ).removeClass("ui-state-disabled");
 		}

@@ -4625,6 +4625,7 @@ public class MediatorController {
 				str = "granted";		
 			else
 				str = "denied";
+			//added by prasant #633
 			if(accessPage.equals("OpenPeriod_PostingOnly"))
 				str = "granted";
 			

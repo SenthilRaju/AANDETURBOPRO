@@ -99,9 +99,9 @@ public class SearchController {
 
 	@RequestMapping(value="/searchjobcustomer",method = RequestMethod.GET)
 	public @ResponseBody  List<?> searchJobCustomer (@RequestParam(value = "jobnumber", required = false) String theJobNumber,
-																				 					@RequestParam(value="jobname", required=false) String theJobName,
+															@RequestParam(value="jobname", required=false) String theJobName,
 								
-																				 					@RequestParam(value = "joMasterID", required = false) Integer thejoMasterID, HttpServletResponse theResponse,HttpServletRequest theRequest,HttpSession theSession) throws JobException, IOException, MessagingException{
+														@RequestParam(value = "joMasterID", required = false) Integer thejoMasterID, HttpServletResponse theResponse,HttpServletRequest theRequest,HttpSession theSession) throws JobException, IOException, MessagingException{
 		System.out.println("===========>>>>>>>> searchjobcustomer");
 		itslogger.debug("Received request to searchJobCustomers");
 		String ajobName= theJobName.replace("`", " ");

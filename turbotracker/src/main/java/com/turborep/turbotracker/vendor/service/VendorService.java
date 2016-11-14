@@ -3489,7 +3489,7 @@ l.			 * Table :veBillDetail
 					+ " ORDER BY ve.posistion";*/
 				
 				//changed by prasant kuamr #645	
-				aPOLineItemListQry = "SELECT * FROM ( SELECT ve.vePODetailID," + " ve.vePOID,"
+				aPOLineItemListQry = "SELECT * FROM ( SELECT DISTINCT ve.vePODetailID," + " ve.vePOID,"
 						+ " ve.prMasterID," + " ve.Description,"
 						+ " (IF (veR.QuantityReceived - IFNULL (a.quaninv,0)>=0,ve.QuantityReceived - IFNULL (a.quaninv,0),0))AS QuantityOrdered," + " ve.Taxable," + " ve.UnitCost,"
 						+ " ve.PriceMultiplier," + " ve.posistion,"

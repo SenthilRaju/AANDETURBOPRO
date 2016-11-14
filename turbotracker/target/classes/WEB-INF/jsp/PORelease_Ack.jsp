@@ -79,7 +79,7 @@
 	</tr>
 </table>
 </div>
-<div id="saveAllDialog">
+<div id="saveAllDialog" style="display:none;">
 	<table>
 		<tr id="ackDateTR">
 			<td style="width: 60px;"><label>Ack.: </label></td>
@@ -94,7 +94,7 @@
 			<td><input type="text" id="orderNumberTD" size="15"></td>
 		</tr>
 	</table>
-	<hr>
+	<hr/>
 </div>
 <div class="loadingDiv" id="loadingPOAckDiv"> </div>
 <script type="text/javascript" src="./../resources/scripts/turbo_scripts/PORelease_Ack.js"></script>

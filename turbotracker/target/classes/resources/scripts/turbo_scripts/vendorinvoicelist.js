@@ -1720,14 +1720,10 @@ var allText = $('#apacct').html();
 							        //data: generalValues+"&updatePO=yes"+"&coFiscalPeriodId="+periodid+"&coFiscalYearId="+yearid,
 							            data: {'updatePO':updateStatus,'coFiscalPeriodId':periodid,'coFiscalYearId':yearid,
 							        	'gridData':dataToSend,'delData':deleteveBillDetailIDDetailId,"reason":reasonVal},
-							        success: function (data) {
+							        success: function (data) {	
 							        	
-							        	
-							        	
-							        	var vepoId = $('#vepoidPO').val();
-							        	
-							        	//added by prasant
-							        	
+							        	var vepoId = $('#vepoidPO').val();							        	
+							        	//added by prasant							        	
 										$.ajax({
 											url: "./veInvoiceBillController/getPoTotal?vePoID="+vepoId,
 											type: "POST",
@@ -1754,32 +1750,10 @@ var allText = $('#apacct').html();
 												}
 											}).dialog("open");
 											}//added by prasant #645
-												else{
-													 saveVendorInvoicesfromPO($("#datePO").val(),generalValues,"no",operStatus,reasonVal);
-												    }
-											}
-										
-										
 												
-												
-										});
-										
-										//added
-							        	
-							        	
-							        	
-							        	
-							        	
-							        	
-							        	
-							        	
-							        	
-							        	
-							        	
-							        	
-							        	
-							        	
-							        	
+											}		
+										});										
+										//added							        	
 							        	deleteveBillDetailIDDetailId==new Array();
 							        	if(operatorStatus!="save")
 							        	{
