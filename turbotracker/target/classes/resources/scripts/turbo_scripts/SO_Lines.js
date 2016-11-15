@@ -1237,6 +1237,11 @@ var posit_job_salesorder=0;
 var soLines_selectRow;
 var checkelement;
 function loadSOLineItemGrid(){	
+	
+	
+	
+	
+	//alert("Soline items callingt");
 	$("#SOlineItemGrid").jqGrid('GridUnload');
 	var cuSOID = $('#Cuso_ID').text();
 	try {
@@ -1252,7 +1257,10 @@ function loadSOLineItemGrid(){
 			editoptions: {
 				dataInit : function(elem) {
 					$(elem).autocomplete({
+						//addded by prasant #1589
+						 delay: 0,				    
 						minLength: 1,timeout :1000,autoFocus: true,
+						tabDisabled:true,
 							source: "jobtabs3/productCodeWithNameList",
 							select: function( event, ui ){
 								var ID = ui.item.id;
@@ -1275,11 +1283,13 @@ function loadSOLineItemGrid(){
 			                	var celValue = $('#cuSOid').val();
 			                	
 
-//			                	alert(id+" || "+celValue+" || "+cuSodetailId);
+                             //alert(id+" || "+celValue+" || "+cuSodetailId);
 			                	
 			                	//alert(" >>>>>>>> "+$("#new_row_vePoid").val()+ " || "+$("#"+aSelectedRowId+"_vePoid").val());
 			                	//alert(id+" || "+product+" || "+aSelectedRowId+"_prMasterId = "+$("#"+aSelectedRowId+"_prMasterId").val()+" || new_row_prMasterId = "+$("#new_row_prMasterId").val());
 			                	var rxMasterID=$('#rxCustomer_ID').text();
+			                	//addded by prasant #1589
+			                	clearTimeout(ui);
 								$.ajax({
 							        url: './getLineItemsSO?prMasterId='+ID+"&rxMasterID="+rxMasterID,
 							        type: 'POST',      
@@ -1347,7 +1357,8 @@ function loadSOLineItemGrid(){
 												setproductWareHouseCost(aSelectedRowId,ID);
 							                	$("#new_row_quantityOrdered").val("1");
 							                	CalculatesoLinegrideditrowvalues(soLines_selectRow);
-												
+							                	$("#SaveLineSOReleaseID").prop("disabled",true);
+							                	$("#SaveLineSOReleaseID").css("background","rgb(204, 204, 204)");
 											}	
 										});
 																			
@@ -1358,6 +1369,33 @@ function loadSOLineItemGrid(){
 							},
 							error: function (result) {$('.ui-autocomplete-loading').removeClass("ui-autocomplete-loading");	}
 							});
+					
+//					$("#autocomplete").autocomplete({
+//					    autoSelect: true,
+//					    autoFocus: true,
+//					    delay: 200,
+//					    source: function (request, response) {
+//					        $.ajax({
+//					            url: "/Country/Find", type: "GET", dataType: "json",
+//					            data: { search: request.term, maxResults: 10 },
+//					            success: function (data) {
+//					                //Check the length of the returned list if it's empty 
+//					                if (data.length == 0) {
+//					                    //Remove the last character from the input
+//					                    $("#autocomplete").val(function (index, value) {
+//					                        return value.substr(0, value.length - 1);
+//					                    })
+//					                    //Rerun search with the modified shortened input
+//					                    $("#autocomplete").autocomplete("search");
+//					                }
+//					                response($.map(data, function (item) {
+//					                    return { label: item, value: item }
+//					                }))
+//					            }
+//					        })
+//					    }
+//					});
+					
 				},dataEvents: [
 				       			  { type: 'focus', data: { i: 7 }, fn: function(e) { 
 				       			  
@@ -1447,6 +1485,8 @@ function loadSOLineItemGrid(){
 		                    			 CalculatesoLinegrideditrowvalues(soLines_selectRow);
 		                    			 $("#SOlineItemGrid_ilsave").trigger("click");
 		                 			    $( "#SOlineItemGrid_iladd" ).trigger( "click" );
+		                 			   $("#SaveLineSOReleaseID").prop("disabled",false);
+		                 			  $("#SaveLineSOReleaseID").css("background","");
 		                    		    return false;  
 		                    		  }
 		                         }
@@ -1503,6 +1543,8 @@ function loadSOLineItemGrid(){
 		                    			 CalculatesoLinegrideditrowvalues(soLines_selectRow);
 		                    			 $("#SOlineItemGrid_ilsave").trigger("click");
 		                 			    $( "#SOlineItemGrid_iladd" ).trigger( "click" );
+		                 			   $("#SaveLineSOReleaseID").prop("disabled",false);
+		                 			  $("#SaveLineSOReleaseID").css("background","");
 		                    		    return false;  
 		                    		  }
 		                         }
@@ -1553,6 +1595,8 @@ function loadSOLineItemGrid(){
 		                    			 CalculatesoLinegrideditrowvalues(soLines_selectRow);
 		                    			 $("#SOlineItemGrid_ilsave").trigger("click");
 		                 			    $( "#SOlineItemGrid_iladd" ).trigger( "click" );
+		                 			   $("#SaveLineSOReleaseID").prop("disabled",false);
+		                 			  $("#SaveLineSOReleaseID").css("background","");
 		                    		    return false;  
 		                    		  }
 		                         }
@@ -1602,6 +1646,8 @@ function loadSOLineItemGrid(){
 		                    			 CalculatesoLinegrideditrowvalues(soLines_selectRow);
 		                    			 $("#SOlineItemGrid_ilsave").trigger("click");
 		                 			    $( "#SOlineItemGrid_iladd" ).trigger( "click" );
+		                 			    $("#SaveLineSOReleaseID").prop("disabled",false);
+		                 			   $("#SaveLineSOReleaseID").css("background","");
 		                    		    return false;  
 		                    		  }
 		                         }
@@ -2304,6 +2350,8 @@ function setshowWarehouseCost(id){
 
 
 function saveLineDetails(popupdetail){
+	//BID1633 Simon
+	 $("#SaveLineSOReleaseID").prop('disabled', true);
 	 var itemCode=$("#new_row_itemCode").val();
 //	 if(itemCode.length==0){
 	 if(itemCode!=undefined){
@@ -2382,7 +2430,10 @@ function saveLineDetails(popupdetail){
 		  }
 	}
 	*/
-	
+	//BID1633 Simon
+	 setTimeout(function(){
+		 $("#SaveLineSOReleaseID").prop('disabled', false);		
+			},3000);
 }
 
 function closeSOLineItemTab(){

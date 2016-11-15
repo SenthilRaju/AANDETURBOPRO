@@ -209,4 +209,10 @@ public interface VendorServiceInterface {
 
 	public Boolean checkStausForAllNonInventory(Integer vePoid);
 
+	public boolean getNumberOfProductReceived1(Integer vepoId, Integer prMasterID,BigDecimal quantityOrder );
+
+	public Integer checkVePOIsInvoicedOrNOR(Integer vePoid, BigDecimal quantityReceived, Integer prMasterID);
+
+	public Integer getTransactionDailogStatus(Integer vepoID);
+
 }

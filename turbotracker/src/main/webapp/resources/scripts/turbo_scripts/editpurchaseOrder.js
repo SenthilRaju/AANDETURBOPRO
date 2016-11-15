@@ -395,6 +395,7 @@ function loadLinesItemGrid() {
 											}); 												
 											$("#new_row_description").focus();
 											$("#"+aSelectedRowId+"_description").focus();
+											
 										}	
 									});
 																		
@@ -1455,7 +1456,7 @@ function ReOrderButtonClick(){
 
 	 var gridRows = $('#lineItemGrid').getRowData();
 	 var dataToSend = JSON.stringify(gridRows);
-	 POlineItemgridLoad=false;
+	 //POlineItemgridLoad=false;
 	 jQuery("#lineItemGrid").jqGrid('setGridParam',{url:"./vendorscontroller/ReorderInsertNew",postData:{"gridData":dataToSend,"WareHouseId" : WareHouseId, "VendorID" : VendorID,"vePOID":vePOID}}).trigger("reloadGrid");
 	/* $.ajax({ 
 		url: "./vendorscontroller/ReorderInsert",
@@ -1470,6 +1471,8 @@ function ReOrderButtonClick(){
 	} 
 
 function SaveLinesPurchaseOrder(popupdetail){
+	//BID1633 Simon
+	$("#SaveLinesPOButton").prop('disabled', true);
 	var newDialogDiv = jQuery(document.createElement('div'));
 	
 	var vePOID = $("#vePOID").val();
@@ -1503,7 +1506,6 @@ function SaveLinesPurchaseOrder(popupdetail){
 	var gridRows = $('#lineItemGrid').getRowData();
 	var dataToSend = JSON.stringify(gridRows);
 	console.log("PO:"+dataToSend);
-		
 	$.ajax({
 		url: "./jobtabs5/SaveLinesPurchaseOrder",
 		type: "POST",
@@ -1525,13 +1527,18 @@ function SaveLinesPurchaseOrder(popupdetail){
 			  $('#ImgPOPDF').append('<input type="image" src="./../resources/Icons/PDF_new.png" title="View Purchase Order" onclick="viewPOPDF();"	style="background: #EEDEBC;" id="lineTabPDF">');
 
 			  $('#ImgPOEmail').empty();
-			  $('#ImgPOEmail').append(' <input id="contactEmailID" type="image" src="./../resources/Icons/mail_new.png" title="Email Purchase Order" style="background: #EEDEBC" id="lineTabMail" onclick="onclick="outsidepoEmailButtonAction();">');
+			  //3.0.68 fix
+			  $('#ImgPOEmail').append(' <input id="contactEmailID" type="image" src="./../resources/Icons/mail_new.png" title="Email Purchase Order" style="background: #EEDEBC" id="lineTabMail" onclick="outsidepoEmailButtonAction();">');
 			
 			// $( "#salesreleasetab ul li:nth-child(1)" ).removeClass("ui-state-disabled");
+			  deletePOLineDetailID=new Array();
 		}
 	});
+	//BID1633 Simon
+	 setTimeout(function(){
+	 $("#SaveLinesPOButton").prop('disabled', false);		
+	 },3000);
 }
-
 
 /*function canDeletePOCheckboxFormatter(cellValue, options, rowObject){
 	var qty_ord=rowObject.quantityOrdered;

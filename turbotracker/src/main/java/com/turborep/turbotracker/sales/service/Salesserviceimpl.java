@@ -1995,11 +1995,17 @@ public class Salesserviceimpl implements SalesService {
 			// Iterator<?> aIterator = aQuery.list().iterator();
 			System.out.println(user);
 			if (user != null) {
-				ListOfCCmail.add(user.getCcaddr1());
-				ListOfCCmail.add(user.getCcaddr2());
-				ListOfCCmail.add(user.getCcaddr3());
-				ListOfCCmail.add(user.getCcaddr4());
-				ListOfCCmail.add(user.getBccaddr());
+				//BID#1596
+				if ((user.getCcaddr1() != null) && (user.getCcaddr1().trim().equals("") == false))
+					ListOfCCmail.add(user.getCcaddr1());
+				if ((user.getCcaddr2() != null) && (user.getCcaddr2().trim().equals("") == false))
+					ListOfCCmail.add(user.getCcaddr2());
+				if ((user.getCcaddr3() != null) && (user.getCcaddr3().trim().equals("") == false))
+					ListOfCCmail.add(user.getCcaddr3());
+				if ((user.getCcaddr4() != null) && (user.getCcaddr4().trim().equals("") == false))
+					ListOfCCmail.add(user.getCcaddr4());
+				if ((user.getBccaddr() != null) && (user.getBccaddr().trim().equals("") == false))
+					ListOfCCmail.add(user.getBccaddr());
 
 			}
 

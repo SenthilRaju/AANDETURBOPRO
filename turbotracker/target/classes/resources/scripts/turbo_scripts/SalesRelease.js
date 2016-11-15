@@ -1574,6 +1574,8 @@ function onSetSalesStatus(e){
 	/*
 	*/
 	//BID#1644 Simon
+	if(setStatus!=3){
+
 	$.ajax({
 		url: "./salesOrderController/setSalesOrderStatus",
 		type: "POST",
@@ -1585,6 +1587,21 @@ function onSetSalesStatus(e){
 			$("#release").trigger( 'reloadGrid' );
 		}
 	});
+
+		releaseGridRowId=$("#release").jqGrid('getGridParam', 'selrow');
+		$.ajax({
+			url: "./salesOrderController/setSalesOrderStatus",
+			type: "POST",
+			data :{cusoID:cuSoid,status:setStatus},
+			success: function(data) {
+				$('#showSalesOrderOptions').dialog('destroy').remove();
+				$('#transactionStatus').val(setStatus);
+				$('#soStatusButton').val(e);
+				$("#release").trigger( 'reloadGrid' );
+			}
+		});	
+
+	}
 }
 
 	//added  by prasant kumar #513 date 23/09/2016	
@@ -1700,3 +1717,4 @@ function invoicethereornotforsalesorder(cusoid){
 			}
 		});
 }
+var releaseGridRowId;

@@ -9,7 +9,9 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -363,14 +365,19 @@ public class CustomerPaymentsController {
         String strDate = dateFormat.format(receiptDate);
         String datePerticles[]=strDate.split("-");
         
+        //added by prasant to get startdate and end date #633
+        String monthStartDate1=datePerticles[0]+"-"+datePerticles[1]+"-"+1;
+        String monthEndDate2=datePerticles[0]+"-"+datePerticles[1]+"-"+31;
+        
 		try {
 			Sysinfo aSysinfo = accountingCyclesService.getSysinfo();
 			
 			//added by prasant kumar for #633
 			Integer yearId=	accountingCyclesService.getYearId(datePerticles[0]);
 			Integer period=Integer.parseInt(datePerticles[1]);
-			Integer periodId=	accountingCyclesService.getPeriodIdForMe(period, yearId);
-			if(periodId==0)
+			
+			Integer periodId=	accountingCyclesService.getPeriodIdForMe(monthStartDate1,monthEndDate2, yearId);
+			if(periodId==0 )
 					periodId=aSysinfo.getCurrentPeriodId();
 			
 			if(yearId==0)

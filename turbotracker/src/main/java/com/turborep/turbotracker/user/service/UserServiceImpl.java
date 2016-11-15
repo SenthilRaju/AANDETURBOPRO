@@ -1483,5 +1483,24 @@ protected static Logger itsLogger = Logger.getLogger(UserServiceImpl.class);
 		
 		return taxTerritorySettingValue;
 	}
+
+	@Override
+	public Integer checkUserAdminOrNot(Integer userLoginID) {
+		String Qry="SELECT systemAdministrator FROM TsUserLogin  WHERE UserLoginID = "+userLoginID;
+		Session aSession = itsSessionFactory.openSession();
+		Integer check=0;
+		try {
+			int id = 0;
+			Query aQuery = aSession.createSQLQuery(Qry);
+			check=((Byte) aQuery.uniqueResult()).intValue();
+			
+		} catch (Exception e) {
+			itsLogger.error(e.getMessage(),e);
+		} finally {
+			aSession.flush();
+			aSession.close();
+		}
+		return check;
+	}
 	
 }

@@ -149,7 +149,7 @@
 							</li>
 							<li id="mainmenuReportsPage"><a class="report" href="#" onclick="">Reports</a>
 								<ul class="child"><li><a href="#" onclick="OpenJobsCriteriaPage()">Open jobs</a></li>
-								<li><a href="#" onclick="bookingsCriteriaPage()">Bookings</a></li>
+								<!-- <li><a href="#" onclick="bookingsCriteriaPage()">Bookings</a></li> -->
 								<li><a href="#" onclick="openPOCriteriaPage()">Open PO</a></li>
 								<li><a href="#" onclick="openPositivePay()">Positive Pay</a></li>
 								</ul>

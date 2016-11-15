@@ -2809,10 +2809,10 @@ public class PurchaseServiceImpl implements PurchaseService {
 			if ((tier != null) && (tier > -1)) {
 				prPriceLevel = prPriceLevel + tier;
 				String priceLevelValQuery = "select " + prPriceLevel + " FROM sysInfo";
-				List<Integer> sysInfos = aSession.createSQLQuery(priceLevelValQuery).list();
-				Integer priceLevalVal = sysInfos.get(0);
+				List<BigDecimal> sysInfos = aSession.createSQLQuery(priceLevelValQuery).list();
+				BigDecimal priceLevalVal = sysInfos.get(0);
 				if (priceLevalVal != null) {
-					whseCost = whseCost.multiply(new BigDecimal(100)).divide(new BigDecimal(priceLevalVal),2, RoundingMode.HALF_UP);
+					whseCost = whseCost.divide(priceLevalVal, 2, RoundingMode.HALF_UP);
 				}else{
 					whseCost=BigDecimal.ZERO;
 				}
@@ -2842,6 +2842,7 @@ public class PurchaseServiceImpl implements PurchaseService {
 			aSession.flush();
 			aSession.close();
 		}
+		tier=(tier!=null?tier:0);
 		return tier - 1;
 	}
 	

@@ -19,6 +19,7 @@ import java.util.Random;
 import javax.annotation.Resource;
 import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
@@ -34,6 +35,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 
 import com.turborep.turbotracker.finance.dao.Transactionmonitor;
 import com.turborep.turbotracker.mail.SendQuoteMail;
+import com.turborep.turbotracker.product.exception.ProductException;
 import com.turborep.turbotracker.system.dao.SysUserDefault;
 import com.turborep.turbotracker.user.dao.AccessModuleConstant;
 import com.turborep.turbotracker.user.dao.AccessProcedureConstant;
@@ -56,6 +58,9 @@ public class UserLoginController {
 	@Resource(name="userLoginService")
 	private UserService itsUserService;
 	
+
+	@Resource(name = "userLoginService")
+	private UserService userService;
 	
 	@RequestMapping(value = "", method = RequestMethod.POST)
 	public String login(@RequestParam("userName") String theUserName,
@@ -345,6 +350,27 @@ public class UserLoginController {
 	    
 	    return mailId_presentornot;
 	}
+	
+	
+	@RequestMapping(value = "/checkAdminOrNot", method = RequestMethod.GET)
+	public @ResponseBody Integer checkAdminOrNot(
+			@RequestParam(value = "UserLoginID", required = false) Integer UserLoginID,
+			HttpSession session, HttpServletResponse theResponse)throws IOException, ProductException {
+		Integer d=0;
+		//logger.info("/checkAdminOrNot Called");
+		try {
+			 d=userService.checkUserAdminOrNot(UserLoginID);
+				
+		} catch (Exception e) {
+			//logger.error(e.getMessage());
+			theResponse.sendError(500, e.getMessage());
+		}
+		return d;
+	}
+	
+	
+	
+	
 	public void sendTransactionException(String trackingID,String jobstatus,Exception e,HttpSession session,HttpServletRequest therequest) throws IOException, MessagingException{
 		UserBean aUserBean=null;
 		TsUserSetting objtsusersettings=null;

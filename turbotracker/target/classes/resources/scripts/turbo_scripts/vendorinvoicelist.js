@@ -468,7 +468,17 @@ var allText = $('#apacct').html();
 									  $('#InvalidPOMsg').text('Please Receive Line Items for this PO #'+po);
 									  jQuery("#InvalidPODlg").dialog("open");
 									  return  true;
-									   }						  
+									   }	
+							  if(data.allow==1)
+							  {
+								  jQuery("#EnterPODlg").dialog("close");
+								  $('#InvalidPOMsg').text('No Other Line items have been received on this  PO #'+po +" please receive item and try again");
+								  jQuery("#InvalidPODlg").dialog("open");
+								  return  true;
+								  
+								  
+							  }
+							  
 							  else{				 
 				        		 
 				        	
@@ -1484,9 +1494,12 @@ var allText = $('#apacct').html();
 								type: "POST",
 								// data : aVendorInvoiceDetails,
 								success: function(data) {
+									
 									if(operatorStatus=="close")
 									{
-										 var newDialogDiv = jQuery(document.createElement('div'));
+									
+										if(data==true){
+											 var newDialogDiv = jQuery(document.createElement('div'));
 										jQuery(newDialogDiv).html('<span><b style="color:Green;">Do You want to close the PO transaction Status?</b></span>');
 										jQuery(newDialogDiv).dialog({modal: true, width:300, height:150, title:"Success.", 
 										buttons:{
@@ -1501,7 +1514,14 @@ var allText = $('#apacct').html();
 												 saveVendorInvoicesfromPO($("#datePO").val(),generalValues,"no",operatorStatus,reasonVal);
 												
 											return false;	
-											}}}).dialog("open");
+											}
+											}
+										}).dialog("open");
+									}
+									else
+										{
+										 saveVendorInvoicesfromPO($("#datePO").val(),generalValues,"no",operatorStatus,reasonVal);
+										}
 									
 									}
 									else
@@ -1513,7 +1533,7 @@ var allText = $('#apacct').html();
 										 saveVendorInvoicesfromPO($("#datePO").val(),generalValues,"no",operatorStatus);
 									}
 								}
-						
+								   
 								});
 						 
 				}		
@@ -1565,6 +1585,13 @@ var allText = $('#apacct').html();
 				var oper = 'add';
 				var reasonVal=$("textarea#invreasonttextid").val();
 				
+				
+				
+				
+				
+				
+				
+				
 				console.log("veBillId---->"+veBillIdPO);
 				if(veBillIdPO == null || veBillIdPO == '')
 					veBillIdPO = 0;				
@@ -1575,11 +1602,18 @@ var allText = $('#apacct').html();
 					+'&oper='+oper+'&prMasterIDPO='+prMasterIDPO+'&rxMasterIDPayablePO='+rxMasterIDPayablePO+'&buttonValue='+$('#viStatusButtonPO').val()
 				    +'&joreleasedetid='+joreleasedetid+'&operatorStatus='+operStatus;
 				
-				$.ajax({
+				
+				 saveVendorInvoicesfromPO($("#datePO").val(),generalValues,"no",operStatus,reasonVal);
+				
+				
+		/*		$.ajax({
 					url: "./veInvoiceBillController/getPoTotal?vePoID="+vepoId,
 					type: "POST",
 					// data : aVendorInvoiceDetails,
-					success: function(data) { var newDialogDiv = jQuery(document.createElement('div'));
+					success: function(data) {
+						var transactionStatus = data.split("-*-");
+						if((transactionStatus[2])*1==0){
+						var newDialogDiv = jQuery(document.createElement('div'));
 					jQuery(newDialogDiv).html('<span><b style="color:Green;">Do You want to close the PO transaction Status?</b></span>');
 					jQuery(newDialogDiv).dialog({modal: true, width:300, height:150, title:"Success.", 
 					buttons:{
@@ -1594,9 +1628,35 @@ var allText = $('#apacct').html();
 							 saveVendorInvoicesfromPO($("#datePO").val(),generalValues,"no",operStatus,reasonVal);
 							
 						return false;	
-						}}}).dialog("open");}
-				});
+						}
+						}
+					}).dialog("open");
+					}//added by prasant #645
+						else{
+							 saveVendorInvoicesfromPO($("#datePO").val(),generalValues,"no",operStatus,reasonVal);
+						    }
+					}
+				
+				
+						
+						
+				});*/
 			}
+			
+			function UpdatePOStatusfromPO(vepoId,status)
+			{
+				$.ajax({
+					url: "./veInvoiceBillController/UpdatePOStatusfromPO?vePoID="+vepoId,
+					type: "POST",
+					success: function(data) {
+					
+					}
+				
+				})
+			}
+			
+			
+			
 			
 			function saveVendorInvoicesfromPO(datetoCheck,generalValues,updateStatus,operatorStatus,reasonVal)
 			{
@@ -1622,6 +1682,26 @@ var allText = $('#apacct').html();
 				var gridRows = $('#lineItemGrid').getRowData();
 				var dataToSend = JSON.stringify(gridRows);
 				var checkpermission=getGrantpermissionprivilage('OpenPeriod_PostingOnly',0);
+				
+
+			/*	$.ajax({
+			        url: './veInvoiceBillController/checkVendorInvoiceFromPO?'+generalValues,
+			        type: 'POST',   
+			        //data: generalValues+"&updatePO=yes"+"&coFiscalPeriodId="+periodid+"&coFiscalYearId="+yearid,
+			            data: {'updatePO':'yes','gridData':dataToSend,'delData':deleteveBillDetailIDDetailId,"reason":reasonVal},
+			        success: function (data) { 
+						if (data=="Mismatch")
+							{
+							var newDialogDiv = jQuery(document.createElement('div'));
+							jQuery(newDialogDiv).html('<span><b style="color:red;">Inventory Receive Count and vendor Invoice Count for the lineItems are not matching</b></span>');
+							jQuery(newDialogDiv).dialog({modal: true, width:300, height:150, title:"Information.", 
+													buttons: [{text: "OK",click: function(){$(this).dialog("close"); }}]
+												}).dialog("open");
+							}
+				
+				
+				
+						else{*/
 				$.ajax({
 					url: "./checkAccountingCyclePeriods",
 					data:{"datetoCheck":datetoCheck,"UserStatus":checkpermission},
@@ -1638,10 +1718,42 @@ var allText = $('#apacct').html();
 							        url: './veInvoiceBillController/addVendorInvoiceFromPO?'+generalValues,
 							        type: 'POST',   
 							        //data: generalValues+"&updatePO=yes"+"&coFiscalPeriodId="+periodid+"&coFiscalYearId="+yearid,
-							            data: {'updatePO':'yes','coFiscalPeriodId':periodid,'coFiscalYearId':yearid,
+							            data: {'updatePO':updateStatus,'coFiscalPeriodId':periodid,'coFiscalYearId':yearid,
 							        	'gridData':dataToSend,'delData':deleteveBillDetailIDDetailId,"reason":reasonVal},
-							        success: function (data) {
+							        success: function (data) {	
 							        	
+							        	var vepoId = $('#vepoidPO').val();							        	
+							        	//added by prasant							        	
+										$.ajax({
+											url: "./veInvoiceBillController/getPoTotal?vePoID="+vepoId,
+											type: "POST",
+											// data : aVendorInvoiceDetails,
+											success: function(data) {
+												var transactionStatus = data.split("-*-");
+												if((transactionStatus[2])*1==0){
+												var newDialogDiv = jQuery(document.createElement('div'));
+											jQuery(newDialogDiv).html('<span><b style="color:Green;">Do You want to close the PO transaction Status?</b></span>');
+											jQuery(newDialogDiv).dialog({modal: true, width:300, height:150, title:"Success.", 
+											buttons:{
+												"OK": function(){
+													
+													jQuery(this).dialog("close");
+													UpdatePOStatusfromPO(vepoId,2);
+													
+												},
+												Cancel: function ()	{
+													jQuery(this).dialog("close");
+													 //saveVendorInvoicesfromPO(vepoId);
+													
+												return false;	
+												}
+												}
+											}).dialog("open");
+											}//added by prasant #645
+												
+											}		
+										});										
+										//added							        	
 							        	deleteveBillDetailIDDetailId==new Array();
 							        	if(operatorStatus!="save")
 							        	{
@@ -1693,7 +1805,13 @@ var allText = $('#apacct').html();
 		   			error:function(data){
 		   				console.log('error');
 		   				}
-		   			});
+				  	
+				  	
+		   			});//1st ajax call end
+						//}
+					//}
+				
+					//});
 			    return false;
 			}
 			
@@ -3344,7 +3462,7 @@ function checkLatestInvoice(prMasterID)
 {
 
 	
-	alert("prMasterID:"+prMasterID);
+	//alert("prMasterID:"+prMasterID);
 	return true;
 
 }
@@ -3352,6 +3470,7 @@ function checkLatestInvoice(prMasterID)
 //New Method
 
 var posit_outside_loadlineItemGrid=0;
+var global_Qty=0;
 function loadlineItemGrid()
 {
 	//alert("hi it is calling....");
@@ -3459,6 +3578,8 @@ function loadlineItemGrid()
 										
 										$("#new_row_description").focus();
 										$("#"+aSelectedRowId+"_description").focus();
+										$("#addNewVeInvFmDlgbuttonsave").prop("disabled",true);
+										$("#addNewVeInvFmDlgbuttonsave").css("background","rgb(204, 204, 204)");
 									}							        		
 								});
 					        }
@@ -3498,6 +3619,8 @@ function loadlineItemGrid()
 	                       			Calculategrideditrowvalues_VI(rowid);
 	                       			checkLatestInvoice(prMasterID);
 	                       			 $("#lineItemGrid_ilsave").trigger("click");
+	                       			 $("#addNewVeInvFmDlgbuttonsave").prop("disabled",false);
+									 $("#addNewVeInvFmDlgbuttonsave").css("background","");
 	                       		      return true;
 	                       		  }
 	                                             }
@@ -3534,15 +3657,36 @@ function loadlineItemGrid()
 	                       		 if(key == 13)  // the enter key code
 	                       		  {
 	                       			var rowid=$(e.target).closest('tr')[0].id;
+	                       			//var colid=$(e.target).closest('td')[4].id;
 	                       			//var prMasterID=$(e.target).closest('tr')[0].prMasterID;
 	                                var row=  $('#lineItemGrid').jqGrid ('getGridParam', 'selrow');
 	                            	var	prMasterID =  $('#lineItemGrid').jqGrid ('getCell', row, 'prMasterId');
 	                            	console.log("prMasterID:"+$('#lineItemGrid').jqGrid ('getCell', row, 'prMasterId'));
-
+	                            	
+	                            	//var	vePodetailId_afterSave=$('#lineItemGrid').jqGrid ('getCell', rowid, 'vePodetailId');
+	                            	var vePodetailId_beforeSave=$('#'+row+'_vePodetailId').val();
+	                            	if(vePodetailId_beforeSave !="")
+        							{ 
+        							var newDialogDiv = jQuery(document.createElement('div'));
+        						    jQuery(newDialogDiv).attr("id","msgDlg");
+        							jQuery(newDialogDiv).html('<span><b style="color:Green;">All lineItems are Received so you cannot edit</b></span>');
+        							jQuery(newDialogDiv).dialog({modal: true, width:320, height:170, title:"Warning",
+        							buttons: [{height:35,text: "OK",click: function() { $(this).dialog("close")        						
+        							$("#lineItemGrid").jqGrid('setCell',row,'quantityOrdered', global_Qty);       							
+        							global_Qty=0;
+        							}}]}).dialog("open");
+        							
+        							//$("#" + rowId).find('td').eq('4').html('newText')
+        						//	$("#lineItemGrid").trigger("reloadGrid");
+        						//	$('#lineItemGrid').jqGrid('restoreCell', rowid, colid, true);
+        			 
+        							}
 	                            	//alert("prMasterID :"+row);
 	                       			Calculategrideditrowvalues_VI(rowid);
 	                       			checkLatestInvoice(prMasterID);
 	                       			 $("#lineItemGrid_ilsave").trigger("click");
+	                       			 $("#addNewVeInvFmDlgbuttonsave").prop("disabled",false);
+									 $("#addNewVeInvFmDlgbuttonsave").css("background","");
 	                       		      return true;
 	                       		  }
 	                                             }
@@ -3588,6 +3732,8 @@ function loadlineItemGrid()
 	                       			Calculategrideditrowvalues_VI(rowid);
 	                       			checkLatestInvoice(prMasterID);
 	                       			$("#lineItemGrid_ilsave").trigger("click")
+	                       		    $("#addNewVeInvFmDlgbuttonsave").prop("disabled",false);
+								    $("#addNewVeInvFmDlgbuttonsave").css("background","");
 	                       		  }
 	                                             }
 	                            }   
@@ -3634,6 +3780,8 @@ function loadlineItemGrid()
 	                       			Calculategrideditrowvalues_VI(rowid);
 	                       			checkLatestInvoice(prMasterID);
 	                       			$("#lineItemGrid_ilsave").trigger("click");
+	                       		    $("#addNewVeInvFmDlgbuttonsave").prop("disabled",false);
+								    $("#addNewVeInvFmDlgbuttonsave").css("background","");
 	                       		  }
 	                                             }
 	                            }
@@ -3673,6 +3821,8 @@ function loadlineItemGrid()
 		                       {
 		                    	  checkLatestInvoice(prMasterID);
 		                       $("#lineItemGrid_ilsave").trigger("click");
+		                       $("#addNewVeInvFmDlgbuttonsave").prop("disabled",false);
+							   $("#addNewVeInvFmDlgbuttonsave").css("background","");
 		                       }
 		                                         }
 		                        } 
@@ -3755,6 +3905,10 @@ function loadlineItemGrid()
 				//console.log("veBillDetailId :: "+veBillDetailId);
 			},
 			ondblClickRow: function(rowid) {
+		    global_Qty=	$('#lineItemGrid').jqGrid('getCell',rowid,'quantityOrdered');//$("#"+rowid+"_quantityOrdered").val();
+			
+			//alert(global_Qty);
+				
 				if(rowid=="new_row"){
 					 
 				 }else{
@@ -4233,6 +4387,8 @@ function check_productNofromoutside( value, colname ) {
 
 
 function SaveVendorInvoicewithPO(operation){
+	//BID1633 Simon
+	$("#addNewVeInvFmDlgbuttonsave").prop("disabled",true);
 	//alert("in SaveVendorInvoicewithPO  "+operation);
 	var vendorInvoiceDetails=$("#addNewVendorInvoiceFromPOForm").serialize();
 	var gridRows = $('#lineItemGrid').getRowData();
@@ -4309,6 +4465,10 @@ function SaveVendorInvoicewithPO(operation){
 					}}}).dialog("open");
 		 }
 		}
+	//BID1633 Simon
+	 setTimeout(function(){
+		 $("#addNewVeInvFmDlgbuttonsave").prop('disabled', false);		
+			},3000);
 }
 function removedollarsymbol(value,id){
 	if(value!=null && value!=""){
