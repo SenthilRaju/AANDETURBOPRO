@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="TrailBalance" language="groovy" pageWidth="595" pageHeight="842" columnWidth="559" leftMargin="18" rightMargin="18" topMargin="20" bottomMargin="20" uuid="76d9585c-0d30-4839-abf0-35d79ee341f2">
-	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.zoom" value="2.0"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
 	<parameter name="HeaderText" class="java.lang.String"/>
@@ -9,7 +9,52 @@
 	<parameter name="AccountStatus" class="java.lang.Boolean"/>
 	<parameter name="companyLogo" class="java.io.InputStream"/>
 	<queryString>
-		<![CDATA[SELECT coAccountID,Number,Description,accountType,FinancialStatus,((pdebits+pcredits)*100)/5581.25 AS PeriodRatio,(pdebits+pcredits) AS PeriodAmount,((ydebits+ycredits)*100)/6410.85 AS YearRatio,(ydebits+ycredits) AS YearAmount FROM ( SELECT  cA.coAccountID,cA.Number,cA.Description,cA.accountType,cA.FinancialStatus, IF(pdebits-pcredits>0,pdebits-pcredits,0) AS pdebits,IF(pcredits-pdebits>0,pcredits-pdebits,0) AS pcredits, IF(ydebits-ycredits>0,ydebits-ycredits,0) AS ydebits, IF(ycredits-ydebits>0,ycredits-ydebits,0) AS ycredits FROM coAccount cA LEFT JOIN  (SELECT  gt.coAccountID, TRUNCATE(SUM(TRUNCATE(gt.debit,4)),2) pdebits,TRUNCATE(SUM(TRUNCATE(gt.credit,4)),2)pcredits FROM glTransaction gt  WHERE gt.coFiscalPeriodId = 159 AND  gt.coFiscalYearId = 12 GROUP BY gt.coAccountID) gl ON cA.coAccountID = gl.coAccountID AND cA.accountType IN ('Income','Expense')  LEFT JOIN (SELECT  gtt.coAccountID, TRUNCATE(SUM(TRUNCATE(gtt.debit,4)),2) ydebits, TRUNCATE(SUM(TRUNCATE(gtt.credit,4)),2) ycredits FROM glTransaction gtt WHERE gtt.coFiscalYearId = 12 GROUP BY gtt.coAccountID)  gll ON cA.coAccountID = gll.coAccountID AND cA.accountType IN ('Income','Expense') WHERE cA.InActive <> 1 AND pdebits IS NOT NULL OR pcredits IS NOT NULL OR ydebits IS NOT NULL OR ycredits IS NOT NULL  HAVING ycredits>0 OR ydebits>0 ORDER BY cA.Number) subquery  ORDER BY FinancialStatus]]>
+		<![CDATA[SELECT coAccountID,Number,Description,
+                          accountType,
+                          FinancialStatus,
+                          ((pdebits+pcredits)*100)/5581.25 AS PeriodRatio,
+                          IF(FinancialStatus IN(1,2),IF((pdebits-pcredits)>0,(pdebits+pcredits)*-1,(pdebits+pcredits)),IF((pdebits+pcredits)>0,(pdebits+pcredits),(pdebits+pcredits)*-1))  AS PeriodAmount,
+                          ((ydebits+ycredits)*100)/6410.85 AS YearRatio,
+                          (ydebits+ycredits) AS YearAmount
+FROM
+  (SELECT cA.coAccountID,
+          cA.Number,
+          cA.Description,
+          cA.accountType,
+          cA.FinancialStatus,
+          IF(pdebits-pcredits>0,pdebits-pcredits,0) AS pdebits,
+          IF(pcredits-pdebits>0,pcredits-pdebits,0) AS pcredits,
+          IF(ydebits-ycredits>0,ydebits-ycredits,0) AS ydebits,
+          IF(ycredits-ydebits>0,ycredits-ydebits,0) AS ycredits
+   FROM coAccount cA
+   LEFT JOIN
+     (SELECT gt.coAccountID,
+             TRUNCATE(SUM(TRUNCATE(gt.debit,4)),2) pdebits,
+             TRUNCATE(SUM(TRUNCATE(gt.credit,4)),2)pcredits
+      FROM glTransaction gt
+      WHERE gt.coFiscalPeriodId = 159
+        AND gt.coFiscalYearId = 12
+      GROUP BY gt.coAccountID) gl ON cA.coAccountID = gl.coAccountID
+   AND cA.accountType IN ('Income',
+                          'Expense')
+   LEFT JOIN
+     (SELECT gtt.coAccountID,
+             TRUNCATE(SUM(TRUNCATE(gtt.debit,4)),2) ydebits,
+             TRUNCATE(SUM(TRUNCATE(gtt.credit,4)),2) ycredits
+      FROM glTransaction gtt
+      WHERE gtt.coFiscalYearId = 12
+      GROUP BY gtt.coAccountID) gll ON cA.coAccountID = gll.coAccountID
+   AND cA.accountType IN ('Income',
+                          'Expense')
+   WHERE cA.InActive <> 1
+     AND pdebits IS NOT NULL
+     OR pcredits IS NOT NULL
+     OR ydebits IS NOT NULL
+     OR ycredits IS NOT NULL
+   HAVING ycredits>0
+   OR ydebits>0
+   ORDER BY cA.Number) subquery
+ORDER BY FinancialStatus]]>
 	</queryString>
 	<field name="coAccountID" class="java.lang.Integer">
 		<fieldDescription><![CDATA[]]></fieldDescription>
