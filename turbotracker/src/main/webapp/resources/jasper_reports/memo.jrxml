@@ -2,7 +2,7 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="memo" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="97890909-8856-4e8d-81ee-d19af251bd44">
 	<property name="ireport.zoom" value="2.0"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="240"/>
+	<property name="ireport.y" value="192"/>
 	<parameter name="type" class="java.lang.String"/>
 	<parameter name="invoiceID" class="java.lang.Integer"/>
 	<queryString>
@@ -154,15 +154,15 @@ ORDER BY rA.rxAddressId ASC LIMIT 1]]>
 				<textFieldExpression><![CDATA[$F{InvoiceDate}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement x="62" y="137" width="158" height="13" uuid="a73c0545-aa46-4607-9f34-69494749ce79"/>
-				<textFieldExpression><![CDATA[(($F{cuAddr2}==null)?($F{cuCity}+", "+$F{cuState}+" "+$F{cuZip}):($F{cuAddr2}+"\n"+$F{cuCity}+", "+$F{cuState}+" "+$F{cuZip}))]]></textFieldExpression>
+				<reportElement x="62" y="137" width="197" height="13" uuid="a73c0545-aa46-4607-9f34-69494749ce79"/>
+				<textFieldExpression><![CDATA[(($F{cuAddr2}==null || ($F{cuAddr2}.trim().equals("")))?($F{cuCity}+", "+$F{cuState}+" "+$F{cuZip}):($F{cuAddr2}+"\n"+$F{cuCity}+", "+$F{cuState}+" "+$F{cuZip}))]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="62" y="124" width="158" height="13" uuid="2640ee31-6993-470a-8644-3e2d3127dc01"/>
+				<reportElement x="62" y="124" width="197" height="13" uuid="2640ee31-6993-470a-8644-3e2d3127dc01"/>
 				<textFieldExpression><![CDATA[$F{cuAddr1}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="62" y="111" width="158" height="13" uuid="188ca8ba-e4eb-446c-8831-1f46d46ddea7"/>
+				<reportElement x="62" y="111" width="197" height="13" uuid="188ca8ba-e4eb-446c-8831-1f46d46ddea7"/>
 				<textFieldExpression><![CDATA[$F{customer}]]></textFieldExpression>
 			</textField>
 			<textField>

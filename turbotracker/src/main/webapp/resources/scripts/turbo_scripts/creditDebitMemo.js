@@ -617,8 +617,8 @@ function preLoadCreditDebitMemoDetails()
 					
 			$("#memotypeID option[value=" + data.cuInvoice.iscredit + "]").attr("selected", true);		
 			$("#datepickerbox").val(FormatDate(data.cuInvoice.invoiceDate));
-			$('#DescriptionID').val(data.cuInvoice.note);
-			$('#notestextareaID').val(data.cuInvoice.description);		
+			$('#DescriptionID').val(data.cuInvoice.description);
+			$('#notestextareaID').val(data.cuInvoice.note);		
 			$('#amountID').val(formatCurrency((subtotal<0)?subtotal*-1:subtotal));
 			$('#frieghtID').val(formatCurrency((frieght<0)?frieght*-1:frieght));
 			$('#taxAmountID').val(formatCurrency((taxamt<0)?taxamt*-1:taxamt));
