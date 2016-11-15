@@ -66,7 +66,7 @@ $("#lineItemGrid").trigger("reloadGrid");
 	                    			   // alert("vePoidID:"+ rowData.vePoid);
 	                    			    
 	                    			   // additionalInfo="&prMasterID="+prMasterID+"&vePoidID="+vePoidID+"&quantityReceived="+quantityReceived;
-	                    				//added by prasant kumar #645
+	                    				//ADDED BY PRASANT KUAMR #645
 	                    			    	if(quantityOrdered > quantityReceived)
 	                    					{
 	                    			    $.ajax({

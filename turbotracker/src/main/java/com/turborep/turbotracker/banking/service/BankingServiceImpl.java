@@ -1526,6 +1526,28 @@ public class BankingServiceImpl implements BankingService {
 						aVeBillPaymentHistory.setAmountVal(payBean.get(j).getApplyingAmount());
 						aSession.save(aVeBillPaymentHistory);
 						}
+						
+						
+						//added by prasant 
+						if(payBean.get(j).getApplyingAmount().signum()<0)
+						{	
+							System.out.println("=======================================================================================================");
+			                System.out.println("Normal  Payment To store payment history when amount is credit chk: payment graeater then 25"+chkno+"Amount"+payBean.get(j).getApplyingAmount());
+							System.out.println("=======================================================================================================");
+							
+						VeBillPaymentHistory aVeBillPaymentHistory = new VeBillPaymentHistory();
+						aVeBillPaymentHistory.setVeBillID(payBean.get(j).getVebillID());
+						aVeBillPaymentHistory.setCheckNo(""+chkno);
+						aVeBillPaymentHistory.setDatePaid(theMotransaction.getTransactionDate());
+						aVeBillPaymentHistory.setAmountVal(payBean.get(j).getApplyingAmount());
+						aSession.save(aVeBillPaymentHistory);
+						}
+						
+						//end
+						
+						
+						
+						
 					}
 					Movendorchecktemp amoVendorCheckTemp = new Movendorchecktemp();
 					amoVendorCheckTemp.setMoTransactionId(moTransactionId);

@@ -561,6 +561,32 @@ public class VendorService implements VendorServiceInterface{
 		}
 		return aRxcontact;
 	}
+		
+		
+//BID1654 Simon
+//	@Override
+//	public Rxcontact getContactDetailsByRxMasterId(Integer rxMasterID) throws VendorException {
+//		Rxcontact aRxcontact = new Rxcontact();
+//		Session aSession = null;
+//		try {
+//			aSession = itsSessionFactory.openSession();
+//			 Query query = aSession.createQuery("from Rxcontact WHERE rxMasterId=:rxMasterID");
+//			 query.setParameter("rxMasterID", rxMasterID);
+//			 List<Rxcontact> list=query.list();
+//			 if(list!=null && list.size()>0){
+//				 aRxcontact=list.get(0);
+//			 }
+//		} catch (Exception e) {
+//			itsLogger.error(e.getMessage(), e);
+//			VendorException aVendorException = new VendorException(e.getCause().getMessage(), e);
+//			throw aVendorException;
+//		} finally {
+//			aSession.flush();
+//			aSession.close();
+//		}
+//		return aRxcontact;
+//	}
+
 	
 	public Veshipvia getVeShipVia(Integer theShipViaID) throws VendorException {
 		Veshipvia aVeshipvia = new Veshipvia();
@@ -3447,7 +3473,7 @@ l.			 * Table :veBillDetail
 
 			}else{
 			
-			aPOLineItemListQry = "SELECT ve.vePODetailID," + " ve.vePOID,"
+/*				aPOLineItemListQry = "SELECT ve.vePODetailID," + " ve.vePOID,"
 					+ " ve.prMasterID," + " ve.Description,"
 					+ " (IF (ve.QuantityOrdered - IFNULL (a.quaninv,0)>=0,ve.QuantityOrdered - IFNULL (a.quaninv,0),0))AS QuantityOrdered," + " ve.Taxable," + " ve.UnitCost,"
 					+ " ve.PriceMultiplier," + " ve.posistion,"
@@ -3460,7 +3486,41 @@ l.			 * Table :veBillDetail
 					+ " LEFT JOIN (SELECT vePODetailID,SUM(quantityInvoiced) AS quaninv FROM veBillHistory WHERE vePOID="+theVepoID+" GROUP BY vePODetailID ) a ON a.vePODetailID = ve.vePODetailID"
 					+ " Right Join vePO vepo on vepo.vePOID = ve.vePOID"
 					+ " where ve.vePOID = " + theVepoID
-					+ " ORDER BY ve.posistion";
+					+ " ORDER BY ve.posistion";*/
+					
+					//changed by prasant kuamr #645	
+				aPOLineItemListQry = "SELECT * FROM ( SELECT DISTINCT ve.vePODetailID," + " ve.vePOID,"
+						+ " ve.prMasterID," + " ve.Description,"
+						+ " (IF (veR.QuantityReceived - IFNULL (a.quaninv,0)>=0,ve.QuantityReceived - IFNULL (a.quaninv,0),0))AS QuantityOrdered," + " ve.Taxable," + " ve.UnitCost,"
+						+ " ve.PriceMultiplier," + " ve.posistion,"
+						+ " pr.ItemCode, " + " vepo.TaxTotal, " + " ve.Note, "
+						+ " ve.EstimatedShipDate," + "ve.AcknowledgementDate,"
+						+ " ve.VendorOrderNumber," + "ve.QuantityReceived,"
+						+ "(ve.QuantityOrdered-ve.QuantityReceived) "
+						+ " FROM vePODetail ve "
+						+ " Left Join veReceiveDetail veR on (veR.vePODetailID=ve.vePODetailID)"
+						+ " Left Join prMaster pr on ve.prMasterID = pr.prMasterID"					
+						+ " LEFT JOIN (SELECT vePODetailID,SUM(quantityInvoiced) AS quaninv FROM veBillHistory WHERE vePOID="+theVepoID+" GROUP BY vePODetailID ) a ON	a.vePODetailID = ve.vePODetailID"
+						+ " Right Join vePO vepo on vepo.vePOID = ve.vePOID"
+						+ " where ve.vePOID = " + theVepoID + " ORDER BY ve.posistion  )AS d WHERE QuantityOrdered >0"
+				
+				
+				        + " UNION ALL"
+				   
+			             + " SELECT * FROM ( SELECT ve.vePODetailID, ve.vePOID, ve.prMasterID, ve.Description, "
+			             + " (IF (ve.QuantityOrdered - IFNULL (a.quaninv,0)>=0,ve.QuantityOrdered - IFNULL (a.quaninv,0),0))AS QuantityOrdered,"
+			             + " ve.Taxable, ve.UnitCost, ve.PriceMultiplier, ve.posistion, pr.ItemCode,  vepo.TaxTotal,  ve.Note, "
+			             + " ve.EstimatedShipDate,ve.AcknowledgementDate, ve.VendorOrderNumber,ve.QuantityReceived,"
+			             + " (ve.QuantityOrdered-ve.QuantityReceived)  FROM vePODetail ve  "
+
+			             + " LEFT JOIN prMaster pr ON ve.prMasterID = pr.prMasterID LEFT JOIN "
+			             + "(SELECT vePODetailID,SUM(quantityInvoiced)"
+			             + " AS quaninv FROM veBillHistory WHERE vePOID="+theVepoID+" GROUP BY vePODetailID ) a ON"
+			             + " a.vePODetailID = ve.vePODetailID RIGHT JOIN vePO vepo ON vepo.vePOID = ve.vePOID WHERE ve.vePOID = "+theVepoID+" AND pr.IsInventory=0"
+			             + "  ORDER BY ve.posistion  )AS d WHERE QuantityOrdered >0";
+		
+		
+				
 			}
 		}
 		Session aSession = null;

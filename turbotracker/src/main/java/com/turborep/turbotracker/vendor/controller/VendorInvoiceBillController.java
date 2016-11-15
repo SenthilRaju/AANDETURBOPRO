@@ -249,6 +249,7 @@ public class VendorInvoiceBillController {
 		try {
 				aVepo = vendorService.getVePo(vepoID);
 				invStatus = vendorService.checkInvoiceNumberExist(invNo,vepoID);
+				//ADDED BY PRASANT #645
 				 transactionStatus=vendorService.getTransactionDailogStatus(vepoID);
 				
 		} catch (VendorException e) {
@@ -1683,6 +1684,27 @@ public class VendorInvoiceBillController {
 		}
 		return status;
 	}
+	
+	@RequestMapping(value = "/UpdatePOStatusfromPO",method = RequestMethod.POST)
+	public @ResponseBody boolean UpdatePOStatusfromPO(
+			@RequestParam(value = "vepoId", required = false) Integer vepoId,	
+				ModelMap theModel, HttpSession theSession,HttpServletResponse theResponse,HttpServletRequest theRequest)
+{
+
+		
+		try{
+		vendorService.updateVepoStatus(vepoId,2);
+		}catch(Exception e)
+		{
+			e.printStackTrace();
+		}
+		return true;		
+				
+				
+}
+	
+	
+	
 	
 	@RequestMapping(value = "/addVendorInvoiceFromPO",method = RequestMethod.POST)
 	public @ResponseBody Vebill addVendorInvoiceFromPO(@RequestParam(value = "recDateIdPO", required = false) String recDateIdPO,

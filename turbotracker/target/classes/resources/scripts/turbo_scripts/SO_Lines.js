@@ -1237,7 +1237,11 @@ var posit_job_salesorder=0;
 var soLines_selectRow;
 var checkelement;
 function loadSOLineItemGrid(){	
-	alert("Soline items callingt");
+	
+	
+	
+	
+	//alert("Soline items callingt");
 	$("#SOlineItemGrid").jqGrid('GridUnload');
 	var cuSOID = $('#Cuso_ID').text();
 	try {
@@ -1254,8 +1258,9 @@ function loadSOLineItemGrid(){
 				dataInit : function(elem) {
 					$(elem).autocomplete({
 						//addded by prasant #1589
-						 delay: 300,				    
+						 delay: 0,				    
 						minLength: 1,timeout :1000,autoFocus: true,
+						tabDisabled:true,
 							source: "jobtabs3/productCodeWithNameList",
 							select: function( event, ui ){
 								var ID = ui.item.id;
@@ -1352,7 +1357,8 @@ function loadSOLineItemGrid(){
 												setproductWareHouseCost(aSelectedRowId,ID);
 							                	$("#new_row_quantityOrdered").val("1");
 							                	CalculatesoLinegrideditrowvalues(soLines_selectRow);
-												
+							                	$("#SaveLineSOReleaseID").prop("disabled",true);
+							                	$("#SaveLineSOReleaseID").css("background","rgb(204, 204, 204)");
 											}	
 										});
 																			
@@ -1479,6 +1485,8 @@ function loadSOLineItemGrid(){
 		                    			 CalculatesoLinegrideditrowvalues(soLines_selectRow);
 		                    			 $("#SOlineItemGrid_ilsave").trigger("click");
 		                 			    $( "#SOlineItemGrid_iladd" ).trigger( "click" );
+		                 			   $("#SaveLineSOReleaseID").prop("disabled",false);
+		                 			  $("#SaveLineSOReleaseID").css("background","");
 		                    		    return false;  
 		                    		  }
 		                         }
@@ -1535,6 +1543,8 @@ function loadSOLineItemGrid(){
 		                    			 CalculatesoLinegrideditrowvalues(soLines_selectRow);
 		                    			 $("#SOlineItemGrid_ilsave").trigger("click");
 		                 			    $( "#SOlineItemGrid_iladd" ).trigger( "click" );
+		                 			   $("#SaveLineSOReleaseID").prop("disabled",false);
+		                 			  $("#SaveLineSOReleaseID").css("background","");
 		                    		    return false;  
 		                    		  }
 		                         }
@@ -1585,6 +1595,8 @@ function loadSOLineItemGrid(){
 		                    			 CalculatesoLinegrideditrowvalues(soLines_selectRow);
 		                    			 $("#SOlineItemGrid_ilsave").trigger("click");
 		                 			    $( "#SOlineItemGrid_iladd" ).trigger( "click" );
+		                 			   $("#SaveLineSOReleaseID").prop("disabled",false);
+		                 			  $("#SaveLineSOReleaseID").css("background","");
 		                    		    return false;  
 		                    		  }
 		                         }
@@ -1634,6 +1646,8 @@ function loadSOLineItemGrid(){
 		                    			 CalculatesoLinegrideditrowvalues(soLines_selectRow);
 		                    			 $("#SOlineItemGrid_ilsave").trigger("click");
 		                 			    $( "#SOlineItemGrid_iladd" ).trigger( "click" );
+		                 			    $("#SaveLineSOReleaseID").prop("disabled",false);
+		                 			   $("#SaveLineSOReleaseID").css("background","");
 		                    		    return false;  
 		                    		  }
 		                         }

@@ -1476,7 +1476,6 @@ function releasestatusImage(cellValue, options, rowObject) {
 	var transstatus=rowObject['transStatus'];
 	var type=rowObject['type'];
 	console.log("transstatus=="+transstatus);
-	
 	/*if (cellValue == "true") {
 		element = "<img src='./../resources/images/circle_tick.png' style='vertical-align: middle;'>";
 	} else if (cellValue == "false") {
@@ -3460,11 +3459,15 @@ function viewPOPDF(aPDFType){
 		
 	}else {
 		if(bidderGridRowId === null){
-			errorText = "Please click one of the Order to View Purchase Order.";
-			jQuery(newDialogDiv).html('<span><b style="color:red;">'+errorText+'</b></span>');
-			jQuery(newDialogDiv).dialog({modal: true, width:300, height:150, title:"Warning", 
-									buttons: [{height:35,text: "OK",click: function() { $(this).dialog("close"); }}]}).dialog("open");
-			return false;
+			if(releaseGridRowId===null){
+				errorText = "Please click one of the Order to View Purchase Order.";
+				jQuery(newDialogDiv).html('<span><b style="color:red;">'+errorText+'</b></span>');
+				jQuery(newDialogDiv).dialog({modal: true, width:300, height:150, title:"Warning", 
+										buttons: [{height:35,text: "OK",click: function() { $(this).dialog("close"); }}]}).dialog("open");
+				return false;
+			}else{
+				bidderGridRowId=releaseGridRowId;
+			}
 		}
 		aPDFType = "Po";
 		if (releaseType=='Drop Ship') {				/*Check wether the user print a Purchase order report.*/
@@ -11073,6 +11076,8 @@ function loadCustomerInvoice(){
 															 }
 															 var margintotal=Number(subTotalIDLine)-Number(grandTotal);
 															 $("#salesorder_total").val(formatCurrency(margintotal));
+															 $("#CuInvoiceSaveID").prop("disabled",true);
+															 $("#CuInvoiceSaveID").css("background","rgb(204, 204, 204)");
 														}								
 													});
 										        }
@@ -11118,6 +11123,8 @@ function loadCustomerInvoice(){
   		                 			     searchProduct=null;
   		                    			 setcustomerInvoicelineitemtotal(cuLines_selectRow);
   		                    			 $("#customerInvoice_lineitems_ilsave").trigger("click");
+  		                    			$("#CuInvoiceSaveID").prop("disabled",false);
+										 $("#CuInvoiceSaveID").css("background","");
   		                 			 //   $( "#customerInvoice_lineitems_iladd" ).trigger( "click" );
   		                    		    return false;  
   		                    		  }
@@ -11175,6 +11182,8 @@ function loadCustomerInvoice(){
               			     searchProduct=null;
                  			 setcustomerInvoicelineitemtotal(cuLines_selectRow);
                  			 $("#customerInvoice_lineitems_ilsave").trigger("click");
+                 			$("#CuInvoiceSaveID").prop("disabled",false);
+							 $("#CuInvoiceSaveID").css("background","");
               			 //   $( "#customerInvoice_lineitems_iladd" ).trigger( "click" );
                  		    return false;  
                  		  }
@@ -11224,6 +11233,8 @@ function loadCustomerInvoice(){
 		                 			    searchProduct=null;
 		                    			 setcustomerInvoicelineitemtotal(cuLines_selectRow);
 		                    			 $("#customerInvoice_lineitems_ilsave").trigger("click");
+		                    			 $("#CuInvoiceSaveID").prop("disabled",false);
+										 $("#CuInvoiceSaveID").css("background","");
 		                 			  //  $( "#customerInvoice_lineitems_iladd" ).trigger( "click" );
 		                    		    return false;  
 		                    		  }
@@ -11272,6 +11283,8 @@ function loadCustomerInvoice(){
 		                 			    searchProduct=null;
 		                    			 setcustomerInvoicelineitemtotal(cuLines_selectRow);
 		                    			 $("#customerInvoice_lineitems_ilsave").trigger("click");
+		                    			 $("#CuInvoiceSaveID").prop("disabled",false);
+										 $("#CuInvoiceSaveID").css("background","");
 		                 			  //  $( "#customerInvoice_lineitems_iladd" ).trigger( "click" );
 		                    		    return false;  
 		                    		  }

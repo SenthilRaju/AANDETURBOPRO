@@ -725,11 +725,11 @@
 			return true;
 		}
 
-		function getjobSubMethod(jobNumber,jobName){
+		function getjobSubMethod(jobNumber,jobName,joMasterID){
 			$.ajax({
 				url: "./search/searchjobcustomer",
 				mType: "GET",
-				data : {'jobnumber': jobNumber, 'jobname': jobName},
+				data : {'jobnumber': jobNumber, 'jobname': jobName,'joMasterID':joMasterID},
 				success: function(result){
 					$.each(result, function(index, value){
 						status = value.jobStatus;
@@ -741,7 +741,7 @@
 					}
 					var urijobname=encodeBigurl(jobName);
 					var uricusname=encodeBigurl(jobCustomer);
-					document.location.href="./jobflow?token=view&jobNumber="+jobNumber+"&jobName="+urijobname+"&jobCustomer="+uricusname+"&jobStatus="+status+"";
+					document.location.href="./jobflow?token=view&jobNumber="+jobNumber+"&jobName="+urijobname+"&jobCustomer="+uricusname+"&jobStatus="+status+"&joMasterID="+joMasterID;;
 				},
 				error: function(Xhr) {
 				}
