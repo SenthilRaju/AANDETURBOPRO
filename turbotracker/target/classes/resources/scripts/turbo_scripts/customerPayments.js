@@ -1176,13 +1176,13 @@ function applyReversePayment()
 	var newDialogDiv = jQuery(document.createElement('div'));
 	jQuery(newDialogDiv).html('<span><b style="color:red;">Are you sure you want to Reverse Payment?</b></span>');
 	jQuery(newDialogDiv).dialog({modal: true, width:300, height:150, title:"Information.", 
-							buttons: [
+							buttons:  [
 							          {text: "Yes",click: function(){ callReversepayment();$(this).dialog("close"); }},
 							          {text: "No",click: function(){$(this).dialog("close");$("#reversePaymentId").removeAttr("disabled"); }}
 							          ]
 						}).dialog("open");
 }
-//--
+
 
 // Apply Reverse Payment
 function callReversepayment()

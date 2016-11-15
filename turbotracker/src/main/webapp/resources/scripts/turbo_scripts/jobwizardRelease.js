@@ -7180,6 +7180,8 @@ var transaction = "";
  /*Edit by velmurugan*/
  function opencustomerinvoicedialog(){
 	 	clearInvoiceDetailsBeforeOpen();
+	 	
+	 	alert("opencustomerinvoicedialog() is calling while loading ...!");
 	 	var CIdivFlag="#CI_Shipto";
 	 	document.getElementById("CuInvoiceSaveID").disabled = false;
 		document.getElementById("CuInvoiceSaveCloseID").disabled = false;
@@ -7502,6 +7504,9 @@ var transaction = "";
 					
 				
 			}else{
+				//BID#1618 related code is loading
+				alert("Else is calling while loading ...!");
+				
 				$('#imgInvoicePDF').empty();
 		 		$('#imgInvoicePDF').append('<input type="image" src="./../resources/Icons/PDF_new.png" title="View CuInvoice" onclick="viewCuInvoicePDF(); return false;"	style="background: #EEDEBC;">');
 
