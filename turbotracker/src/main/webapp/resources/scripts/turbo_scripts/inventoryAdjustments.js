@@ -166,6 +166,7 @@ function loadtransfermaindata(transferId){
 	$('#transferId').val(transferId);
 
 }
+
 function SaveCloseAdjustments(){
 	var gridRows = $('#chartsOfTransferListGrid').getRowData();
 	var rowData = new Array();
@@ -176,7 +177,9 @@ function SaveCloseAdjustments(){
 	var dataToSend = JSON.stringify(gridRows);
 	var additionalInfo=$("#InvAdjustmentformId").serialize();
 	additionalInfo=additionalInfo // +"&gridData="+dataToSend
-	var checkpermission=getGrantpermissionprivilage('Adjustments',0);
+	//added by prasant Bartos Fixes
+	var checkpermission=getGrantpermissionprivilage('OpenPeriod_PostingOnly',0);
+	
 if($("#cogErrorStatustextbox").val()=="")
 	{
 	$.ajax({
@@ -514,8 +517,8 @@ function loadTransferDetails(transferId){
 
 
 function checkOpenperiodOrNot(){
-	
-	var checkpermission=getGrantpermissionprivilage('Adjustments',0);
+	//modified by prasant Bartos Fixes
+	var checkpermission=getGrantpermissionprivilage('OpenPeriod_PostingOnly',0);
 
 	$.ajax({
 		url: "./checkAccountingCyclePeriods",

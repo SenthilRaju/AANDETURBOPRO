@@ -1786,12 +1786,8 @@ function getGrantpermissionprivilage(accesspage,groupid){
 	    	{   		
 	    		returnvalue=true;	    		
 	    	}
-	    	else if(data.Value == "deniedforOP"){	    		
-	    		returnvalue=false;	
-	    		
-	    	}	    	
-	        else if(data.Value == "deniedforOPA"){	    		
-	    		returnvalue=true;
+	    	else if(data.Value == "deniedforOP"){
+	    		returnvalue=false;
 	    	}
 	    	else
 	    	{

@@ -1257,13 +1257,14 @@ function applypayments()
 	var res = month.split("/");
 	var date=new  Date();
 	var UserLoginID=  $("#userLogin_Id").val();
+	//commented by prasant Bartos Fixes
 	
 	//alert("sdfasf:"+())
 	
 	
 	
 	//to check is Admin
-  $.ajax({
+ /* $.ajax({
     url: "./usercontroller/checkAdminOrNot",
     async:false,
     data: { 'UserLoginID':UserLoginID},
@@ -1275,27 +1276,27 @@ function applypayments()
     	flag=1;
     		}
     	}
-	});
+	});*/
   
 
   
-	var prevMonth=date.getMonth()*1;
-	var paymentMonth=res[0]*1;
+	//var prevMonth=date.getMonth()*1;
+	//var paymentMonth=res[0]*1;
 	
-	if( (prevMonth+1)==paymentMonth &&  flag!=1)
+	/*if( (prevMonth+1)==paymentMonth &&  flag!=1)
 	{
 		checkpermission=true;;
-	}
+	}*/
 	
 
 	
-		if(checkpermission==false)
+	/*	if(checkpermission==false)
 		{
 		   // $("#LoadingDialog").css({"display":"none"});
 			showDeniedPopup1();
-		}
+		}*/
 		
-	else{
+	//else{
 	$("#LoadingDialog").css({"display":"inherit"});
 	//Get Paid Rows only
 	var rows = jQuery("#customerPaymets").getDataIDs();
@@ -1324,7 +1325,7 @@ function applypayments()
 	//Check period is openy
 	$.ajax({
 		url: "./checkAccountingCyclePeriods",
-		data:{"datetoCheck":$("#paymentdateid").val(),"UserStatus":checkpermission,"flag":"allow"},
+		data:{"datetoCheck":$("#paymentdateid").val(),"UserStatus":checkpermission},
 		type: "POST",
 		success: function(data) { 
 				if(data.cofiscalperiod!=null && typeof(data.cofiscalperiod.period) !== "undefined" )
@@ -1391,7 +1392,7 @@ function applypayments()
    		});
 					
 					
-		}
+		
 	
 }
    	

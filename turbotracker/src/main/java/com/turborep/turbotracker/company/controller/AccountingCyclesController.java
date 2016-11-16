@@ -318,7 +318,7 @@ public class AccountingCyclesController {
 	public @ResponseBody
 	Map<String, Object> checkAccountingCyclePeriods(@RequestParam(value = "datetoCheck", required = false) Date datetoCheck,
 											   @RequestParam(value = "UserStatus", required = false) boolean UserStatus,
-											   @RequestParam(value = "flag", required = false) String  flag,
+											/*   @RequestParam(value = "flag", required = false) String  flag,*/
 											   HttpSession session,HttpServletResponse theResponse,HttpServletRequest request) throws IOException, MessagingException {
 		
 		System.out.println("===>>"+datetoCheck);
@@ -337,12 +337,12 @@ public class AccountingCyclesController {
 			 if(cofiscalperiod==null)
 			 AuthStatus="granted";
 			}
-			
-			else if ((aUserBean.getSystemAdministrator() == 1 || UserStatus  )&&flag.equals("allow")){
+		
+			/*else if ((aUserBean.getSystemAdministrator() == 1 || UserStatus  )	&& ((flag!=null) && (flag.equals("allow")))){
 				 cofiscalperiod = accountingCyclesService.getAllOpenPeriods(datetoCheck);
 				 if(cofiscalperiod==null)
 				 AuthStatus="granted";
-			}
+			}*/
 			else
 			{
 			 cofiscalperiod = accountingCyclesService.getCurrentOpenPeriods(datetoCheck,aSysinfo.getCurrentFiscalYearId(),aSysinfo.getCurrentPeriodId());
