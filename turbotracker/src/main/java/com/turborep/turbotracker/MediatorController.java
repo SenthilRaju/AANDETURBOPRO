@@ -4619,7 +4619,7 @@ public class MediatorController {
 			Sysprivilege obj = sysservice.getSysPrivileageLst(aSysprivilege, thecondition);
 		//	logger.info(" obj.getPrivilegeValue() = "+obj.getPrivilegeValue());
 			
-			if(obj!=null && obj.getPrivilegeValue()==1)
+		/*	if(obj!=null && obj.getPrivilegeValue()==1)
 				str = "granted";
 			else if(aUserLogin.getSystemAdministrator() == 1)
 				str = "granted";		
@@ -4633,7 +4633,18 @@ public class MediatorController {
                 str = "deniedforOP";
 			
 			if(accessPage.equals("OpenPeriod_PostingOnly")  && aUserLogin.getSystemAdministrator() == 1)
-                str = "deniedforOPA";
+                str = "deniedforOPA";*/
+			
+			//modified by prasant Bartos Fixes
+			
+			if(obj!=null && obj.getPrivilegeValue()==1)
+				str = "granted";
+			else if(aUserLogin.getSystemAdministrator() == 1)
+				str = "granted";
+			else if(accessPage.equals("OpenPeriod_PostingOnly"))
+				str = "deniedforOP";
+			else
+				str = "denied";
 			
 			map.put("Value", str);
 			logger.info(" getSysPrivilage data string = "+str);
