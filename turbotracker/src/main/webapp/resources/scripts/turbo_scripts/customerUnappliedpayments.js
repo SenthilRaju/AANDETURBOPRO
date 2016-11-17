@@ -715,8 +715,8 @@ function payToLedger(){
 				//	yearid = data.cofiscalperiod.coFiscalYearId;
 					
 					//Apply Payment 
-	if(checkpermission==true)
-		{
+	/*if(checkpermission==true)
+		{*/
 					$.ajax({
 					url: "./custpaymentslistcontroller/payMultipleInvoice",
 					data:{
@@ -742,14 +742,16 @@ function payToLedger(){
 		   				console.log('error');
 		   				}
 		   			});
-}
+					
+					
+					/*}
 	
 	else{
 		
 		showDeniedPopup();
 		
 		
-	}
+	}*/
 					
 			/*	}
 				else
