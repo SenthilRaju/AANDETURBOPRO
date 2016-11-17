@@ -6758,7 +6758,7 @@ public class JobServiceImpl implements JobService {
 			theJobsTotal = "";
 		}
 
-String aJobSelectQry = "SELECT joMaster.joMasterId, joMaster.jobNumber, joMaster.Description, joMaster.locationName, joMaster.locationCity, ts.Initials as salesman, "
+/*String aJobSelectQry = "SELECT joMaster.joMasterId, joMaster.jobNumber, joMaster.Description, joMaster.locationName, joMaster.locationCity, ts.Initials as salesman, "
 				+ "joStatus.JobStatus, rx.Name, joMaster.CustomerPONumber, coDivision.Code, joMaster.SourceReport1, joMaster.bookedDate, joMaster.bidDate, joMaster.contractAmount, "
 				+ "joMaster.estimatedCost, coDivision.Description as division, ts5.Initials as takeoff, ts6.Initials as quoteBy, IFNULL(rxm.Name,'') as bidList, COUNT(joMaster.jobNumber), "
 				+ " joMaster.LocationState FROM joMaster as joMaster "
@@ -6771,7 +6771,30 @@ String aJobSelectQry = "SELECT joMaster.joMasterId, joMaster.jobNumber, joMaster
 				+ "LEFT JOIN tsUserLogin as ts5 ON joMaster.cuAssignmentID5 = ts5.UserLoginID "
 				+ "LEFT JOIN tsUserLogin as ts6 ON joMaster.cuAssignmentID6 = ts6.UserLoginID  "
 				+ theJobsTotal
-				+ " GROUP BY joMaster.jobNumber ORDER BY joMaster.bidDate DESC ";
+				+ " GROUP BY joMaster.jobNumber ORDER BY joMaster.bidDate DESC ";*/
+		
+		//BID1670 Simon
+		if(theSortBy==null || theSortBy.trim().equals("")){
+			theSortBy="joMaster.bidDate";
+		}
+		if(sort==null || sort.trim().equals("")){
+			sort="DESC";
+		}
+	String aJobSelectQry = "SELECT joMaster.joMasterId, joMaster.jobNumber, joMaster.Description, joMaster.locationName, joMaster.locationCity, ts.Initials as salesman, "
+				+ "joStatus.JobStatus, rx.Name, joMaster.CustomerPONumber, coDivision.Code, joMaster.SourceReport1, joMaster.bookedDate, joMaster.bidDate, joMaster.contractAmount, "
+				+ "joMaster.estimatedCost, coDivision.Description as division, ts5.Initials as takeoff, ts6.Initials as quoteBy, IFNULL(rxm.Name,'') as bidList, COUNT(joMaster.jobNumber), "
+				+ " joMaster.LocationState FROM joMaster as joMaster "
+				+ "LEFT JOIN joStatus as joStatus on joStatus.jostatusID = joMaster.jobstatus "
+				+ "LEFT JOIN coDivision as coDivision on joMaster.coDivisionID = coDivision.coDivisionID "
+				+ "LEFT JOIN joBidder as j  ON j.joMasterID= joMaster.joMasterID "
+				+ "LEFT JOIN rxMaster as rx ON j.rxMasterID = rx.rxMasterID "
+				+ "LEFT JOIN rxMaster AS rxm ON joMaster.rxCustomerID = rxm.rxMasterID "
+				+ "LEFT JOIN tsUserLogin as ts ON joMaster.cuAssignmentID0 = ts.UserLoginID "
+				+ "LEFT JOIN tsUserLogin as ts5 ON joMaster.cuAssignmentID5 = ts5.UserLoginID "
+				+ "LEFT JOIN tsUserLogin as ts6 ON joMaster.cuAssignmentID6 = ts6.UserLoginID  "
+				+ theJobsTotal
+				+ " GROUP BY joMaster.jobNumber ORDER BY "
+				+ theSortBy + " "+sort;
 		if (aJobSelectQry.contains("AND ORDER BY")) {
 			aJobSelectQry = aJobSelectQry.replace("AND ORDER BY", "ORDER BY");
 		}

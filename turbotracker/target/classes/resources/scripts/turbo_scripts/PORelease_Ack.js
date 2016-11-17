@@ -729,3 +729,91 @@ function POAckTabformChanges(formvalue){
    }
 	return false;
 }
+//added by prasant #1629
+function SetoverAllPOTotal(){
+	var allRowsInGrid = $('#lineItemGrid').jqGrid('getRowData');
+	var aVal = new Array(); 
+	var aTax = new Array();
+	var sum = 0;
+	 var totalamount=0;
+	 var taxamount=0;
+	 var taxcellValue;
+	var aTotal = 0;
+	
+	
+	
+	var ids = $("#lineItemGrid").jqGrid('getDataIDs');
+	/*$.each(allRowsInGrid, function(index, value) {
+		aVal[index] = value.quantityBilled;
+		var number1 = aVal[index].replace("$", "");
+		var number2 = number1.replace(".00", "");
+		var number3 = number2.replace(",", "");
+		var number4 = number3.replace(",", "");
+		var number5 = number4.replace(",", "");
+		var number6 = number5.replace(",", "");
+		
+		var id="#canDeletePOID_"+ids[index];
+		var canDo=$(id).is(':checked');
+		if(!canDo){
+		sum = Number(sum) + Number(number6); 
+		
+		aVal[index] = value.taxable;
+		if (aVal[index] === 'Yes'){
+			aTax[index] = value.quantityBilled;
+			var number1 = aTax[index].replace("$", "");
+			var number2 = number1.replace(".00", "");
+			var number3 = number2.replace(",", "");
+			var number4 = number3.replace(",", "");
+			var number5 = number4.replace(",", "");
+			var number6 = number5.replace(",", "");
+			var taxValue = $('#taxLineId').val();
+			taxAmount = taxAmount + Number(number6)*(taxValue/100);
+		}
+		}
+	});*/
+	
+	
+	for(var i=0;i<ids.length;i++){
+		 var selectedRowId=ids[i];
+		 if(selectedRowId!="new_row"){
+		 cellValue =$("#lineItemGrid").jqGrid ('getCell', selectedRowId, 'quantityBilled');
+		 taxcellValue=$("#lineItemGrid").jqGrid ('getCell', selectedRowId, 'taxable');
+		 var id="#canDeletePOID_"+selectedRowId;
+		 var canDo=$(id).is(':checked');
+		 if(taxcellValue=="Yes"){
+			 var eachamount=parseFloat(floorFigureoverall(cellValue.replace(/[^0-9\.-]+/g,""),2));
+			 var multiplyamount=eachamount*Number(taxpercentage)/100;
+			 if(!canDo){
+			 taxamount=Number(taxamount)+Number(multiplyamount);
+			
+			 }
+		 }
+		var cellvalueamt=Number(parseFloat(cellValue.replace(/[^0-9\.-]+/g,"")).toFixed(3));
+		//alert(parseFloat(cellValue.replace(/[^0-9\.-]+/g,"")).toFixed(2));
+		if(!canDo){
+		 totalamount=cellvalueamt+totalamount;
+		 totalamount=Number(floorFigureoverall(totalamount,2));
+		}
+		 }
+	 }
+	
+	
+	$('#subtotalGeneralId').val(Number(floorFigureoverall(totalamount, 2)));
+	$('#subtotalLineId').val(Number(floorFigureoverall(totalamount,2)));
+	$('#subtotalKnowledgeId').val(Number(floorFigureoverall(totalamount,2)));
+	$('#generalID').val(Number(floorFigureoverall(taxamount,2)));
+	$('#lineID').val(Number(floorFigureoverall(taxamount,2)));
+	$('#KnowledgeID').val(Number(floorFigureoverall(taxamount,2)));
+	
+	var frieghtvalue=Number($("#freightGeneralId").val().replace(/[^0-9\.]+/g,""));
+	if(frieghtvalue==undefined ||frieghtvalue=="" || frieghtvalue==null ||frieghtvalue=="null"){
+		frieghtvalue=0.00;
+		}
+	
+	aTotal = aTotal + totalamount + Number(floorFigureoverall(taxamount,2)) +frieghtvalue;
+	$('#totalGeneralId').val(Number(floorFigureoverall(aTotal,2)));
+	$('#totalLineId').val(Number(floorFigureoverall(aTotal,2)));
+	$('#totalKnowledgeId').val(Number(floorFigureoverall(aTotal,2)));
+	$("#freightLineId").val(Number(floorFigureoverall(frieghtvalue,2)));
+	//$("#taxLineId").val($("#Tax_ID").text());
+}
