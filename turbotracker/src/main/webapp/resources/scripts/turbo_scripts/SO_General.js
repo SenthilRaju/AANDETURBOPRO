@@ -3004,6 +3004,14 @@ function soLineItemformChanges(formvalue){
     	  console.log("LineItemForm");
     	if(formvalue=="TabChange"){
     		 $( "#salesreleasetab ul li:nth-child(1)" ).addClass("ui-state-disabled");
+    		 $('#generalSOTabPDF').attr('disabled',true);
+     		 $('#contactEmailID_general').attr('disabled',true);
+     		$('#lineSOTabPDF').attr('disabled',true);
+     		$('#contactEmailID_lines').attr('disabled',true);
+     		 $('#lineSOTabPDF').fadeTo("slow", 0.4);
+    		 $('#contactEmailID_lines').fadeTo("slow", 0.4);
+    		 $('#generalSOTabPDF').fadeTo("slow", 0.4);
+    		 $('#contactEmailID_general').fadeTo("slow", 0.4);
     		 $('#loadingDivForSOGeneralTab').css({
  				"display": "none"
  			}); 
@@ -3024,12 +3032,28 @@ function soLineItemformChanges(formvalue){
   				"display": "none"
   			});
     		$( "#salesreleasetab ul li:nth-child(1)" ).addClass("ui-state-disabled");
+    		$('#generalSOTabPDF').attr('disabled',true);
+    		 $('#contactEmailID_general').attr('disabled',true);
+    		 $('#lineSOTabPDF').attr('disabled',true);
+      		 $('#contactEmailID_lines').attr('disabled',true);
+      		 $('#lineSOTabPDF').fadeTo("slow", 0.4);
+     		 $('#contactEmailID_lines').fadeTo("slow", 0.4);
+//     		 $('#generalSOTabPDF').fadeTo("slow", 0.4);
+//    		 $('#contactEmailID_general').fadeTo("slow", 0.4);
     		ret_val=false;
     	}
     	
     	
     }else{
     	$( "#salesreleasetab ul li:nth-child(1)" ).removeClass("ui-state-disabled");
+    	$('#generalSOTabPDF').attr('disabled',false);
+		 $('#contactEmailID_general').attr('disabled',false);
+		 $('#lineSOTabPDF').attr('disabled',false);
+		 $('#contactEmailID_lines').attr('disabled',false);
+		 $('#lineSOTabPDF').fadeTo("slow", 1);
+ 		 $('#contactEmailID_lines').fadeTo("slow", 1);
+// 		 $('#generalSOTabPDF').fadeTo("slow", 1);
+//		 $('#contactEmailID_general').fadeTo("slow", 1);
     	ret_val=true;
     }
      }
