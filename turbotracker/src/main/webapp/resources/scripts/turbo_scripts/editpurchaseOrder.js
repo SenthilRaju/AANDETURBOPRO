@@ -446,20 +446,20 @@ function loadLinesItemGrid() {
          		    			  { type: 'click', data: { i: 7 }, fn: function(e) { 
          		    				  var rowobji=$(e.target).closest('tr.jqgrow');
          		    				  var textboxid=rowobji.attr('id');
-         		    				poLines_selectRow=textboxid;
+         		    				  poLines_selectRow=textboxid;
          				    		  jQuery("#lineItemGrid").jqGrid('setSelection',poLines_selectRow, true);
          		    				  e.target.select();
          		    				//  changePosition(poLines_selectRow);
          		    			  }
          		    			   },
-         		    			  { type: 'change', data: { i: 7 }, fn: function(e) {
-         		    			  var rowobji=$(e.target).closest('tr.jqgrow');
-         			    		  var textboxid=rowobji.attr('id');
-         			    		poLines_selectRow=textboxid;
-         			    			jQuery("#lineItemGrid").jqGrid('setSelection',poLines_selectRow, true);
-         			    			e.target.select();
-         		    				//changePosition(poLines_selectRow);
-         		    			  } },
+//         		    			  { type: 'change', data: { i: 7 }, fn: function(e) {
+//         		    			  var rowobji=$(e.target).closest('tr.jqgrow');
+//         			    		  var textboxid=rowobji.attr('id');
+//         			    		poLines_selectRow=textboxid;
+//         			    			jQuery("#lineItemGrid").jqGrid('setSelection',poLines_selectRow, true);
+//         			    			e.target.select();
+//         		    				//changePosition(poLines_selectRow);
+//         		    			  } },
          	                        {
          		                         type: 'keypress',
          		                         fn: function(e) {
