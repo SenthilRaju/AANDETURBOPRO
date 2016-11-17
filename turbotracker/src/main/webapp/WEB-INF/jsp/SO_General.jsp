@@ -364,9 +364,9 @@
 	<td style="width:729px">
 	<table >
 	<tr style="width: 100%;">
-	<td align="left" style="padding-right: 0px;"><input type="image" src="./../resources/Icons/PDF_new.png" title="View Sales Order" onclick="viewPOPDF()"  style="background: #EEDEBC;"></td> 	
+	<td align="left" style="padding-right: 0px;"><input type="image" src="./../resources/Icons/PDF_new.png" title="View Sales Order" onclick="viewPOPDF()"  style="background: #EEDEBC;" onchange="soLineItemformChanges();" id="generalSOTabPDF"></td> 	
 	<td align="left" style="padding-right: 0px;">
-	<td><input id="contactEmailID_general"  onmouseover="triggertitle()"  type="image" src="./../resources/Icons/mail_new.png" title="Email Sales Order" style="background: #EEDEBC;" onclick="sendPOEmail('SOJ')"></td>
+	<td><input id="contactEmailID_general"  onmouseover="triggertitle()"  type="image" src="./../resources/Icons/mail_new.png" title="Email Sales Order" style="background: #EEDEBC;" onclick="sendPOEmail('SOJ')" onchange="soLineItemformChanges();"></td>
 	<td align="left" style="padding-left: 10px;"><input id="withPrice" type="checkbox" style="background: #EEDEBC;" onclick="general(this);"></td>
 	<td width="30%"><label id='withPriceLabel' display: none;">With Price</label></td>
 	<td width="40%"><font color="green" size="3"><div id="soEmailTimeStamp"></div></font> </td>
