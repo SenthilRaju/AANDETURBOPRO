@@ -235,6 +235,9 @@
 				</tr>
 			</table>
 			</div>
+			<div id="countyCodeAlert" style="display: none;">
+				<span>Special characters are not allowed.</span>
+			</div>
 		<script type="text/javascript" src="./../resources/scripts/turbo_scripts/taxTerritories.js"></script>
 <!-- 		<script type="text/javascript" src="./../resources/scripts/turbo_scripts/minscripts/chartofaccounts.min.js"></script> -->
 
