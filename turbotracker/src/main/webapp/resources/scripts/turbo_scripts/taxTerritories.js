@@ -29,10 +29,20 @@ jQuery(document).ready(function() {
 		var countyCode=$("#CountyCodeId").val();
 		if(countyCode!=undefined && countyCode.match(/[^0-9a-z]/i)){
 			$('#CountyCodeId').css('border-color', 'red');
+			$("#countyCodeAlert").dialog({modal: true, width:300, height:150, title:"Information", 
+				open: function(event, ui) { $(".ui-dialog-titlebar-close").hide(); },
+				buttons:{
+					"Ok": function(){
+						jQuery(this).dialog("close");
+						$('#CountyCodeId').focus();
+					    return false;
+					}}}).dialog("open");
 			$("#saveUserButton").prop("disabled",true);
+			$("#saveUserButton").fadeTo("slow",0.4);
 		}else{
 			$('#CountyCodeId').css('border-color', '');
 			$("#saveUserButton").prop("disabled",false);
+			$("#saveUserButton").fadeTo("slow",1);
 		}
 	});
 	//BID1691 Simon (Reg : countyCode is expected to allow Alpha Numeric chars)
@@ -40,10 +50,20 @@ jQuery(document).ready(function() {
 		var stateCode=$("#stateCodeID").val();
 		if(stateCode!=undefined && stateCode.match(/[^0-9a-z]/i)){
 			$('#stateCodeID').css('border-color', 'red');
-			$("#saveUserButton").prop("disabled",true);
+			$("#countyCodeAlert").dialog({modal: true, width:300, height:150, title:"Information", 
+				open: function(event, ui) { $(".ui-dialog-titlebar-close").hide(); },
+				buttons:{
+					"Ok": function(){
+						jQuery(this).dialog("close");
+						$('#CountyCodeId').focus();
+					    return false;
+					}}}).dialog("open");
+//			$("#saveUserButton").prop("disabled",true);
+//			$("#saveUserButton").fadeTo("slow",0.4);
 		}else{
 			$('#stateCodeID').css('border-color', '');
-			$("#saveUserButton").prop("disabled",false);
+//			$("#saveUserButton").prop("disabled",false);
+//			$("#saveUserButton").fadeTo("slow",1);
 		}
 	});
 });

@@ -1178,7 +1178,6 @@ function checkImportTypeSelectornot(manufactureid){
 var poLines_selectRow;
 //Changes Method
 function loadLineItemGrid() {
-	
 	var schgrid='<table id="lineItemGrid"></table><div id="lineItemPager"></div>';	
 	$('#jqgridLine').empty();
 	$('#jqgridLine').append(schgrid);
@@ -1329,14 +1328,14 @@ function loadLineItemGrid() {
    		    				//  changePosition(poLines_selectRow);
    		    			  }
    		    			   },
-   		    			  { type: 'change', data: { i: 7 }, fn: function(e) {
-   		    			  var rowobji=$(e.target).closest('tr.jqgrow');
-   			    		  var textboxid=rowobji.attr('id');
-   			    		poLines_selectRow=textboxid;
-   			    			jQuery("#lineItemGrid").jqGrid('setSelection',poLines_selectRow, true);
-   			    			e.target.select();
-   		    				//changePosition(poLines_selectRow);
-   		    			  } },
+//   		    			  { type: 'change', data: { i: 7 }, fn: function(e) {
+//   		    			  var rowobji=$(e.target).closest('tr.jqgrow');
+//   			    		  var textboxid=rowobji.attr('id');
+//   			    		poLines_selectRow=textboxid;
+//   			    			jQuery("#lineItemGrid").jqGrid('setSelection',poLines_selectRow, true);
+//   			    			e.target.select();
+//   		    				//changePosition(poLines_selectRow);
+//   		    			  } },
    	                        {
    		                         type: 'keypress',
    		                         fn: function(e) {
