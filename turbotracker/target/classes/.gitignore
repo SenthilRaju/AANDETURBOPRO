@@ -1,4 +1,9 @@
 /META-INF/
 /WEB-INF/
+/applet.html
+/eturbokey
+/eturbokeyjks.jks
 /resources/
 /com/
+/ehcache.xml
+/log4j.properties
