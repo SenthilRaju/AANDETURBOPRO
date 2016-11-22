@@ -1650,7 +1650,9 @@ public class UserListController {
 			@RequestParam(value = "screen", required = false) String screen, 
 			@RequestParam(value = "action", required = false) String action, 
 			@RequestParam(value = "logLevel", required = false) String logLevel, 
-			@RequestParam(value = "description", required = false) String description,HttpSession session,HttpServletRequest therequest ) throws IOException, MessagingException {
+			@RequestParam(value = "description", required = false) String description,
+			@RequestParam(value = "jobnumber", required = false) String jobNumber,
+			HttpSession session,HttpServletRequest therequest ) throws IOException, MessagingException {
 		TpUsage aTpusage=null;UserBean aUserBean=null;
 		TsUserSetting objtsusersettings=null;
 		try{
@@ -1664,6 +1666,7 @@ public class UserListController {
 			aTpusage.setDescription(description);
 			aTpusage.setUserID(aUserBean.getUserId());
 			aTpusage.setDatetime(new Date());
+			aTpusage.setJobNumber(jobNumber);
 			if(objtsusersettings.getItslogYN()==1){
 		    itsUserService.createTpUsage(aTpusage);
 			}

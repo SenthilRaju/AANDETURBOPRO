@@ -67,7 +67,6 @@ import com.turborep.turbotracker.vendor.dao.Vepodetail;
 import com.turborep.turbotracker.vendor.dao.Vereceive;
 import com.turborep.turbotracker.vendor.dao.Vereceivedetail;
 import com.turborep.turbotracker.vendor.dao.Veshipvia;
-import com.turborep.turbotracker.vendor.dao.veBillHistory;
 import com.turborep.turbotracker.vendor.exception.VendorException;
 
 @Service("vendorService")
@@ -563,30 +562,29 @@ public class VendorService implements VendorServiceInterface{
 		return aRxcontact;
 	}
 	
-	//BID1654 Simon
-//	@Override
-//	public Rxcontact getContactDetailsByRxMasterId(Integer rxMasterID) throws VendorException {
-//		Rxcontact aRxcontact = new Rxcontact();
-//		Session aSession = null;
-//		try {
-//			aSession = itsSessionFactory.openSession();
-//			 Query query = aSession.createQuery("from Rxcontact WHERE rxMasterId=:rxMasterID");
-//			 query.setParameter("rxMasterID", rxMasterID);
-//			 List<Rxcontact> list=query.list();
-//			 if(list!=null && list.size()>0){
-//				 aRxcontact=list.get(0);
-//			 }
-//		} catch (Exception e) {
-//			itsLogger.error(e.getMessage(), e);
-//			VendorException aVendorException = new VendorException(e.getCause().getMessage(), e);
-//			throw aVendorException;
-//		} finally {
-//			aSession.flush();
-//			aSession.close();
-//		}
-//		return aRxcontact;
-//	}
-
+	/*//BID1654 Simon
+	@Override
+	public Rxcontact getContactDetailsByRxMasterId(Integer rxMasterID) throws VendorException {
+		Rxcontact aRxcontact = new Rxcontact();
+		Session aSession = null;
+		try {
+			aSession = itsSessionFactory.openSession();
+			 Query query = aSession.createQuery("from Rxcontact WHERE rxMasterId=:rxMasterID");
+			 query.setParameter("rxMasterID", rxMasterID);
+			 List<Rxcontact> list=query.list();
+			 if(list!=null && list.size()>0){
+				 aRxcontact=list.get(0);
+			 }
+		} catch (Exception e) {
+			itsLogger.error(e.getMessage(), e);
+			VendorException aVendorException = new VendorException(e.getCause().getMessage(), e);
+			throw aVendorException;
+		} finally {
+			aSession.flush();
+			aSession.close();
+		}
+		return aRxcontact;
+	}*/
 	
 	public Veshipvia getVeShipVia(Integer theShipViaID) throws VendorException {
 		Veshipvia aVeshipvia = new Veshipvia();
@@ -3489,7 +3487,7 @@ l.			 * Table :veBillDetail
 					+ " ORDER BY ve.posistion";*/
 				
 				//changed by prasant kuamr #645	
-				aPOLineItemListQry = "SELECT * FROM ( SELECT DISTINCT ve.vePODetailID," + " ve.vePOID,"
+				aPOLineItemListQry = "SELECT * FROM ( SELECT  DISTINCT ve.vePODetailID," + " ve.vePOID,"
 						+ " ve.prMasterID," + " ve.Description,"
 						+ " (IF (veR.QuantityReceived - IFNULL (a.quaninv,0)>=0,ve.QuantityReceived - IFNULL (a.quaninv,0),0))AS QuantityOrdered," + " ve.Taxable," + " ve.UnitCost,"
 						+ " ve.PriceMultiplier," + " ve.posistion,"
@@ -5855,41 +5853,34 @@ l.			 * Table :veBillDetail
 	@Override
 	public Integer getTransactionDailogStatus(Integer vepoID) {
 		
-
-		Session aSession = null;
-		int status=0;
-		BigDecimal vePODetails_Qty=BigDecimal.ZERO;
-		BigDecimal veBillDetais_Qtys=BigDecimal.ZERO;	
-		List<Vepodetail> vepodetails = null;
-		List<veBillHistory>vebillHistorys=null;
 		String Qry="from Vepodetail where vePoid = "+vepoID;
-		String Qry2="from veBillHistory where vePOID ="+vepoID;
+			Session aSession = null;
+			int status=0;
+		
+		
+		
+		List<Vepodetail> vepodetails = null;
 		try {
 			// Retrieve session from Hibernate
-			aSession = itsSessionFactory.openSession();			
+			aSession = itsSessionFactory.openSession();
+			
 			// Create a Hibernate query (HQL)
 			Query query = aSession.createQuery(Qry);
-			Query query2= aSession.createQuery(Qry2);
 			// Retrieve all
 			vepodetails = query.list();
-			vebillHistorys=query2.list();
 		   Iterator<Vepodetail>vepodetails_iterator=vepodetails.iterator();
-		   Iterator<veBillHistory>vebillHistorys_iterator=vebillHistorys.iterator();
-		 //checking total number of Quantity purchased 
+			
 			while(vepodetails_iterator.hasNext())
 			{
 				Vepodetail vepoDetail=vepodetails_iterator.next();
-				vePODetails_Qty=vePODetails_Qty.add(vepoDetail.getQuantityOrdered());				 
+				if(checkStausNonInventory(vepoDetail.getPrMasterId())==true){
+				if(vepoDetail.getQuantityOrdered().compareTo(vepoDetail.getQuantityReceived())!=0)
+				{
+					status=1;
+					break;
+				}
+			}//check only for inventory products if end 
 			}
-			//checking total number of QuantityInvoiced 
-			while(vebillHistorys_iterator.hasNext())
-			{				
-				veBillHistory veBillhistory=vebillHistorys_iterator.next();
-				veBillDetais_Qtys=veBillDetais_Qtys.add(veBillhistory.getQuantityInvoiced());				
-			}
-			if (vePODetails_Qty.compareTo(veBillDetais_Qtys)!=0)
-				status=1;
-			
 			
 		   } catch (Exception e) {
 			itsLogger.error(e.getMessage(), e);

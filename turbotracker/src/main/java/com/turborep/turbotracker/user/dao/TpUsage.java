@@ -21,6 +21,7 @@ public class TpUsage {
 	private String logLevel;
 	private Integer userID;
 	private String description;
+	private String jobNumber;
 	
 	public TpUsage(){}
 	public TpUsage(Date datetime,String screen,String action,String logLevel,Integer userID,String description){
@@ -87,6 +88,13 @@ public class TpUsage {
 	}
 	public void setDescription(String description) {
 		this.description = description;
+	}
+	@Column(name="jobNumber")
+	public String getJobNumber() {
+		return jobNumber;
+	}
+	public void setJobNumber(String jobNumber) {
+		this.jobNumber = jobNumber;
 	}
 
 	

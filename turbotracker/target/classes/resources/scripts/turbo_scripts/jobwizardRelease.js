@@ -2889,7 +2889,7 @@ function saveBillNote(){
 //		data : "&joReleaseId="+aJoReleaseId+"&billNote=" +abillNote+"&joMasterID=" +aJoMasterID+"&joReleaseDate=" +aJoReleasedDate+
 //				"&joReleaseType=" +aJoReleaseType+"&ReleaseNote=" +aReleaseNote+"&EstimatedBilling=" +aCostAllocated,
 		success: function(data) {
-			createtpusage('job-Release Tab','Save Bill Note','Info','Job,Release Tab,Saving Bill Note,JobNumber:'+$('input:text[name=jobHeader_JobNumber_name]').val()+'abillNote:'+abillNote); 
+			createtpusage('job-Release Tab','Save Bill Note','Info','Job,Release Tab,Saving Bill Note,JobNumber:'+$('input:text[name=jobHeader_JobNumber_name]').val()+'abillNote:'+abillNote,$('input:text[name=jobHeader_JobNumber_name]').val()); 
 			jQuery("#openBillNoteDialog").dialog("close");
 			$("#release").trigger("reloadGrid");
 			var errorText = "Bill Note Successfully Updated.";
