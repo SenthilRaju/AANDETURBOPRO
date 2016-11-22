@@ -71,8 +71,8 @@
 		<td><div id="showMessageLineSO" style="color: green;margin-left: 1498%;margin-bottom: 0%;"></div></td>
 	</tr>
 	<tr style="width: 100%;">
-			<td align="left" style="padding-right: 0px;"><input type="image" src="./../resources/Icons/PDF_new.png" title="View Sales Order" onclick="viewPOPDF()"  style="background: #EEDEBC;"></td> 	
-			<td align="left" style="padding-right: 0px;"><input id="contactEmailID_lines" type="image" src="./../resources/Icons/mail_new.png" onmouseover="triggertitle()"  title="Email Sales Order" style="background: #EEDEBC;" onclick="sendPOEmail('SOJ')"></td>
+			<td align="left" style="padding-right: 0px;"><input type="image" src="./../resources/Icons/PDF_new.png" title="View Sales Order" onclick="viewPOPDF()"  style="background: #EEDEBC;" onchange="soLineItemformChanges();" id="lineSOTabPDF"></td> 	
+			<td align="left" style="padding-right: 0px;"><input id="contactEmailID_lines" type="image" src="./../resources/Icons/mail_new.png" onmouseover="triggertitle()"  title="Email Sales Order" style="background: #EEDEBC;" onclick="sendPOEmail('SOJ')" onchange="soLineItemformChanges();"></td>
 			<td align="left" style="padding-left: 10px;"><input id="withPriceLine" type="checkbox" style="background: #EEDEBC;margin-left: 5px;" onclick="line(this);"></td>
 			<td align="left" style="padding-right: 0px;" width="30%"><label id="withPriceLineLabel" style="">With&nbsp;Price</label></td>
 			<td width="40%"><font color="green" size="3"><div id="soLinesEmailTimeStamp"></div></font> </td>

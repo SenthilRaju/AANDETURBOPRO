@@ -62,7 +62,7 @@
 																			<td><label>State: </label></td>
 																			<td><input type="text" name="stateName" id="stateID" style="width:50px" maxlength="2" value=""></td>
 																			<td><label style="vertical-align: middle;">code: </label></td>
-																			<td><input type="text" name="CountyCodeName" id="CountyCodeId" style="width:50px" class="number" maxlength="6" value=""></td>
+																			<td><input type="text" name="CountyCodeName" id="CountyCodeId" style="width:50px" maxlength="6" value=""></td>
 																		</tr>
 																		<tr>
 																			<td><label>Description: </label></td>
@@ -207,7 +207,7 @@
 							<td><label>State: </label></td>
 							<td><input type="text" name="stateName" id="stateID" style="width:50px"  value="" maxlength="2"></td>
 							<td><label style="vertical-align: middle;">code: </label></td>
-							<td><input type="text" name="stateCodeName" id="stateCodeID" style="width:50px" class="number" value="" maxlength="6"></td>
+							<td><input type="text" name="stateCodeName" id="stateCodeID" style="width:50px" value="" maxlength="6"></td>
 						</tr>
 						<tr>
 							<td><label>Description: </label></td>
@@ -234,6 +234,9 @@
 					</td>
 				</tr>
 			</table>
+			</div>
+			<div id="countyCodeAlert" style="display: none;">
+				<span>Special characters are not allowed.</span>
 			</div>
 		<script type="text/javascript" src="./../resources/scripts/turbo_scripts/taxTerritories.js"></script>
 <!-- 		<script type="text/javascript" src="./../resources/scripts/turbo_scripts/minscripts/chartofaccounts.min.js"></script> -->

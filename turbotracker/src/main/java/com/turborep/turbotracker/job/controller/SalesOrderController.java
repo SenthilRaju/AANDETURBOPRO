@@ -399,6 +399,8 @@ public class SalesOrderController {
 			@RequestParam(value = "joReleaseDetailID", required = false) Integer joReleaseDetailID,
 			@RequestParam(value = "veBillID", required = false) Integer veBillID,
 			@RequestParam(value = "joMasterID", required = false) Integer jomasterid,
+			/*@RequestParam(value = "vendorInvoiceSerialNumber", required = false) Integer vendorInvoiceSerialNumber,*/
+			
 			HttpSession session, HttpServletResponse theResponse,HttpServletRequest theRequest)
 			throws Exception {
 		String salesMan = null;
@@ -512,7 +514,10 @@ public class SalesOrderController {
 					ArrayList<Sysvariable> sysvariablelist= userService.getInventorySettingsDetails(addlist);
 					requireCuInvoiceNumberOrNot = sysvariablelist.get(0).getValueLong()==null?0:sysvariablelist.get(0).getValueLong();
 					newCustomerInvoiceNumber = sysvariablelist.get(0).getValueString()==null?"":sysvariablelist.get(0).getValueString();
-					
+					//added by prasant #1425
+					/*if(vendorInvoiceSerialNumber!=null)
+						aVepo.setPonumber(requireCuInvoiceNumberOrNot>0?newCustomerInvoiceNumber:aVepo.getPonumber()+vendorInvoiceSerialNumber);
+					else*/
 					aVepo.setPonumber(requireCuInvoiceNumberOrNot>0?newCustomerInvoiceNumber:aVepo.getPonumber()+countofinvoiceforrelease);
 					
 					System.out.println("After Checking poNumber---->"+(requireCuInvoiceNumberOrNot>0?newCustomerInvoiceNumber:aVepo.getPonumber()+countofinvoiceforrelease));
@@ -4182,10 +4187,20 @@ if(batchInvoiceCuID.length()>0 && !batchInvoiceCuID.equals("0")){
 		ConnectionProvider con = null;
 		try {
 			List<String> addlist=new ArrayList<String>();
-			//addlist.add("IncludeListcolumnoninvoices");
-			//addlist.add("IncludeExtListcolumnoninvoices");
-			//addlist.add("IncludeMultcolumnoninvoices");
+			
 			addlist.add("IncludJobNamein_co_inshiptoaddressonPDForder");
+			addlist.add("RemoveLISTcolumnfromSalesOrderPDF");
+			addlist.add("RemoveEXTLISTcolumnfromSalesOrderPDF");
+			addlist.add("RemoveMULTcolumnfromSalesOrderPDF");
+			
+			
+			//RemoveEXTLISTcolumnfromSalesOrderPDF(2014002019),
+			//RemoveMULTcolumnfromSalesOrderPDF(2014002020),
+			//added by prasant 2016010026 added date date month and year separated with 0(zero)
+			//RemoveLISTcolumnfromSalesOrderPDF(2016010026),
+			
+			
+			
 			
 			ArrayList<Sysvariable> sysvariablelist=new ArrayList<Sysvariable>();
 						
@@ -4201,7 +4216,7 @@ if(batchInvoiceCuID.length()>0 && !batchInvoiceCuID.equals("0")){
 		}
 			
 			
-			/*int i=0;
+			int i=0;
 			boolean listColumn=false;
 			boolean ExtListColumn=false;
 			boolean MultColumn=false;
@@ -4209,19 +4224,20 @@ if(batchInvoiceCuID.length()>0 && !batchInvoiceCuID.equals("0")){
 			for (Sysvariable aSysvariable : sysvariablelist) {
 				if (aSysvariable.getValueLong() != null) {
 					if (aSysvariable.getValueLong() == 1) {
-						if (i == 0) {
+						if (i == 1) {
 							listColumn = true;
-						} else if (i == 1) {
-							ExtListColumn = true;
 						} else if (i == 2) {
+							ExtListColumn = true;
+						} else if (i == 3) {
 							MultColumn=true;
 						}
+						
 						// break;
 					}
 				}
 				i = i + 1;
 			}
-			*/
+			
 			
 			HashMap<String, Object> params = new HashMap<String, Object>();
 			String path_JRXML = theRequest
@@ -4308,14 +4324,14 @@ if(batchInvoiceCuID.length()>0 && !batchInvoiceCuID.equals("0")){
 				}
 				
 			}
-			/*params.put("incListCol", listColumn);
+		    params.put("incListCol", listColumn);
 			params.put("incExtListCol", ExtListColumn);
-			params.put("incMultCol", MultColumn);*/
+			params.put("incMultCol", MultColumn);
 
 			params.put("printJobName", printJobNameascoinPdf);
-			params.put("incListCol", true);
-			params.put("incExtListCol", true);
-			params.put("incMultCol", true);
+			//params.put("incListCol", true);
+			//params.put("incExtListCol", true);
+			//params.put("incMultCol", true);
 			params.put("billtoName", BillToName);
 			params.put("billtoAddress1", BillToAddress1);
 			params.put("billtoAddress2", BillToAddress2);

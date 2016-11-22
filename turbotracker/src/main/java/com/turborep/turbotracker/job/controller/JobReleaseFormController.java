@@ -9,7 +9,6 @@ import java.io.PrintWriter;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.text.DateFormat;
@@ -19,9 +18,11 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.annotation.Resource;
 import javax.mail.MessagingException;
@@ -71,7 +72,6 @@ import com.google.gson.JsonParser;
 import com.turborep.turbotracker.Inventory.Exception.InventoryException;
 import com.turborep.turbotracker.Rolodex.service.RolodexService;
 import com.turborep.turbotracker.banking.dao.GlRollback;
-import com.turborep.turbotracker.banking.dao.Motransaction;
 import com.turborep.turbotracker.banking.exception.BankingException;
 import com.turborep.turbotracker.banking.service.GltransactionService;
 import com.turborep.turbotracker.company.Exception.CompanyException;
@@ -92,14 +92,12 @@ import com.turborep.turbotracker.customer.dao.Cuinvoicedetail;
 import com.turborep.turbotracker.customer.dao.Cumaster;
 import com.turborep.turbotracker.customer.dao.Cureceipt;
 import com.turborep.turbotracker.customer.dao.Cuso;
-import com.turborep.turbotracker.customer.dao.Cusodetail;
 import com.turborep.turbotracker.customer.dao.Cusodetailtemplate;
 import com.turborep.turbotracker.customer.dao.Cusotemplate;
 import com.turborep.turbotracker.customer.dao.RxCustomerTabViewBean;
 import com.turborep.turbotracker.customer.exception.CustomerException;
 import com.turborep.turbotracker.customer.service.CustomerService;
 import com.turborep.turbotracker.employee.dao.Ecstatement;
-import com.turborep.turbotracker.employee.dao.Rxmaster;
 import com.turborep.turbotracker.employee.exception.EmployeeException;
 import com.turborep.turbotracker.employee.service.EmployeeServiceInterface;
 import com.turborep.turbotracker.finance.dao.Transactionmonitor;
@@ -111,7 +109,6 @@ import com.turborep.turbotracker.job.dao.JoReleaseDetail;
 import com.turborep.turbotracker.job.dao.JobReleaseBean;
 import com.turborep.turbotracker.job.dao.Jochange;
 import com.turborep.turbotracker.job.dao.Jomaster;
-import com.turborep.turbotracker.job.dao.joQuoteDetailMstr;
 import com.turborep.turbotracker.job.dao.joQuoteDetailPosition;
 import com.turborep.turbotracker.job.exception.JobException;
 import com.turborep.turbotracker.job.service.JobService;
@@ -4855,6 +4852,9 @@ public@ResponseBody String getCommissionPaidDetails(
 				HttpSession session, HttpServletResponse theResponse,HttpServletRequest theRequest)
 				throws IOException, JobException, MessagingException, ParseException {
 			JsonParser parser = new JsonParser();
+			boolean status=false;
+			String serverStatus="";
+			int count_LineItem_NO=1;
 			if (delData!=null && delData.size()>0) {
 				for(String detailID:delData){
 					Integer cusoDetailID=JobUtil.ConvertintoInteger(detailID);
@@ -4866,6 +4866,38 @@ public@ResponseBody String getCommissionPaidDetails(
 					itsJobService.addPurchaseORderLineItem(aVepodetail, "delete");
 				}
 			}
+			
+			
+			if ( gridData!=null) {
+
+				System.out.println("gridData"+gridData);
+				JsonElement ele = parser.parse(gridData);
+				JsonArray array = ele.getAsJsonArray();
+				System.out.println("array length==>"+array.size());
+				BigDecimal whcostTotalAmount=BigDecimal.ZERO;
+				int i=1;
+				for (int ki=0;ki<array.size()-1;ki++) {
+					JsonElement ele1=array.get(ki);
+					boolean saved = false;
+					Vepodetail aVepodetail=new Vepodetail();
+					JsonObject obj = ele1.getAsJsonObject();
+					
+						String inLineNote=obj.get("inLineNote").getAsString();
+						status=checkDuplicateLineInsideInlineNote(inLineNote);
+						if(status)
+						{						
+							serverStatus=serverStatus+(ki+1);
+							break;
+						}
+					
+				}
+			
+			}
+			
+			
+		
+			if(!status)
+			{
 			if ( gridData!=null) {
 
 				System.out.println("gridData"+gridData);
@@ -4918,6 +4950,8 @@ public@ResponseBody String getCommissionPaidDetails(
 					String vendorOrderNumber=obj.get("vendorOrderNumber").getAsString();
 					String inLineNote=obj.get("inLineNote").getAsString();
 					
+					
+					
 					aVepodetail.setDescription(desc);
 					aVepodetail.setQuantityOrdered(quantityOrder);
 					aVepodetail.setUnitCost(unitCost);
@@ -4938,6 +4972,8 @@ public@ResponseBody String getCommissionPaidDetails(
 						inLineNote=inLineNote.replaceAll("'Tahoma', sans-serif;", "Tahoma, sans-serif;");
 						inLineNote=inLineNote.replaceAll("'Verdana', sans-serif;", "Verdana, sans-serif;");
 					}
+					
+					
 					aVepodetail.setNote(inLineNote);
 					
 					if(shipDate_String != null && !shipDate_String.equals("")){
@@ -4961,8 +4997,12 @@ public@ResponseBody String getCommissionPaidDetails(
 					}
 					itsJobService.addPurchaseORderLineItem(aVepodetail, Oper);
 					i=i+1;
+					count_LineItem_NO=count_LineItem_NO+1;
 				}
 			}
+			}
+			if(status)
+				return serverStatus=serverStatus;
 			Vepo avepo=new Vepo();
 			avepo.setVePoid(vePOID);
 			avepo.setSubtotal(subTotal);
@@ -4971,7 +5011,39 @@ public@ResponseBody String getCommissionPaidDetails(
 			
 			
 			itsJobService.updatevePOfromlinesTab(avepo);
-			return null;
+			return serverStatus;
+		}
+		//added by prasant #1325 to check inlineNote containing duplicate Line or not
+		public boolean checkDuplicateLineInsideInlineNote(String inlineNote)
+		{
+			boolean hasDuplicate = false;
+			
+			if(inlineNote!=null && !inlineNote.equals(""))
+			{
+			String AllLines[]=inlineNote.split("<br>");
+			
+			Set<String> lines = new HashSet<String>();
+			String line="";
+			int size=AllLines.length-1;
+			
+			while ( size>=0 && !hasDuplicate )
+			    {
+				line=AllLines[size];
+				if(!line.equals(""))
+				{
+			        if (lines.contains(line)) {
+			            hasDuplicate = true;
+			        }
+			        lines.add(line);
+			        
+			      //  size=size-1;
+				}
+				 size=size-1;
+			    }
+			}
+			
+			return hasDuplicate;
+			
 		}
 		
 		@RequestMapping(value = "/SaveAckPurchaseOrder", method = RequestMethod.POST)

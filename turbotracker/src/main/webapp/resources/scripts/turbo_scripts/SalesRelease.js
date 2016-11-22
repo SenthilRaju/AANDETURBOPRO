@@ -311,8 +311,7 @@ function PreloadDataFromInvoiceTable(){
 function PreloadDataInvoice(CIdivFlag){		
 	console.log('Jenith You may Here1');
 	
-	//alert("i am hear SalesRelease");
-	
+
 	CIdivFlag ="#"+CIdivFlag;
 	$(CIdivFlag).contents().find("#shiptoaddrhiddenfromdbid").val("");
 	var cuSOID = $('#Cuso_ID').text();
@@ -321,6 +320,10 @@ function PreloadDataInvoice(CIdivFlag){
 	var SelectedRow = grid.jqGrid('getGridParam', 'selrow');
 	var vePOID = grid.jqGrid('getCell', SelectedRow, 'vePoId');
 	var count = $("#shiping").getGridParam("reccount");
+	var vendorInvoiceSerialNumber=$("#shiping").jqGrid ('getGridParam', 'selrow');
+	//alert("i am hear SalesRelease");
+	//+"&vendorInvoiceSerialNumber="+vendorInvoiceSerialNumber
+	
 	var rowId = $("#shiping").jqGrid('getGridParam', 'selrow');
 	var joReleaseDetailID = '';
 	var veBillID = '';
@@ -370,9 +373,10 @@ function PreloadDataInvoice(CIdivFlag){
 			else{
 				$("#CustomerNameGeneral").val(data.CustomerName);
 				if (typeof(data.Cuso) != "undefined" && data.Cuso != null){
-						//$("#customerInvoice_invoiceNumberId").val(data.Cuso.sonumber);
+						$("#customerInvoice_invoiceNumberId").val(data.Cuso.sonumber);
 						console.log('You r in SO * CI Number::'+data.customerInvoiceNumber);
-						$("#customerInvoice_invoiceNumberId").val(data.customerInvoiceNumber);
+						//$("#customerInvoice_invoiceNumberId").val(data.customerInvoiceNumber);
+						//alert("Invoice Numeber :-"+data.customerInvoiceNumber);
 						$('#customerInvoice_subTotalID').val(formatCurrency(0));
 						$('#customerInvoice_totalID').val(formatCurrency(0));
 						$('#customerinvoicepaymentId').val(data.Cuso.cuTermsId);
@@ -382,7 +386,8 @@ function PreloadDataInvoice(CIdivFlag){
 						$('#customerInvoice_frightIDcu').val(formatCurrency(0)); 
 						$('#customerInvoice_linefrightID').val(formatCurrency(data.Cuso.freight)); 
 						$('#CI_taxfreight').val(data.Cuso.taxfreight);
-			/*if(data.Cuso.prFromWarehouseId == null)
+			
+						/*if(data.Cuso.prFromWarehouseId == null)
 				{
 				console.log("yes=====================");
 				
@@ -631,7 +636,7 @@ function preloadCustomePONumber(joReleaseID){
 			}
 	});
 }
-
+//method is preloaded the customer Details in inside job
 function PreloadDataInvoiceFromPO(data,CIdivFlag){
 	$("#CustomerNameGeneral").val(data.CustomerName);
 	if (typeof(data.vepo) != "undefined" && data.vepo != null){

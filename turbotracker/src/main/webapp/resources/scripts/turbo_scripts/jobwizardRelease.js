@@ -7181,7 +7181,7 @@ var transaction = "";
  function opencustomerinvoicedialog(){
 	 	clearInvoiceDetailsBeforeOpen();
 	 	
-	 	alert("opencustomerinvoicedialog() is calling while loading ...!");
+	 	//alert("opencustomerinvoicedialog() is calling while loading ...!");
 	 	var CIdivFlag="#CI_Shipto";
 	 	document.getElementById("CuInvoiceSaveID").disabled = false;
 		document.getElementById("CuInvoiceSaveCloseID").disabled = false;
@@ -7285,6 +7285,7 @@ var transaction = "";
 									
 									var aCustomerName = $(".customerNameField").val();
 									var aCustomerID = $("#JobCustomerId").val();
+									
 									PreloadDataInvoice("CI_Shipto");
 									$("#customerInvoice_customerInvoiceID").val(aCustomerName);
 									$("#customerInvoice_customerHiddnID").val(aCustomerID);
@@ -7366,7 +7367,7 @@ var transaction = "";
 							
 							}else{
 								
-								
+								alert("new Creation of  CI");
  								 var aCustomerName = $(".customerNameField").val();
 								 var aCustomerID = $("#JobCustomerId").val();
 								 PreloadDataInvoice("CI_Shipto");
@@ -7505,7 +7506,7 @@ var transaction = "";
 				
 			}else{
 				//BID#1618 related code is loading
-				alert("Else is calling while loading ...!");
+				//alert("Else is calling while loading ...!");
 				
 				$('#imgInvoicePDF').empty();
 		 		$('#imgInvoicePDF').append('<input type="image" src="./../resources/Icons/PDF_new.png" title="View CuInvoice" onclick="viewCuInvoicePDF(); return false;"	style="background: #EEDEBC;">');

@@ -16,10 +16,19 @@
 	<parameter name="billtoCity" class="java.lang.String"/>
 	<parameter name="billtoState" class="java.lang.String"/>
 	<parameter name="billtoZip" class="java.lang.String"/>
-	<parameter name="incListCol" class="java.lang.Boolean"/>
-	<parameter name="incExtListCol" class="java.lang.Boolean"/>
-	<parameter name="incMultCol" class="java.lang.Boolean"/>
-	<parameter name="printJobName" class="java.lang.Integer"/>
+	<parameter name="incListCol" class="java.lang.Boolean">
+		<parameterDescription><![CDATA[]]></parameterDescription>
+		<defaultValueExpression><![CDATA[true]]></defaultValueExpression>
+	</parameter>
+	<parameter name="incExtListCol" class="java.lang.Boolean">
+		<defaultValueExpression><![CDATA[true]]></defaultValueExpression>
+	</parameter>
+	<parameter name="incMultCol" class="java.lang.Boolean">
+		<defaultValueExpression><![CDATA[true]]></defaultValueExpression>
+	</parameter>
+	<parameter name="printJobName" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[true]]></defaultValueExpression>
+	</parameter>
 	<queryString>
 		<![CDATA[SELECT joRelease.ReleaseType,
 cuInvoiceDetail.*, prMaster.ItemCode,

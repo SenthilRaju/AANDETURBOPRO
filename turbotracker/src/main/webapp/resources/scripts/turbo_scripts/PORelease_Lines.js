@@ -2155,6 +2155,7 @@ function POLineItemTabformChanges(formvalue){
 
 function SaveLinesPurchaseOrder(popupdetail){
 	//BID1633 Simon
+	alert("PORelease_Lines.js  is calling.....!");
 	$("#SaveLinesPOButton").prop('disabled', true);
 	var newDialogDiv = jQuery(document.createElement('div'));
 	
@@ -2199,6 +2200,8 @@ function SaveLinesPurchaseOrder(popupdetail){
 			"DelPOData":vePodetailIdsToBeDeleted
 			},
 		success: function(data) {
+			
+			if (data==""){
 			vePodetailIdsToBeDeleted =[];
 			$('#ShowInfo').html("Saved");
 			POlineItemgridLoad=true;
@@ -2218,6 +2221,12 @@ function SaveLinesPurchaseOrder(popupdetail){
 			  $('#ImgPOEmail').append(' <input id="contactEmailID" type="image" src="./../resources/Icons/mail_new.png" title="Email Purchase Order" style="background: #EEDEBC" id="lineTabMail" onclick="outsidepoEmailButtonAction();">');
 				
 			// $( "#salesreleasetab ul li:nth-child(1)" ).removeClass("ui-state-disabled");
+			}
+			else
+				{
+				showInfoPopup(data);
+				//alert("Line Item "+data+" containing Duplicate Line in Inline Note please ");
+				}
 		}
 	});
 	//BID1633 Simon
@@ -2225,7 +2234,16 @@ function SaveLinesPurchaseOrder(popupdetail){
 	 $("#SaveLinesPOButton").prop('disabled', false);		
 	 },3000);
 }
-
+function showInfoPopup(data)
+{
+	var information = "Line Item No "+data+" InLine Note has some Duplicate Lines please check";
+	var newDialogDiv = jQuery(document.createElement('div'));
+	jQuery(newDialogDiv).html('<span><b style="color:yellow;">'+information+'</b></span>');
+	jQuery(newDialogDiv).dialog({modal: true, width:340, height:170, title:"Information", 
+							buttons: [{height:35,text: "OK",click: function() { 
+								$(this).dialog("close"); }}]}).dialog("open");
+	return true;
+}
 function closePurchaseOrderLineItemTab(){
     var gridRows = $('#lineItemGrid').getRowData();
     var new_PO_lines_form =  JSON.stringify(gridRows);

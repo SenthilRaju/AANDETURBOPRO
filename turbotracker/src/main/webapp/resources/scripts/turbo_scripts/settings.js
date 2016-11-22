@@ -1914,11 +1914,16 @@ function saveCompanySettingsSysVariable() {
 	if($('input:radio[id=chk_cusRemExtListfmSalOrdpdfYes]:checked').val()==="yes"){
 		chk_cusRemExtListfmSalOrdpdfYes="1";
 	}
-	var chk_cusRemMultfmSalOrdpdfYes="0";
-	if($('input:radio[id=chk_cusRemMultfmSalOrdpdfYes]:checked').val()==="yes"){
-		chk_cusRemMultfmSalOrdpdfYes="1";
+	var chk_cusRemListfmSalOrdpdfYes="0";
+	if($('input:radio[id=chk_cusRemListfmSalOrdpdfYes]:checked').val()==="yes"){
+		chk_cusRemListfmSalOrdpdfYes="1";
 	}
 	//
+	
+	var chk_cusRemMultfmSalOrdpdfYes="0";
+	if($('input:radio[id=chk_cusRemlistfmSalOrdpdfStatus]:checked').val()==="yes"){
+		chk_cusRemMultfmSalOrdpdfYes="1";
+	}
 	var chk_cusIncSalTaxYes="0";
 	if($('input:radio[id=chk_cusIncSalTaxYes]:checked').val()==="yes"){
 		chk_cusIncSalTaxYes="1";
@@ -1988,7 +1993,7 @@ function saveCompanySettingsSysVariable() {
         	 'chk_cusIncMultYes':chk_cusIncMultYes,'chk_cusUseDivAddYes':chk_cusUseDivAddYes, 'chk_cusAllblCusInvYes':chk_cusAllblCusInvYes,
         	'chk_cusAllblCusInvYes':chk_cusAllblCusInvYes, 'chk_cusAllblProdinSalOrdYes':chk_cusAllblProdinSalOrdYes, 'chk_cusReqProinSalOrderYes':chk_cusReqProinSalOrderYes,
         	'chk_cusReqfreinCuInvoicesYes':chk_cusReqfreinCuInvoicesYes,'chk_cusReqSeqNumCuInvoicesYes':chk_cusReqSeqNumCuInvoicesYes,'inp_cusNewSeqNumCuInvoices':inp_cusNewSeqNumCuInvoices,
-        	'chk_cusRemExtListfmSalOrdpdfYes':chk_cusRemExtListfmSalOrdpdfYes,'chk_cusRemMultfmSalOrdpdfYes':chk_cusRemMultfmSalOrdpdfYes},
+        	'chk_cusRemExtListfmSalOrdpdfYes':chk_cusRemExtListfmSalOrdpdfYes,'chk_cusRemMultfmSalOrdpdfYes':chk_cusRemMultfmSalOrdpdfYes,'chk_cusRemListfmSalOrdpdfYes':chk_cusRemListfmSalOrdpdfYes},
         type: 'POST',
         success: function(data){
         	createtpusage('Company-Settings','Save Customer Settings','Info','Company-Settings,Saving Customer Settings');

@@ -24,6 +24,48 @@ jQuery(document).ready(function() {
 			}
 		}
 	});
+	//BID1691 Simon (Reg : countyCode is expected to allow Alpha Numeric chars)
+	$("#CountyCodeId").keyup(function(){
+		var countyCode=$("#CountyCodeId").val();
+		if(countyCode!=undefined && countyCode.match(/[^0-9a-z]/i)){
+			$('#CountyCodeId').css('border-color', 'red');
+			$("#countyCodeAlert").dialog({modal: true, width:300, height:150, title:"Information", 
+				open: function(event, ui) { $(".ui-dialog-titlebar-close").hide(); },
+				buttons:{
+					"Ok": function(){
+						jQuery(this).dialog("close");
+						$('#CountyCodeId').focus();
+					    return false;
+					}}}).dialog("open");
+			$("#saveUserButton").prop("disabled",true);
+			$("#saveUserButton").fadeTo("slow",0.4);
+		}else{
+			$('#CountyCodeId').css('border-color', '');
+			$("#saveUserButton").prop("disabled",false);
+			$("#saveUserButton").fadeTo("slow",1);
+		}
+	});
+	//BID1691 Simon (Reg : countyCode is expected to allow Alpha Numeric chars)
+	$("#stateCodeID").keyup(function(){
+		var stateCode=$("#stateCodeID").val();
+		if(stateCode!=undefined && stateCode.match(/[^0-9a-z]/i)){
+			$('#stateCodeID').css('border-color', 'red');
+			$("#countyCodeAlert").dialog({modal: true, width:300, height:150, title:"Information", 
+				open: function(event, ui) { $(".ui-dialog-titlebar-close").hide(); },
+				buttons:{
+					"Ok": function(){
+						jQuery(this).dialog("close");
+						$('#CountyCodeId').focus();
+					    return false;
+					}}}).dialog("open");
+//			$("#saveUserButton").prop("disabled",true);
+//			$("#saveUserButton").fadeTo("slow",0.4);
+		}else{
+			$('#stateCodeID').css('border-color', '');
+//			$("#saveUserButton").prop("disabled",false);
+//			$("#saveUserButton").fadeTo("slow",1);
+		}
+	});
 });
 
 var newDialogDiv = jQuery(document.createElement('div'));
@@ -332,21 +374,28 @@ function deleteTaxTerritory(coTaxTerritoryID){
 }
 
 function saveNewTaxTerritory(){
-	var formData = $("#addNewTaxTerritoryFormID").serialize();
-	$.ajax({
-		url: "./company/addNewTerritory",
-		type: "POST",
-		data : formData,
-		success: function(data) {
-			createtpusage('Company-Tax Territories','Add Tax Territory','Info','Company-Tax Territories,Adding Tax Territory,decription:'+$("#decriptionID").val());
-			jQuery("#addNewTaxTerritoryDialog").dialog("close");
-			jQuery(newDialogDiv).html('<span><b style="color:Green;">Tax Territory Added Successfully</b></span>');
-			jQuery(newDialogDiv).dialog({modal: true, width:300, height:150, title:"Success.", 
-					buttons: [{height:30,text: "OK",click: function() {  $(this).dialog("close");$('#taxTerritoryFromID')[0].reset();$("#taxTerritoryGrid").trigger("reloadGrid"); }}]}).dialog("open");
-			lastcelleditID=null;
-		}
-	});
-	return true;
+	//BID1691 Simon (Reg : countyCode is expected to allow Alpha Numeric chars)
+	var stateCode=$("#stateCodeID").val();
+	if(stateCode!=undefined && stateCode.match(/[^0-9a-z]/i)){
+		$('#stateCodeID').css('border-color', 'red');
+		return false;
+	}else{
+		var formData = $("#addNewTaxTerritoryFormID").serialize();
+		$.ajax({
+			url: "./company/addNewTerritory",
+			type: "POST",
+			data : formData,
+			success: function(data) {
+				createtpusage('Company-Tax Territories','Add Tax Territory','Info','Company-Tax Territories,Adding Tax Territory,decription:'+$("#decriptionID").val());
+				jQuery("#addNewTaxTerritoryDialog").dialog("close");
+				jQuery(newDialogDiv).html('<span><b style="color:Green;">Tax Territory Added Successfully</b></span>');
+				jQuery(newDialogDiv).dialog({modal: true, width:300, height:150, title:"Success.", 
+						buttons: [{height:30,text: "OK",click: function() {  $(this).dialog("close");$('#taxTerritoryFromID')[0].reset();$("#taxTerritoryGrid").trigger("reloadGrid"); }}]}).dialog("open");
+				lastcelleditID=null;
+			}
+		});
+		return true;
+	}
 }
 
 function saveTaxTerritory(){

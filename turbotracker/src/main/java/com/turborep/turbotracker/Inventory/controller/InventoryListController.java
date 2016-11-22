@@ -1984,6 +1984,7 @@ public class InventoryListController {
 			@RequestParam(value = "inp_cusNewSeqNumCuInvoices",required=false) String inp_cusNewSeqNumCuInvoices,
 			@RequestParam(value = "chk_cusRemExtListfmSalOrdpdfYes",required=false) Integer chk_cusRemExtListfmSalOrdpdfYes,
 			@RequestParam(value = "chk_cusRemMultfmSalOrdpdfYes",required=false) Integer chk_cusRemMultfmSalOrdpdfYes,
+			@RequestParam(value = "chk_cusRemListfmSalOrdpdfYes",required=false) Integer chk_cusRemListfmSalOrdpdfYes,
 			
 			HttpServletRequest therequest,HttpSession session) throws IOException, MessagingException {
 		  ArrayList<Sysvariable> asysvariable = new  ArrayList<Sysvariable>();
@@ -2129,7 +2130,7 @@ public class InventoryListController {
 			
 			
 			thesysvariable=new Sysvariable();
-			thesysvariable.setValueLong(chk_cusRemMultfmSalOrdpdfYes);
+			thesysvariable.setValueLong(chk_cusRemListfmSalOrdpdfYes);
 			System.out.println("sysvariableid RemoveLISTcolumnfromSalesOrderPDF==>"+InventoryConstant.getConstantSysvariableId("RemoveLISTcolumnfromSalesOrderPDF"));
 			thesysvariable.setSysVariableId(InventoryConstant.getConstantSysvariableId("RemoveLISTcolumnfromSalesOrderPDF"));
 			asysvariable.add(thesysvariable);
