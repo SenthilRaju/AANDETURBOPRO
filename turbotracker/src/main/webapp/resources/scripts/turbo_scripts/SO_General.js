@@ -3115,7 +3115,7 @@ function setTaxTotal_SO(){
 			 var overalltotal=Number(totalamount)+Number(floorFigureoverall(freight,2))+Number(floorFigureoverall(taxamount,2));
 			 $("#SOGeneral_totalID").val(formatCurrency(overalltotal));
 			 $("#customerInvoice_taxId").val(formatCurrency(taxamount));	
-			 updateTaxTerritoryStatusWhenChanged=1;
+			 updateTaxTerritoryStatusWhenChanged=0;
 		}
 		
 }
@@ -3184,7 +3184,9 @@ function initiateGenerataTabOfSO(cuSOID){
 //			var taxAmt=$("#customerInvoice_taxIdcu").val().replace(/[^0-9\.-]+/g,"");
 //			var sum = Number(subtot) + Number(taxAmt) + Number(frieght);
 //			$("#customerInvoice_totalID").val(formatCurrency(Number(floorFigureoverall(sum, 2))));	
-			$('#SOGeneral_taxId').val(data.taxRate);
+			if(data.taxRate!=null){
+				$('#SOGeneral_taxId').val(data.taxRate);
+			}
 			$("#SOGeneral_subTotalID").val(formatCurrency(Number(floorFigureoverall(data.subTotal, 2))));
 			$("#SOGeneral_frightID").val(formatCurrency(Number(floorFigureoverall(data.freight, 2))));
 			$("#SOGeneral_taxvalue").val(formatCurrency(Number(floorFigureoverall(data.taxTotal, 2))));

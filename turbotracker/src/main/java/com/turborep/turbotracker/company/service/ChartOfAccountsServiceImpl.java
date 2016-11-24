@@ -935,10 +935,10 @@ Session aSession = null;Query aQuery =null;
 Coaccount coAccount=null;
 try{
  aSession = itsSessionFactory.openSession();
-  aQuery = aSession.createQuery("FROM com.turborep.turbotracker.company.dao.Coaccount WHERE coAccountID=(SELECT coExpenseAccountId FROM com.turborep.turbotracker.vendor.dao.Vemaster WHERE veMasterId =?)");
+  aQuery = aSession.createQuery("SELECT c_a FROM com.turborep.turbotracker.company.dao.Coaccount as c_a,com.turborep.turbotracker.vendor.dao.Vemaster as v_m WHERE c_a.coAccountId=v_m.coExpenseAccountId AND  v_m.veMasterId =?");
   aQuery.setString(0, rxMasterId);
   List<Coaccount> coAccounts=aQuery.list();
-  if(coAccounts.size()!=0 || coAccounts!=null){    
+  if(coAccounts!=null && coAccounts.size()!=0){    
    coAccount=coAccounts.get(0);
   }
 }catch(Exception e){
