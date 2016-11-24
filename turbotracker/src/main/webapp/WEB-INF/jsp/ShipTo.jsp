@@ -93,6 +93,7 @@ function fn_override_taxIDBasedOnCustomer(){
 		
 	function preloadShiptoAddress(divflag,primaryid,addressid,mode,shipindex,customername,coTaxTerritoryID)
 	{
+		console.log("preloadShiptoAddress(preloadShiptoAddress(preloadShiptoAddress(preloadShiptoAddress(preloadShiptoAddress(preloadShiptoAddress(");
 		toggledivflag = divflag;
 		
 		//added by prasant #1580 9/9/2016
@@ -546,6 +547,7 @@ function fn_override_taxIDBasedOnCustomer(){
 	
 	
 function SetTaxTerritory(toggledivflag,data){
+	console.log("SetTaxTerritory(SetTaxTerritory(SetTaxTerritory(SetTaxTerritory(SetTaxTerritory(SetTaxTerritory(");
 	var cotaxTerritoryID=0;
 	var county="";
 	var taxRate=0.00;

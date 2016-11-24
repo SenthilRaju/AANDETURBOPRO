@@ -66,6 +66,7 @@ import com.turborep.turbotracker.company.dao.Rxcontact;
 import com.turborep.turbotracker.company.service.AccountingCyclesService;
 import com.turborep.turbotracker.customer.dao.CuLinkageDetail;
 import com.turborep.turbotracker.customer.dao.CuMasterType;
+import com.turborep.turbotracker.customer.dao.CuSOLog;
 import com.turborep.turbotracker.customer.dao.CuTerms;
 import com.turborep.turbotracker.customer.dao.Cuinvoice;
 import com.turborep.turbotracker.customer.dao.Cuinvoicedetail;
@@ -20934,6 +20935,8 @@ public class JobServiceImpl implements JobService {
 			Integer cusoDetailID=null;
 			BigDecimal oldQuantityOrdered = new BigDecimal("0.0000");
 			Boolean tplog=false;
+			//BID1713 Simon
+			CuSOLog cuSOLog=null;
 			try {
 				
 				if(oper.equals("add")){
@@ -20943,6 +20946,24 @@ public class JobServiceImpl implements JobService {
 					tplog=true;
 					aTransaction.commit();
 					Cuso aCuso=(Cuso) aSession.get(Cuso.class, theCuSODetail.getCuSoid());
+					//BID1713 Simon
+					cuSOLog=new CuSOLog();
+					cuSOLog.setCuSoid(theCuSODetail.getCuSoid());
+					cuSOLog.setChangedById(theCuSODetail.getUserID());
+					cuSOLog.setChangedOn(new Date());
+					cuSOLog.setCuSodetailId(theCuSODetail.getCuSodetailId());
+					cuSOLog.setPrMasterId(theCuSODetail.getPrMasterId());
+					cuSOLog.setDescription(theCuSODetail.getDescription());
+					cuSOLog.setNote(theCuSODetail.getNote());
+					cuSOLog.setQuantityOrdered(theCuSODetail.getQuantityOrdered());
+					cuSOLog.setQuantityReceived(theCuSODetail.getQuantityReceived());
+					cuSOLog.setQuantityBilled(theCuSODetail.getQuantityBilled());
+					cuSOLog.setUnitCost(theCuSODetail.getUnitCost());
+					cuSOLog.setUnitPrice(theCuSODetail.getUnitPrice());
+					cuSOLog.setPriceMultiplier(theCuSODetail.getPriceMultiplier());
+					cuSOLog.setTaxable(theCuSODetail.getTaxable());
+					cuSOLog.setOper(oper);
+					saveCuSOLog(cuSOLog, aSession);
 					if(aCuso.getTransactionStatus()==1){
 					insertPrMasterPrWareHouseInventory(theCuSODetail.getCuSoid(),cusoDetailID);
 					}
@@ -21051,6 +21072,24 @@ public class JobServiceImpl implements JobService {
 					aSession.update(aCusodetail);
 					aTransaction.commit();
 					 aCuso=(Cuso) aSession.get(Cuso.class, aCusodetail.getCuSoid());
+					//BID1713 Simon
+					cuSOLog=new CuSOLog();
+					cuSOLog.setCuSoid(theCuSODetail.getCuSoid());
+					cuSOLog.setChangedById(theCuSODetail.getUserID());
+					cuSOLog.setChangedOn(new Date());
+					cuSOLog.setCuSodetailId(theCuSODetail.getCuSodetailId());
+					cuSOLog.setPrMasterId(theCuSODetail.getPrMasterId());
+					cuSOLog.setDescription(theCuSODetail.getDescription());
+					cuSOLog.setNote(theCuSODetail.getNote());
+					cuSOLog.setQuantityOrdered(theCuSODetail.getQuantityOrdered());
+					cuSOLog.setQuantityReceived(theCuSODetail.getQuantityReceived());
+					cuSOLog.setQuantityBilled(theCuSODetail.getQuantityBilled());
+					cuSOLog.setUnitCost(theCuSODetail.getUnitCost());
+					cuSOLog.setUnitPrice(theCuSODetail.getUnitPrice());
+					cuSOLog.setPriceMultiplier(theCuSODetail.getPriceMultiplier());
+					cuSOLog.setTaxable(theCuSODetail.getTaxable());
+					cuSOLog.setOper(oper);
+					saveCuSOLog(cuSOLog, aSession);
 					if(aCuso.getTransactionStatus()==1){
 					insertPrMasterPrWareHouseInventory(theCuSODetail.getCuSoid(),aCusodetail.getCuSodetailId());
 					}
@@ -23044,8 +23083,13 @@ public class JobServiceImpl implements JobService {
 			}
 			return returnValue;
 		}
-
-
+		
+//BID1713 Simon
+private void saveCuSOLog(CuSOLog cuSOLog,Session aSession){
+	Transaction tx=aSession.beginTransaction();
+	aSession.save(cuSOLog);
+	tx.commit();
+}
 
 }
 	

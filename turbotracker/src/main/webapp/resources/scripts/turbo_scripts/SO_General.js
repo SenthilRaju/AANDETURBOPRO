@@ -2237,7 +2237,8 @@ $( "#projectManagerID" ).autocomplete({ minLength: 2,timeout :1000,
 
 $(function() { var cache = {}, lastXhr;
 $( "#taxID" ).autocomplete({ minLength: 2,timeout :1000,
-	select: function( event, ui ) { var id = ui.item.id; $("#taxhiddenID").val(id); $("#SOGeneral_taxId").val(ui.item.taxValue); },
+	select: function( event, ui ) { var id = ui.item.id; $("#taxhiddenID").val(id); $("#SOGeneral_taxId").val(ui.item.taxValue);
+	},
 	source: function( request, response ) { var term = request.term;
 		if ( term in cache ) { response( cache[ term ] ); 	return; 	}
 		lastXhr = $.getJSON( "companycontroller/companyTax", request, function( data, status, xhr ) { cache[ term ] = data; 
@@ -2252,6 +2253,8 @@ $( "#taxIDwz" ).autocomplete({ minLength: 2,timeout :1000,
 	$("#taxhiddenIDwz").val(id);
 	$("#SOGeneral_taxId").val(ui.item.taxValue); 
 	$("#so_taxfreight").val(ui.item.taxfreight);
+	//BID1682 Simon
+	updateTaxTerritoryStatusWhenChanged=1;
 	setTaxTotal_SO();
 	},
 	source: function( request, response ) { var term = request.term;
@@ -3072,41 +3075,49 @@ $(function() { var cache = {}; var lastXhr=''; $( "#SOlocationShipToCityeditable
 	     $('.ui-autocomplete-loading').removeClass("ui-autocomplete-loading");
 	} }); });
 
+//BID1682 Simon Edited
 function setTaxTotal_SO(){
+	console.log("setTaxTotal_SO(setTaxTotal_SO(setTaxTotal_SO(setTaxTotal_SO(setTaxTotal_SO(");
 		var cuSoid =  $('#Cuso_ID').text();
-		var totalamount=$("#SOGeneral_subTotalID").val();
-		if(totalamount==undefined ||totalamount=="" ||totalamount==null){
-			totalamount=0.00;
-		}
-		if((totalamount+"").contains("$")){
-			totalamount=totalamount.replace(/[^0-9\.-]+/g,"").replace(".00", "");
-		}
-		 var freight=$("#SOGeneral_frightID").val();
-		 if(freight==undefined ||freight=="" ||freight==null){
-			 freight=0.00;
+		if(cuSoid!=undefined && cuSoid!=null && cuSoid!="" && updateTaxTerritoryStatusWhenChanged!=undefined && updateTaxTerritoryStatusWhenChanged==0){
+			initiateGenerataTabOfSO(cuSoid);
+		}else{
+			var totalamount=$("#SOGeneral_subTotalID").val();
+			if(totalamount==undefined ||totalamount=="" ||totalamount==null){
+				totalamount=0.00;
 			}
-		 if((freight+"").contains("$")){
-			 freight=freight.replace(/[^0-9\.-]+/g,"").replace(".00", "");
+			if((totalamount+"").contains("$")){
+				totalamount=totalamount.replace(/[^0-9\.-]+/g,"").replace(".00", "");
 			}
-		 
-		 var taxRate=$("#SOGeneral_taxId").val();
-		 var totalWithTax=getsubtotalwithtax(cuSoid);
-	     var taxamount=(Number(totalWithTax)*Number(taxRate))/100;
-	     var taxchecked=$("#so_taxfreight").val()==1?true:false;
-		 var taxforfreight=0;
-	     if(taxRate>0 && taxchecked && freight!=null && freight>0){
-	    	 taxforfreight=taxRate*freight/100;
-			 taxamount=taxamount+taxforfreight;
-	     }
-		 if(taxamount<0)
-			 taxamount=-taxamount;
-		 
-		 $("#SOGeneral_taxvalue").val(formatCurrency(taxamount));
-		 $("#customerInvoice_taxvalue").val(formatCurrency(taxamount));
-		 
-		 var overalltotal=Number(totalamount)+Number(floorFigureoverall(freight,2))+Number(floorFigureoverall(taxamount,2));
-		 $("#SOGeneral_totalID").val(formatCurrency(overalltotal));
-		 $("#customerInvoice_taxId").val(formatCurrency(taxamount));
+			 var freight=$("#SOGeneral_frightID").val();
+			 if(freight==undefined ||freight=="" ||freight==null){
+				 freight=0.00;
+				}
+			 if((freight+"").contains("$")){
+				 freight=freight.replace(/[^0-9\.-]+/g,"").replace(".00", "");
+				}
+			 
+			 var taxRate=$("#SOGeneral_taxId").val();
+			 var totalWithTax=getsubtotalwithtax(cuSoid);
+		     var taxamount=(Number(totalWithTax)*Number(taxRate))/100;
+		     var taxchecked=$("#so_taxfreight").val()==1?true:false;
+			 var taxforfreight=0;
+		     if(taxRate>0 && taxchecked && freight!=null && freight>0){
+		    	 taxforfreight=taxRate*freight/100;
+				 taxamount=taxamount+taxforfreight;
+		     }
+			 if(taxamount<0)
+				 taxamount=-taxamount;
+			 
+			 $("#SOGeneral_taxvalue").val(formatCurrency(taxamount));
+			 $("#customerInvoice_taxvalue").val(formatCurrency(taxamount));
+			 
+			 var overalltotal=Number(totalamount)+Number(floorFigureoverall(freight,2))+Number(floorFigureoverall(taxamount,2));
+			 $("#SOGeneral_totalID").val(formatCurrency(overalltotal));
+			 $("#customerInvoice_taxId").val(formatCurrency(taxamount));	
+			 updateTaxTerritoryStatusWhenChanged=1;
+		}
+		
 }
 function getsubtotalwithtax(cuSoid){
 	var totalamt=0.00;
@@ -3156,3 +3167,48 @@ function triggertitle(){
 		}
 	}
 }
+
+function initiateGenerataTabOfSO(cuSOID){
+	$.ajax({
+		url: "./salesOrderController/getCuSO",
+		type: "GET",
+		data : {"cuSOID" : cuSOID},
+		success: function(data) {
+//			$('#customerInvoice_generaltaxId').val(data.taxRate);
+//			$("#customerInvoice_subTotalID").val(formatCurrency(Number(floorFigureoverall(data.subtotal, 2))));
+//			$("#customerInvoice_frightIDcu").val(formatCurrency(Number(floorFigureoverall(data.freight, 2))));
+//			$("#customerInvoice_taxIdcu").val(formatCurrency(Number(floorFigureoverall(data.taxAmount, 2))));
+//			var taxRate=$('#customerInvoice_generaltaxId').val();
+//			var subtot = $("#customerInvoice_subTotalID").val().replace(/[^0-9\.-]+/g,"");
+//			var frieght = $("#customerInvoice_frightIDcu").val().replace(/[^0-9\.-]+/g,"");
+//			var taxAmt=$("#customerInvoice_taxIdcu").val().replace(/[^0-9\.-]+/g,"");
+//			var sum = Number(subtot) + Number(taxAmt) + Number(frieght);
+//			$("#customerInvoice_totalID").val(formatCurrency(Number(floorFigureoverall(sum, 2))));	
+			$('#SOGeneral_taxId').val(data.taxRate);
+			$("#SOGeneral_subTotalID").val(formatCurrency(Number(floorFigureoverall(data.subTotal, 2))));
+			$("#SOGeneral_frightID").val(formatCurrency(Number(floorFigureoverall(data.freight, 2))));
+			$("#SOGeneral_taxvalue").val(formatCurrency(Number(floorFigureoverall(data.taxTotal, 2))));
+			var taxRate=$('#SOGeneral_taxId').val();
+			var subtot = $("#SOGeneral_subTotalID").val().replace(/[^0-9\.-]+/g,"");
+			var frieght = $("#SOGeneral_frightID").val().replace(/[^0-9\.-]+/g,"");
+			var taxAmt=$("#SOGeneral_taxvalue").val().replace(/[^0-9\.-]+/g,"");
+			$("#customerInvoice_taxvalue").val(formatCurrency(taxAmt));
+			var sum = Number(subtot) + Number(taxAmt) + Number(frieght);
+			$("#SOGeneral_totalID").val(formatCurrency(Number(floorFigureoverall(sum, 2))));
+			$("#customerInvoice_taxId").val(formatCurrency(taxAmt));
+		}
+	});
+//	setTimeout(function(){
+//	 	//_globaloldcustomerInvoiceformTotal=$("#custoemrInvoiceFormTotalID").serialize();
+//	 _globaloldcustomerInvoiceformTotal=generatecustoemrInvoiceFormTotalIDSeriallize();
+//	 	_globaloldcustomerInvoiceform = CIGeneralTabSeriallize();
+//	 	var gridRows = $('#customerInvoice_lineitems').getRowData();
+//	 	_globaloldcustomerInvoicegrid =  JSON.stringify(gridRows)+$("#customerInvoice_invoiceDateID").val();
+//	 	$('#loadingDivForCIGeneralTab').css({
+//			"display": "none"
+//		}); 
+//		},2500);
+}
+
+//BID1682 Simon
+var updateTaxTerritoryStatusWhenChanged=0;

@@ -44,6 +44,7 @@ import com.turborep.turbotracker.company.dao.Rxaddress;
 import com.turborep.turbotracker.company.dao.Rxcontact;
 import com.turborep.turbotracker.company.service.AccountingCyclesService;
 import com.turborep.turbotracker.customer.dao.Cuinvoice;
+import com.turborep.turbotracker.customer.dao.Cuso;
 import com.turborep.turbotracker.employee.dao.Rxmaster;
 import com.turborep.turbotracker.job.dao.JoReleaseDetail;
 import com.turborep.turbotracker.job.exception.JobException;
@@ -2322,6 +2323,7 @@ l.			 * Table :veBillDetail
 		}
 		return aCuInvoice;
 	}
+	
 	@Override
 	public Rxcontact getContactIdFromMasterID(String theMasterId) throws VendorException {
 		Session aSession = null;
@@ -5904,5 +5906,25 @@ public Integer getTransactionDailogStatus(Integer vepoID) {
 	
 		// TODO Auto-generated method stub
 		return status;
+	}
+	
+	//BID1682 Simon
+	@Override
+	public Cuso getCuSo(Integer cuSoID) throws VendorException {
+//		itsLogger.debug("getCuInvoiceObj Method");
+		Cuso cuso = null;
+		Session aSession = null;
+		try {
+			aSession = itsSessionFactory.openSession();
+			cuso = (Cuso) aSession.get(Cuso.class, cuSoID);
+		} catch (Exception e) {
+			itsLogger.error(e.getMessage(), e);
+			VendorException aVendorException = new VendorException(e.getCause().getMessage(), e);
+			throw aVendorException;
+		} finally {
+			aSession.flush();
+			aSession.close();
+		}
+		return cuso;
 	}
 }
