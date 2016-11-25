@@ -59,6 +59,7 @@ import com.turborep.turbotracker.vendor.dao.VeFactory;
 import com.turborep.turbotracker.vendor.dao.Vebill;
 import com.turborep.turbotracker.vendor.dao.Vebilldetail;
 import com.turborep.turbotracker.vendor.dao.Vebilldistribution;
+import com.turborep.turbotracker.vendor.dao.Vebilllog;
 import com.turborep.turbotracker.vendor.dao.Vebillpay;
 import com.turborep.turbotracker.vendor.dao.Vemaster;
 import com.turborep.turbotracker.vendor.dao.VendorBillPayBean;
@@ -1344,6 +1345,8 @@ l.			 * Table :veBillDetail
 		BigDecimal oldQuantityBilled = new BigDecimal("0.0000");
 		boolean tplog=false;
 		Session tplogsession =null;
+		//BID1711 Simon
+		Vebilllog vebilllog=null;
 		try {
 			Vepodetail aVepodetail = (Vepodetail) aSession.get(Vepodetail.class,
 					theVebilldetail.getVePodetailId());
@@ -1437,6 +1440,36 @@ l.			 * Table :veBillDetail
 			}
 			acreateSession.update(updvebilldetail);
 			aTransaction.commit();
+			
+			//BID1711 Simon
+			vebilllog=new Vebilllog();
+			Vebill veBill=theVebilldetail.getVebill();
+			//VeBill
+			vebilllog.setVeBillId(veBill.getVeBillId());
+			vebilllog.setRxMasterId(veBill.getRxMasterId());
+			vebilllog.setVePoid(veBill.getVePoid());
+			vebilllog.setJoReleaseDetailId(veBill.getJoReleaseDetailId());
+			vebilllog.setCreatedById(veBill.getCreatedById());
+			vebilllog.setCreatedOn(veBill.getCreatedOn());
+			vebilllog.setChangedById(veBill.getChangedById());
+			vebilllog.setChangedOn(new Date());
+			vebilllog.setReason(veBill.getReason());
+			
+			//VeBillDetail
+			vebilllog.setVeBillDetailId(theVebilldetail.getVeBillDetailId());
+			vebilllog.setVePodetailId(theVebilldetail.getVePodetailId());
+			vebilllog.setPrMasterId(theVebilldetail.getPrMasterId());
+			vebilllog.setDescription(theVebilldetail.getDescription());
+			vebilllog.setNote(theVebilldetail.getNote());
+			vebilllog.setQuantityBilled(theVebilldetail.getQuantityBilled());
+			vebilllog.setUnitCost(theVebilldetail.getUnitCost());
+			vebilllog.setPriceMultiplier(theVebilldetail.getPriceMultiplier());
+			vebilllog.setFreightCost(theVebilldetail.getFreightCost());
+			vebilllog.setTaxable(((byte)(theVebilldetail.getTaxable()==true?1:0)));
+			vebilllog.setOper("Edit");
+			
+			saveVebillLog(aSession, vebilllog);
+			
 			if(theVebilldetail.getVePodetailId()!=null && theVebilldetail.getVePodetailId()>0){
 				theVepodetail = new Vepodetail();
 				theVepodetail.setVePodetailId(theVebilldetail.getVePodetailId());
@@ -4304,6 +4337,8 @@ l.			 * Table :veBillDetail
 		Integer veBillDetailID=null;
 		BigDecimal oldQuantityBilled = new BigDecimal("0.0000");
 		Vebilldetail tpInvLogVebilldetail = new Vebilldetail();
+		//BID1711 Simon
+		Vebilllog vebilllog=null;
 		try {
 			aSession = itsSessionFactory.openSession();
 			if(aVebilldetail.getVeBillDetailId()!= null && aVebilldetail.getVeBillDetailId()>0){
@@ -4372,6 +4407,35 @@ l.			 * Table :veBillDetail
 				 * 11-12-2015
 				 * */
 				//updatePrMaster(aVebilldetail.getVeBillId());
+				
+				//BID1711 Simon
+				vebilllog=new Vebilllog();
+				Vebill veBill=aVebilldetail.getVebill();
+				//VeBill
+				vebilllog.setVeBillId(veBill.getVeBillId());
+				vebilllog.setRxMasterId(veBill.getRxMasterId());
+				vebilllog.setVePoid(veBill.getVePoid());
+				vebilllog.setJoReleaseDetailId(veBill.getJoReleaseDetailId());
+				vebilllog.setCreatedById(veBill.getCreatedById());
+				vebilllog.setCreatedOn(veBill.getCreatedOn());
+				vebilllog.setChangedById(veBill.getChangedById());
+				vebilllog.setChangedOn(new Date());
+				vebilllog.setReason(veBill.getReason());
+				
+				//VeBillDetail
+				vebilllog.setVeBillDetailId(aVebilldetail.getVeBillDetailId());
+				vebilllog.setVePodetailId(aVebilldetail.getVePodetailId());
+				vebilllog.setPrMasterId(aVebilldetail.getPrMasterId());
+				vebilllog.setDescription(aVebilldetail.getDescription());
+				vebilllog.setNote(aVebilldetail.getNote());
+				vebilllog.setQuantityBilled(aVebilldetail.getQuantityBilled());
+				vebilllog.setUnitCost(aVebilldetail.getUnitCost());
+				vebilllog.setPriceMultiplier(aVebilldetail.getPriceMultiplier());
+				vebilllog.setFreightCost(aVebilldetail.getFreightCost());
+				vebilllog.setTaxable(((byte)(aVebilldetail.getTaxable()==true?1:0)));
+				vebilllog.setOper(operation);
+				
+				saveVebillLog(aSession, vebilllog);
 			}
 			else if(aVebilldetail.getVeBillDetailId() != null && "delete".equalsIgnoreCase(operation))
 			{
@@ -4472,6 +4536,35 @@ l.			 * Table :veBillDetail
 				aTpInventoryLog.setCreatedOn(new Date());
 				itsInventoryService.saveInventoryTransactions(aTpInventoryLog);
 				}*/
+				
+				//BID1711 Simon
+				vebilllog=new Vebilllog();
+				Vebill veBill=aVebilldetail.getVebill();
+				//VeBill
+				vebilllog.setVeBillId(veBill.getVeBillId());
+				vebilllog.setRxMasterId(veBill.getRxMasterId());
+				vebilllog.setVePoid(veBill.getVePoid());
+				vebilllog.setJoReleaseDetailId(veBill.getJoReleaseDetailId());
+				vebilllog.setCreatedById(veBill.getCreatedById());
+				vebilllog.setCreatedOn(veBill.getCreatedOn());
+				vebilllog.setChangedById(veBill.getChangedById());
+				vebilllog.setChangedOn(new Date());
+				vebilllog.setReason(veBill.getReason());
+				
+				//VeBillDetail
+				vebilllog.setVeBillDetailId(aVebilldetail.getVeBillDetailId());
+				vebilllog.setVePodetailId(aVebilldetail.getVePodetailId());
+				vebilllog.setPrMasterId(aVebilldetail.getPrMasterId());
+				vebilllog.setDescription(aVebilldetail.getDescription());
+				vebilllog.setNote(aVebilldetail.getNote());
+				vebilllog.setQuantityBilled(aVebilldetail.getQuantityBilled());
+				vebilllog.setUnitCost(aVebilldetail.getUnitCost());
+				vebilllog.setPriceMultiplier(aVebilldetail.getPriceMultiplier());
+				vebilllog.setFreightCost(aVebilldetail.getFreightCost());
+				vebilllog.setTaxable(((byte)(aVebilldetail.getTaxable()==true?1:0)));
+				vebilllog.setOper(operation);
+				
+				saveVebillLog(aSession, vebilllog);
 			}
 			if(vePODetailID!=null && vePODetailID>0){
 				theVepodetail = new Vepodetail();
@@ -4693,6 +4786,7 @@ l.			 * Table :veBillDetail
 
 		Session aSession = null;
 		Transaction aTransaction = null;
+		Vebilllog vebilllog=null;
 		try {
 			aSession = itsSessionFactory.openSession();
 			if(aVebilldistribution.getVeBillDistributionId() != null && "edit".equalsIgnoreCase(operation))
@@ -4714,7 +4808,28 @@ l.			 * Table :veBillDetail
 				aSession.update(theVebilldistribution);
 				aTransaction.commit();
 				
-			
+				//BID1711 Simon
+				vebilllog=new Vebilllog();
+				Vebill veBill=aVebilldistribution.getVebill();
+				//VeBill
+				vebilllog.setVeBillId(veBill.getVeBillId());
+				vebilllog.setRxMasterId(veBill.getRxMasterId());
+				vebilllog.setVePoid(veBill.getVePoid());
+				vebilllog.setJoReleaseDetailId(veBill.getJoReleaseDetailId());
+				vebilllog.setCreatedById(veBill.getCreatedById());
+				vebilllog.setCreatedOn(veBill.getCreatedOn());
+				vebilllog.setChangedById(veBill.getChangedById());
+				vebilllog.setChangedOn(new Date());
+				vebilllog.setReason(veBill.getReason());
+				
+				//VeBillDistribution
+				vebilllog.setVeBillDistributionId(aVebilldistribution.getVeBillDistributionId());
+				vebilllog.setCoExpenseAccountId(aVebilldistribution.getCoExpenseAccountId());
+				vebilllog.setExpenseAmount(aVebilldistribution.getExpenseAmount());
+				vebilllog.setJoMasterId(aVebilldistribution.getJoMasterId());
+				vebilllog.setOper(operation);
+				
+				saveVebillLog(aSession, vebilllog);
 				
 			}
 			else if(aVebilldistribution.getVeBillDistributionId() != null && "delete".equalsIgnoreCase(operation))
@@ -4730,6 +4845,29 @@ l.			 * Table :veBillDetail
 				aTransaction.begin();
 				aSession.save(aVebilldistribution);
 				aTransaction.commit();
+				
+				//BID1711 Simon
+				vebilllog=new Vebilllog();
+				Vebill veBill=aVebilldistribution.getVebill();
+				//VeBill
+				vebilllog.setVeBillId(veBill.getVeBillId());
+				vebilllog.setRxMasterId(veBill.getRxMasterId());
+				vebilllog.setVePoid(veBill.getVePoid());
+				vebilllog.setJoReleaseDetailId(veBill.getJoReleaseDetailId());
+				vebilllog.setCreatedById(veBill.getCreatedById());
+				vebilllog.setCreatedOn(veBill.getCreatedOn());
+				vebilllog.setChangedById(veBill.getChangedById());
+				vebilllog.setChangedOn(new Date());
+				vebilllog.setReason(veBill.getReason());
+				
+				//VeBillDistribution
+				vebilllog.setVeBillDistributionId(aVebilldistribution.getVeBillDistributionId());
+				vebilllog.setCoExpenseAccountId(aVebilldistribution.getCoExpenseAccountId());
+				vebilllog.setExpenseAmount(aVebilldistribution.getExpenseAmount());
+				vebilllog.setJoMasterId(aVebilldistribution.getJoMasterId());
+				vebilllog.setOper(operation);
+				
+				saveVebillLog(aSession, vebilllog);
 			}
 			
 		}
@@ -4876,11 +5014,44 @@ l.			 * Table :veBillDetail
 		boolean tplog=false;
 		Integer veBilldetailID=0;
 		Vepodetail theVepodetail = null;
+		//BID1711 Simon
+		Vebilllog vebilllog=null;
 		try {
 			aTransaction = avebilldetailSession.beginTransaction();
 			aTransaction.begin();
 			veBilldetailID = (Integer) avebilldetailSession.save(avebilldetail);
 			aTransaction.commit();
+			
+			//BID1711 Simon
+			vebilllog=new Vebilllog();
+			Vebill veBill=avebilldetail.getVebill();
+			//VeBill
+			vebilllog.setVeBillId(veBill.getVeBillId());
+			vebilllog.setRxMasterId(veBill.getRxMasterId());
+			vebilllog.setVePoid(veBill.getVePoid());
+			vebilllog.setJoReleaseDetailId(veBill.getJoReleaseDetailId());
+			vebilllog.setCreatedById(veBill.getCreatedById());
+			vebilllog.setCreatedOn(veBill.getCreatedOn());
+			vebilllog.setChangedById(veBill.getChangedById());
+			vebilllog.setChangedOn(new Date());
+			vebilllog.setReason(veBill.getReason());
+			
+			//VeBillDetail
+			vebilllog.setVeBillDetailId(avebilldetail.getVeBillDetailId());
+			vebilllog.setVePodetailId(avebilldetail.getVePodetailId());
+			vebilllog.setPrMasterId(avebilldetail.getPrMasterId());
+			vebilllog.setDescription(avebilldetail.getDescription());
+			vebilllog.setNote(avebilldetail.getNote());
+			vebilllog.setQuantityBilled(avebilldetail.getQuantityBilled());
+			vebilllog.setUnitCost(avebilldetail.getUnitCost());
+			vebilllog.setPriceMultiplier(avebilldetail.getPriceMultiplier());
+			vebilllog.setFreightCost(avebilldetail.getFreightCost());
+			vebilllog.setTaxable(((byte)(avebilldetail.getTaxable()==true?1:0)));
+			vebilllog.setOper("Add");
+			
+			saveVebillLog(avebilldetailSession, vebilllog);
+			
+			
 			if(avebilldetail.getVePodetailId()!=null && avebilldetail.getVePodetailId()>0){
 				theVepodetail = new Vepodetail();
 				theVepodetail.setVePodetailId(avebilldetail.getVePodetailId());
@@ -5927,4 +6098,12 @@ public Integer getTransactionDailogStatus(Integer vepoID) {
 		}
 		return cuso;
 	}
+	
+	//BID1711 Simon --To Log veBill LineItems--
+	private void saveVebillLog(Session session,Vebilllog vebilllog){
+		Transaction tx=session.beginTransaction();
+		session.save(vebilllog);
+		tx.commit();
+	}
+	
 }

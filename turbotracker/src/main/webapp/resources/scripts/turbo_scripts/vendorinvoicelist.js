@@ -5308,45 +5308,46 @@ function getDefaultAccountNumber(masterID){
 	 * Added by Simon
 	 * Reason for changing ID #576
 	 */
-	$.ajax({
-        url: './getAandD?rxMasterId='+masterID,
-        type: 'GET',       
-        success: function (data) {
-        	$( "#vendorInvoiceGrid_iladd" ).trigger( "click" );
-        	$.each(data, function(key, valueMap) {									
-				if("number"==key)
-				{
-					if(valueMap==null || valueMap==''){
-						accountNumber='';
-					}else{													
-						accountNumber=valueMap;
+	if(masterID!=undefined && masterID!=null && masterID!=""){
+		$.ajax({
+	        url: './getAandD?rxMasterId='+masterID,
+	        type: 'GET',       
+	        success: function (data) {
+	        	$( "#vendorInvoiceGrid_iladd" ).trigger( "click" );
+	        	$.each(data, function(key, valueMap) {									
+					if("number"==key)
+					{
+						if(valueMap==null || valueMap==''){
+							accountNumber='';
+						}else{													
+							accountNumber=valueMap;
+						}
+						$("#new_row_number").val(accountNumber);
+						
 					}
-					$("#new_row_number").val(accountNumber);
-					
-				}
 
-				if("description"==key)
-				{
-					if(valueMap==null || valueMap==''){
-						accountDescription='';
-					}else{													
-						accountDescription=valueMap;
+					if("description"==key)
+					{
+						if(valueMap==null || valueMap==''){
+							accountDescription='';
+						}else{													
+							accountDescription=valueMap;
+						}
+						 $( "#vendorInvoiceGrid").jqGrid("setCell","new_row",'desc',accountDescription);
 					}
-					 $( "#vendorInvoiceGrid").jqGrid("setCell","new_row",'desc',accountDescription);
-				}
-				if("ceaId"==key)
-				{
-					if(valueMap==null || valueMap==''){
-						coExpenseAccountId='';
-					}else{													
-						coExpenseAccountId=valueMap;
+					if("ceaId"==key)
+					{
+						if(valueMap==null || valueMap==''){
+							coExpenseAccountId='';
+						}else{													
+							coExpenseAccountId=valueMap;
+						}
+						$("#new_row_coExpenseAccountId").val(coExpenseAccountId);
 					}
-					$("#new_row_coExpenseAccountId").val(coExpenseAccountId);
-				}
-				$("#new_row_number").focus();
-			});
-        }});
-	
+					$("#new_row_number").focus();
+				});
+	        }});
+	}
 }
 
 function generatewopoFormSeriallize(){

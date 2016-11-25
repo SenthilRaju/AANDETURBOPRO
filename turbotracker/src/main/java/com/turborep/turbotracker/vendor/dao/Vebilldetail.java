@@ -41,7 +41,8 @@ public class Vebilldetail implements java.io.Serializable {
 	private Integer userId ;
 	private String userName; 
 	private String inLineNoteImage;
-	
+	//BID1711 Simon
+	private Vebill vebill;
 	
 	@Transient
 	public String getInLineNoteImage() {
@@ -227,4 +228,14 @@ public class Vebilldetail implements java.io.Serializable {
 		this.userName = userName;
 	}
 
+	@Transient
+	public Vebill getVebill() {
+		return vebill;
+	}
+
+	public void setVebill(Vebill vebill) {
+		this.vebill = vebill;
+	}
+
+	
 }
