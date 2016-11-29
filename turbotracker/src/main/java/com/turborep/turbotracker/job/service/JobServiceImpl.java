@@ -10321,7 +10321,7 @@ public class JobServiceImpl implements JobService {
 			Cofiscalyear aCofiscalyear = null;
 			Transaction aTransaction = aSession.beginTransaction();
 			aTransaction.begin();
-			if(transType.equals("CI-Edited-Payment")){
+			if(transType.equals("CI-Payment-Received")){
 				aCuinvoice=newCuinvoice;
 			}else{
 				aCuinvoice = (Cuinvoice) aSession.get(Cuinvoice.class,newCuinvoice.getCuInvoiceId());		
@@ -10335,7 +10335,7 @@ public class JobServiceImpl implements JobService {
 				if(oldCuinvoice.getCuInvoiceId()!=null)
 				{
 					
-					if(transType.equals("CI-Edited")||transType.equals("CI-Line Item(s) Deleted")||transType.equals("CI-Edited-Tax Adjustments")||transType.equals("CI-Edited-Payment"))
+					if(transType.equals("CI-Edited")||transType.equals("CI-Line Item(s) Deleted")||transType.equals("CI-Edited-Tax Adjustments")||transType.equals("CI-Payment-Received"))
 					{
 						if( transStatus == 1 && (
 								(aCuinvoice.getInvoiceAmount()==null?BigDecimal.ZERO:aCuinvoice.getInvoiceAmount()).compareTo(oldCuinvoice.getInvoiceAmount()==null?BigDecimal.ZERO:oldCuinvoice.getInvoiceAmount())!=0 ||
@@ -10368,13 +10368,17 @@ public class JobServiceImpl implements JobService {
 			newTaxableSales=(aCuinvoice.getTaxableSales()==null?new BigDecimal("0.0000"):aCuinvoice.getTaxableSales());
 			newNonTaxableSales=(aCuinvoice.getNonTaxableSales()==null?new BigDecimal("0.0000"):aCuinvoice.getNonTaxableSales());
 			//TaxableSales  = (newTaxAmt.compareTo(new BigDecimal("0.0000"))!=0?newSubTotal.add(sysvariablelist.get(0).getValueLong()==1?newFreight:new BigDecimal("0.0000")).subtract(newDiscountAmt):new BigDecimal("0.0000"));
-			TaxableSales  = newTaxableSales.subtract(newDiscountAmt);
+			//BID1710 Simon Modified
+			//TaxableSales  = newTaxableSales.subtract(newDiscountAmt);
+			TaxableSales  = newTaxableSales;
 			if(transType.equals("CI-PDF-Viewed")){
 				NonTaxableSales = new BigDecimal("0.0000");
 			}
 			else{
 //				NonTaxableSales = (newTaxAmt.compareTo(new BigDecimal("0.0000"))==0?newSubTotal.add(taxfreight==1?newFreight:new BigDecimal("0.0000")).subtract(newDiscountAmt):new BigDecimal("0.0000"));
-				NonTaxableSales = newNonTaxableSales.subtract(newDiscountAmt);
+				//BID1710 Simon Modified
+//				NonTaxableSales = newNonTaxableSales.subtract(newDiscountAmt);
+				NonTaxableSales = newNonTaxableSales;
 			}
 			//TaxAmount = JobUtil.floorFigureoverall((new BigDecimal("0.01")).multiply((newSubTotal).add(taxfreight==1?newFreight:new BigDecimal("0.0000")).subtract(newDiscountAmt)).multiply(aCuinvoice.getTaxRate()==null?new BigDecimal("0.0000"):aCuinvoice.getTaxRate()),3);
 			TaxAmount=aCuinvoice.getTaxAmount()==null?new BigDecimal("0.0000"):aCuinvoice.getTaxAmount();
@@ -10391,7 +10395,8 @@ public class JobServiceImpl implements JobService {
 			
 			
 			aTransaction.begin();
-			aCuinvoice = (Cuinvoice) aSession.get(Cuinvoice.class,newCuinvoice.getCuInvoiceId());
+			//BID1710 Simon Modified
+//			aCuinvoice = (Cuinvoice) aSession.get(Cuinvoice.class,newCuinvoice.getCuInvoiceId());
 			/*Customer Invoice Log*/
 			if(aCuinvoice.getCreatedById()!=null && aCuinvoice.getCreatedById()!=-1){
 				createdByName = ((TsUserLogin) aSession.get(TsUserLogin.class,aCuinvoice.getCreatedById()==null?0:aCuinvoice.getCreatedById())).getFullName();
@@ -10506,12 +10511,10 @@ public class JobServiceImpl implements JobService {
 				if(logidfor!=null)
 				{
 				 aTpCuinvoiceLogMasterinve =(TpCuinvoiceLogMaster) aSession.get(TpCuinvoiceLogMaster.class,logidfor); 
+				 aTpCuinvoiceLogMaster.setFperiod(aTpCuinvoiceLogMasterinve.getFperiod());
+				 aTpCuinvoiceLogMaster.setFyear(aTpCuinvoiceLogMasterinve.getFyear());
 				}	
-				
-			 aTpCuinvoiceLogMaster.setFperiod(aTpCuinvoiceLogMasterinve.getFperiod());
-			 aTpCuinvoiceLogMaster.setFyear(aTpCuinvoiceLogMasterinve.getFyear());
 			}
-			
 			savedStatus = (Integer) aSession.save(aTpCuinvoiceLogMaster);
 			aTransaction.commit();
 		} catch (Exception e) {
@@ -10545,7 +10548,7 @@ public class JobServiceImpl implements JobService {
 			 
 			if(aTpCuinvoiceLogMaster.getCoTaxTerritoryId()!=newCuinvoice.getCoTaxTerritoryId() || aTpCuinvoiceLogMaster.getInvoiceAmount().compareTo(newCuinvoice.getInvoiceAmount())!=0 || aTpCuinvoiceLogMaster.getTransType().equals("CI-Edited")||aTpCuinvoiceLogMaster.getTransType().equals("CI-Line Item(s) Deleted")||aTpCuinvoiceLogMaster.getTransType().equals("CI-Edited-Tax Adjustments"))
 				rollbackstatus = true;
-			else if(aTpCuinvoiceLogMaster.getTransType().equals("CI-Edited-Payment"))
+			else if(aTpCuinvoiceLogMaster.getTransType().equals("CI-Payment-Received"))
 				rollbackstatus = true;
 			else
 				rollbackstatus = false;
