@@ -66,6 +66,7 @@ import com.turborep.turbotracker.company.dao.Rxcontact;
 import com.turborep.turbotracker.company.service.AccountingCyclesService;
 import com.turborep.turbotracker.customer.dao.CuLinkageDetail;
 import com.turborep.turbotracker.customer.dao.CuMasterType;
+import com.turborep.turbotracker.customer.dao.CuSOLog;
 import com.turborep.turbotracker.customer.dao.CuTerms;
 import com.turborep.turbotracker.customer.dao.Cuinvoice;
 import com.turborep.turbotracker.customer.dao.Cuinvoicedetail;
@@ -10320,7 +10321,7 @@ public class JobServiceImpl implements JobService {
 			Cofiscalyear aCofiscalyear = null;
 			Transaction aTransaction = aSession.beginTransaction();
 			aTransaction.begin();
-			if(transType.equals("CI-Edited-Payment")){
+			if(transType.equals("CI-Payment-Received")){
 				aCuinvoice=newCuinvoice;
 			}else{
 				aCuinvoice = (Cuinvoice) aSession.get(Cuinvoice.class,newCuinvoice.getCuInvoiceId());		
@@ -10334,7 +10335,7 @@ public class JobServiceImpl implements JobService {
 				if(oldCuinvoice.getCuInvoiceId()!=null)
 				{
 					
-					if(transType.equals("CI-Edited")||transType.equals("CI-Line Item(s) Deleted")||transType.equals("CI-Edited-Tax Adjustments")||transType.equals("CI-Edited-Payment"))
+					if(transType.equals("CI-Edited")||transType.equals("CI-Line Item(s) Deleted")||transType.equals("CI-Edited-Tax Adjustments")||transType.equals("CI-Payment-Received"))
 					{
 						if( transStatus == 1 && (
 								(aCuinvoice.getInvoiceAmount()==null?BigDecimal.ZERO:aCuinvoice.getInvoiceAmount()).compareTo(oldCuinvoice.getInvoiceAmount()==null?BigDecimal.ZERO:oldCuinvoice.getInvoiceAmount())!=0 ||
@@ -10367,13 +10368,17 @@ public class JobServiceImpl implements JobService {
 			newTaxableSales=(aCuinvoice.getTaxableSales()==null?new BigDecimal("0.0000"):aCuinvoice.getTaxableSales());
 			newNonTaxableSales=(aCuinvoice.getNonTaxableSales()==null?new BigDecimal("0.0000"):aCuinvoice.getNonTaxableSales());
 			//TaxableSales  = (newTaxAmt.compareTo(new BigDecimal("0.0000"))!=0?newSubTotal.add(sysvariablelist.get(0).getValueLong()==1?newFreight:new BigDecimal("0.0000")).subtract(newDiscountAmt):new BigDecimal("0.0000"));
-			TaxableSales  = newTaxableSales.subtract(newDiscountAmt);
+			//BID1710 Simon Modified
+			//TaxableSales  = newTaxableSales.subtract(newDiscountAmt);
+			TaxableSales  = newTaxableSales;
 			if(transType.equals("CI-PDF-Viewed")){
 				NonTaxableSales = new BigDecimal("0.0000");
 			}
 			else{
 //				NonTaxableSales = (newTaxAmt.compareTo(new BigDecimal("0.0000"))==0?newSubTotal.add(taxfreight==1?newFreight:new BigDecimal("0.0000")).subtract(newDiscountAmt):new BigDecimal("0.0000"));
-				NonTaxableSales = newNonTaxableSales.subtract(newDiscountAmt);
+				//BID1710 Simon Modified
+//				NonTaxableSales = newNonTaxableSales.subtract(newDiscountAmt);
+				NonTaxableSales = newNonTaxableSales;
 			}
 			//TaxAmount = JobUtil.floorFigureoverall((new BigDecimal("0.01")).multiply((newSubTotal).add(taxfreight==1?newFreight:new BigDecimal("0.0000")).subtract(newDiscountAmt)).multiply(aCuinvoice.getTaxRate()==null?new BigDecimal("0.0000"):aCuinvoice.getTaxRate()),3);
 			TaxAmount=aCuinvoice.getTaxAmount()==null?new BigDecimal("0.0000"):aCuinvoice.getTaxAmount();
@@ -10390,7 +10395,8 @@ public class JobServiceImpl implements JobService {
 			
 			
 			aTransaction.begin();
-			aCuinvoice = (Cuinvoice) aSession.get(Cuinvoice.class,newCuinvoice.getCuInvoiceId());
+			//BID1710 Simon Modified
+//			aCuinvoice = (Cuinvoice) aSession.get(Cuinvoice.class,newCuinvoice.getCuInvoiceId());
 			/*Customer Invoice Log*/
 			if(aCuinvoice.getCreatedById()!=null && aCuinvoice.getCreatedById()!=-1){
 				createdByName = ((TsUserLogin) aSession.get(TsUserLogin.class,aCuinvoice.getCreatedById()==null?0:aCuinvoice.getCreatedById())).getFullName();
@@ -10510,7 +10516,8 @@ public class JobServiceImpl implements JobService {
 				 aTpCuinvoiceLogMaster.setFyear(aTpCuinvoiceLogMasterinve.getFyear());
 				}	
 	
-			}
+				}	
+
 			
 			savedStatus = (Integer) aSession.save(aTpCuinvoiceLogMaster);
 			aTransaction.commit();
@@ -10545,7 +10552,7 @@ public class JobServiceImpl implements JobService {
 			 
 			if(aTpCuinvoiceLogMaster.getCoTaxTerritoryId()!=newCuinvoice.getCoTaxTerritoryId() || aTpCuinvoiceLogMaster.getInvoiceAmount().compareTo(newCuinvoice.getInvoiceAmount())!=0 || aTpCuinvoiceLogMaster.getTransType().equals("CI-Edited")||aTpCuinvoiceLogMaster.getTransType().equals("CI-Line Item(s) Deleted")||aTpCuinvoiceLogMaster.getTransType().equals("CI-Edited-Tax Adjustments"))
 				rollbackstatus = true;
-			else if(aTpCuinvoiceLogMaster.getTransType().equals("CI-Edited-Payment"))
+			else if(aTpCuinvoiceLogMaster.getTransType().equals("CI-Payment-Received"))
 				rollbackstatus = true;
 			else
 				rollbackstatus = false;
@@ -20935,6 +20942,8 @@ public class JobServiceImpl implements JobService {
 			Integer cusoDetailID=null;
 			BigDecimal oldQuantityOrdered = new BigDecimal("0.0000");
 			Boolean tplog=false;
+			//BID1713 Simon
+			CuSOLog cuSOLog=null;
 			try {
 				
 				if(oper.equals("add")){
@@ -20944,6 +20953,24 @@ public class JobServiceImpl implements JobService {
 					tplog=true;
 					aTransaction.commit();
 					Cuso aCuso=(Cuso) aSession.get(Cuso.class, theCuSODetail.getCuSoid());
+					//BID1713 Simon
+					cuSOLog=new CuSOLog();
+					cuSOLog.setCuSoid(theCuSODetail.getCuSoid());
+					cuSOLog.setChangedById(theCuSODetail.getUserID());
+					cuSOLog.setChangedOn(new Date());
+					cuSOLog.setCuSodetailId(theCuSODetail.getCuSodetailId());
+					cuSOLog.setPrMasterId(theCuSODetail.getPrMasterId());
+					cuSOLog.setDescription(theCuSODetail.getDescription());
+					cuSOLog.setNote(theCuSODetail.getNote());
+					cuSOLog.setQuantityOrdered(theCuSODetail.getQuantityOrdered());
+					cuSOLog.setQuantityReceived(theCuSODetail.getQuantityReceived());
+					cuSOLog.setQuantityBilled(theCuSODetail.getQuantityBilled());
+					cuSOLog.setUnitCost(theCuSODetail.getUnitCost());
+					cuSOLog.setUnitPrice(theCuSODetail.getUnitPrice());
+					cuSOLog.setPriceMultiplier(theCuSODetail.getPriceMultiplier());
+					cuSOLog.setTaxable(theCuSODetail.getTaxable());
+					cuSOLog.setOper(oper);
+					saveCuSOLog(cuSOLog, aSession);
 					if(aCuso.getTransactionStatus()==1){
 					insertPrMasterPrWareHouseInventory(theCuSODetail.getCuSoid(),cusoDetailID);
 					}
@@ -21052,6 +21079,24 @@ public class JobServiceImpl implements JobService {
 					aSession.update(aCusodetail);
 					aTransaction.commit();
 					 aCuso=(Cuso) aSession.get(Cuso.class, aCusodetail.getCuSoid());
+					//BID1713 Simon
+					cuSOLog=new CuSOLog();
+					cuSOLog.setCuSoid(theCuSODetail.getCuSoid());
+					cuSOLog.setChangedById(theCuSODetail.getUserID());
+					cuSOLog.setChangedOn(new Date());
+					cuSOLog.setCuSodetailId(theCuSODetail.getCuSodetailId());
+					cuSOLog.setPrMasterId(theCuSODetail.getPrMasterId());
+					cuSOLog.setDescription(theCuSODetail.getDescription());
+					cuSOLog.setNote(theCuSODetail.getNote());
+					cuSOLog.setQuantityOrdered(theCuSODetail.getQuantityOrdered());
+					cuSOLog.setQuantityReceived(theCuSODetail.getQuantityReceived());
+					cuSOLog.setQuantityBilled(theCuSODetail.getQuantityBilled());
+					cuSOLog.setUnitCost(theCuSODetail.getUnitCost());
+					cuSOLog.setUnitPrice(theCuSODetail.getUnitPrice());
+					cuSOLog.setPriceMultiplier(theCuSODetail.getPriceMultiplier());
+					cuSOLog.setTaxable(theCuSODetail.getTaxable());
+					cuSOLog.setOper(oper);
+					saveCuSOLog(cuSOLog, aSession);
 					if(aCuso.getTransactionStatus()==1){
 					insertPrMasterPrWareHouseInventory(theCuSODetail.getCuSoid(),aCusodetail.getCuSodetailId());
 					}
@@ -23101,7 +23146,12 @@ public class JobServiceImpl implements JobService {
 		
 			return true;
 		}
-
+//BID1713 Simon
+private void saveCuSOLog(CuSOLog cuSOLog,Session aSession){
+	Transaction tx=aSession.beginTransaction();
+	aSession.save(cuSOLog);
+	tx.commit();
+}
 
 
 }

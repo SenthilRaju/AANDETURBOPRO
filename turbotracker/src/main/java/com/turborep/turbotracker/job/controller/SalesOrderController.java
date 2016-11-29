@@ -5800,4 +5800,21 @@ if(batchInvoiceFromDate.length()>0 && batchInvoiceToDate.length()>0){
 		settingsTaxTerritoryValue=userService.getTaxTerritorySettingsValue(sysVariableId);
 		return settingsTaxTerritoryValue;
 	}
+	//BID1682 Simon
+	@RequestMapping(value = "/getCuSO", method = RequestMethod.GET)
+	public @ResponseBody
+	Cuso getCuSo(
+			@RequestParam(value = "cuSOID", required = true) Integer cuSOID,
+			 HttpServletResponse theResponse,HttpServletRequest theRequest,HttpSession session)
+			throws IOException, JobException, MessagingException {
+		Cuso cuso = null;
+		try {
+			cuso = itsVendorService.getCuSo(cuSOID);
+		} catch (Exception e) {
+			logger.error(e.getMessage());
+			theResponse.sendError(500, e.getMessage());
+			sendTransactionException("<b>cusoID:</b>"+cuSOID,"SalesOrderController",e,session,theRequest);
+		}
+		return cuso;
+	}
 }

@@ -126,7 +126,7 @@ function CheckCustomerInvoiceSave(){
 				$("#customerInvoice_lineitems").jqGrid('GridUnload');
 				loadCustomerInvoice();
 				$("#customerInvoice_lineitems").trigger("reloadGrid");
-				$("#customerInvoice_lineitems").trigger("reloadGrid");
+//				$("#customerInvoice_lineitems").trigger("reloadGrid");
 			}
 			else{
 				$('#InfoSave').show();

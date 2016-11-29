@@ -526,6 +526,8 @@
 											+ Number(fieghtTotal)
 											+ Number(thetaxTotal)));
 							$('#CI_taxfreight').val(ui.item.taxfreight);
+							//BID1682 Simon
+							updateTaxTerritoryStatusOnChange=1;
 							setTaxTotal_CI();
 						},
 						source : function(request, response) {

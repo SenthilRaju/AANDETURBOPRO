@@ -14,6 +14,7 @@ import com.turborep.turbotracker.company.dao.CoTaxTerritory;
 import com.turborep.turbotracker.company.dao.Rxaddress;
 import com.turborep.turbotracker.company.dao.Rxcontact;
 import com.turborep.turbotracker.customer.dao.Cuinvoice;
+import com.turborep.turbotracker.customer.dao.Cuso;
 import com.turborep.turbotracker.employee.dao.Rxmaster;
 import com.turborep.turbotracker.job.dao.JoReleaseDetail;
 import com.turborep.turbotracker.job.exception.JobException;
@@ -215,5 +216,8 @@ public interface VendorServiceInterface {
 	public Integer checkVePOIsInvoicedOrNOR(Integer vePoid, BigDecimal quantityReceived, Integer prMasterID);
 
 	public Integer getTransactionDailogStatus(Integer vepoID);
+
+	//BID1682
+	Cuso getCuSo(Integer cuSoID) throws VendorException;
 
 }

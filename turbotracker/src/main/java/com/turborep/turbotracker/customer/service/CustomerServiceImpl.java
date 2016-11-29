@@ -1894,10 +1894,13 @@ public class CustomerServiceImpl implements CustomerService {
 					aCuinvoice.setChangedById(aUserBean.getUserId());
 					
 					aSession.update(aCuinvoice);
-					if(aCuinvoice.getDiscountAmt().compareTo(BigDecimal.ZERO)!=0)
-						itsJobService.saveCustomerInvoiceLog(theCuinvoice,aCuinvoice,"CI-Edited-Payment",1,periodID,yearID);
+					if(aCuinvoice.getDiscountAmt().compareTo(BigDecimal.ZERO)!=0){
+						//BID1710 Simon Modified
+//						itsJobService.saveCustomerInvoiceLog(theCuinvoice,aCuinvoice,"CI-Payment-Received",1,periodID,yearID);
+						itsJobService.saveCustomerInvoiceLog(theCuinvoice,aCuinvoice,"CI-Payment-Received",0,periodID,yearID);
+					}
 					else
-						itsJobService.saveCustomerInvoiceLog(theCuinvoice,aCuinvoice,"CI-Edited-Payment",0,periodID,yearID);
+						itsJobService.saveCustomerInvoiceLog(theCuinvoice,aCuinvoice,"CI-Payment-Received",0,periodID,yearID);
 					
 					if(aCuinvoice.getJoReleaseDetailId()!=null && aCuinvoice.getJoReleaseDetailId()!=0 ){
 					JoReleaseDetail joReleaseDetail = (JoReleaseDetail ) aSession.get(JoReleaseDetail.class,aCuinvoice.getJoReleaseDetailId());
@@ -3277,10 +3280,13 @@ public class CustomerServiceImpl implements CustomerService {
 						aCuinvoice.setChangedById(aUserBean.getUserId());
 						
 						aSession.update(aCuinvoice);
-						if(aCuinvoice.getDiscountAmt().compareTo(BigDecimal.ZERO)!=0)
-							itsJobService.saveCustomerInvoiceLog(theCuinvoice,aCuinvoice,"CI-Edited-Payment",1,periodID,yearID);
+						if(aCuinvoice.getDiscountAmt().compareTo(BigDecimal.ZERO)!=0){
+							//BID1710 Simon Modified
+//							itsJobService.saveCustomerInvoiceLog(theCuinvoice,aCuinvoice,"CI-Payment-Received",1,periodID,yearID);
+							itsJobService.saveCustomerInvoiceLog(theCuinvoice,aCuinvoice,"CI-Payment-Received",0,periodID,yearID);
+						}
 						else
-							itsJobService.saveCustomerInvoiceLog(theCuinvoice,aCuinvoice,"CI-Edited-Payment",0,periodID,yearID);
+							itsJobService.saveCustomerInvoiceLog(theCuinvoice,aCuinvoice,"CI-Payment-Received",0,periodID,yearID);
 						
 						if(aCuinvoice.getJoReleaseDetailId()!=null && aCuinvoice.getJoReleaseDetailId()!=0 ){
 						JoReleaseDetail joReleaseDetail = (JoReleaseDetail ) aSession.get(JoReleaseDetail.class,aCuinvoice.getJoReleaseDetailId());
@@ -3352,10 +3358,13 @@ public class CustomerServiceImpl implements CustomerService {
 						aCuinvoice.setChangedById(aUserBean.getUserId());
 						aSession.update(aCuinvoice);
 						
-						if(DiscountApplied.compareTo(BigDecimal.ZERO)!=0)
-						itsJobService.saveCustomerInvoiceLog(theCuinvoice,aCuinvoice,"CI-Edited-Payment",1,periodid,yearid);
+						if(DiscountApplied.compareTo(BigDecimal.ZERO)!=0){
+						//BID1710 Simon Modified
+//						itsJobService.saveCustomerInvoiceLog(theCuinvoice,aCuinvoice,"CI-Payment-Received",1,periodid,yearid);
+						itsJobService.saveCustomerInvoiceLog(theCuinvoice,aCuinvoice,"CI-Payment-Received",0,periodid,yearid);
+						}
 						else
-						itsJobService.saveCustomerInvoiceLog(theCuinvoice,aCuinvoice,"CI-Edited-Payment",0,periodid,yearid);
+						itsJobService.saveCustomerInvoiceLog(theCuinvoice,aCuinvoice,"CI-Payment-Received",0,periodid,yearid);
 						
 						if(aCuinvoice.getJoReleaseDetailId()!=null && aCuinvoice.getJoReleaseDetailId()!=0 ){
 						JoReleaseDetail joReleaseDetail = (JoReleaseDetail ) aSession.get(JoReleaseDetail.class,aCuinvoice.getJoReleaseDetailId());

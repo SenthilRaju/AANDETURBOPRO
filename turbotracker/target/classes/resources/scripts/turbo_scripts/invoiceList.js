@@ -8257,5 +8257,5 @@ function setproductWareHouseCostBycuMasterID(prMasterID,rxMasterID){
 	});
 	return result;
 }
-
-
+//BID1682 Simon
+var updateTaxTerritoryStatusOnChange=0;

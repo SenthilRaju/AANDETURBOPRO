@@ -1236,15 +1236,6 @@ function openinventorydetailspopup(rowID){
 var posit_job_salesorder=0;
 var soLines_selectRow;
 var checkelement;
-/*var dataList=;
-//load all products
-$.ajax({
-    url: './getAllLineIte,
-    type: 'POST',      
-    success: function (data) {
-    	dataList=data;
-    	alert(data);
-    }*/
 function loadSOLineItemGrid(){	
 	
 	
@@ -1501,6 +1492,7 @@ function loadSOLineItemGrid(){
 		                 			    $( "#SOlineItemGrid_iladd" ).trigger( "click" );
 		                 			   $("#SaveLineSOReleaseID").prop("disabled",false);
 		                 			  $("#SaveLineSOReleaseID").css("background","");
+		                 			  
 		                    		    return false;  
 		                    		  }
 		                         }

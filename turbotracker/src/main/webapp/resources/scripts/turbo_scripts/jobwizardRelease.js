@@ -8702,7 +8702,8 @@ $( "#customerinvoice_paymentTerms" ).autocomplete({ minLength: 2,timeout :1000,
 
 $(function() { var cache = {}; var lastXhr='';
 $( "#customerInvoice_TaxTerritory" ).autocomplete({ minLength: 2,timeout :1000,
-	select: function( event, ui ) { 
+	select: function( event, ui ) {
+		console.log("customerInvoice_TaxTerritorycustomerInvoice_TaxTerritorycustomerInvoice_TaxTerritorycustomerInvoice_TaxTerritory");
 		var oldtaxrate=$("#customerInvoice_generaltaxId").val();
 		var taxtotal_CU=$("#customerInvoice_taxIdcu").val();	
 		/*var CI_taxsubtotal=parseFloat(parseFloat(taxtotal_CU*100)/oldtaxrate);
@@ -8735,6 +8736,8 @@ $( "#customerInvoice_TaxTerritory" ).autocomplete({ minLength: 2,timeout :1000,
 			$("#customerInvoice_generaltaxId").val("0.00");
 			
 		}
+		//BID1682 Simon
+		updateTaxTerritoryStatusOnChange=1;
 		setTaxTotal_CI();
 		
 		//loadTaxTerritoryRateforinsideJob(id);
@@ -12188,4 +12191,5 @@ function cuLineItemChanges_Out(formvalue)
     }
 	return ret_val;
 }
-
+//BID1682 Simon
+var updateTaxTerritoryStatusOnChange=0;

@@ -29,7 +29,9 @@ public class Vebilldistribution implements java.io.Serializable {
 	private String number;
 	private String desc;
 	private String jobNumber;
-
+	//BID1711 Simon
+	private Vebill vebill;
+	
 	public Vebilldistribution() {
 	}
 
@@ -108,6 +110,15 @@ public class Vebilldistribution implements java.io.Serializable {
 
 	public void setJobNumber(String jobNumber) {
 		this.jobNumber = jobNumber;
+	}
+
+	@Transient
+	public Vebill getVebill() {
+		return vebill;
+	}
+
+	public void setVebill(Vebill vebill) {
+		this.vebill = vebill;
 	}
 
 }

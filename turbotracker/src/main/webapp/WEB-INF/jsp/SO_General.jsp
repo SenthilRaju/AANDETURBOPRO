@@ -1202,6 +1202,7 @@ function loadPickUpAddress()
 function loadTaxTerritoryRate(coTaxTerritoryId,type)
 {
   // alert(coTaxTerritoryId+"Type::"+type);
+  console.log("loadTaxTerritoryRate(loadTaxTerritoryRate(loadTaxTerritoryRate(loadTaxTerritoryRate(loadTaxTerritoryRate(loadTaxTerritoryRate(loadTaxTerritoryRate(loadTaxTerritoryRate(loadTaxTerritoryRate(");
 	if(coTaxTerritoryId != null && coTaxTerritoryId != '')
 	{
 		$.ajax({
@@ -1368,6 +1369,7 @@ $( "#taxID" ).autocomplete({ minLength: 2,timeout :1000,
 	select: function( event, ui ) {  var id = ui.item.id; $("#taxhiddenID").val(id);
 	toggledivflag="#SO_Shipto";
 	loadmaintabtaxterritory(toggledivflag,id);
+	updateTaxTerritoryStatusWhenChanged=1;
 	},
 	source: function( request, response ) { var term = request.term;
 		if ( term in cache ) { response( cache[ term ] ); 	return; 	}

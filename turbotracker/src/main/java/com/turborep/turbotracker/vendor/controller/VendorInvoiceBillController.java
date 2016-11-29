@@ -409,6 +409,8 @@ public class VendorInvoiceBillController {
 						
 						thevebilldetail.setUserId(((UserBean)theSession.getAttribute(SessionConstants.USER)).getUserId());
 						thevebilldetail.setUserName(((UserBean)theSession.getAttribute(SessionConstants.USER)).getUserName());
+						//BID1711 Simon
+						thevebilldetail.setVebill(aVebill);
 						boolean returnvalue =vendorService.saveVeBillDetail(thevebilldetail);
 						logger.info("returnvalue=="+returnvalue);
 						
@@ -477,8 +479,15 @@ public class VendorInvoiceBillController {
 						thevebilldetail.setFreightCost(new BigDecimal(0.00));
 						boolean returnvalue =false;
 						if(thevebilldetail.getVeBillDetailId()==0){
+							
+							//BID1711 Simon
+							aVebill.setChangedById(aUserBean.getUserId());
+							thevebilldetail.setVebill(aVebill);
 							returnvalue =vendorService.saveVeBillDetail(thevebilldetail);
 						}else{
+							//BID1711 Simon
+							aVebill.setChangedById(aUserBean.getUserId());
+							thevebilldetail.setVebill(aVebill);
 							vendorService.updateVendorBillDetail(thevebilldetail);
 						}
 						
@@ -877,6 +886,9 @@ public class VendorInvoiceBillController {
 					
 					aVebilldistribution.setExpenseAmount(expenseAmount);
 					aVebilldistribution.setVeBillId(aVebill.getVeBillId());	
+					//BID1713 Simon
+					aVebill.setChangedById(aUserBean.getUserId());
+					aVebilldistribution.setVebill(aVebill);
 					vendorService.saveVebillDistribution(aVebilldistribution,Oper);
 					
 				}
@@ -1254,6 +1266,9 @@ public class VendorInvoiceBillController {
 						aVebilldetail.setPrMasterId(Integer.valueOf(prMasterIDPO));
 					aVebilldetail.setVeBillId(veBillIdPO);
 					
+					//BID1711 Simon
+					aVebill.setChangedById(aUserBean.getUserId());
+					aVebilldetail.setVebill(aVebill);
 					vendorService.saveVebillDetail(aVebilldetail,Oper);
 					
 					
@@ -1336,6 +1351,10 @@ public class VendorInvoiceBillController {
 				aVebilldetail.setVeBillId(veBillid);
 				aVebilldetail.setUnitCost(unitCost);
 				aVebilldetail.setVePodetailId(Integer.parseInt(vePodetailId));
+				
+				//BID1711 Simon
+				aVebill.setChangedById(aUserBean.getUserId());
+				aVebilldetail.setVebill(aVebill);
 				vendorService.saveVebillDetail(aVebilldetail,Oper);
 			}
 			
@@ -1546,6 +1565,11 @@ public class VendorInvoiceBillController {
 				aVebilldistribution.setExpenseAmount(expenseAmount);
 				aVebilldistribution.setVeBillId(veBillid);	
 				
+				//BID1711 Simon
+				UserBean aUserBean;
+				aUserBean = (UserBean) theSession.getAttribute(SessionConstants.USER);
+				aVebill.setChangedById(aUserBean.getUserId());
+				aVebilldistribution.setVebill(aVebill);
 				vendorService.saveVebillDistribution(aVebilldistribution,Oper);
 				
 			}
@@ -1924,6 +1948,9 @@ public class VendorInvoiceBillController {
 						        else
 						         aVebilldetail.setTaxable(false);
 							
+							//BID1711 Simon
+							aVebill.setChangedById(aUserBean.getUserId());
+							aVebilldetail.setVebill(aVebill);
 							vendorService.saveVebillDetail(aVebilldetail,Oper);
 							master.setInitialCost(freightGeneralId);
 							prMaster.add(master);
@@ -2027,6 +2054,9 @@ public class VendorInvoiceBillController {
 					        else
 					         aVebilldetail.setTaxable(false);
 						
+						//BID1711 Simon
+						aVebill.setChangedById(aUserBean.getUserId());
+						aVebilldetail.setVebill(aVebill);
 						vendorService.saveVebillDetail(aVebilldetail,Oper);
 						master.setInitialCost(freightGeneralId);
 						prMaster.add(master);
