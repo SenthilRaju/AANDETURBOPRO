@@ -352,6 +352,8 @@ function fn_override_taxIDBasedOnCustomer(){
 	function rsAddresstoggleassign(rxAddressarray,shipindex,divflag,coTaxTerritoryID)
 	{
 		//alert("testing 4..!");
+		if(rxAddressarray.length>0)
+			{
 		 $(divflag).contents().find("#shipToName").val(rxAddressarray[shipindex].name); 
 		 $(divflag).contents().find("#shipToAddress1").val(rxAddressarray[shipindex].address1); 
 		 $(divflag).contents().find("#shipToAddress2").val(rxAddressarray[shipindex].address2); 
@@ -368,7 +370,17 @@ function fn_override_taxIDBasedOnCustomer(){
 			   else				   
 			       loadTaxTerritoryRate_ShipTO(rxAddressarray[shipindex].coTaxTerritoryId);
 		   }
-		 
+			}//if end add  by prasant #1718
+			 else{				
+				 $(divflag).contents().find("#shipToName").val(""); 
+				 $(divflag).contents().find("#shipToAddress1").val(""); 
+				 $(divflag).contents().find("#shipToAddress2").val(""); 
+				 $(divflag).contents().find("#shipToCity").val("");
+				 $(divflag).contents().find("#shipToState").val("");
+				 $(divflag).contents().find("#shipToZip").val("");
+				 $(divflag).contents().find("#shiptoaddrhiddenfromuiid").val("");					
+		}
+		  
 	}
 	 
 	

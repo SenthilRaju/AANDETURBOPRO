@@ -1402,4 +1402,8 @@ public interface JobService {
 			Integer joquoteheaderid);
 
 	public Integer saveQuoteProducts(JoQuoteProductsDetail master);
+
+	public Integer getnumberofVendorNumber(Integer vePOID);
+
+	public boolean updateShipToIDforThisCustomer(Integer cuInvoiceID, Integer shipToID);
 }

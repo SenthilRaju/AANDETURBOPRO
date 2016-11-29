@@ -904,7 +904,7 @@ function ReOrderButtonClick(){
 
 function SaveLinesPurchaseOrder(popupdetail){
 	
-	alert("addPurchaseOrder.js  is calling.....!");
+	//alert("addPurchaseOrder.js  is calling.....!");
 	var newDialogDiv = jQuery(document.createElement('div'));
 	
 	var vePOID = $("#vePOID").val();

@@ -1236,7 +1236,7 @@ function openinventorydetailspopup(rowID){
 var posit_job_salesorder=0;
 var soLines_selectRow;
 var checkelement;
-var dataList=;
+/*var dataList=;
 //load all products
 $.ajax({
     url: './getAllLineIte,
@@ -1244,7 +1244,7 @@ $.ajax({
     success: function (data) {
     	dataList=data;
     	alert(data);
-    }
+    }*/
 function loadSOLineItemGrid(){	
 	
 	
@@ -1267,8 +1267,12 @@ function loadSOLineItemGrid(){
 				dataInit : function(elem) {
 					$(elem).autocomplete({
 						//addded by prasant #1589
-						 delay: 0,				    
-						minLength: 1,timeout :1000,autoFocus: true,
+						// delay: 0,				    
+						minLength: 1,
+						//timeout :1000,
+						autoSelectFirst:true,
+						 
+						//autoFocus: true,
 						tabDisabled:true,
 							source: "jobtabs3/productCodeWithNameList",
 							select: function( event, ui ){
@@ -1374,6 +1378,7 @@ function loadSOLineItemGrid(){
 										
 							        }
 							    });
+								//$(elem).data().autocomplete.term = null;
 								return false;	
 							},
 							error: function (result) {$('.ui-autocomplete-loading').removeClass("ui-autocomplete-loading");	}

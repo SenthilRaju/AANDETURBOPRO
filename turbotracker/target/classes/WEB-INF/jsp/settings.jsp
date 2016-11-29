@@ -1519,6 +1519,57 @@ Description             : Vendor Settings fieldset UI.
 						</td>
 						<td width="27%"></td>
 						</tr>	
+						
+						<!-- added By prasant for #630 chk_cusRemListfmSalOrdpdfYes -->
+						<tr>
+						<td width="70%">
+						<div Style="width:75%;display:block;float:left;line-height:24px;"><span>Remove EXT LIST column from all Customer Invoice PDF?</span></div>
+						<div Style="width:25%;display:block;float:right;">
+							<c:if test="${requestScope.chk_cusRemExtfmallInvoicepdfYes==1 }">
+								<span><input type="radio" id="chk_cusRemExtfmallInvoicepdfYes" name="chk_cusRemExtfmallInvoicepdfStatus" style="vertical-align: top;" checked="checked"  value="yes"></span>&nbsp;<span style="color:#00377A;">Yes</span>
+								<span style="margin-left:75px;"><input type="radio" id="chk_cusRemExtfmallInvoicepdfYes" name="chk_cusRemExtfmallInvoicepdfStatus" value="no" style="vertical-align: top;"></span>&nbsp;<span style="color:#00377A;">No</span>
+							</c:if>
+							<c:if test="${requestScope.chk_cusRemExtfmallInvoicepdfYes==0 || empty requestScope.chk_cusRemExtfmallInvoicepdfYes}">
+								<span><input type="radio" id="chk_cusRemExtfmallInvoicepdfYes" name="chk_cusRemExtfmallInvoicepdfStatus" style="vertical-align: top;"  value="yes"></span>&nbsp;<span style="color:#00377A;">Yes</span>
+								<span style="margin-left:75px;"><input type="radio" id="chk_cusRemExtfmallInvoicepdfYes" name="chk_cusRemExtfmallInvoicepdfStatus" checked="checked" value="no" style="vertical-align: top;"></span>&nbsp;<span style="color:#00377A;">No</span>
+							</c:if>
+						</div>	
+						</td>
+						<td width="27%"></td>
+						</tr>						
+						<tr>
+						<td width="70%">
+						<div Style="width:75%;display:block;float:left;line-height:24px;"><span>Remove MULT column from  all Customer Invoice PDF?</span></div>
+						<div Style="width:25%;display:block;float:right;">
+							<c:if test="${requestScope.chk_cusRemMultfmallInvoicepdfYes==1 }">
+								<span><input type="radio" id="chk_cusRemMultfmallInvoicepdfYes" name="chk_cusRemMultInvoiceStatus" style="vertical-align: top;" checked="checked" value="yes"></span>&nbsp;<span style="color:#00377A;">Yes</span>
+								<span style="margin-left:75px;"><input type="radio" id="chk_cusRemMultfmallInvoicepdfYes" name="chk_cusRemMultInvoiceStatus" value="no" style="vertical-align: top;"></span>&nbsp;<span style="color:#00377A;">No</span>
+							</c:if>
+							<c:if test="${requestScope.chk_cusRemMultfmallInvoicepdfYes==0 || empty requestScope.chk_cusRemMultfmallInvoicepdfYes}">
+								<span><input type="radio" id="chk_cusRemMultfmallInvoicepdfYes" name="chk_cusRemMultfmallInvoicepdfStatus" style="vertical-align: top;"  value="yes"></span>&nbsp;<span style="color:#00377A;">Yes</span>
+								<span style="margin-left:75px;"><input type="radio" id="chk_cusRemMultfmallInvoicepdfYes" name="chk_cusRemMultfmallInvoicepdfStatus" checked="checked" value="no" style="vertical-align: top;"></span>&nbsp;<span style="color:#00377A;">No</span>
+							</c:if>
+						</div>	
+						</td>
+						<td width="27%"></td>
+						</tr>	
+									
+							<tr>
+						<td width="70%">
+						<div Style="width:75%;display:block;float:left;line-height:24px;"><span>Remove LIST column from  all Customer Invoice PDF?</span></div>
+						<div Style="width:25%;display:block;float:right;">
+							<c:if test="${requestScope.chk_cusRemListfmSalOrdpdfYes==1 }">
+								<span><input type="radio" id="chk_cusRemListfmSalOrdpdfYes" name="chk_cusRemlistfmSalOrdpdfStatus" style="vertical-align: top;" checked="checked" value="yes"></span>&nbsp;<span style="color:#00377A;">Yes</span>
+								<span style="margin-left:75px;"><input type="radio" id="chk_cusRemListfmSalOrdpdfYes" name="chk_cusRemlistfmSalOrdpdfStatus" value="no" style="vertical-align: top;"></span>&nbsp;<span style="color:#00377A;">No</span>
+							</c:if>
+							<c:if test="${requestScope.chk_cusRemListfmSalOrdpdfYes==0 || empty requestScope.chk_cusRemListfmSalOrdpdfYes}">
+								<span><input type="radio" id="chk_cusRemListfmSalOrdpdfYes" name="chk_cusRemlistfmSalOrdpdfStatus" style="vertical-align: top;"  value="yes"></span>&nbsp;<span style="color:#00377A;">Yes</span>
+								<span style="margin-left:75px;"><input type="radio" id="chk_cusRemListfmSalOrdpdfYes" name="chk_cusRemlistfmSalOrdpdfStatus" checked="checked" value="no" style="vertical-align: top;"></span>&nbsp;<span style="color:#00377A;">No</span>
+							</c:if>
+						</div>	
+						</td>
+						<td width="27%"></td>
+						</tr>
 						<!--  Added by aravind Date 03-06-16 ID#534 -->
 						<%-- <tr>
 						<td width="70%">
@@ -1572,23 +1623,7 @@ Description             : Vendor Settings fieldset UI.
 						</td>
 						<td width="27%"></td>
 						</tr>	
-						<!-- added By prasant for #630 chk_cusRemListfmSalOrdpdfYes -->
-							<tr>
-						<td width="70%">
-						<div Style="width:75%;display:block;float:left;line-height:24px;"><span>Remove LIST column from Sales Order PDF?</span></div>
-						<div Style="width:25%;display:block;float:right;">
-							<c:if test="${requestScope.chk_cusRemListfmSalOrdpdfYes==1 }">
-								<span><input type="radio" id="chk_cusRemListfmSalOrdpdfYes" name="chk_cusRemlistfmSalOrdpdfStatus" style="vertical-align: top;" checked="checked" value="yes"></span>&nbsp;<span style="color:#00377A;">Yes</span>
-								<span style="margin-left:75px;"><input type="radio" id="chk_cusRemListfmSalOrdpdfYes" name="chk_cusRemlistfmSalOrdpdfStatus" value="no" style="vertical-align: top;"></span>&nbsp;<span style="color:#00377A;">No</span>
-							</c:if>
-							<c:if test="${requestScope.chk_cusRemListfmSalOrdpdfYes==0 || empty requestScope.chk_cusRemListfmSalOrdpdfYes}">
-								<span><input type="radio" id="chk_cusRemListfmSalOrdpdfYes" name="chk_cusRemlistfmSalOrdpdfStatus" style="vertical-align: top;"  value="yes"></span>&nbsp;<span style="color:#00377A;">Yes</span>
-								<span style="margin-left:75px;"><input type="radio" id="chk_cusRemListfmSalOrdpdfYes" name="chk_cusRemlistfmSalOrdpdfStatus" checked="checked" value="no" style="vertical-align: top;"></span>&nbsp;<span style="color:#00377A;">No</span>
-							</c:if>
-						</div>	
-						</td>
-						<td width="27%"></td>
-						</tr>					
+											
 						<tr>
 						<td width="70%">
 						<div Style="width:75%;display:block;float:left;line-height:24px;"><span>Require Division in Sales Order(Outside of Job)?</span></div>

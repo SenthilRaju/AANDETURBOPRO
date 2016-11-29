@@ -6,6 +6,9 @@
 	<parameter name="cuInvoiceID" class="java.lang.Integer">
 		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
 	</parameter>
+	<parameter name="incListCol" class="java.lang.Boolean"/>
+	<parameter name="incExtListCol" class="java.lang.Boolean"/>
+	<parameter name="incMultCol" class="java.lang.Boolean"/>
 	<queryString>
 		<![CDATA[select  cuInvoiceDetail.*,cuInvoiceDetail.UnitCost*cuInvoiceDetail.QuantityBilled AS ExtList,
  (IFNULL(NULLIF(cuInvoiceDetail.UnitCost, '' ), 0) * IFNULL(NULLIF(cuInvoiceDetail.QuantityBilled, '' ), 0)*IFNULL(NULLIF(cuInvoiceDetail.PriceMultiplier , '' ),1)) AS total,
@@ -67,7 +70,7 @@ prMaster.ItemCode from cuInvoiceDetail LEFT JOIN prMaster ON prMaster.prMasterID
 	<detail>
 		<band height="31" splitType="Stretch">
 			<textField isBlankWhenNull="true">
-				<reportElement x="124" y="0" width="142" height="15" uuid="bb46d178-cb5d-4287-8703-6894a38b02b6"/>
+				<reportElement key="desc3Detail" x="124" y="0" width="142" height="15" uuid="bb46d178-cb5d-4287-8703-6894a38b02b6"/>
 				<textFieldExpression><![CDATA[$F{Description}]]></textFieldExpression>
 			</textField>
 			<textField pattern=" ###0.####" isBlankWhenNull="true">
@@ -80,17 +83,23 @@ prMaster.ItemCode from cuInvoiceDetail LEFT JOIN prMaster ON prMaster.prMasterID
 				<textFieldExpression><![CDATA[$F{ItemCode}]]></textFieldExpression>
 			</textField>
 			<textField pattern="¤ #,##0.00" isBlankWhenNull="true">
-				<reportElement x="270" y="0" width="91" height="15" uuid="cbab8b0d-631e-4099-91d0-0c763ff5bdc7"/>
+				<reportElement key="list4Detail" x="270" y="0" width="91" height="15" uuid="cbab8b0d-631e-4099-91d0-0c763ff5bdc7">
+					<printWhenExpression><![CDATA[$P{incListCol}]]></printWhenExpression>
+				</reportElement>
 				<textElement textAlignment="Center"/>
 				<textFieldExpression><![CDATA[$F{UnitCost}]]></textFieldExpression>
 			</textField>
 			<textField pattern="¤ #,##0.00" isBlankWhenNull="true">
-				<reportElement x="361" y="0" width="80" height="15" uuid="a86d280e-d319-4b8e-8de2-ba6e772fa20a"/>
+				<reportElement key="Extlist5Detail" x="361" y="0" width="80" height="15" uuid="a86d280e-d319-4b8e-8de2-ba6e772fa20a">
+					<printWhenExpression><![CDATA[$P{incExtListCol}]]></printWhenExpression>
+				</reportElement>
 				<textElement textAlignment="Center"/>
 				<textFieldExpression><![CDATA[$F{ExtList}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0.00" isBlankWhenNull="true">
-				<reportElement x="441" y="0" width="44" height="15" uuid="8981c08f-6c72-4102-87e0-b698b3482624"/>
+				<reportElement key="mult6Detail" x="441" y="0" width="44" height="15" uuid="8981c08f-6c72-4102-87e0-b698b3482624">
+					<printWhenExpression><![CDATA[$P{incMultCol}]]></printWhenExpression>
+				</reportElement>
 				<textElement textAlignment="Center"/>
 				<textFieldExpression><![CDATA[$F{PriceMultiplier}]]></textFieldExpression>
 			</textField>

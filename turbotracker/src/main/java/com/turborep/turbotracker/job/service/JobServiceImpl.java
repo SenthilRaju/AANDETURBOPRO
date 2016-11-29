@@ -10505,10 +10505,11 @@ public class JobServiceImpl implements JobService {
 				if(logidfor!=null)
 				{
 				 aTpCuinvoiceLogMasterinve =(TpCuinvoiceLogMaster) aSession.get(TpCuinvoiceLogMaster.class,logidfor); 
+				//added by prasant kumar to Fix while Server Down NullPointer Exception
+				 aTpCuinvoiceLogMaster.setFperiod(aTpCuinvoiceLogMasterinve.getFperiod());
+				 aTpCuinvoiceLogMaster.setFyear(aTpCuinvoiceLogMasterinve.getFyear());
 				}	
-				
-			 aTpCuinvoiceLogMaster.setFperiod(aTpCuinvoiceLogMasterinve.getFperiod());
-			 aTpCuinvoiceLogMaster.setFyear(aTpCuinvoiceLogMasterinve.getFyear());
+	
 			}
 			
 			savedStatus = (Integer) aSession.save(aTpCuinvoiceLogMaster);
@@ -23043,6 +23044,62 @@ public class JobServiceImpl implements JobService {
 				aSession.close();
 			}
 			return returnValue;
+		}
+
+		@Override
+		public Integer getnumberofVendorNumber(Integer vePOID) {
+			Session acuInvoiceSession = null;
+			Transaction aTransaction;
+			Integer returncountvalue=0;
+			String aSelectquery = null;
+			List<?> listdetails = null;
+			try {
+				acuInvoiceSession = itsSessionFactory.openSession();
+				aTransaction = acuInvoiceSession.beginTransaction();
+				aTransaction.begin();
+				aSelectquery = "SELECT COUNT(*) FROM veBill WHERE vePOID="+vePOID;
+				listdetails = acuInvoiceSession
+						.createSQLQuery(aSelectquery).list();
+				returncountvalue = ((BigInteger)listdetails.get(0)).intValue();
+				aSelectquery=null;
+			} finally {
+				acuInvoiceSession.flush();
+				acuInvoiceSession.close();
+				aSelectquery = null;
+				listdetails = null;
+			}
+
+			return returncountvalue;
+		}
+
+		@Override
+		public boolean updateShipToIDforThisCustomer(Integer cuInvoiceID, Integer shipToID) {
+
+			Session aSession = null;
+			Cuinvoice aCuinvoice = null;
+			try {
+				aSession = itsSessionFactory.openSession();
+				aCuinvoice = (Cuinvoice) aSession.get(Cuinvoice.class, cuInvoiceID);
+				Transaction transaction=aSession.beginTransaction();
+				if (aCuinvoice!=null)
+					aCuinvoice.setRxShipToId(shipToID);
+				aCuinvoice.setShipToMode((byte)1);
+				
+				aSession.update(aCuinvoice);
+				transaction.commit();
+				
+			} catch (Exception excep) {
+				itsLogger.error(excep.getMessage(), excep);
+				JobException aJobException = new JobException(excep.getMessage(),
+						excep);
+				
+			} finally {
+				aSession.flush();
+				aSession.close();
+			}
+			
+		
+			return true;
 		}
 
 

@@ -1984,8 +1984,10 @@ public class InventoryListController {
 			@RequestParam(value = "inp_cusNewSeqNumCuInvoices",required=false) String inp_cusNewSeqNumCuInvoices,
 			@RequestParam(value = "chk_cusRemExtListfmSalOrdpdfYes",required=false) Integer chk_cusRemExtListfmSalOrdpdfYes,
 			@RequestParam(value = "chk_cusRemMultfmSalOrdpdfYes",required=false) Integer chk_cusRemMultfmSalOrdpdfYes,
+			//added by prs #630
 			@RequestParam(value = "chk_cusRemListfmSalOrdpdfYes",required=false) Integer chk_cusRemListfmSalOrdpdfYes,
-			
+			@RequestParam(value = "chk_cusRemExtfmallInvoicepdfYes",required=false) Integer chk_cusRemExtfmallInvoicepdfYes,
+			@RequestParam(value = "chk_cusRemMultfmallInvoicepdfYes",required=false) Integer chk_cusRemMultfmallInvoicepdfYes,
 			HttpServletRequest therequest,HttpSession session) throws IOException, MessagingException {
 		  ArrayList<Sysvariable> asysvariable = new  ArrayList<Sysvariable>();
 		try {
@@ -2128,12 +2130,31 @@ public class InventoryListController {
 			thesysvariable.setSysVariableId(InventoryConstant.getConstantSysvariableId("RemoveMULTcolumnfromSalesOrderPDF"));
 			asysvariable.add(thesysvariable);
 			
-			
+			//added by prasant #630
 			thesysvariable=new Sysvariable();
 			thesysvariable.setValueLong(chk_cusRemListfmSalOrdpdfYes);
-			System.out.println("sysvariableid RemoveLISTcolumnfromSalesOrderPDF==>"+InventoryConstant.getConstantSysvariableId("RemoveLISTcolumnfromSalesOrderPDF"));
-			thesysvariable.setSysVariableId(InventoryConstant.getConstantSysvariableId("RemoveLISTcolumnfromSalesOrderPDF"));
+			System.out.println("sysvariableid RemoveLISTcolumnfromInvoicesPDF==>"+InventoryConstant.getConstantSysvariableId("RemoveLISTcolumnfromInvoicesPDF"));
+			thesysvariable.setSysVariableId(InventoryConstant.getConstantSysvariableId("RemoveLISTcolumnfromInvoicesPDF"));
 			asysvariable.add(thesysvariable);
+			
+			thesysvariable=new Sysvariable();
+			thesysvariable.setValueLong(chk_cusRemMultfmallInvoicepdfYes);
+			System.out.println("sysvariableid RemoveMULTcolumnfromInvoicesPDF==>"+InventoryConstant.getConstantSysvariableId("RemoveMULTcolumnfromInvoicesPDF"));
+			thesysvariable.setSysVariableId(InventoryConstant.getConstantSysvariableId("RemoveMULTcolumnfromInvoicesPDF"));
+			asysvariable.add(thesysvariable);
+			
+			
+			thesysvariable=new Sysvariable();
+			thesysvariable.setValueLong(chk_cusRemExtfmallInvoicepdfYes);
+			System.out.println("sysvariableid RemoveEXTLISTcolumnfromInvoicesPDF==>"+InventoryConstant.getConstantSysvariableId("RemoveEXTLISTcolumnfromInvoicesPDF"));
+			thesysvariable.setSysVariableId(InventoryConstant.getConstantSysvariableId("RemoveEXTLISTcolumnfromInvoicesPDF"));
+			asysvariable.add(thesysvariable);
+			
+			
+			
+			
+			
+			
 			boolean	insertintosysvariable = itsInventoryService.saveInventorysettings(asysvariable);
 			
 		} catch (Exception e) {

@@ -2977,6 +2977,7 @@ public class JobReleaseFormController {
 				aCuinvoice.setRxShipToAddressId(rxOtherID);
 				
 			}*/
+			
 			aCuinvoice.setShipToMode(CIrxShiptomodevalue);
 			if(CIrxShiptomodevalue==0){
 				//US

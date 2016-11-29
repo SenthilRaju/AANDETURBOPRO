@@ -1914,14 +1914,30 @@ function saveCompanySettingsSysVariable() {
 	if($('input:radio[id=chk_cusRemExtListfmSalOrdpdfYes]:checked').val()==="yes"){
 		chk_cusRemExtListfmSalOrdpdfYes="1";
 	}
+	
+	//630
+	
 	var chk_cusRemListfmSalOrdpdfYes="0";
 	if($('input:radio[id=chk_cusRemListfmSalOrdpdfYes]:checked').val()==="yes"){
 		chk_cusRemListfmSalOrdpdfYes="1";
+	} 
+	
+	var chk_cusRemExtfmallInvoicepdfYes="0";
+	if($('input:radio[id=chk_cusRemExtfmallInvoicepdfYes]:checked').val()==="yes"){
+		chk_cusRemExtfmallInvoicepdfYes="1";
 	}
-	//
+	
+	var chk_cusRemMultfmallInvoicepdfYes="0";
+	if($('input:radio[id=chk_cusRemMultfmallInvoicepdfYes]:checked').val()==="yes"){
+		chk_cusRemMultfmallInvoicepdfYes="1";
+	}
+	
+	
+	
+	//END
 	
 	var chk_cusRemMultfmSalOrdpdfYes="0";
-	if($('input:radio[id=chk_cusRemlistfmSalOrdpdfStatus]:checked').val()==="yes"){
+	if($('input:radio[id=chk_cusRemMultfmSalOrdpdfYes]:checked').val()==="yes"){
 		chk_cusRemMultfmSalOrdpdfYes="1";
 	}
 	var chk_cusIncSalTaxYes="0";
@@ -1993,7 +2009,8 @@ function saveCompanySettingsSysVariable() {
         	 'chk_cusIncMultYes':chk_cusIncMultYes,'chk_cusUseDivAddYes':chk_cusUseDivAddYes, 'chk_cusAllblCusInvYes':chk_cusAllblCusInvYes,
         	'chk_cusAllblCusInvYes':chk_cusAllblCusInvYes, 'chk_cusAllblProdinSalOrdYes':chk_cusAllblProdinSalOrdYes, 'chk_cusReqProinSalOrderYes':chk_cusReqProinSalOrderYes,
         	'chk_cusReqfreinCuInvoicesYes':chk_cusReqfreinCuInvoicesYes,'chk_cusReqSeqNumCuInvoicesYes':chk_cusReqSeqNumCuInvoicesYes,'inp_cusNewSeqNumCuInvoices':inp_cusNewSeqNumCuInvoices,
-        	'chk_cusRemExtListfmSalOrdpdfYes':chk_cusRemExtListfmSalOrdpdfYes,'chk_cusRemMultfmSalOrdpdfYes':chk_cusRemMultfmSalOrdpdfYes,'chk_cusRemListfmSalOrdpdfYes':chk_cusRemListfmSalOrdpdfYes},
+        	'chk_cusRemExtListfmSalOrdpdfYes':chk_cusRemExtListfmSalOrdpdfYes,'chk_cusRemMultfmSalOrdpdfYes':chk_cusRemMultfmSalOrdpdfYes,'chk_cusRemListfmSalOrdpdfYes':chk_cusRemListfmSalOrdpdfYes,
+        	'chk_cusRemExtfmallInvoicepdfYes':chk_cusRemExtfmallInvoicepdfYes,'chk_cusRemMultfmallInvoicepdfYes':chk_cusRemMultfmallInvoicepdfYes},
         type: 'POST',
         success: function(data){
         	createtpusage('Company-Settings','Save Customer Settings','Info','Company-Settings,Saving Customer Settings');

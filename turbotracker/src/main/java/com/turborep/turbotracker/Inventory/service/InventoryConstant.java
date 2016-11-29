@@ -33,10 +33,18 @@ public class InventoryConstant {
 				RemoveEXTLISTcolumnfromSalesOrderPDF(2014002019),
 				RemoveMULTcolumnfromSalesOrderPDF(2014002020),
 				//added by prasant 2016010026 added date date month and year separated with 0(zero)
-				RemoveLISTcolumnfromSalesOrderPDF(2016010026),
+			
 				DoNotAllowTaxTerritoryAfterSavingCustomerInvoice(2014002021),
 				//ID#624 Aravind
 				TierPricingAddingWarehouseLineitemstoSOServiceOrderCI(2014002022),
+				RemoveLISTcolumnfromIPDF(2016010026), 
+				//added by prasant #630
+				RemoveLISTcolumnfromInvoicesPDF(2016010029), 
+				RemoveMULTcolumnfromInvoicesPDF(2016010027),
+				RemoveEXTLISTcolumnfromInvoicesPDF(2016010028),
+				
+				
+				
 				
 				//VendorSettings
 				DefaultPODescItemCode(2014003001),

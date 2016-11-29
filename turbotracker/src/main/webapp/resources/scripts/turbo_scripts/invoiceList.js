@@ -442,8 +442,7 @@ function showCustomerInvoiceList(searchData, fromDate, toDate) {
 											+ aMasterID);
 							loadEmailList(aMasterID);
 							PreloadDataFromInvoiceTable("0");
-							$('#cusinvoicetab').dialog('option', 'title',
-									'Customer Invoice');
+							$('#cusinvoicetab').dialog('option', 'title','Customer Invoice');
 							$('#cusinvoicetab').dialog("open");
 
 						}
@@ -1285,8 +1284,7 @@ function PreloadSODataForInvoice(cusodata) {
 			.append(
 					'<input id="contactEmailID" type="image" src="./../resources/Icons/mail_new_disabled.png" title="Email Customer Invoice" style="background: #EEDEBC;cursor:default;" return false;">');
 
-	$
-			.ajax({
+	$.ajax({
 				url : "./salesOrderController/getPreLoadData",
 				type : "POST",
 				data : "&cuSOID=" + cusodata.cuSoid + "&rxMasterID="
@@ -3481,6 +3479,8 @@ function savecustomerinvoice(operation) {
 	var cIopenStatus = $('#ciOpenStatusID').val();
 	var shipToAddressIDs = $('#prShiptowarehouseID').val();
 	var taxfreight = $('#CI_taxfreight').val();
+	if(taxfreight=="")
+		taxfreight=0;
 
 	console.log("InvoiceDetails==" + aInvoiceDetails);
 	var aCustomerInvoiceDetails = aInvoiceDetails
@@ -3805,6 +3805,7 @@ function savecustomerinvoice(operation) {
 							var gridRows = $('#customerInvoice_lineitems')
 									.getRowData();
 							var dataToSend = JSON.stringify(gridRows);
+						//	alert("aCustomerInvoiceDetails  1"+aCustomerInvoiceDetails);
 							// &reason='
 							$
 									.ajax({
@@ -4204,8 +4205,8 @@ function PreloadDataFromInvoiceTable(initialValue) {
 						}
 
 						loadCustomerAddress(data.cuInvoice.rxCustomerId);
-						loadCUInvoice_ShipTO("#CI_Shipto",
-								data.cuInvoice.cuInvoiceId);
+						//alert("is calling");
+						loadCUInvoice_ShipTO("#CI_Shipto",data.cuInvoice.cuInvoiceId);
 						/* Code Ends */
 
 						if (data.cuInvoice.doNotMail === 0)
@@ -5852,7 +5853,7 @@ function Savecustomerinvoicewithreasonbox(aCustomerInvoiceDetails, transaction,
 	var dataToSend = JSON.stringify(gridRows);
 	console.log("I am from Savecustomerinvoicewithreasonbox==============>>>"
 			+ aCustomerInvoiceDetails);
-
+	//alert("aCustomerInvoiceDetails  2"+aCustomerInvoiceDetails);
 	// &reason='
 	$.ajax({
 		url : "./jobtabs5/createCustomerInvoiceDetails?"
@@ -7832,6 +7833,26 @@ function CIGeneralTabSeriallize() {
 			+ value27 + value28 + value29 + value30 + value31;
 	return value;
 }
+//added by prasant #1718
+function updateShipToAddress(cuInvoiceID,ShipToID)
+{ if(cuInvoiceID!=null && ShipToID!=null)
+	{
+	$.ajax({
+		url : "./salesOrderController/updateShipToIDforThisCustomer",
+		type : "POST",
+		data : {
+			"cuInvoiceId" : cuInvoiceID,
+			"ShipToID" : ShipToID
+		},
+		success : function(data) {
+	return true;
+	
+		}
+	});
+
+	}
+	
+}
 function loadCUInvoice_ShipTO(CIdivFlag, InvoiceID) {
 	$.ajax({
 		url : "./salesOrderController/getcuInvoice",
@@ -7866,15 +7887,23 @@ function loadCUInvoice_ShipTO(CIdivFlag, InvoiceID) {
 					$(CIdivFlag).contents().find("#shiptoaddrhiddenfromdbid")
 							.val(data.rxShipToAddressId);
 				}
-				$(CIdivFlag).contents().find("#shiptomodehiddenfromdbid").val(
+					$(CIdivFlag).contents().find("#shiptomodehiddenfromdbid").val(
 						data.shipToMode);
-				preloadShiptoAddress(CIdivFlag, data.cuInvoiceId,
-						checkshiptoid, data.shipToMode, '0', $(
-								"#jobCustomerName_ID").text(),
+					
+				preloadShiptoAddress(CIdivFlag, data.cuInvoiceId,checkshiptoid, data.shipToMode, '0', $("#jobCustomerName_ID").text(),
 						data.coTaxTerritoryId);
 				$(CIdivFlag).contents().find("#shiptomoderhiddenid").val(
 						data.shipToMode);
+				
 			}
+			//else part added by prasant #1718	when customer Invoice is created with customer Address the  automatically fetch the de
+			//shipping address from customer Adress if it is checked 
+			else
+				{
+				$(CIdivFlag).contents().find("#shiptomoderhiddenid").val(data.shipToMode);		
+				preloadShiptoAddress(CIdivFlag, data.cuInvoiceId,0, data.shipToMode, '0', $("#jobCustomerName_ID").text(),data.coTaxTerritoryId);				
+				updateShipToAddress(InvoiceID, $("#CI_Shipto").contents().find("#shiptoaddrhiddenfromuiid").val());
+				}
 		}
 	});
 }

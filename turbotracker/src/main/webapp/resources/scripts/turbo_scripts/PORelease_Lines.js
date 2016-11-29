@@ -2155,7 +2155,7 @@ function POLineItemTabformChanges(formvalue){
 
 function SaveLinesPurchaseOrder(popupdetail){
 	//BID1633 Simon
-	alert("PORelease_Lines.js  is calling.....!");
+	//alert("PORelease_Lines.js  is calling.....!");
 	$("#SaveLinesPOButton").prop('disabled', true);
 	var newDialogDiv = jQuery(document.createElement('div'));
 	
@@ -2238,8 +2238,8 @@ function showInfoPopup(data)
 {
 	var information = "Line Item No "+data+" InLine Note has some Duplicate Lines please check";
 	var newDialogDiv = jQuery(document.createElement('div'));
-	jQuery(newDialogDiv).html('<span><b style="color:yellow;">'+information+'</b></span>');
-	jQuery(newDialogDiv).dialog({modal: true, width:340, height:170, title:"Information", 
+	jQuery(newDialogDiv).html('<span><b style="color:blue;">'+information+'</b></span>');
+	jQuery(newDialogDiv).dialog({modal: true, width:340, height:150, title:"Information", 
 							buttons: [{height:35,text: "OK",click: function() { 
 								$(this).dialog("close"); }}]}).dialog("open");
 	return true;

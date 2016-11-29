@@ -3982,9 +3982,15 @@ function loadvebilldetails(aJoReleaseDetailsID,veBillID){
 				$("#postDateID").val('');
 				$("#postDateID").val(aPostDate);
 				$("#dueDateID").val('');
+				//added by prasant #1717
+				$("#dueDateID").attr("readonly", "true"); 
 				$("#dueDateID").val(aDueDate);
+				//added by prasant #1717
+				$("#shipDateID").attr("readonly", "true"); 
 				$("#shipDateID").val('');
 				$("#shipDateID").val(aShipDate);
+				//added by prasant #1717
+				$("#vendorDateID").attr("readonly", "true");
 				$("#vendorDateID").val('');
 				$("#vendorDateID").val(aReceiveDate);
 				invoiceFreightAmount = data.freightAmount;
@@ -4104,8 +4110,10 @@ function openvendorinvoicedialog() {
 			/*Added by Jenith for BID#1021
 			if(aVeBillId==0){*/
 				$("#datedID").attr("readonly", "true"); 
+				$("#shipDateID").attr("readonly", "true"); 
 				$("#shipDateID").val('');
 				$("#shipDateID").val(currenDate);
+				$("#vendorDateID").attr("readonly", "true"); 
 				$("#vendorDateID").val('');
 				$("#vendorDateID").val(currenDate);
 				$("#datedID").val('');
@@ -6142,10 +6150,13 @@ function getVendorDetails(joDetailId, vePOID){
 				$("#proNumberID").val(data.trackingNumber);
 				$("#postDateID").val('');
 				$("#postDateID").val(aPostDate);
+				$("#dueDateID").attr("readonly", "true"); 
 				$("#dueDateID").val('');
 				$("#dueDateID").val(aDueDate);
+				$("#shipDateID").attr("readonly", "true"); 
 				$("#shipDateID").val('');
 				$("#shipDateID").val(aShipDate);
+				$("#vendorDateID").attr("readonly", "true"); 
 				$("#vendorDateID").val('');
 				$("#vendorDateID").val(aReceiveDate);
 				if(data.billDate!=null){
@@ -6216,6 +6227,7 @@ function savevendorinvoice(_param,_reason){
 	jQuery( "#jobinvreasondialog" ).dialog("close");
 	
 	//alert(_reason);
+	
 	
 	var aInvoiceDetails = $("#openvendorinvoiceFormID").serialize();
 	/*var aSubTotal = $("#subtotal_ID").val().replace(/\$/g, '');
@@ -7357,6 +7369,7 @@ var transaction = "";
 									 $(CIdivFlag).contents().find("#shiptoaddrhiddenfromdbid").val("");
 									 $(CIdivFlag).contents().find("#shiptomodehiddenfromdbid").val("");
 									 $(CIdivFlag).contents().find("#shiptomodehiddenfromdbid").val(2);
+									 alert("1 is calling...1");
 									 preloadShiptoAddress("#CI_Shipto",'',null,'2','0',$("#jobCustomerName_ID").text(),"");
 									 $("#CI_Shipto").contents().find("#shiptomoderhiddenid").val('2');
 									 boolean = false;
@@ -7431,6 +7444,7 @@ var transaction = "";
 									 $(CIdivFlag).contents().find("#shiptoaddrhiddenfromdbid").val("");
 									 $(CIdivFlag).contents().find("#shiptomodehiddenfromdbid").val("");
 									 $(CIdivFlag).contents().find("#shiptomodehiddenfromdbid").val(2);
+									 alert("2 is calling ...!");
 									 preloadShiptoAddress("#CI_Shipto",'',null,'2','0',$("#jobCustomerName_ID").text(),"");
 									 $("#CI_Shipto").contents().find("#shiptomoderhiddenid").val('2');
 									 boolean = false;

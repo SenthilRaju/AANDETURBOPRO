@@ -36,6 +36,7 @@ import net.sf.jasperreports.engine.JRElement;
 import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JRExpression;
 import net.sf.jasperreports.engine.JRExpressionChunk;
+import net.sf.jasperreports.engine.JRGroup;
 import net.sf.jasperreports.engine.JasperCompileManager;
 import net.sf.jasperreports.engine.JasperExportManager;
 import net.sf.jasperreports.engine.JasperFillManager;
@@ -46,6 +47,7 @@ import net.sf.jasperreports.engine.design.JRDesignElement;
 import net.sf.jasperreports.engine.design.JRDesignQuery;
 import net.sf.jasperreports.engine.design.JRDesignSection;
 import net.sf.jasperreports.engine.design.JRDesignStaticText;
+import net.sf.jasperreports.engine.design.JRDesignSubreport;
 import net.sf.jasperreports.engine.design.JRDesignTextField;
 import net.sf.jasperreports.engine.design.JasperDesign;
 import net.sf.jasperreports.engine.type.HorizontalAlignEnum;
@@ -399,7 +401,7 @@ public class SalesOrderController {
 			@RequestParam(value = "joReleaseDetailID", required = false) Integer joReleaseDetailID,
 			@RequestParam(value = "veBillID", required = false) Integer veBillID,
 			@RequestParam(value = "joMasterID", required = false) Integer jomasterid,
-			/*@RequestParam(value = "vendorInvoiceSerialNumber", required = false) Integer vendorInvoiceSerialNumber,*/
+			@RequestParam(value = "vendorInvoiceSerialNumber", required = false) Integer vendorInvoiceSerialNumber,
 			
 			HttpSession session, HttpServletResponse theResponse,HttpServletRequest theRequest)
 			throws Exception {
@@ -505,6 +507,12 @@ public class SalesOrderController {
 				if(aVepo.getPonumber() != null && aVepo.getPonumber().length() > 0)
 				{
 					Integer countofinvoiceforrelease=jobService.getnumberofInvoiceNumber( aVepo.getPonumber());
+					//added by prasant #1425
+					Integer countNoOfVendorInvoiced=jobService.getnumberofVendorNumber( aVepo.getVePoid());
+					
+					if(countofinvoiceforrelease.intValue()>0)
+						countofinvoiceforrelease=countofinvoiceforrelease+1;
+					
 					countofinvoiceforrelease=countofinvoiceforrelease+1;
 					
 					String newCustomerInvoiceNumber = "";
@@ -515,9 +523,12 @@ public class SalesOrderController {
 					requireCuInvoiceNumberOrNot = sysvariablelist.get(0).getValueLong()==null?0:sysvariablelist.get(0).getValueLong();
 					newCustomerInvoiceNumber = sysvariablelist.get(0).getValueString()==null?"":sysvariablelist.get(0).getValueString();
 					//added by prasant #1425
-					/*if(vendorInvoiceSerialNumber!=null)
+					if(vendorInvoiceSerialNumber==0)
+						vendorInvoiceSerialNumber=countofinvoiceforrelease;
+					
+					if(vendorInvoiceSerialNumber!=null)
 						aVepo.setPonumber(requireCuInvoiceNumberOrNot>0?newCustomerInvoiceNumber:aVepo.getPonumber()+vendorInvoiceSerialNumber);
-					else*/
+					else
 					aVepo.setPonumber(requireCuInvoiceNumberOrNot>0?newCustomerInvoiceNumber:aVepo.getPonumber()+countofinvoiceforrelease);
 					
 					System.out.println("After Checking poNumber---->"+(requireCuInvoiceNumberOrNot>0?newCustomerInvoiceNumber:aVepo.getPonumber()+countofinvoiceforrelease));
@@ -2481,7 +2492,7 @@ public class SalesOrderController {
 					
 					
 					sysvariablelist = userService.getInventorySettingsDetails(addlist);
-					;
+					
 					Boolean removeextlst=false;
 					Boolean removemult=false;
 					if (sysvariablelist.get(0).getValueLong() == 1) {
@@ -2517,8 +2528,13 @@ public class SalesOrderController {
 					jr5h.setX(jr4h.getX()+jr4h.getWidth()+4);
 					JRDesignElement  jr5d=(JRDesignElement) jrb.getElementByKey("column4detail1");
 					jr5d.setX(jr5h.getX());
+					
 					JRDesignElement jr6h=(JRDesignElement) jdb.getElementByKey("column6header");
+					
 					JRDesignElement  jr6d=(JRDesignElement) jrb.getElementByKey("column5detail1");
+					
+					
+					
 					params.put("removeextlst",!removeextlst);
 					params.put("removeMult",!removemult);
 					params.put("printJobName", IncludeJobNameasCoinPDF);
@@ -2540,7 +2556,7 @@ public class SalesOrderController {
 				if(rxadd!=null)
 				{
 				params.put("billName",rxadd.getName());
-				params.put("billAddress1",rxadd.getAddress1());
+				params.put("billAddress1",rxadd.getAddress1());	
 				params.put("billAddress2",rxadd.getAddress2());
 				params.put("billCity",rxadd.getCity());
 				params.put("BilState",rxadd.getState());
@@ -3158,6 +3174,119 @@ public class SalesOrderController {
 				logger.info("Your OS is not support!!");
 			}
 			
+			
+			//added by prasant
+			List<String> addlist=new ArrayList<String>();
+			addlist.add("RemoveLISTcolumnfromInvoicesPDF");
+					addlist.add("RemoveEXTLISTcolumnfromInvoicesPDF");
+					addlist.add("RemoveMULTcolumnfromInvoicesPDF");		 
+					ArrayList<Sysvariable> sysvariablelist=new ArrayList<Sysvariable>();
+								
+					try {
+						sysvariablelist = userService.getInventorySettingsDetails(addlist);
+					} catch (UserException e) {
+						e.printStackTrace();
+					}
+					
+					int i=0;
+					Integer printJobNameStatus=0;
+					
+					if (sysvariablelist.get(0).getValueLong() == 1) {
+						printJobNameStatus = 1;
+					}
+					
+					boolean listColumn=false;
+					boolean ExtListColumn=false;
+					boolean MultColumn=false;
+					
+					for (Sysvariable aSysvariable : sysvariablelist) {
+						if (aSysvariable.getValueLong() != null) {
+							if (aSysvariable.getValueLong() == 0) {
+								if (i == 0) {
+									listColumn = true;
+								} else if (i == 1) {
+									ExtListColumn = true;
+								} else if (i ==2 ) {
+									MultColumn=true;
+								}
+								
+								// break;
+							}
+						}
+						i = i + 1;
+					}	
+					JasperDesign jd = JRXmlLoader.load(path_JRXML);
+					
+			
+			
+				
+				//JasperDesign jd1 = JRXmlLoader.load(absolutePath);
+					
+					jd = JRXmlLoader.load(path_JRXML);
+				
+					//added by prasant #630
+				
+				//jd = JRXmlLoader.load(path_JRXML);
+					
+					JRBand jdb1[]= jd.getAllBands();
+					JRDesignBand jdb=(JRDesignBand)jdb1[1];
+					JRDesignSection jds=(JRDesignSection) jd.getDetailSection();
+					
+					
+					//JRDesignSubreport jrb2=(JRDesignSubreport) jds.getBandsList().get(0).getChildren().get(0);
+					//JRBand jrb=(JRBand) jrb2.ge
+					
+				/*	//Dynamic Speceing Between  columns 
+					JRDesignSection jds1=(JRDesignSection) jd1.getDetailSection();
+					JRBand jrb1=jds1.getBandsList().get(0);*/
+					int width=0;
+				
+					if(!ExtListColumn){
+						width=width+79;
+					
+					}
+					if(!MultColumn){
+						width=width+43;
+					}
+	            //Description Header
+				
+					JRDesignElement jr3h=(JRDesignElement) jdb.getElementByKey("des3Header");
+			       jr3h.setWidth(jr3h.getWidth()+width);
+				//Description Detail
+					//JRDesignElement  jr3d=(JRDesignElement) jrb.getElementByKey("desc3Detail");
+					//jr3d.setWidth(jr3d.getWidth()+width);
+				//List header
+					JRDesignElement jr4h=(JRDesignElement) jdb.getElementByKey("list4Header");
+					jr4h.setX(jr3h.getX()+jr3h.getWidth()+4);
+					
+					//JRDesignElement  jr4d=(JRDesignElement) jrb.getElementByKey("list4Detail");
+					//jr4d.setX(jr4h.getX());
+					
+					
+					JRDesignElement jr5h=(JRDesignElement) jdb.getElementByKey("ExtList5Header");
+					jr5h.setX(jr4h.getX()+jr4h.getWidth()+4);
+					
+					//JRDesignElement  jr5d=(JRDesignElement) jrb.getElementByKey("Extlist5Detail");
+					//jr5d.setX(jr5h.getX());			
+					
+					JRDesignElement jr6h=(JRDesignElement) jdb.getElementByKey("mult6Header");
+					//jr6h.setX(jr5h.getX()+jr5h.getWidth()+8);			
+					//JRDesignElement  jr6d=(JRDesignElement) jrb.getElementByKey("mult6Detail");
+					//jr6h.setX(jr6h.getX());	
+			
+		
+					
+        if(!listColumn && MultColumn && ExtListColumn)
+		         {
+				width=width+20;
+				 jr3h=(JRDesignElement) jdb.getElementByKey("des3Header");
+				jr3h.setWidth(jr3h.getWidth()+width);
+				//Description Detail
+				 // jr3d=(JRDesignElement) jrb.getElementByKey("desc3Detail");
+				//jr3d.setWidth(jr3d.getWidth()+width);
+			       }
+			
+			
 				String invoicefromdate=null;
 				String invoicetodate=null;
 				String yesterDayDate=JobUtil.getYesterdayDateString();
@@ -3181,10 +3310,16 @@ public class SalesOrderController {
 			Blob blob =  objtsusersettings.getCompanyLogo();
 			 imageStream =blob.getBinaryStream();
 			//BufferedImage image = ImageIO.read(imageStream);
-			params.put("HeaderImage", imageStream);
-			params.put("HeaderText",((objtsusersettings.getHeaderText().replaceAll("`and`nbsp;", " ")).replaceAll("`", "")).replaceAll("amp;"," "));
-			params.put("subReportPath", absolutePath);
-			params.put("ShipToPath", ShipToPath);
+			 
+			 //added by prasant 
+			 
+		                params.put("incListCol", listColumn);
+						params.put("incExtListCol", ExtListColumn);
+						params.put("incMultCol", MultColumn);
+		             	params.put("HeaderImage", imageStream);
+		            	params.put("HeaderText",((objtsusersettings.getHeaderText().replaceAll("`and`nbsp;", " ")).replaceAll("`", "")).replaceAll("amp;"," "));
+		            	params.put("subReportPath", absolutePath);
+		             	params.put("ShipToPath", ShipToPath);
 			
 			String remitTo = ( objtsusersettings.getRemitToDescription() !=null && ! objtsusersettings.getRemitToDescription().equals("") ? objtsusersettings.getRemitToDescription() +",": "" )
 					+( objtsusersettings.getRemitToAddress1() !=null && !objtsusersettings.getRemitToAddress1().equals("") ?objtsusersettings.getRemitToAddress1()+"," : "" )
@@ -3197,7 +3332,7 @@ public class SalesOrderController {
 			theResponse.setContentType("application/pdf");
 			
 			connection = con.getConnection();
-			JasperDesign jd  = JRXmlLoader.load(path_JRXML);
+			 jd  = JRXmlLoader.load(path_JRXML);
 		   // String query ="SELECT joRelease.ReleaseType, tsUserLogin.Initials AS SalesRep,(CASE WHEN cuInvoiceDetail.PriceMultiplier IS NULL THEN (CASE WHEN cuInvoiceDetail.UnitCost IS NULL THEN 0 ELSE cuInvoiceDetail.UnitCost END *cuInvoiceDetail.QuantityBilled) ELSE ((CASE WHEN cuInvoiceDetail.UnitCost IS NULL THEN 0 ELSE cuInvoiceDetail.UnitCost END )*cuInvoiceDetail.QuantityBilled*cuInvoiceDetail.PriceMultiplier )END ) AS total, veShipVia.Description AS ShippedVia, joMaster.Description AS Job, cuInvoice.*, tsUserLogin.Initials,cuTerms.Description AS termsdesc,cuInvoice.ShipToMode AS ShipToMode, (CASE WHEN cuInvoice.ShipToMode=0 THEN prWarehouse.Description ELSE      (CASE WHEN cuInvoice.ShipToMode=1 THEN (SELECT rxM.Name FROM rxAddress rxA,rxMaster rxM WHERE rxM.rxMasterId =rxA.rxMasterId AND rxA.rxMasterId=cuInvoice.rxCustomerID AND isShipTo = 1 GROUP BY rxM.rxMasterId) ELSE         (CASE WHEN cuInvoice.ShipToMode=2 THEN (SELECT rxM.Name FROM rxMaster rxM WHERE rxM.rxMasterId =cuInvoice.rxCustomerID) ELSE            (CASE WHEN cuInvoice.ShipToMode=3 THEN (SELECT rxA.Name FROM rxAddress rxA WHERE rxA.rxAddressId = cuInvoice.rxShipToAddressID)ELSE \"\" END ) END) END) END) AS shiptoName, (CASE WHEN cuInvoice.ShipToMode=0 THEN prWarehouse.Address1 ELSE     (CASE WHEN cuInvoice.ShipToMode=1 THEN (SELECT rxA.address1 FROM rxAddress rxA,rxMaster rxM WHERE rxM.rxMasterId =rxA.rxMasterId AND rxA.rxMasterId=cuInvoice.rxCustomerID AND isShipTo = 1 GROUP BY rxA.rxMasterId)  ELSE          (CASE WHEN cuInvoice.ShipToMode=2 THEN (joMaster.LocationAddress1) ELSE             (CASE WHEN cuInvoice.ShipToMode=3 THEN (SELECT rxA.Address1 FROM rxAddress rxA WHERE rxA.rxAddressId = cuInvoice.rxShipToAddressID)ELSE \"\" END ) END)  END) END) AS shiptoAddress1, (CASE WHEN cuInvoice.ShipToMode=0 THEN prWarehouse.Address2 ELSE (CASE WHEN cuInvoice.ShipToMode=1 THEN (SELECT rxA.address2 FROM rxAddress rxA,rxMaster rxM WHERE rxM.rxMasterId =rxA.rxMasterId AND rxA.rxMasterId=cuInvoice.rxCustomerID AND isShipTo = 1 GROUP BY rxA.rxMasterId) ELSE  (CASE WHEN cuInvoice.ShipToMode=2 THEN (joMaster.LocationAddress2) ELSE (CASE WHEN cuInvoice.ShipToMode=3 THEN (SELECT rxA.Address2 FROM rxAddress rxA WHERE rxA.rxAddressId = cuInvoice.rxShipToAddressID)ELSE \"\" END ) END)  END) END) AS shiptoAddress2,   (CASE WHEN cuInvoice.ShipToMode=0 THEN prWarehouse.City ELSE (CASE WHEN cuInvoice.ShipToMode=1 THEN (SELECT rxA.city FROM rxAddress rxA,rxMaster rxM WHERE rxM.rxMasterId =rxA.rxMasterId AND rxA.rxMasterId=cuInvoice.rxCustomerID AND isShipTo = 1 GROUP BY rxA.rxMasterId)   ELSE  (CASE WHEN cuInvoice.ShipToMode=2 THEN (joMaster.LocationCity) ELSE (CASE WHEN cuInvoice.ShipToMode=3 THEN (SELECT rxA.City FROM rxAddress rxA WHERE rxA.rxAddressId = cuInvoice.rxShipToAddressID)ELSE \"\" END ) END) END) END) AS shiptoCity,  (CASE WHEN cuInvoice.ShipToMode=0 THEN prWarehouse.State ELSE (CASE WHEN cuInvoice.ShipToMode=1 THEN (SELECT rxA.state FROM rxAddress rxA,rxMaster rxM WHERE rxM.rxMasterId =rxA.rxMasterId AND rxA.rxMasterId=cuInvoice.rxCustomerID AND isShipTo = 1 GROUP BY rxA.rxMasterId)  ELSE  (CASE WHEN cuInvoice.ShipToMode=2 THEN (joMaster.LocationState) ELSE (CASE WHEN cuInvoice.ShipToMode=3 THEN (SELECT rxA.State FROM rxAddress rxA WHERE rxA.rxAddressId = cuInvoice.rxShipToAddressID)ELSE \"\" END ) END) END) END) AS shiptoState, (CASE WHEN cuInvoice.ShipToMode=0 THEN prWarehouse.Zip ELSE  (CASE WHEN cuInvoice.ShipToMode=1 THEN (SELECT rxA.zip FROM rxAddress rxA,rxMaster rxM WHERE rxM.rxMasterId =rxA.rxMasterId AND rxA.rxMasterId=cuInvoice.rxCustomerID AND isShipTo = 1 GROUP BY rxA.rxMasterId) ELSE   (CASE WHEN cuInvoice.ShipToMode=2 THEN (joMaster.LocationZip) ELSE  (CASE WHEN cuInvoice.ShipToMode=3 THEN (SELECT rxA.Zip FROM rxAddress rxA WHERE rxA.rxAddressId = cuInvoice.rxShipToAddressID)ELSE \"\" END ) END) END) END) AS shiptoZip,  (SELECT rxMaster.Name FROM rxAddress LEFT JOIN rxMaster ON rxAddress.rxMasterID = rxMaster.rxMasterID WHERE rxAddress.rxMasterId =cuInvoice.rxBillToID AND IsMailing = 1 GROUP BY rxAddress.rxMasterID)  AS billtoName, (SELECT rxAddress.address1 FROM rxAddress LEFT JOIN rxMaster ON rxAddress.rxMasterID = rxMaster.rxMasterID WHERE rxAddress.rxMasterId =cuInvoice.rxBillToID AND IsMailing = 1 GROUP BY rxAddress.rxMasterID) AS billtoAddress1, (SELECT rxAddress.address2 FROM rxAddress LEFT JOIN rxMaster ON rxAddress.rxMasterID = rxMaster.rxMasterID WHERE rxAddress.rxMasterId =cuInvoice.rxBillToID AND IsMailing = 1 GROUP BY rxAddress.rxMasterID) AS billtoAddress2, (SELECT rxAddress.city FROM rxAddress LEFT JOIN rxMaster ON rxAddress.rxMasterID = rxMaster.rxMasterID WHERE rxAddress.rxMasterId =cuInvoice.rxBillToID AND IsMailing = 1 GROUP BY rxAddress.rxMasterID) AS billtoCity, (SELECT rxAddress.state FROM rxAddress LEFT JOIN rxMaster ON rxAddress.rxMasterID = rxMaster.rxMasterID WHERE rxAddress.rxMasterId =cuInvoice.rxBillToID AND IsMailing = 1 GROUP BY rxAddress.rxMasterID) AS billtoState, (SELECT rxAddress.zip FROM rxAddress LEFT JOIN rxMaster ON rxAddress.rxMasterID = rxMaster.rxMasterID WHERE rxAddress.rxMasterId =cuInvoice.rxBillToID AND IsMailing = 1 GROUP BY rxAddress.rxMasterID) AS billtoZip,  (SELECT headertext FROM tsUserSetting) AS header, (SELECT companylogo FROM tsUserSetting) AS logo FROM (joMaster RIGHT JOIN joRelease ON joMaster.joMasterID = joRelease.joMasterID LEFT JOIN joReleaseDetail ON joReleaseDetail.joReleaseID=joRelease.joReleaseID) RIGHT JOIN (veShipVia RIGHT JOIN (cuInvoice LEFT JOIN tsUserLogin ON cuInvoice.cuAssignmentID0 = tsUserLogin.UserLoginID) ON veShipVia.veShipViaID = cuInvoice.veShipViaID) ON joReleaseDetail.joReleaseDetailID = cuInvoice.joReleaseDetailID LEFT JOIN cuInvoiceDetail ON cuInvoiceDetail.cuInvoiceID = cuInvoice.cuInvoiceID LEFT JOIN tsUserLogin ON tsUserLogin.UserLoginID = cuInvoice.cuAssignmentID0 LEFT JOIN cuTerms ON cuTerms.cuTermsID = cuInvoice.cuTermsID  LEFT JOIN prWarehouse ON prWarehouse.prWarehouseID=cuInvoice.rxShipToAddressID LEFT JOIN rxMaster ON rxMaster.rxMasterID=cuInvoice.rxCustomerID LEFT JOIN rxAddress ON rxAddress.rxMasterId=cuInvoice.rxCustomerID";
 		  
 		    String query ="SELECT (CASE WHEN cuInvoiceDetail.PriceMultiplier IS NULL THEN (CASE WHEN cuInvoiceDetail.UnitCost IS NULL THEN 0 ELSE cuInvoiceDetail.UnitCost END *cuInvoiceDetail.QuantityBilled) ELSE ((CASE WHEN cuInvoiceDetail.UnitCost IS NULL THEN 0 ELSE cuInvoiceDetail.UnitCost END )*cuInvoiceDetail.QuantityBilled*cuInvoiceDetail.PriceMultiplier )END ) AS total,"+
@@ -3366,8 +3501,9 @@ if(batchInvoiceCuID.length()>0 && !batchInvoiceCuID.equals("0")){
 	List<String> addlist=new ArrayList<String>();
 		
 		addlist.add("IncludJobNamein_co_inshiptoaddressonPDForder");
-		
-		 
+		addlist.add("RemoveLISTcolumnfromInvoicesPDF");
+		addlist.add("RemoveEXTLISTcolumnfromInvoicesPDF");
+		addlist.add("RemoveMULTcolumnfromInvoicesPDF");		 
 		ArrayList<Sysvariable> sysvariablelist=new ArrayList<Sysvariable>();
 					
 		try {
@@ -3383,19 +3519,26 @@ if(batchInvoiceCuID.length()>0 && !batchInvoiceCuID.equals("0")){
 			printJobNameStatus = 1;
 		}
 		
-		/*for (Sysvariable aSysvariable : sysvariablelist) {
+		boolean listColumn=false;
+		boolean ExtListColumn=false;
+		boolean MultColumn=false;
+		
+		for (Sysvariable aSysvariable : sysvariablelist) {
 			if (aSysvariable.getValueLong() != null) {
-				if (aSysvariable.getValueLong() == 1) {
-					if (i == 0) {
-						printJobNameStatus=1;
+				if (aSysvariable.getValueLong() == 0) {
+					if (i == 1) {
+						listColumn = true;
+					} else if (i == 2) {
+						ExtListColumn = true;
+					} else if (i == 3) {
+						MultColumn=true;
 					}
-										}
+					
+					// break;
+				}
 			}
 			i = i + 1;
-		}*/
-		
-		
-		
+		}		
 		
 		try {
 			HashMap<String, Object> params = new HashMap<String, Object>();
@@ -3406,6 +3549,79 @@ if(batchInvoiceCuID.length()>0 && !batchInvoiceCuID.equals("0")){
 				//			"/resources/jasper_reports/CuInvoiceReportFinal.jrxml");
 							"/resources/jasper_reports/CuInvoiceReportFinalNew.jrxml");
 			con = itspdfService.connectionForJasper();
+			
+    JasperDesign jd = JRXmlLoader.load(path_JRXML);
+			
+			
+			
+			//added by prasant #630
+			
+			jd = JRXmlLoader.load(path_JRXML);
+			JRDesignBand jdb=(JRDesignBand) jd.getColumnHeader();
+			JRDesignSection jds=(JRDesignSection) jd.getDetailSection();
+			JRBand jrb=jds.getBandsList().get(0);
+			int width=0;
+		
+			
+			
+			
+			if(!ExtListColumn){
+				width=width+79;
+			
+			}
+			if(!MultColumn){
+				width=width+43;
+			}
+			
+		
+			
+            //Description Header
+		
+			JRDesignElement jr3h=(JRDesignElement) jdb.getElementByKey("des3Header");
+			jr3h.setWidth(jr3h.getWidth()+width);
+			//Description Detail
+			JRDesignElement  jr3d=(JRDesignElement) jrb.getElementByKey("desc3Detail");
+			jr3d.setWidth(jr3d.getWidth()+width);
+			//List header
+			JRDesignElement jr4h=(JRDesignElement) jdb.getElementByKey("list4Header");
+			jr4h.setX(jr3h.getX()+jr3h.getWidth()+4);
+			
+			JRDesignElement  jr4d=(JRDesignElement) jrb.getElementByKey("list4Detail");
+			jr4d.setX(jr4h.getX());
+			
+			
+			JRDesignElement jr5h=(JRDesignElement) jdb.getElementByKey("ExtList5Header");
+			jr5h.setX(jr4h.getX()+jr4h.getWidth()+4);
+			
+			JRDesignElement  jr5d=(JRDesignElement) jrb.getElementByKey("Extlist5Detail");
+			jr5d.setX(jr5h.getX());			
+			
+			
+			
+			
+			/*JRDesignElement  jr5l=(JRDesignElement) jrb.getElementByKey("ExtList5Line");
+			jr5d.setX(jr5h.getX());*/
+			
+			JRDesignElement jr6h=(JRDesignElement) jdb.getElementByKey("mult6Header");
+			//jr6h.setX(jr5h.getX()+jr5h.getWidth()+8);			
+			JRDesignElement  jr6d=(JRDesignElement) jrb.getElementByKey("mult6Detail");
+			//jr6h.setX(jr6h.getX());	
+			
+			
+			if(!listColumn && MultColumn && ExtListColumn)
+			{
+				width=width+30;
+				 jr3h=(JRDesignElement) jdb.getElementByKey("des3Header");
+				jr3h.setWidth(jr3h.getWidth()+width);
+				//Description Detail
+				  jr3d=(JRDesignElement) jrb.getElementByKey("desc3Detail");
+				jr3d.setWidth(jr3d.getWidth()+width);
+			}
+			
+			
+			
+			
+			
 			Cuinvoice aCuinvoice = new Cuinvoice();
 			try {
 				aCuinvoice = jobService.getSingleCuInvoiceObj(CuInvoice);
@@ -3491,7 +3707,12 @@ if(batchInvoiceCuID.length()>0 && !batchInvoiceCuID.equals("0")){
 			params.put("billtoZip", BillToZip);
 			params.put("CuInvoice", CuInvoice);
 			
-			params.put("printJobName", printJobNameStatus);
+			    params.put("printJobName", printJobNameStatus);
+			    //added by prasant #630
+		        params.put("incListCol", listColumn);
+				params.put("incExtListCol", ExtListColumn);
+				params.put("incMultCol", MultColumn);
+
 			
 			
 			if(aRxAddressShipto!=null)
@@ -3513,7 +3734,14 @@ if(batchInvoiceCuID.length()>0 && !batchInvoiceCuID.equals("0")){
 				params.put("shiptoZip","");
 			}
 		
-			ServletOutputStream out = theResponse.getOutputStream();
+			connection = con.getConnection();
+			
+			String filename = "CustomerInvoice.pdf";
+			ReportService.dynamicReportCall(theResponse,params,"pdf",jd,filename,connection);
+		
+			
+			
+		/*	ServletOutputStream out = theResponse.getOutputStream();
 			theResponse.setHeader("Content-Disposition", "inline");
 			theResponse.setContentType("application/pdf");
 			connection = con.getConnection();
@@ -3525,7 +3753,7 @@ if(batchInvoiceCuID.length()>0 && !batchInvoiceCuID.equals("0")){
 			JasperExportManager.exportReportToPdfStream(print, baos);
 			out.write(baos.toByteArray());
 			out.flush();
-			out.close();
+			out.close();*/
 		} catch (IOException e) {
 			logger.error(e.getMessage());
 			theResponse.sendError(500, e.getMessage());
@@ -3581,7 +3809,9 @@ if(batchInvoiceCuID.length()>0 && !batchInvoiceCuID.equals("0")){
 			List<String> addlist=new ArrayList<String>();
 			
 			addlist.add("IncludJobNamein_co_inshiptoaddressonPDForder");
-			
+			addlist.add("RemoveLISTcolumnfromInvoicesPDF");
+			addlist.add("RemoveEXTLISTcolumnfromInvoicesPDF");
+			addlist.add("RemoveMULTcolumnfromInvoicesPDF");			
 			 
 			ArrayList<Sysvariable> sysvariablelist=new ArrayList<Sysvariable>();
 						
@@ -3597,6 +3827,76 @@ if(batchInvoiceCuID.length()>0 && !batchInvoiceCuID.equals("0")){
 			if (sysvariablelist.get(0).getValueLong() == 1) {
 				printJobNameStatus = 1;
 			}
+			
+			boolean listColumn=false;
+			boolean ExtListColumn=false;
+			boolean MultColumn=false;
+			for (Sysvariable aSysvariable : sysvariablelist) {
+				if (aSysvariable.getValueLong() != null) {
+					if (aSysvariable.getValueLong() == 0) {
+						if (i == 1) {
+							listColumn = true;
+						} else if (i == 2) {
+							ExtListColumn = true;
+						} else if (i == 3) {
+							MultColumn=true;
+						}
+						
+						// break;
+					}
+				}
+				i = i + 1;
+			}
+			
+			
+
+			//added by prasant #630
+			jd = JRXmlLoader.load(path_JRXML);
+			JRDesignBand jdb=(JRDesignBand) jd.getColumnHeader();
+			JRDesignSection jds=(JRDesignSection) jd.getDetailSection();
+			JRBand jrb=jds.getBandsList().get(0);
+			int width=0;
+		
+			if(!ExtListColumn){
+				width=width+79;
+			}
+			if(!MultColumn){
+				width=width+43;
+			}
+            //Description Header
+			JRDesignElement jr3h=(JRDesignElement) jdb.getElementByKey("des3Header");
+			jr3h.setWidth(jr3h.getWidth()+width);
+			//Description Detail
+			JRDesignElement  jr3d=(JRDesignElement) jrb.getElementByKey("desc3Detail");
+			jr3d.setWidth(jr3d.getWidth()+width);
+			//List header
+			JRDesignElement jr4h=(JRDesignElement) jdb.getElementByKey("list4Header");
+			jr4h.setX(jr3h.getX()+jr3h.getWidth()+4);
+			
+			JRDesignElement  jr4d=(JRDesignElement) jrb.getElementByKey("list4Detail");
+			jr4d.setX(jr4h.getX());			
+			
+			JRDesignElement jr5h=(JRDesignElement) jdb.getElementByKey("ExtList5Header");
+			jr5h.setX(jr4h.getX()+jr4h.getWidth()+4);
+			
+			JRDesignElement  jr5d=(JRDesignElement) jrb.getElementByKey("Extlist5Detail");
+			jr5d.setX(jr5h.getX());		
+				
+			JRDesignElement jr6h=(JRDesignElement) jdb.getElementByKey("mult6Header");
+						
+			JRDesignElement  jr6d=(JRDesignElement) jrb.getElementByKey("mult6Detail");
+			
+			
+			
+		if(!listColumn && MultColumn && ExtListColumn)
+	          {
+		width=width+30;
+		 jr3h=(JRDesignElement) jdb.getElementByKey("des3Header");
+		jr3h.setWidth(jr3h.getWidth()+width);
+		//Description Detail
+		  jr3d=(JRDesignElement) jrb.getElementByKey("desc3Detail");
+		jr3d.setWidth(jr3d.getWidth()+width);
+	}	
 			
 			
 			
@@ -3669,6 +3969,12 @@ if(batchInvoiceCuID.length()>0 && !batchInvoiceCuID.equals("0")){
 				}
 				
 			}
+			
+		           params.put("incListCol", listColumn);
+					params.put("incExtListCol", ExtListColumn);
+					params.put("incMultCol", MultColumn);
+			
+			
 			params.put("billtoName", BillToName);
 			//added by prasant Bartos 3.0.67 Issue Solve
 			params.put("printJobName", printJobNameStatus);
@@ -4189,19 +4495,10 @@ if(batchInvoiceCuID.length()>0 && !batchInvoiceCuID.equals("0")){
 			List<String> addlist=new ArrayList<String>();
 			
 			addlist.add("IncludJobNamein_co_inshiptoaddressonPDForder");
-			addlist.add("RemoveLISTcolumnfromSalesOrderPDF");
-			addlist.add("RemoveEXTLISTcolumnfromSalesOrderPDF");
-			addlist.add("RemoveMULTcolumnfromSalesOrderPDF");
-			
-			
-			//RemoveEXTLISTcolumnfromSalesOrderPDF(2014002019),
-			//RemoveMULTcolumnfromSalesOrderPDF(2014002020),
-			//added by prasant 2016010026 added date date month and year separated with 0(zero)
-			//RemoveLISTcolumnfromSalesOrderPDF(2016010026),
-			
-			
-			
-			
+			addlist.add("RemoveLISTcolumnfromInvoicesPDF");
+			addlist.add("RemoveEXTLISTcolumnfromInvoicesPDF");
+			addlist.add("RemoveMULTcolumnfromInvoicesPDF");			
+
 			ArrayList<Sysvariable> sysvariablelist=new ArrayList<Sysvariable>();
 						
 			try {
@@ -4214,8 +4511,7 @@ if(batchInvoiceCuID.length()>0 && !batchInvoiceCuID.equals("0")){
 			if (sysvariablelist.get(0).getValueLong() == 1) {
 				printJobNameascoinPdf = 1;
 		}
-			
-			
+	
 			int i=0;
 			boolean listColumn=false;
 			boolean ExtListColumn=false;
@@ -4223,7 +4519,7 @@ if(batchInvoiceCuID.length()>0 && !batchInvoiceCuID.equals("0")){
 			
 			for (Sysvariable aSysvariable : sysvariablelist) {
 				if (aSysvariable.getValueLong() != null) {
-					if (aSysvariable.getValueLong() == 1) {
+					if (aSysvariable.getValueLong() == 0) {
 						if (i == 1) {
 							listColumn = true;
 						} else if (i == 2) {
@@ -4238,7 +4534,7 @@ if(batchInvoiceCuID.length()>0 && !batchInvoiceCuID.equals("0")){
 				i = i + 1;
 			}
 			
-			
+
 			HashMap<String, Object> params = new HashMap<String, Object>();
 			String path_JRXML = theRequest
 					.getSession()
@@ -4246,7 +4542,65 @@ if(batchInvoiceCuID.length()>0 && !batchInvoiceCuID.equals("0")){
 					.getRealPath(
 							"/resources/jasper_reports/CuInvoiceReportFinalNew.jrxml");
 			
+			 
+
+			//added by prasant #630
+		
 			jd = JRXmlLoader.load(path_JRXML);
+			JRDesignBand jdb=(JRDesignBand) jd.getColumnHeader();
+			JRDesignSection jds=(JRDesignSection) jd.getDetailSection();
+			JRBand jrb=jds.getBandsList().get(0);
+			int width=0;
+			
+			if(!ExtListColumn){
+				width=width+79;
+				
+			}
+			if(!MultColumn){
+				width=width+43;
+			}
+            //Description Header
+		
+			JRDesignElement jr3h=(JRDesignElement) jdb.getElementByKey("des3Header");
+			jr3h.setWidth(jr3h.getWidth()+width);
+			//Description Detail
+			JRDesignElement  jr3d=(JRDesignElement) jrb.getElementByKey("desc3Detail");
+			jr3d.setWidth(jr3d.getWidth()+width);
+			//List header
+			JRDesignElement jr4h=(JRDesignElement) jdb.getElementByKey("list4Header");
+			jr4h.setX(jr3h.getX()+jr3h.getWidth()+4);
+			
+			JRDesignElement  jr4d=(JRDesignElement) jrb.getElementByKey("list4Detail");
+			jr4d.setX(jr4h.getX());
+			
+			
+			JRDesignElement jr5h=(JRDesignElement) jdb.getElementByKey("ExtList5Header");
+			jr5h.setX(jr4h.getX()+jr4h.getWidth()+4);
+			
+			JRDesignElement  jr5d=(JRDesignElement) jrb.getElementByKey("Extlist5Detail");
+			jr5d.setX(jr5h.getX());			
+
+			
+			JRDesignElement jr6h=(JRDesignElement) jdb.getElementByKey("mult6Header");
+			//jr6h.setX(jr5h.getX()+jr5h.getWidth()+8);			
+			JRDesignElement  jr6d=(JRDesignElement) jrb.getElementByKey("mult6Detail");
+			//jr6h.setX(jr6h.getX());	
+			
+			
+			
+	if(!listColumn && MultColumn && ExtListColumn)
+	       {
+		width=width+30;
+		 jr3h=(JRDesignElement) jdb.getElementByKey("des3Header");
+		jr3h.setWidth(jr3h.getWidth()+width);
+		//Description Detail
+		  jr3d=(JRDesignElement) jrb.getElementByKey("desc3Detail");
+		jr3d.setWidth(jr3d.getWidth()+width);
+	       }
+			
+			
+			
+			
 			con = itspdfService.connectionForJasper();
 			Cuinvoice aCuinvoice = new Cuinvoice();
 			try {
@@ -4451,7 +4805,10 @@ if(batchInvoiceCuID.length()>0 && !batchInvoiceCuID.equals("0")){
 			}
 			ReportService.dynamicReportCall(theResponse,params,"pdf",jd,"CuInvoice.pdf",connection);*/
 			
-			ServletOutputStream out = theResponse.getOutputStream();
+			String filename = "CustomerInvoice.pdf";
+			ReportService.dynamicReportCall(theResponse,params,"pdf",jd,filename,connection);
+			
+		/*	ServletOutputStream out = theResponse.getOutputStream();
 			theResponse.setHeader("Content-Disposition", "inline");
 			theResponse.setContentType("application/pdf");
 			connection = con.getConnection();
@@ -4463,7 +4820,7 @@ if(batchInvoiceCuID.length()>0 && !batchInvoiceCuID.equals("0")){
 			JasperExportManager.exportReportToPdfStream(print, baos);
 			out.write(baos.toByteArray());
 			out.flush();
-			out.close();
+			out.close();*/
 		} catch (IOException e) {
 			logger.error(e.getMessage());
 			theResponse.sendError(500, e.getMessage());
@@ -5033,6 +5390,27 @@ if(batchInvoiceCuID.length()>0 && !batchInvoiceCuID.equals("0")){
 
 		return aResponse;
 	}
+	
+	@RequestMapping(value = "/updateShipToIDforThisCustomer", method = RequestMethod.POST)
+	public @ResponseBody boolean updateShipToIDforThisCustomer(
+			@RequestParam(value = "cuInvoiceId", required = false) Integer cuInvoiceID,
+			@RequestParam(value = "ShipToID", required = false) Integer ShipToID,
+			HttpSession session, HttpServletResponse theResponse,HttpServletRequest theRequest)
+			throws JobException {
+		Cuinvoice aCuinvoice =new Cuinvoice();
+		try{
+			if(cuInvoiceID!=null && ShipToID!=null)
+		return  jobService.updateShipToIDforThisCustomer(cuInvoiceID,ShipToID);
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		return true;
+	}
+	
+	
+	
+	
+	
 	@RequestMapping(value = "/getcuInvoice", method = RequestMethod.POST)
 	public @ResponseBody Cuinvoice getInvoiceData(
 			@RequestParam(value = "cuInvoiceId", required = false) Integer cuInvoiceID,

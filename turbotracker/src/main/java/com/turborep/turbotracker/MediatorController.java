@@ -708,8 +708,10 @@ public class MediatorController {
 				
 				
 				//added  by prasant #630
-				addlist.add("RemoveLISTcolumnfromSalesOrderPDF");
+				addlist.add("RemoveLISTcolumnfromInvoicesPDF");//112
 				
+				addlist.add("RemoveMULTcolumnfromInvoicesPDF");//113
+				addlist.add("RemoveEXTLISTcolumnfromInvoicesPDF");//114
 				
 				
 				ArrayList<Sysvariable> sysvariablelist= userService.getInventorySettingsDetails(addlist);
@@ -1149,7 +1151,15 @@ public class MediatorController {
 						logger.info(i+" theSysvariable.getValueString() = "+theSysvariable.getValueLong());
 						model.addAttribute("chk_cusRemListfmSalOrdpdfYes", theSysvariable.getValueLong());
 					}
-					
+					else if(i==113){
+						logger.info(i+" theSysvariable.getValueString() = "+theSysvariable.getValueLong());
+						model.addAttribute("chk_cusRemMultfmallInvoicepdfYes", theSysvariable.getValueLong());
+					}
+					else if(i==114){
+						logger.info(i+" theSysvariable.getValueString() = "+theSysvariable.getValueLong());
+						model.addAttribute("chk_cusRemExtfmallInvoicepdfYes", theSysvariable.getValueLong());
+					}
+				
 					
 					i=i+1;
 				}

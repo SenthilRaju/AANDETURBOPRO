@@ -5864,29 +5864,39 @@ public Integer getTransactionDailogStatus(Integer vepoID) {
 		List<Vepodetail> vepodetails = null;
 		List<veBillHistory>vebillHistorys=null;
 		String Qry="from Vepodetail where vePoid = "+vepoID;
-		String Qry2="from veBillHistory where vePOID ="+vepoID;
+		String Qry2="from veBillHistory where vePOID = "+vepoID;
 		try {
 			// Retrieve session from Hibernate
-			aSession = itsSessionFactory.openSession();			
+			aSession = itsSessionFactory.openSession();		
+			 Iterator<Vepodetail>vepodetails_iterator=null;
+			 Iterator<veBillHistory>vebillHistorys_iterator=null;
 			// Create a Hibernate query (HQL)
 			Query query = aSession.createQuery(Qry);
 			Query query2= aSession.createQuery(Qry2);
 			// Retrieve all
 			vepodetails = query.list();
 			vebillHistorys=query2.list();
-		   Iterator<Vepodetail>vepodetails_iterator=vepodetails.iterator();
-		   Iterator<veBillHistory>vebillHistorys_iterator=vebillHistorys.iterator();
+			
+			if (vepodetails!=null)
+		    vepodetails_iterator=vepodetails.iterator();
+			if (vebillHistorys!=null)
+	        vebillHistorys_iterator=vebillHistorys.iterator();
 		 //checking total number of Quantity purchased 
+			if(vepodetails_iterator!=null){
 			while(vepodetails_iterator.hasNext())
 			{
 				Vepodetail vepoDetail=vepodetails_iterator.next();
 				vePODetails_Qty=vePODetails_Qty.add(vepoDetail.getQuantityOrdered());				 
 			}
-			//checking total number of QuantityInvoiced 
+			}
+			
+			//checking total number of QuantityInvoiced
+			if(vebillHistorys_iterator!=null){
 			while(vebillHistorys_iterator.hasNext())
 			{				
-				veBillHistory veBillhistory=vebillHistorys_iterator.next();
-				veBillDetais_Qtys=veBillDetais_Qtys.add(veBillhistory.getQuantityInvoiced());				
+				veBillHistory veBillhistory1=vebillHistorys_iterator.next();
+				veBillDetais_Qtys=veBillDetais_Qtys.add(veBillhistory1.getQuantityInvoiced());				
+			}
 			}
 			if (vePODetails_Qty.compareTo(veBillDetais_Qtys)!=0)
 				status=1;

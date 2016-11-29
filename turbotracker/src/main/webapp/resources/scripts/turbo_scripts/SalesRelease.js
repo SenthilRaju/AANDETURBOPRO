@@ -333,11 +333,12 @@ function PreloadDataInvoice(CIdivFlag){
 	}
 	var releaseType = grid.jqGrid('getCell', SelectedRow, 'type');
 	var jobNumber = $('.jobHeader_JobNumber').val();
-	
+	if(vendorInvoiceSerialNumber==null)
+		vendorInvoiceSerialNumber="0";
 	$.ajax({
 		url: "./salesOrderController/getPreLoadData",
 		type: "POST",
-		data : "&cuSOID="+cuSOID+"&rxMasterID="+rxMasterID+'&vePOID='+vePOID+'&jobNumber='+jobNumber+"&joReleaseDetailID="+joReleaseDetailID+"&veBillID="+veBillID+"&joMasterID="+$("#joMaster_ID").text(),
+		data : "&cuSOID="+cuSOID+"&rxMasterID="+rxMasterID+'&vePOID='+vePOID+'&jobNumber='+jobNumber+"&joReleaseDetailID="+joReleaseDetailID+"&veBillID="+veBillID+"&joMasterID="+$("#joMaster_ID").text()+"&vendorInvoiceSerialNumber="+vendorInvoiceSerialNumber,
 		success: function(data) {
 			$("#CI_taxsubtotal").val("");
 			if(data.vepo !== null){
