@@ -1280,10 +1280,13 @@ l.			 * Table :veBillDetail
 			/**--------------------------------------*/
 			
 			aTransaction.commit();
-			theJoReleaseDetail.setJoReleaseDetailId(aVebill.getJoReleaseDetailId());
-			updateJoReleaseDetail(theJoReleaseDetail);
+			//TPUsage NullPointerException Fix Simon
+			if(theJoReleaseDetail!=null){
+				theJoReleaseDetail.setJoReleaseDetailId(aVebill.getJoReleaseDetailId());
+				updateJoReleaseDetail(theJoReleaseDetail);
+			}
 			
-			if(isUpdate.equalsIgnoreCase("yes")){
+			if(isUpdate!=null && isUpdate.equalsIgnoreCase("yes")){
 				updateVepoStatus(theVebill.getVePoid(),2);
 			}else{
 				updateVepoStatus(theVebill.getVePoid(),1);

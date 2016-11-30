@@ -4217,7 +4217,8 @@ public class JobQuoteFormController {
 						JsonObject obj = ele1.getAsJsonObject();
 						joQuoteDetailMstr ajoQuoteDetailMstr=new joQuoteDetailMstr();
 						Integer joQuoteDetailMstrID=null;
-						if(obj.get("joQuoteDetailMstrID")!=null && obj.get("joQuoteDetailMstrID").getAsString()!=""&& obj.get("joQuoteDetailMstrID").getAsString().length()>0){
+						//UAT Fix
+						if(obj.get("joQuoteDetailMstrID")!=null && obj.get("joQuoteDetailMstrID").getAsString().trim()!="" && obj.get("joQuoteDetailMstrID").getAsString().length()>0){
 							joQuoteDetailMstrID=obj.get("joQuoteDetailMstrID").getAsInt();
 						}
 						Integer type=obj.get("type").getAsInt();
