@@ -1666,7 +1666,7 @@ public class UserListController {
 			aTpusage.setDescription(description);
 			aTpusage.setUserID(aUserBean.getUserId());
 			aTpusage.setDatetime(new Date());
-			aTpusage.setJobNumber(jobNumber);
+			//aTpusage.setJobNumber(jobNumber);
 			if(objtsusersettings.getItslogYN()==1){
 		    itsUserService.createTpUsage(aTpusage);
 			}
