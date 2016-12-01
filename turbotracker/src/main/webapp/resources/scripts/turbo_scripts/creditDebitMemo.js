@@ -353,7 +353,9 @@ function saveMemoDetails()
    			});
 			
 	
-}
+}   //added by prasant #656
+	$("#customerID").prop('readonly',true);
+	
 }
 
 function editMemoDetails()
@@ -488,7 +490,7 @@ jQuery(function() {
 
 function createNewcreditdebitmemo()
 {
-	
+	alert("it is calling..!");
 	document.getElementById("creditdebitmemoformID").reset();
 	
 	$("#addcreditDebitMemosDlg").dialog("open");
@@ -503,6 +505,8 @@ function createNewcreditdebitmemo()
 	$("#checkyesID").attr("disabled",true);
 	$("#savememo").show()
 	$("#editmemo").css("display","none");
+	$("#customerID").prop('readonly',false);
+
 	
 }
 

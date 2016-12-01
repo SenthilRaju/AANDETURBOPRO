@@ -3220,30 +3220,30 @@ public class SalesOrderController {
 			
 			
 				
-				//JasperDesign jd1 = JRXmlLoader.load(absolutePath);
+				/*JasperDesign jd1 = JRXmlLoader.load(absolutePath);
 					
 					jd = JRXmlLoader.load(path_JRXML);
 				
 					//added by prasant #630
 				
-				//jd = JRXmlLoader.load(path_JRXML);
+				    jd = JRXmlLoader.load(path_JRXML);
 					
 					JRBand jdb1[]= jd.getAllBands();
 					JRDesignBand jdb=(JRDesignBand)jdb1[1];
 					JRDesignSection jds=(JRDesignSection) jd.getDetailSection();
 					
 					
-					//JRDesignSubreport jrb2=(JRDesignSubreport) jds.getBandsList().get(0).getChildren().get(0);
-					//JRBand jrb=(JRBand) jrb2.ge
+					JRDesignSubreport jrb2=(JRDesignSubreport) jds.getBandsList().get(0).getChildren().get(0);
+					JRBand jrb=(JRBand) jrb2.getElementGroup();
 					
-				/*	//Dynamic Speceing Between  columns 
+				    //Dynamic Speceing Between  columns 
 					JRDesignSection jds1=(JRDesignSection) jd1.getDetailSection();
-					JRBand jrb1=jds1.getBandsList().get(0);*/
+					JRBand jrb1=jds1.getBandsList().get(0);
 					int width=0;
 				
 					if(!ExtListColumn){
 						width=width+79;
-					
+				
 					}
 					if(!MultColumn){
 						width=width+43;
@@ -3251,40 +3251,40 @@ public class SalesOrderController {
 	            //Description Header
 				
 					JRDesignElement jr3h=(JRDesignElement) jdb.getElementByKey("des3Header");
-			       jr3h.setWidth(jr3h.getWidth()+width);
+			      jr3h.setWidth(jr3h.getWidth()+width);
 				//Description Detail
-					//JRDesignElement  jr3d=(JRDesignElement) jrb.getElementByKey("desc3Detail");
-					//jr3d.setWidth(jr3d.getWidth()+width);
+					JRDesignElement  jr3d=(JRDesignElement) jrb.getElementByKey("desc3Detail");
+					jr3d.setWidth(jr3d.getWidth()+width);
 				//List header
 					JRDesignElement jr4h=(JRDesignElement) jdb.getElementByKey("list4Header");
 					jr4h.setX(jr3h.getX()+jr3h.getWidth()+4);
 					
-					//JRDesignElement  jr4d=(JRDesignElement) jrb.getElementByKey("list4Detail");
-					//jr4d.setX(jr4h.getX());
+					JRDesignElement  jr4d=(JRDesignElement) jrb.getElementByKey("list4Detail");
+					jr4d.setX(jr4h.getX());
 					
 					
 					JRDesignElement jr5h=(JRDesignElement) jdb.getElementByKey("ExtList5Header");
 					jr5h.setX(jr4h.getX()+jr4h.getWidth()+4);
 					
-					//JRDesignElement  jr5d=(JRDesignElement) jrb.getElementByKey("Extlist5Detail");
-					//jr5d.setX(jr5h.getX());			
+					JRDesignElement  jr5d=(JRDesignElement) jrb.getElementByKey("Extlist5Detail");
+					jr5d.setX(jr5h.getX());			
 					
 					JRDesignElement jr6h=(JRDesignElement) jdb.getElementByKey("mult6Header");
-					//jr6h.setX(jr5h.getX()+jr5h.getWidth()+8);			
-					//JRDesignElement  jr6d=(JRDesignElement) jrb.getElementByKey("mult6Detail");
-					//jr6h.setX(jr6h.getX());	
+					jr6h.setX(jr5h.getX()+jr5h.getWidth()+8);			
+					JRDesignElement  jr6d=(JRDesignElement) jrb.getElementByKey("mult6Detail");
+					jr6h.setX(jr6h.getX());	
 			
 		
 					
-        if(!listColumn && MultColumn && ExtListColumn)
+              if(!listColumn && MultColumn && ExtListColumn)
 		         {
 				width=width+20;
 				 jr3h=(JRDesignElement) jdb.getElementByKey("des3Header");
 				jr3h.setWidth(jr3h.getWidth()+width);
 				//Description Detail
-				 // jr3d=(JRDesignElement) jrb.getElementByKey("desc3Detail");
-				//jr3d.setWidth(jr3d.getWidth()+width);
-			       }
+				  jr3d=(JRDesignElement) jrb.getElementByKey("desc3Detail");
+				jr3d.setWidth(jr3d.getWidth()+width);
+			       }*/
 			
 			
 				String invoicefromdate=null;

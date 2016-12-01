@@ -486,7 +486,7 @@ var allText = $('#apacct').html();
 				        	console.log('Length :: '+data.length);
 					        if(data.Vepo.ponumber != null && data.Vepo.ponumber != ' ' && data.Vepo.ponumber.length > 0)
 					        {
-					    	
+					    	alert("if part is calling...");
 					        	if(document.getElementById("addNewVendorInvoiceFromPOForm")!=null)
 					        	document.getElementById("addNewVendorInvoiceFromPOForm").reset();
 					        	$('#rxMasterIDPO').val("");
@@ -528,6 +528,11 @@ var allText = $('#apacct').html();
 								var d = new Date($("#duePO").val());
 								d.setDate(Number(d.getDate())+Number(data.dueonDaysPO));
 								$("#duedaysfmpo").val(data.dueonDaysPO);
+								//added by prsant #1723
+								$("#viStatusButtonPO").css({ opacity: 0.3});
+							    $("#viStatusButton").attr("disabled", true);
+							    
+								//$("#viStatusButton").attr("disabled",true);
 								
 							/*	var day = ("0" + d.getDate()).slice(-2);
 								var month = ("0" + (d.getMonth() + 1)).slice(-2);
@@ -575,7 +580,12 @@ var allText = $('#apacct').html();
 					$('#payable').val("");
 					$('#vendorAddress').html("");
 					$('#vendorAddress1').html("");
+					alert("else part is calling...");
 					$('#viStatusButton').val("Open");
+					//added by prsant #1723
+					$("#viStatusButton").css({ opacity: 0.3});
+				    $("#viStatusButton").attr("disabled", true);
+				     
 					return true;
 				}
 				
@@ -1721,7 +1731,7 @@ var allText = $('#apacct').html();
 							            data: {'updatePO':updateStatus,'coFiscalPeriodId':periodid,'coFiscalYearId':yearid,
 							        	'gridData':dataToSend,'delData':deleteveBillDetailIDDetailId,"reason":reasonVal},
 							        success: function (data) {	
-							        	
+							        	var flag=1;
 							        	var vepoId = $('#vepoidPO').val();							        	
 							        	//added by prasant							        	
 										$.ajax({
@@ -1739,12 +1749,16 @@ var allText = $('#apacct').html();
 													
 													jQuery(this).dialog("close");
 													UpdatePOStatusfromPO(vepoId,2);
-													
+													flag=2;
 												},
 												Cancel: function ()	{
 													jQuery(this).dialog("close");
-													 //saveVendorInvoicesfromPO(vepoId);
-													
+													//$('#veBillIdPO').val(data.veBillId);	
+													$("#lineItemGrid").jqGrid('GridUnload');
+													loadlineItemGrid();
+													$("#lineItemGrid").trigger("reloadGrid");
+													flag=2;
+									        		
 												return false;	
 												}
 												}
@@ -1755,8 +1769,12 @@ var allText = $('#apacct').html();
 										});										
 										//added							        	
 							        	deleteveBillDetailIDDetailId==new Array();
-							        	if(operatorStatus!="save")
+							        	
+											//$("#saveStatus").html("");					
+											
+							        	if(operatorStatus!="save" && flag==2)
 							        	{
+							        		setTimeout(function(){
 							        		if(document.getElementById("BillPayVendorInvoice")==undefined
 													|| document.getElementById("BillPayVendorInvoice")==null){
 												document.location.href ="./vendorinvoicelist";
@@ -1765,7 +1783,10 @@ var allText = $('#apacct').html();
 												$("#vendorBills").trigger("reloadGrid");
 											}
 										return true;
+										flag=1;
+							        		},500);
 							        	}
+							        
 							        	else
 							        	{
 							        	$('#veBillIdPO').val(data.veBillId);	
@@ -3495,7 +3516,8 @@ function loadlineItemGrid()
 		
 		$("#jqgridLine").empty();
 		$("#jqgridLine").append("<table id='lineItemGrid'></table><div id='lineItemPager' style='display:none;'></div>");
-	 $('#lineItemGrid').jqGrid({
+	//vendorInvoice with PO --Line item Grid
+		$('#lineItemGrid').jqGrid({
 			datatype: 'JSON',
 			mtype: 'POST',
 			pager: jQuery('#lineItemPager'),
@@ -3997,6 +4019,8 @@ function loadlineItemGrid()
 						 $("#lineItemGrid").jqGrid('setSelection','new_row', true);
 						},300);
 					//alert("insidee");
+				    
+				   // OnChageVendorInvoiceForm();
 				},
 				errorfunc : function(rowid, response) {
 					$("#info_dialog").css("z-index", "12345");
@@ -4071,6 +4095,9 @@ function loadlineItemGrid()
 					    $( "#lineItemGrid_iladd" ).trigger( "click" );
 					 $("#lineItemGrid").jqGrid('setSelection','new_row', true);
 					},300);
+			    
+			    
+			    OnChageVendorInvoiceFormWithPO();
 		},
 		errorfunc : function(rowid, response) {
 			$("#info_dialog").css("z-index", "12345");
@@ -4384,6 +4411,36 @@ function check_productNofromoutside( value, colname ) {
 	}
 	return result;
 }
+	//added by prasant #1723
+	function OnChageVendorInvoiceFormWithPO()
+	{
+		//alert("my method is calling   OnChageVendorInvoiceFormWithPO....!");
+		var vendorInvoiceDetails=$("#addNewVendorInvoiceFromPOForm").serialize();
+		var gridRows = $('#lineItemGrid').getRowData();
+		var vendorInvoiceGridDetails= JSON.stringify(gridRows);	
+		if(global_vendorInvoicePOForm != vendorInvoiceDetails || global_vendorInvoicegridPOForm != vendorInvoiceGridDetails || global_vendorInvoicetotalPOForm != vendorInvoiceDetailsTotal)
+		{  //with PO			
+			//added by prsant #1723 viStatusButtonPO
+			$("#viStatusButtonPO").css({ opacity: 0.3});
+		    $("#viStatusButtonPO").attr("disabled", true);			
+		}
+	}
+	//added by prasant #1723
+	function OnChageVendorInvoiceFormWithOutPO()
+	{
+	
+		//alert("my method is calling   OnChageVendorInvoiceFormWithOutPO....!");
+		var vendorInvoiceDetails=generatewopoFormSeriallize();
+		var gridRows = $('#vendorInvoiceGrid').getRowData();
+		var vendorInvoiceGridDetails= JSON.stringify(gridRows);		
+		if(global_vendorInvoiceWOPOForm != vendorInvoiceDetails || global_vendorInvoicegridWOPOForm != vendorInvoiceGridDetails || global_vendorInvoicetotalWOPOForm != vendorInvoiceDetailsTotal)
+		{	//without PO			
+			//added by prsant #1723
+			$("#viStatusButton").css({ opacity: 0.3});
+		    $("#viStatusButton").attr("disabled", true);		
+		}
+		
+	}
 
 
 function SaveVendorInvoicewithPO(operation){
@@ -4465,10 +4522,18 @@ function SaveVendorInvoicewithPO(operation){
 					}}}).dialog("open");
 		 }
 		}
+	
+	
+	
 	//BID1633 Simon
 	 setTimeout(function(){
 		 $("#addNewVeInvFmDlgbuttonsave").prop('disabled', false);		
 			},3000);
+	 
+		//added by prsant #1723 viStatusButtonPO
+		$("#viStatusButtonPO").css({ opacity: "1"});
+	    $("#viStatusButtonPO").attr("disabled", false);
+	 
 }
 function removedollarsymbol(value,id){
 	if(value!=null && value!=""){
@@ -4822,7 +4887,8 @@ function loadNewVendorInvoice(){
 										    $( "#vendorInvoiceGrid_iladd" ).trigger( "click" );
 										 $("#vendorInvoiceGrid").jqGrid('setSelection','new_row', true);
 										},300);
-								    
+									//addded by prasant #1723
+							      // OnChageVendorInvoiceForm();    
 								
 								},
 								
@@ -4887,6 +4953,9 @@ function loadNewVendorInvoice(){
 							    $( "#vendorInvoiceGrid_iladd" ).trigger( "click" );
 							 $("#vendorInvoiceGrid").jqGrid('setSelection','new_row', true);
 							},300);
+					  //addded by prasant #1723
+					     OnChageVendorInvoiceFormWithOutPO();  
+						
 					
 					},
 					errorfunc : function(rowid, response) {
@@ -5187,6 +5256,15 @@ function SaveVendorInvoicewithoutPO(operation){
 				   // return false;
 				}}}).dialog("open");
 	 }
+	
+	
+	//added by prsant #1723
+	$("#viStatusButton").css({ opacity: "1"});
+    $("#viStatusButton").attr("disabled", false);
+    
+    
+
+	
 }
 
 function generatevendorInvoiceWOPOFormTotalIDSeriallize(){

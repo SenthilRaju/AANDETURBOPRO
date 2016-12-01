@@ -7380,7 +7380,7 @@ var transaction = "";
 							
 							}else{
 								
-								alert("new Creation of  CI");
+								//alert("new Creation of  CI");
  								 var aCustomerName = $(".customerNameField").val();
 								 var aCustomerID = $("#JobCustomerId").val();
 								 PreloadDataInvoice("CI_Shipto");
@@ -8813,7 +8813,7 @@ $(function() { var cache = {}; var lastXhr='';
 
 function getCustomerInvoiceDetails(joDetailId, CustomerID){
 	
-	//alert("hi");
+	alert("hi in getCustomerInvoiceDetails");
 	
 	console.log('getCustomerInvoiceDetails');
 	$.ajax({

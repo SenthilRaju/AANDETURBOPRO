@@ -1649,6 +1649,7 @@ function getfilterarraydata2()
 		{
 	if(rowId !== null){
 		jQuery(newDialogDiv).html('<span><b style="color: red;">Void this Check Record?</b></span>');
+		//alert("voidTransaction is calling....!");
 		jQuery(newDialogDiv).dialog({modal: true, width:300, height:120, title:"Are you sure?", 
 			buttons:{
 				"Yes": function(){
