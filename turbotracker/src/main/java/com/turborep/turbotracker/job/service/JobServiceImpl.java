@@ -2169,6 +2169,8 @@ public class JobServiceImpl implements JobService {
 					//costTotal = aCuinvoice.getCostTotal()==null?new BigDecimal("0.0000"):aCuinvoice.getCostTotal().subtract(oldFreightCost);
 					//costTotal = costTotal.add(newFreightCost==null?new BigDecimal("0.0000"):newFreightCost);
 					aCuinvoice.setFreightCost(addedCostAmount);
+					//for #633 added prasant
+					aCuinvoice.setPaymentMadeOn(new Date());
 					//aCuinvoice.setCostTotal(costTotal);
 					aTransaction =aSession.beginTransaction();
 					aTransaction.begin();

@@ -2402,6 +2402,7 @@ public class GltransactionServiceImpl implements GltransactionService {
 					glTransaction.setJournalId(aColedgersource.getJournalID());
 					glTransaction.setJournalDesc(aColedgersource.getDescription());
 					glTransaction.setEntrydate(new Date());
+				     //added by prasant #633
 					glTransaction.setTransactionDate(cuInvoice.getInvoiceDate());
 					glTransaction.setEnteredBy(username);
 				
@@ -3690,6 +3691,8 @@ public class GltransactionServiceImpl implements GltransactionService {
             cuInvoiceobj.setNote(cuInvoice.getNote());
             cuInvoiceobj.setTaxfreight(cuInvoice.getTaxfreight());
             cuInvoiceobj.setCoTaxTerritoryId(cuInvoice.getCoTaxTerritoryId());
+     	   //added by prasant to solve arHistory createOn date properly when doing tax adjustment reg #633
+            cuInvoiceobj.setPaymentMadeOn(new Date());
             aSession.update(cuInvoiceobj);
             aTransaction.commit();
             itsJobService.updateTaxableandNonTaxableforCuInvoice(cuInvoiceobj);

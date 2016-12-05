@@ -1694,6 +1694,9 @@ function getfilterarraydata2()
 		 }
  }
  
+ 
+
+ 
  function deleteTransaction(){
 	 
 	 var bkgrid = $("#bankingAccountsGrid");

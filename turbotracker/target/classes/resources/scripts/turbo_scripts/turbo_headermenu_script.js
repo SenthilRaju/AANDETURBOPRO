@@ -58,6 +58,31 @@ $(function(){
 	});
 });
 
+
+
+//BartosIssue Fixes for 3.0.69 prasant (Reg : Amount is expected to allow  Numeric value)
+$("#amountID").keyup(function(){
+	var countyCode=$("#amountID").val();
+	if(countyCode!=undefined && countyCode.match(/[^0-9]/i)){
+		$('#amountID').css('border-color', 'red');
+		$("#amountAlert").dialog({modal: true, width:300, height:150, title:"Information", 
+			open: function(event, ui) { $(".ui-dialog-titlebar-close").hide(); },
+			buttons:{
+				"Ok": function(){
+					jQuery(this).dialog("close");
+					$('#amountID').focus();
+				    return false;
+				}}}).dialog("open");
+		$("#saveAddButton").prop("disabled",true);
+		$("#saveAddButton").fadeTo("slow",0.4);
+	}else{
+		$('#amountID').css('border-color', '');
+		$("#saveAddButton").prop("disabled",false);
+		$("#saveAddButton").fadeTo("slow",1);
+	}
+});
+
+
 $(function() { var cache = {}; var lastXhr='';
 $( "#salesRepId" ).autocomplete({ minLength: 2,timeout :1000,
 	select: function( event, ui ) { var id = ui.item.id; $("#salesRepTextId").val(id); },

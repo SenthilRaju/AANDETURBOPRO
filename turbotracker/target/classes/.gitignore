@@ -7,3 +7,6 @@
 /com/
 /ehcache.xml
 /log4j.properties
+/ConvertToWord.class
+/NumberToWord.class
+/testmail.class
