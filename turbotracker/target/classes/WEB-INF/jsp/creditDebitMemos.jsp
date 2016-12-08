@@ -134,7 +134,7 @@
 			
 			</tr>
 			<tr>
-			<td><span style="white-space: nowrap;">Tax Territory:</span></td>		
+			<td><span style="white-space: nowrap;">Tax Territory:<span style="color:red;size:13px">*</span></span></td>		
 			<td><select id="taxterritoryID" name="taxterritoryName" style="width:175px;">
 					<option value="-1"> - Select - </option>
 							<c:forEach var="taxterritory" items="${requestScope.taxterritory}">
