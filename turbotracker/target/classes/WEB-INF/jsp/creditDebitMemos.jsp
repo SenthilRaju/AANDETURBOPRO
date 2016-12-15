@@ -52,7 +52,7 @@
 			</tr>
 			<tr>
 			<td>Customer:<span style="color:red;size:13px">*</span></td>			
-			<td><input type="text" id="customerID" name="customerName" style="width:178px;"/>&nbsp;<img alt="search" src="./../resources/scripts/jquery-autocomplete/search.png" title="" style="size:10px;" onclick="">
+			<td><input type="text" id="customerID" name="customerName" readonly="readonly" style="width:178px;"/>&nbsp;<img alt="search" src="./../resources/scripts/jquery-autocomplete/search.png" title="" style="size:10px;" onclick="">
 			<input type="text" style="display: none;" id="JobCustomerId" name="customerIDName"></td>
 			</td>
 			</tr>
@@ -134,7 +134,7 @@
 			
 			</tr>
 			<tr>
-			<td><span style="white-space: nowrap;">Tax Territory:</span></td>		
+			<td><span style="white-space: nowrap;">Tax Territory:<span style="color:red;size:13px">*</span></span></td>		
 			<td><select id="taxterritoryID" name="taxterritoryName" style="width:175px;">
 					<option value="-1"> - Select - </option>
 							<c:forEach var="taxterritory" items="${requestScope.taxterritory}">

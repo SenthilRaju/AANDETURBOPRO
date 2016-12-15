@@ -153,6 +153,7 @@ public class CreditDebitMemoContorller {
 			   cuInvoice.setChangedById(aUserBean.getUserId());
 			   cuInvoice.setChangedOn(new Date());
 			   cuInvoice.setTaxfreight(taxsetting);
+		
 			   itsGltransactionService.updateTaxAdjustment(cuInvoice,aSysinfo.getCurrentFiscalYearId(),aSysinfo.getCurrentPeriodId(),aUserBean.getUserName());
 			
 		}catch(Exception e){

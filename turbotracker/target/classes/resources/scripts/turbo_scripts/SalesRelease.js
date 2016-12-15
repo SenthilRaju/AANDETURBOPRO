@@ -376,7 +376,7 @@ function PreloadDataInvoice(CIdivFlag){
 				if (typeof(data.Cuso) != "undefined" && data.Cuso != null){
 						$("#customerInvoice_invoiceNumberId").val(data.Cuso.sonumber);
 						console.log('You r in SO * CI Number::'+data.customerInvoiceNumber);
-						//$("#customerInvoice_invoiceNumberId").val(data.customerInvoiceNumber);
+						$("#customerInvoice_invoiceNumberId").val(data.customerInvoiceNumber);
 						//alert("Invoice Numeber :-"+data.customerInvoiceNumber);
 						$('#customerInvoice_subTotalID').val(formatCurrency(0));
 						$('#customerInvoice_totalID').val(formatCurrency(0));

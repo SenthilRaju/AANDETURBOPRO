@@ -8810,7 +8810,7 @@ $(function() { var cache = {}; var lastXhr='';
 
 function getCustomerInvoiceDetails(joDetailId, CustomerID){
 	
-	//alert("hi");
+	alert("hi in getCustomerInvoiceDetails");
 	
 	console.log('getCustomerInvoiceDetails');
 	$.ajax({

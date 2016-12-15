@@ -1238,9 +1238,6 @@ var soLines_selectRow;
 var checkelement;
 function loadSOLineItemGrid(){	
 	
-	
-	
-	
 	//alert("Soline items callingt");
 	$("#SOlineItemGrid").jqGrid('GridUnload');
 	var cuSOID = $('#Cuso_ID').text();

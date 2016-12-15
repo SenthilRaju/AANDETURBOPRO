@@ -400,6 +400,9 @@
 									</div>
 									</table>
 								</div>
+								<div id="amountAlert" style="display: none;">
+			                 	<span>Special characters are not allowed.</span>
+		                    	</div>
 						<script type="text/javascript" src="./../resources/scripts/turbo_scripts/bankingAccounts.js"></script>			
 <script>
 

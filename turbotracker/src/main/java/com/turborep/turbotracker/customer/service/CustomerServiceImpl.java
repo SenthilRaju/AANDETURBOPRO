@@ -1860,7 +1860,7 @@ public class CustomerServiceImpl implements CustomerService {
 			}
 		
 	}
-
+//Desc:This method is called when doing customer payment using unapplied Payment
 	private boolean updateCuInvoiceforsuccessfulpaymentUnappliedPayment(Integer cuReceiptID, Session aSession,
 			UserBean aUserBean, Integer yearID, Integer periodID) {
 		
@@ -3240,7 +3240,7 @@ public class CustomerServiceImpl implements CustomerService {
 				CustomerException aCustomerException = new CustomerException(
 						e.getMessage(), e);
 			
-			} finally {
+			} finally {	
 				aSession.flush();
 				aSession.close();
 				aSession =null;
@@ -3313,7 +3313,7 @@ public class CustomerServiceImpl implements CustomerService {
 			}
 			return true;
 		}
-		
+		//Desc: This is called when we are revercing Cutomer Payment
 		public Boolean updateCuInvoiceforunsuccessfulpayment(Integer cuReceiptID,Session aSession,UserBean aUserBean,Integer yearid, Integer periodid) throws CustomerException
 		{
 			

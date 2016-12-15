@@ -4025,6 +4025,9 @@ public class BankingServiceImpl implements BankingService {
 				balance=currentbalance.add(M1.getAmount());
 			}
 			moAccount.setOper(oper);
+			
+			//delete all moLinakgeDetail records when we are doing Void Transaction added by prasant #1725
+			deleteMoLinkageDetail(M1.getMoTransactionId());
 			updateDepositAndWithDraw(moAccount,aSession);
 			M1.setStatus(false);
 			M1.setBalance(balance);
@@ -4049,6 +4052,40 @@ public class BankingServiceImpl implements BankingService {
 		
 	}
 
+	
+	
+	public Integer deleteMoLinkageDetail(Integer moTransactionID) throws CompanyException {
+		itsLogger.debug("deleteing molinkageDetail Voiding the Transaction is going ON......!");
+		Session aSession=null;
+		int Status=0;
+		Integer aRxaddress = 0;
+		try{
+			aSession=itsSessionFactory.openSession();
+			Transaction tx=aSession.beginTransaction();
+			if (moTransactionID!=null)
+			{
+				Status= aSession.createQuery("delete Molinkagedetail where moTransactionId ="+moTransactionID).executeUpdate();
+		       tx.commit();
+			
+			}
+			
+		}catch (Exception e) {
+			itsLogger.error(e.getMessage(),e);
+			CompanyException aCompanyException = new CompanyException(e.getCause().getMessage(), e);
+			throw aCompanyException;
+		} finally {
+			aSession.flush();
+			aSession.close();
+		}
+		return Status;
+	}
+	
+	
+	
+	
+	
+	
+	
 	@Override
 	public boolean insertReconcileFLStatus(
 			ReconcileFLStatus theReconcileFLStatus) throws BankingException {

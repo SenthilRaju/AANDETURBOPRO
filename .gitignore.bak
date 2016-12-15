@@ -1,5 +1,4 @@
 *.class
-!/turbotracker
 */turbotracker/target/**
 
 # Mobile Tools for Java (J2ME)

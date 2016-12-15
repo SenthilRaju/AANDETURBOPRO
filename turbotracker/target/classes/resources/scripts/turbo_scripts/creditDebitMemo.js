@@ -298,6 +298,17 @@ function saveMemoDetails()
 			},3000);
 		console.log("6")
 	}
+	//added by prasant #650
+	else if( $('#taxterritoryID').val() =="-1")
+	{
+		$("#creditdebiterrorstatus").html("Mandatory Fields are Required");
+		setTimeout(function(){
+			$('#creditdebiterrorstatus').html("");
+			},3000);
+		console.log("2")
+	}
+	
+	
 	else
 	{
 		var creditdebitmemoformValues = $("#creditdebitmemoformID").serialize();
@@ -351,9 +362,11 @@ function saveMemoDetails()
    				console.log('error');
    				}
    			});
-			
+		 //added by prasant #656
+		$("#customerID").prop('readonly',true);
 	
-}
+}  
+	
 }
 
 function editMemoDetails()
@@ -488,7 +501,7 @@ jQuery(function() {
 
 function createNewcreditdebitmemo()
 {
-	
+	alert("it is calling..!");
 	document.getElementById("creditdebitmemoformID").reset();
 	
 	$("#addcreditDebitMemosDlg").dialog("open");
@@ -503,6 +516,8 @@ function createNewcreditdebitmemo()
 	$("#checkyesID").attr("disabled",true);
 	$("#savememo").show()
 	$("#editmemo").css("display","none");
+	$("#customerID").prop('readonly',false);
+
 	
 }
 

@@ -2169,6 +2169,8 @@ public class JobServiceImpl implements JobService {
 					//costTotal = aCuinvoice.getCostTotal()==null?new BigDecimal("0.0000"):aCuinvoice.getCostTotal().subtract(oldFreightCost);
 					//costTotal = costTotal.add(newFreightCost==null?new BigDecimal("0.0000"):newFreightCost);
 					aCuinvoice.setFreightCost(addedCostAmount);
+					//for #633 added prasant
+					aCuinvoice.setPaymentMadeOn(new Date());
 					//aCuinvoice.setCostTotal(costTotal);
 					aTransaction =aSession.beginTransaction();
 					aTransaction.begin();
@@ -10341,9 +10343,12 @@ public class JobServiceImpl implements JobService {
 								(aCuinvoice.getInvoiceAmount()==null?BigDecimal.ZERO:aCuinvoice.getInvoiceAmount()).compareTo(oldCuinvoice.getInvoiceAmount()==null?BigDecimal.ZERO:oldCuinvoice.getInvoiceAmount())!=0 ||
 								(aCuinvoice.getSubtotal()==null?BigDecimal.ZERO:aCuinvoice.getSubtotal()).compareTo(oldCuinvoice.getSubtotal()==null?BigDecimal.ZERO:oldCuinvoice.getSubtotal())!=0 || 
 								(aCuinvoice.getFreight()==null?BigDecimal.ZERO:aCuinvoice.getFreight()).compareTo(oldCuinvoice.getFreight()==null?BigDecimal.ZERO:oldCuinvoice.getFreight())!=0 ||
-								aCuinvoice.getCoTaxTerritoryId()!=oldCuinvoice.getCoTaxTerritoryId()||(aCuinvoice.getDiscountAmt()==null?BigDecimal.ZERO:aCuinvoice.getDiscountAmt()).compareTo(oldCuinvoice.getDiscountAmt()==null?BigDecimal.ZERO:oldCuinvoice.getDiscountAmt())!=0))
+								aCuinvoice.getCoTaxTerritoryId()!=oldCuinvoice.getCoTaxTerritoryId()||(aCuinvoice.getDiscountAmt()==null?BigDecimal.ZERO:aCuinvoice.getDiscountAmt()).compareTo(oldCuinvoice.getDiscountAmt()==null?BigDecimal.ZERO:oldCuinvoice.getDiscountAmt())!=0)
+								)
 						rollbackstatus = invoicelogRollbackentry(aCuinvoice.getCuInvoiceId(),aCuinvoice);
 					}
+					
+					
 				}
 			}
 			
@@ -10574,7 +10579,7 @@ public class JobServiceImpl implements JobService {
 				aRollbacklog.setJoReleaseDetailId(aTpCuinvoiceLogMaster.getJoReleaseDetailId());
 				aRollbacklog.setCuSoid(aTpCuinvoiceLogMaster.getCuSoid());
 				aRollbacklog.setRxCustomerId(aTpCuinvoiceLogMaster.getRxCustomerId());
-				aRollbacklog.setTransType(aTpCuinvoiceLogMaster.getTransType());
+				aRollbacklog.setTransType("CI-ROLLBACK");
 				aRollbacklog.setPrFromWarehouseId(aTpCuinvoiceLogMaster.getPrFromWarehouseId());
 				aRollbacklog.setPrToWarehouseId(aTpCuinvoiceLogMaster.getPrToWarehouseId());
 				aRollbacklog.setRxShipToId(aTpCuinvoiceLogMaster.getRxShipToId());
