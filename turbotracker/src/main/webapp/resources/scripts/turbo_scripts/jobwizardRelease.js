@@ -7369,7 +7369,6 @@ var transaction = "";
 									 $(CIdivFlag).contents().find("#shiptoaddrhiddenfromdbid").val("");
 									 $(CIdivFlag).contents().find("#shiptomodehiddenfromdbid").val("");
 									 $(CIdivFlag).contents().find("#shiptomodehiddenfromdbid").val(2);
-									 alert("1 is calling...1");
 									 preloadShiptoAddress("#CI_Shipto",'',null,'2','0',$("#jobCustomerName_ID").text(),"");
 									 $("#CI_Shipto").contents().find("#shiptomoderhiddenid").val('2');
 									 boolean = false;
@@ -7379,8 +7378,6 @@ var transaction = "";
 							}}).dialog("open");
 							
 							}else{
-								
-								alert("new Creation of  CI");
  								 var aCustomerName = $(".customerNameField").val();
 								 var aCustomerID = $("#JobCustomerId").val();
 								 PreloadDataInvoice("CI_Shipto");
@@ -11407,15 +11404,12 @@ function loadCustomerInvoice(){
 				if(freightLineVal !== ''){
 					number1 = freightLineVal.replace(/[^0-9\.-]+/g,"");
 				}
-				$( "#customerInvoice_lineitems_iladd" ).trigger( "click" );
 				var allRowsInGridwithnewrow = $('#customerInvoice_lineitems').jqGrid('getRowData');
 				_globaloldcustomerInvoicegrid = JSON.stringify(allRowsInGridwithnewrow)+$("#customerInvoice_invoiceDateID").val();
 				console.log("_globaloldcustomerInvoicegrid=="+_globaloldcustomerInvoicegrid); 
 				_globaloldcustomerInvoiceformTotal=generatecustoemrInvoiceFormTotalIDSeriallize();
 				//_globaloldcustomerInvoiceform =  $("#custoemrInvoiceFormID").serialize();
-	             
-	            
-	    	 
+				$("#customerInvoice_lineitems_iladd").trigger( "click" );
 	     },
 		onSelectRow : function(id) {
 			CuInvoiceDetailrowid=id;

@@ -554,6 +554,7 @@ function PreloadDataInvoice(CIdivFlag){
 			var taxsubtotal=0;
 			$("#CI_taxsubtotal").val(0);
 			if (typeof(data.Cusodetail) != "undefined" && data.Cusodetail != null){
+				console.log("am I here.am I here.am I here.am I here.am I here.am I here.am I here.am I here.am I here.am I here.am I here.")
 				var taxrate = data.Cuso.taxRate;
 				var subtotal = data.Cusodetail.taxTotal;
 				var freight = data.Cuso.freight;
@@ -561,9 +562,20 @@ function PreloadDataInvoice(CIdivFlag){
 				var totalAmount=0.00;
 				var datacusodetail=data.Cusodetail;
 				$("#CI_taxsubtotal").val(data.Cusodetail.taxableSum);
-				taxtotals=data.Cuso.taxTotal;
-				totalAmount =parseFloat(taxtotals)+parseFloat(freight)+parseFloat(subtotal);
+//				taxtotals=data.Cuso.taxTotal;
+				//BID1687 Simon 
+				var allowfreightinTax=false;
+				 var allowreqcheckfreightintax=$('#CI_taxfreight').val();
+					if(allowreqcheckfreightintax!=null && allowreqcheckfreightintax==1){
+						allowfreightinTax=true;
+					}
+				 if(allowfreightinTax){
+					 taxtotals = Number(Number(floorFigureoverall(subtotal, 2))+Number(floorFigureoverall(freight,2)))*Number(taxrate)/100;
+				 }else{
+					 taxtotals = Number(floorFigureoverall(subtotal, 2))*Number(taxrate)/100;
+				 }
 				
+				 totalAmount =parseFloat(taxtotals)+parseFloat(freight)+parseFloat(subtotal);
 					console.log('1 count<=0');
 					setTimeout(function(){
 						$('#customerInvoice_generaltaxId').val(taxrate);

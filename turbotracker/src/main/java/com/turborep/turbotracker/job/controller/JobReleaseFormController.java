@@ -78,6 +78,7 @@ import com.turborep.turbotracker.company.Exception.CompanyException;
 import com.turborep.turbotracker.company.dao.CoTaxTerritory;
 import com.turborep.turbotracker.company.dao.Coaccount;
 import com.turborep.turbotracker.company.dao.Codivision;
+import com.turborep.turbotracker.company.dao.Cofiscalperiod;
 import com.turborep.turbotracker.company.dao.Coledgersource;
 import com.turborep.turbotracker.company.dao.Rxaddress;
 import com.turborep.turbotracker.company.dao.Rxcontact;
@@ -3139,7 +3140,41 @@ public class JobReleaseFormController {
 				itsJobService.updateTaxableandNonTaxableforCuInvoice(aCuinvoice);
 				Integer dateval=(aCuinvoize.getInvoiceDate()==null?"":aCuinvoize.getInvoiceDate().toString()).indexOf(invdate);
 				if(transaction!=null && transaction.equalsIgnoreCase("close") ||(dateval!=0)){
-					if(aCuinvoize.getInvoiceAmount().compareTo(aCuinvoice.getInvoiceAmount())!=0  ||(dateval!=0)){
+					//BID1733 Simon Added
+					if(aCuinvoize.getInvoiceDate()!=aCuinvoice.getInvoiceDate()){
+						itsLogger.info("Transaction Rollback. .. ..."+aCuinvoize.getInvoiceAmount()+"#@#"+aCuinvoice.getInvoiceAmount());
+						Coledgersource aColedgersource = itsGltransactionService.getColedgersourceDetail("CI");
+						Cofiscalperiod cfp=itsGltransactionService.getCofiscalPeriodDetail();
+						
+						GlRollback glRollback = new GlRollback();
+						glRollback.setVeBillID(aCuinvoice.getCuInvoiceId());
+						glRollback.setCoLedgerSourceID(aColedgersource.getCoLedgerSourceId());
+						glRollback.setPeriodID(cfp.getCoFiscalPeriodId());
+						glRollback.setYearID(cfp.getCoFiscalYearId());
+						glRollback.setTransactionDate(aCuinvoize.getInvoiceDate());
+						
+						itsGltransactionService.rollBackGlTransaction(glRollback);
+						itsGltransactionService.receiveCustomerInvoiceBill(aCuinvoice,coFiscalYearId,coFiscalPeriodId,aUserBean.getFullName());
+						if(delData!=null){
+							//theCuinvoice = itsJobService.getCustomerInvoiceDetails(aCuinvoice.getCuInvoiceId());
+							theCuinvoice.setUserName(aUserBean.getFullName());
+							theCuinvoice.setReason(reason);
+							if(aCuinvoize.getInvoiceAmount().compareTo(theCuinvoice.getInvoiceAmount())!=0)
+							itsJobService.saveCustomerInvoiceLog(aCuinvoize,theCuinvoice,"CI-Line Item(s) Deleted",1,coFiscalPeriodId,coFiscalYearId);
+							else
+							itsJobService.saveCustomerInvoiceLog(aCuinvoize,theCuinvoice,"CI-Line Item(s) Deleted",0,coFiscalPeriodId,coFiscalYearId);
+							
+						}else{
+							theCuinvoice.setUserName(aUserBean.getFullName());
+							theCuinvoice.setReason(reason);
+							if(aCuinvoize.getSubtotal().compareTo(theCuinvoice.getSubtotal())!=0 || aCuinvoize.getFreight().compareTo(theCuinvoice.getFreight())!=0 ||
+									aCuinvoize.getTaxAmount().compareTo(theCuinvoice.getTaxAmount())!=0)
+							itsJobService.saveCustomerInvoiceLog(aCuinvoize,theCuinvoice,"CI-Edited",1,coFiscalPeriodId,coFiscalYearId);
+							else
+							itsJobService.saveCustomerInvoiceLog(aCuinvoize,theCuinvoice,"CI-Edited",0,coFiscalPeriodId,coFiscalYearId);
+						}
+					}
+					else if(aCuinvoize.getInvoiceAmount().compareTo(aCuinvoice.getInvoiceAmount())!=0  ||(dateval!=0)){
 					itsLogger.info("Transaction Rollback. .. ..."+aCuinvoize.getInvoiceAmount()+"#@#"+aCuinvoice.getInvoiceAmount());
 					Coledgersource aColedgersource = itsGltransactionService.getColedgersourceDetail("CI");
 					
