@@ -77,5 +77,8 @@ public interface SearchServiceInterface {
 
 	public List<AutoCompleteBean> getInventoryproductSearch(String theSearchString)
 			throws SearchException;
+	//BID1277 Simon
+	public List<AutoCompleteBean> searchCreditDebitMemos(String theSearchString)
+			throws SearchException;
 
 }

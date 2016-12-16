@@ -2375,4 +2375,54 @@ public class Searchservice implements SearchServiceInterface {
 		}
 		return aQueryList;
 	}
+	
+	@Override
+	public List<AutoCompleteBean> searchCreditDebitMemos(String theSearchString) throws SearchException {
+		String aSearchSelectQry = "SELECT DISTINCT cuInvoiceID, InvoiceNumber,InvoiceDate,InvoiceAmount,CONCAT(rxMaster.Name, ' ', rxMaster.FirstName) AS Customer,cuInvoice.rxCustomerID,memoStatus, CASE WHEN CONCAT(InvoiceDate, CONCAT(rxMaster.Name, ' ', rxMaster.FirstName), InvoiceAmount, InvoiceNumber) LIKE '%"
+				+ JobUtil.removeSpecialcharacterswithslash(theSearchString)
+				+ "%' THEN 'and' ELSE '' END AS result FROM rxMaster , cuInvoice WHERE rxMaster.rxMasterID = cuInvoice.rxCustomerID AND CreditMemo=1 HAVING result != '' ORDER BY cuInvoiceID DESC";
+		Session aSession = null;
+		ArrayList<AutoCompleteBean> aQueryList = new ArrayList<AutoCompleteBean>();
+		AutoCompleteBean aAutoCompleteBean = null;
+		try {
+			aSession = itsSessionFactory.openSession();
+			Query aQuery = aSession.createSQLQuery(aSearchSelectQry);
+			List mainlist=aQuery.list();
+				Iterator<?> aIterator = mainlist.iterator();
+				while (aIterator.hasNext()) {
+					aAutoCompleteBean = new AutoCompleteBean();
+					Object[] aObj = (Object[]) aIterator.next();
+					Integer icuSOID = (Integer) aObj[0];
+					aAutoCompleteBean.setValue(icuSOID.toString());	
+					aAutoCompleteBean.setRxAddressID(new Integer(aObj[5].toString()));
+					aAutoCompleteBean.setMemo(aObj[6].toString());
+					String createdOn = " ";
+					if (aObj[2] != null) {
+						SimpleDateFormat formatter = new SimpleDateFormat(
+								"yyyy-MM-dd hh:mm:ss.0");
+						Date d = formatter.parse(aObj[2].toString());
+						createdOn = new SimpleDateFormat("dd/MM/yyyy")
+								.format(d).toString();
+					}
+					aAutoCompleteBean.setLabel("[" + (aObj[1]!=null?aObj[1]:"")+
+							" || " +createdOn+ " || "+ (aObj[4]!=null?aObj[4]:"") + " || "
+							+ aObj[3] + "]");
+
+					aQueryList.add(aAutoCompleteBean);
+				}
+			
+			
+		} catch (Exception e) {
+			itsLogger.error(e.getMessage(), e);
+			e.printStackTrace();
+			SearchException aSearchException = new SearchException(
+					e.getMessage());
+			throw aSearchException;
+		} finally {
+			aSession.flush();
+			aSession.close();
+			aSearchSelectQry = null;
+		}
+		return aQueryList;
+	}
 }

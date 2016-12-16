@@ -12,9 +12,6 @@
 			#mainmenuBankingPage ul li a{background: none; }
 			input[type="text"] {padding-left:5px;}
 		</style>
-		
-		
-		
 	</head>
 	<body style="background-color: #FAFAFA;margin: 0 auto;">
 		<div style="margin: 0 auto;">
@@ -268,8 +265,48 @@
 					return true;
 				
 				}
-
 			 
+			 //BID1277 Simon Added
+			 $(function() {
+					var cache = {};
+					var lastXhr = '';
+					$("#searchJob").autocomplete(
+							{
+								minLength : 3,
+								timeout : 1000,
+								select : function(event, ui) {
+									var aValue = ui.item.value;
+									var acuInvoiceID = ui.item.value;
+									var rxMasterID = ui.item.rxAddressID;
+									var memoStatus=ui.item.memo;
+									createtpusage('Company-Customer-Credit/Debit Memo','Grid View','Info','Company-Customer-Credit/Debit Memo,Viewing Memo,,rxMasterID:'+rxMasterID);
+									document.getElementById("creditdebitmemoformID").reset();   
+									$("#creditdebiterrorstatus").html("");
+									loadCreditDebitMemo(acuInvoiceID, rxMasterID,memoStatus);
+									$('#addcreditDebitMemosDlg').dialog("open");
+									$("#editmemo").attr("disabled",true);
+
+								},
+								source : function(request, response) {
+									var term = request.term;
+									if (term in cache) {
+										response(cache[term]);
+										return;
+									}
+									lastXhr = $.getJSON("search/searchCreditDebitMemos",
+											request, function(data, status, xhr) {
+												cache[term] = data;
+												if (xhr === lastXhr) {
+													response(data);
+												}
+											});
+								},
+								error : function(result) {
+									$('.ui-autocomplete-loading').removeClass(
+											"ui-autocomplete-loading");
+								}
+							});
+				});
 		</script>
 		
 		</div>
