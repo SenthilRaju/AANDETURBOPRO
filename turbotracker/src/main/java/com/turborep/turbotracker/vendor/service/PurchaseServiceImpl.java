@@ -1606,8 +1606,8 @@ public class PurchaseServiceImpl implements PurchaseService {
 	
 	@Override
 	public List<Rxaddress> getCustomerAddresses(Integer rxMasterID) throws VendorException {
-		
-		String aQry = "SELECT rxMaster.Name,address.Address1,address.Address2,address.city,address.State,address.Zip,address.rxAddressId,address.IsDefault FROM rxAddress AS address JOIN rxMaster ON rxMaster.rxMasterID = address.rxMasterID WHERE address.rxMasterID = "+rxMasterID;
+		//BID1483 Simon Modified
+		String aQry = "SELECT rxMaster.Name,address.Address1,address.Address2,address.city,address.State,address.Zip,address.rxAddressId,address.IsDefault FROM rxAddress AS address JOIN rxMaster ON rxMaster.rxMasterID = address.rxMasterID WHERE address.IsRemitTo=1 AND address.rxMasterID = "+rxMasterID;
 		itsLogger.info(aQry);
 		Session aSession=null;
 		Rxaddress objRxaddress = null;

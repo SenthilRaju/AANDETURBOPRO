@@ -30,6 +30,7 @@ import com.turborep.turbotracker.company.dao.CoTaxTerritory;
 import com.turborep.turbotracker.company.dao.Codivision;
 import com.turborep.turbotracker.company.dao.Rxaddress;
 import com.turborep.turbotracker.company.dao.Rxcontact;
+import com.turborep.turbotracker.company.service.AccountingCyclesService;
 import com.turborep.turbotracker.company.service.CompanyService;
 import com.turborep.turbotracker.customer.dao.CuMasterType;
 import com.turborep.turbotracker.customer.dao.CuTerms;
@@ -91,6 +92,11 @@ public class CustomerDetailedViewFormController {
 	//Added to get Customer Address for SO
 	@Resource(name = "purchaseService")
 	private PurchaseService itsPurchaseService;
+	
+	//ID624 Simon Added
+	@Resource(name="accountingCyclesService")
+	private AccountingCyclesService accountingCyclesService;
+	
 	/*
 	 * Adding Customer due and balance from customer Invoice
 	 * 
@@ -178,6 +184,8 @@ public class CustomerDetailedViewFormController {
 			
 			
 			theModel.addAttribute("customerMasterObj", getCustomerRecord());
+			//ID625 Simon Added
+			theModel.addAttribute("sysInfoObj", accountingCyclesService.getSysinfo());
 			theModel.addAttribute("customerTabFormDataBean", aRxCustomerTabViewBean);
 			//fetching the shipping address theRolodexNumber
 			//select Address1,Address2,City,State,Zip,coTaxTerritoryID from rxAddress where rxMasterID=8607
