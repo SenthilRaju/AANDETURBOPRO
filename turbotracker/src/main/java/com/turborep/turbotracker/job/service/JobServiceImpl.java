@@ -10272,7 +10272,7 @@ public class JobServiceImpl implements JobService {
 			aCuinvoice.setTaxfreight(theCuinvoice.getTaxfreight());
 			//aCuinvoice.setPaymentMadeOn(theCuinvoice.getInvoiceDate());
 			//added by prasant #633
-			aCuinvoice.setPaymentMadeOn(theCuinvoice.getInvoiceDate());
+			aCuinvoice.setPaymentMadeOn(new Date());
 			
 			aSession.update(aCuinvoice);
 			aTransaction.commit();
