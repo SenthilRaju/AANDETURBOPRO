@@ -563,30 +563,29 @@ public class VendorService implements VendorServiceInterface{
 		return aRxcontact;
 	}
 	
-	//BID1654 Simon
-//	@Override
-//	public Rxcontact getContactDetailsByRxMasterId(Integer rxMasterID) throws VendorException {
-//		Rxcontact aRxcontact = new Rxcontact();
-//		Session aSession = null;
-//		try {
-//			aSession = itsSessionFactory.openSession();
-//			 Query query = aSession.createQuery("from Rxcontact WHERE rxMasterId=:rxMasterID");
-//			 query.setParameter("rxMasterID", rxMasterID);
-//			 List<Rxcontact> list=query.list();
-//			 if(list!=null && list.size()>0){
-//				 aRxcontact=list.get(0);
-//			 }
-//		} catch (Exception e) {
-//			itsLogger.error(e.getMessage(), e);
-//			VendorException aVendorException = new VendorException(e.getCause().getMessage(), e);
-//			throw aVendorException;
-//		} finally {
-//			aSession.flush();
-//			aSession.close();
-//		}
-//		return aRxcontact;
-//	}
-
+	/*//BID1654 Simon
+	@Override
+	public Rxcontact getContactDetailsByRxMasterId(Integer rxMasterID) throws VendorException {
+		Rxcontact aRxcontact = new Rxcontact();
+		Session aSession = null;
+		try {
+			aSession = itsSessionFactory.openSession();
+			 Query query = aSession.createQuery("from Rxcontact WHERE rxMasterId=:rxMasterID");
+			 query.setParameter("rxMasterID", rxMasterID);
+			 List<Rxcontact> list=query.list();
+			 if(list!=null && list.size()>0){
+				 aRxcontact=list.get(0);
+			 }
+		} catch (Exception e) {
+			itsLogger.error(e.getMessage(), e);
+			VendorException aVendorException = new VendorException(e.getCause().getMessage(), e);
+			throw aVendorException;
+		} finally {
+			aSession.flush();
+			aSession.close();
+		}
+		return aRxcontact;
+	}*/
 	
 	public Veshipvia getVeShipVia(Integer theShipViaID) throws VendorException {
 		Veshipvia aVeshipvia = new Veshipvia();
@@ -3489,7 +3488,7 @@ l.			 * Table :veBillDetail
 					+ " ORDER BY ve.posistion";*/
 				
 				//changed by prasant kuamr #645	
-				aPOLineItemListQry = "SELECT * FROM ( SELECT DISTINCT ve.vePODetailID," + " ve.vePOID,"
+				aPOLineItemListQry = "SELECT * FROM ( SELECT  DISTINCT ve.vePODetailID," + " ve.vePOID,"
 						+ " ve.prMasterID," + " ve.Description,"
 						+ " (IF (veR.QuantityReceived - IFNULL (a.quaninv,0)>=0,ve.QuantityReceived - IFNULL (a.quaninv,0),0))AS QuantityOrdered," + " ve.Taxable," + " ve.UnitCost,"
 						+ " ve.PriceMultiplier," + " ve.posistion,"
@@ -5853,7 +5852,7 @@ l.			 * Table :veBillDetail
 	}
 
 	@Override
-	public Integer getTransactionDailogStatus(Integer vepoID) {
+public Integer getTransactionDailogStatus(Integer vepoID) {
 		
 
 		Session aSession = null;

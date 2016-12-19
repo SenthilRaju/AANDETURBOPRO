@@ -3112,11 +3112,12 @@ function chngPswd(){
 	$("#cnfrmPswd").val("");
 	jQuery("#ChangePasswordDialogBox").dialog("open");
 }
-function createtpusage(screen,action,loglevel,description){
+function createtpusage(screen,action,loglevel,description,jobnumber){
+//	alert("it is calling  tpUSage");
 	$.ajax({
 	    url: "./userlistcontroller/CreateTpUsage",
 	    async:false,
-	    data: {'screen':screen,'action':action, 'logLevel':loglevel,'description':description},
+	    data: {'screen':screen,'action':action, 'logLevel':loglevel,'description':description,'jobnumber':jobnumber},
 	    type: 'POST',
 	    success: function(data){
 	    }, error: function(error) {

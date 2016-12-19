@@ -1456,7 +1456,7 @@ function ReOrderButtonClick(){
 
 	 var gridRows = $('#lineItemGrid').getRowData();
 	 var dataToSend = JSON.stringify(gridRows);
-	 POlineItemgridLoad=false;
+	 //POlineItemgridLoad=false;
 	 jQuery("#lineItemGrid").jqGrid('setGridParam',{url:"./vendorscontroller/ReorderInsertNew",postData:{"gridData":dataToSend,"WareHouseId" : WareHouseId, "VendorID" : VendorID,"vePOID":vePOID}}).trigger("reloadGrid");
 	/* $.ajax({ 
 		url: "./vendorscontroller/ReorderInsert",
@@ -1506,7 +1506,6 @@ function SaveLinesPurchaseOrder(popupdetail){
 	var gridRows = $('#lineItemGrid').getRowData();
 	var dataToSend = JSON.stringify(gridRows);
 	console.log("PO:"+dataToSend);
-		
 	$.ajax({
 		url: "./jobtabs5/SaveLinesPurchaseOrder",
 		type: "POST",
@@ -1532,6 +1531,7 @@ function SaveLinesPurchaseOrder(popupdetail){
 			  $('#ImgPOEmail').append(' <input id="contactEmailID" type="image" src="./../resources/Icons/mail_new.png" title="Email Purchase Order" style="background: #EEDEBC" id="lineTabMail" onclick="outsidepoEmailButtonAction();">');
 			
 			// $( "#salesreleasetab ul li:nth-child(1)" ).removeClass("ui-state-disabled");
+			  deletePOLineDetailID=new Array();
 		}
 	});
 	//BID1633 Simon
@@ -1539,7 +1539,6 @@ function SaveLinesPurchaseOrder(popupdetail){
 	 $("#SaveLinesPOButton").prop('disabled', false);		
 	 },3000);
 }
-
 
 /*function canDeletePOCheckboxFormatter(cellValue, options, rowObject){
 	var qty_ord=rowObject.quantityOrdered;

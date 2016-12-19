@@ -1751,7 +1751,7 @@ function getfilterarraydata2()
  function loadTransactionDetails(oper){
 	 
 	 
-	 alert("loadTransacstionDetails IS calling "+oper);
+	// alert("loadTransacstionDetails IS calling "+oper);
 	 if(oper == "new")
 	 createtpusage('Banking-Transaction Details','Saving New Check','Info','Banking,Saving Check Details,Check No:'+$("#checkNo").val());
 	
@@ -1969,7 +1969,7 @@ function getfilterarraydata2()
 	 if(checkformvalid || oper=="delete" || oper=="void" ){
 		// alert("in validation it is calling...");
 		 var checkpermission=getGrantpermissionprivilage('OpenPeriod_PostingOnly',0);
-		 alert("checkpermission "+checkpermission);
+		// alert("checkpermission "+checkpermission);
 		 var datetoCheck = "";
 		 var dataToSend = "";
 		 	if(oper=="delete" || oper=="void")
