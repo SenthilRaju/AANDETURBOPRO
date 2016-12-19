@@ -122,8 +122,9 @@ public interface CustomerService {
 	
 	public BigInteger getcreditdebitmemoCount() throws CustomerException;
 	
+	//BID1277 Simon Modified
 	public ArrayList<CustomerPaymentBean> getcreditordebitmemoList(int theFrom,
-			int theRows,String column,String sortBy) throws CustomerException;
+			int theRows,String column,String sortBy,String searchTerm) throws CustomerException;
 	
 	
 	public Integer addCreditDebitDetails(Cuinvoice acuInvoice) throws CustomerException;

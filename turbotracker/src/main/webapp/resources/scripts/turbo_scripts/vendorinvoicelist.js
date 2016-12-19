@@ -486,7 +486,6 @@ var allText = $('#apacct').html();
 				        	console.log('Length :: '+data.length);
 					        if(data.Vepo.ponumber != null && data.Vepo.ponumber != ' ' && data.Vepo.ponumber.length > 0)
 					        {
-					    	alert("if part is calling...");
 					        	if(document.getElementById("addNewVendorInvoiceFromPOForm")!=null)
 					        	document.getElementById("addNewVendorInvoiceFromPOForm").reset();
 					        	$('#rxMasterIDPO').val("");
@@ -580,7 +579,6 @@ var allText = $('#apacct').html();
 					$('#payable').val("");
 					$('#vendorAddress').html("");
 					$('#vendorAddress1').html("");
-					alert("else part is calling...");
 					$('#viStatusButton').val("Open");
 					//added by prsant #1723
 					$("#viStatusButton").css({ opacity: 0.3});

@@ -521,11 +521,14 @@ function createNewcreditdebitmemo()
 	
 }
 
-function showCustomerInvoiceList(){
+//BID1277 Simon Modified
+function showCustomerInvoiceList(search){
 	/*Controller:POController/cuInvoice_listgrid */
+	var source_url=(search!=null && search!=undefined)?"./creditdebitmemo?search="+search:"./creditdebitmemo";
 	$("#creditDebitMemosGrid").jqGrid({
 		/*url:'./creditdebitmemo?searchData='+searchData+'&fromDate='+fromDate+'&toDate='+toDate,*/	
-		url:'./creditdebitmemo',
+//		url:'./creditdebitmemo',
+		url:source_url,
 		datatype: 'JSON',
 		mtype: 'GET',
 		pager: jQuery('#creditDebitMemosGridPager'),
@@ -588,6 +591,7 @@ function showCustomerInvoiceList(){
 	);
 }
 
+//BID1277 Simon Modified
 function preLoadCreditDebitMemoDetails()
 {
 
@@ -609,10 +613,21 @@ function preLoadCreditDebitMemoDetails()
 				statusValue=data;
 			}
 		});*/
-		
-
-		
-		$.ajax({
+		loadCreditDebitMemo(acuInvoiceID, rxMasterID,memoStatus);
+}
+function FormatDate(createdDate){
+	var date = new Date(createdDate);
+	var CreatedOn = date.getDate();
+	var createdMonth = date.getMonth()+1; 
+	var createdYear = date.getFullYear();
+	if(CreatedOn<10){CreatedOn='0'+CreatedOn;} 
+	if(createdMonth<10){createdMonth='0'+createdMonth;} 
+	createdDate = createdMonth+"/"+CreatedOn+"/"+createdYear;
+	return createdDate;
+}
+//BID1277 Simon Added
+function loadCreditDebitMemo(acuInvoiceID,rxMasterID,memoStatus){
+	$.ajax({
 		url: "./salesOrderController/getPreInvoiceData",
 		type: "POST",
 		data : "&cuInvoiceId="+acuInvoiceID+"&rxMasterID="+rxMasterID,
@@ -685,16 +700,14 @@ function preLoadCreditDebitMemoDetails()
 			
 		}
 	});
-
-		
 }
-function FormatDate(createdDate){
-	var date = new Date(createdDate);
-	var CreatedOn = date.getDate();
-	var createdMonth = date.getMonth()+1; 
-	var createdYear = date.getFullYear();
-	if(CreatedOn<10){CreatedOn='0'+CreatedOn;} 
-	if(createdMonth<10){createdMonth='0'+createdMonth;} 
-	createdDate = createdMonth+"/"+CreatedOn+"/"+createdYear;
-	return createdDate;
+//BID1277 Simon Added
+function getSearchDetails(){
+	if ($('#searchJob').val() != null && $('#searchJob').val() != '') {
+		searchData = $('#searchJob').val();
+		$("#creditDebitMemosGrid").jqGrid('GridUnload');
+		showCustomerInvoiceList(searchData);
+		$("#creditDebitMemosGrid").trigger("reloadGrid");
+		$('#searchJob').val('');
+	}
 }

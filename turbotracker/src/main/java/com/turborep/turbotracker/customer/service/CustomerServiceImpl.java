@@ -362,8 +362,9 @@ public class CustomerServiceImpl implements CustomerService {
 	
 	@Override
 	public ArrayList<CustomerPaymentBean> getcreditordebitmemoList(int theFrom,
-			int theRows,String column,String sortBy) throws CustomerException {
+			int theRows,String column,String sortBy,String searchTerm) throws CustomerException {
 		String sortByOption="InvoiceNumber";
+		String aPaymentsselectQry =null;
 		
 		if(column.equalsIgnoreCase("cuInvoiceID")){
 				sortByOption=" cuInvoiceID ";
@@ -376,12 +377,17 @@ public class CustomerServiceImpl implements CustomerService {
 		}else if(column.equalsIgnoreCase("amount")){
 			sortByOption=" InvoiceAmount ";
 		}
-		
-		
-		String aPaymentsselectQry = " SELECT DISTINCT cuInvoiceID, InvoiceNumber,InvoiceDate,InvoiceAmount,CONCAT(rxMaster.Name, ' ', rxMaster.FirstName) AS Customer,cuInvoice.rxCustomerID,memoStatus  "
-				+ " FROM rxMaster , cuInvoice where rxMaster.rxMasterID = cuInvoice.rxCustomerID "
-				+ "and CreditMemo=1 ORDER BY "+sortByOption+sortBy.toUpperCase()+" Limit "
-				+ theFrom + ", " + theRows + ";";
+		//BID1277 Simon Modified
+		if(searchTerm!=null){
+			aPaymentsselectQry = "SELECT DISTINCT cuInvoiceID, InvoiceNumber,InvoiceDate,InvoiceAmount,CONCAT(rxMaster.Name, ' ', rxMaster.FirstName) AS Customer,cuInvoice.rxCustomerID,memoStatus, CASE WHEN CONCAT(InvoiceDate, CONCAT(rxMaster.Name, ' ', rxMaster.FirstName), InvoiceAmount, InvoiceNumber) LIKE '%"
+					+ JobUtil.removeSpecialcharacterswithslash(searchTerm)
+					+ "%' THEN 'and' ELSE '' END AS result FROM rxMaster , cuInvoice WHERE rxMaster.rxMasterID = cuInvoice.rxCustomerID AND CreditMemo=1 HAVING result != '' ORDER BY cuInvoiceID DESC";
+		}else{
+			aPaymentsselectQry = " SELECT DISTINCT cuInvoiceID, InvoiceNumber,InvoiceDate,InvoiceAmount,CONCAT(rxMaster.Name, ' ', rxMaster.FirstName) AS Customer,cuInvoice.rxCustomerID,memoStatus  "
+					+ " FROM rxMaster , cuInvoice where rxMaster.rxMasterID = cuInvoice.rxCustomerID "
+					+ "and CreditMemo=1 ORDER BY "+sortByOption+sortBy.toUpperCase()+" Limit "
+					+ theFrom + ", " + theRows + ";";	
+		}
 		Session aSession = null;
 		BigDecimal amt=null;Query aQuery =null;
 		ArrayList<CustomerPaymentBean> aCuPaymentsList = new ArrayList<CustomerPaymentBean>();

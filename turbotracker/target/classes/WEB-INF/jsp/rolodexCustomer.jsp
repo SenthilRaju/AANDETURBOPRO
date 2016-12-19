@@ -204,12 +204,13 @@ input[type=radio] {
 												<td><label><b>Tier Pricing: </b></label></td>
 												<td><select id="customer_tierPrice" name="tier">
 														<option value="-1">- Select -</option>
-														<option value="1" <c:if test='${customerMasterObj.tier==1}'>selected="selected" </c:if>>Price1</option>
-														<option value="2" <c:if test='${customerMasterObj.tier==2}'>selected="selected" </c:if>>Price2</option>
-														<option value="3" <c:if test='${customerMasterObj.tier==3}'>selected="selected" </c:if>>Price3</option>
-														<option value="4" <c:if test='${customerMasterObj.tier==4}'>selected="selected" </c:if>>Price4</option>
-														<option value="5" <c:if test='${customerMasterObj.tier==5}'>selected="selected" </c:if>>Price5</option>
-														<option value="6" <c:if test='${customerMasterObj.tier==6}'>selected="selected" </c:if>>Price6</option>
+														<!-- BID1731 Simon Modified -->
+														<option value="1" <c:if test='${customerMasterObj.tier==1}'>selected="selected" </c:if>>${sysInfoObj.prPriceLevel0}</option>
+														<option value="2" <c:if test='${customerMasterObj.tier==2}'>selected="selected" </c:if>>${sysInfoObj.prPriceLevel1}</option>
+														<option value="3" <c:if test='${customerMasterObj.tier==3}'>selected="selected" </c:if>>${sysInfoObj.prPriceLevel2}</option>
+														<option value="4" <c:if test='${customerMasterObj.tier==4}'>selected="selected" </c:if>>${sysInfoObj.prPriceLevel3}</option>
+														<option value="5" <c:if test='${customerMasterObj.tier==5}'>selected="selected" </c:if>>${sysInfoObj.prPriceLevel4}</option>
+														<option value="6" <c:if test='${customerMasterObj.tier==6}'>selected="selected" </c:if>>${sysInfoObj.prPriceLevel5}</option>
 												</select></td>
 											</tr>
 										</c:if>

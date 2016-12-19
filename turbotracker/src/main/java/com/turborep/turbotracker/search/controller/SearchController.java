@@ -582,4 +582,18 @@ public class SearchController {
 					}
 					return aAccountsSearchList;
 				}
+				//BID1277 Simon Added
+				@RequestMapping(value="/searchCreditDebitMemos",method = RequestMethod.GET)
+				public @ResponseBody  List<AutoCompleteBean> searchCreditDebitMemos(@RequestParam(value = "term", required = false) String theSearchString, HttpServletRequest theRequest,HttpSession theSession) throws IOException, MessagingException 
+				{
+					itslogger.info("------------------Request to searchCreditDebitMemos----------------");
+					List<AutoCompleteBean> creditDebitMemosSearchList = null;
+					try {
+						creditDebitMemosSearchList = itsSearchServices.searchCreditDebitMemos(theSearchString);
+					} catch (SearchException e) {
+						itslogger.error(e.getMessage(), e);
+						sendTransactionException("<b>credit Debit Memo Search:</b>"+theSearchString,"SearchController",e,theSession,theRequest);
+					}
+					return creditDebitMemosSearchList;
+				}
 }

@@ -84,7 +84,10 @@ public class CreditDebitMemoContorller {
 			@RequestParam(value="page", required=false) Integer page,
 			@RequestParam(value="rows", required=false) Integer rows,
 			@RequestParam(value="sidx", required=false) String sidx,
-			@RequestParam(value="sord", required=false) String sord, HttpServletResponse theResponse,HttpSession session,HttpServletRequest therequest) throws CustomerException, IOException, MessagingException {
+			@RequestParam(value="sord", required=false) String sord,
+			//BID1277 Simon Modified
+			@RequestParam(value="search", required=false) String searchTerm,
+			HttpServletResponse theResponse,HttpSession session,HttpServletRequest therequest) throws CustomerException, IOException, MessagingException {
 		int from, to;
 		BigInteger aTotalCount;
 		CustomResponse response = new CustomResponse();
@@ -92,13 +95,17 @@ public class CreditDebitMemoContorller {
 			//aTotalCount = jobService.getJobsCount();
 			to = (rows * page);
 			from = to - rows;
-			ArrayList<CustomerPaymentBean> aCustomerPaymentsList = itsCuMasterService.getcreditordebitmemoList(from, rows,sidx,sord);
+			ArrayList<CustomerPaymentBean> aCustomerPaymentsList = itsCuMasterService.getcreditordebitmemoList(from, rows,sidx,sord,searchTerm);
 			response.setRows(aCustomerPaymentsList);
 			
 			itsLogger.info("I am Here");
 			aTotalCount = itsCuMasterService.getcreditdebitmemoCount();
 			response.setPage(page);
-			response.setTotal((int) Math.ceil((double)aTotalCount.intValue() / (double) rows));
+			if(searchTerm!=null){
+				response.setTotal((int) Math.ceil((double)aCustomerPaymentsList.size()/ (double) rows));				
+			}else{
+				response.setTotal((int) Math.ceil((double)aTotalCount.intValue() / (double) rows));
+			}
 		}catch (CustomerException e) {
 			sendTransactionException("<b>getAll:</b>getAll","Customer",e,session,therequest);
 			itsLogger.error(e.getMessage());

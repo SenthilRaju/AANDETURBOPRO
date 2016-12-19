@@ -651,7 +651,7 @@
 						<td><label>Freight:</label></td>
 						<td><input type="text" style="width: 85px"
 							id="customerInvoice_frightIDcu"
-							name="customerInvoice_frightIDcuname" onkeyup="setTaxTotal_CI()"></td>
+							name="customerInvoice_frightIDcuname"></td>
 						<!-- <td><label>Tax:</label></td><td><input type="text" style="width:85px" id="customerInvoice_taxIdcu"  readonly="readonly"></td> -->
 						<td><label>Tax:</label></td>
 						<td><input type="text" style="width: 85px"
@@ -1217,6 +1217,49 @@
 					//return true;
 				}	
 		});
+		
+		$('#customerInvoice_frightIDcu').keyup(function(){
+			var taxRate=$('#customerInvoice_generaltaxId').val();
+			var subtot = $("#customerInvoice_subTotalID").val().replace(/[^0-9\.-]+/g,"");
+			var frieght = $("#customerInvoice_frightIDcu").val().replace(/[^0-9\.-]+/g,"");
+			var sum = 0;
+			var taxAmt = 0;
+			var rows = jQuery("#customerInvoice_lineitems").getDataIDs();
+				var taxsubtotal = 0;
+			if(cuinvoiceIDhidden=="" && $("#CI_taxsubtotal").val()!=null && $("#CI_taxsubtotal").val()!=""){
+				taxsubtotal=$("#CI_taxsubtotal").val();
+			}else{
+				 for(a=0;a<rows.length;a++)
+				 {
+				    row=jQuery("#customerInvoice_lineitems").getRowData(rows[a]);
+				    var total=row['amount'].replace(/[^0-9\-.]+/g,"");
+				    var taxable=row['taxable'];
+				    var id="#canDoID_"+rows[a];
+				    var canDo=$(id).is(':checked');
+				      if(!isNaN(total)&& !canDo && taxable==1){
+				    	  taxsubtotal=Number(taxsubtotal)+Number(floorFigureoverall(total,2));
+				    	}
+				      }
+			}
+			var allowfreightinTax=false;
+			 var allowreqcheckfreightintax=$('#CI_taxfreight').val();
+				if(allowreqcheckfreightintax!=null && allowreqcheckfreightintax==1){
+					allowfreightinTax=true;
+				}
+			 if(allowfreightinTax){
+				 taxAmt = Number(Number(floorFigureoverall(taxsubtotal, 2))+Number(floorFigureoverall(frieght,2)))*Number(taxRate)/100;
+			 }else{
+				 taxAmt = Number(floorFigureoverall(taxsubtotal, 2))*Number(taxRate)/100;
+			 }
+			 sum = Number(subtot) + taxAmt + Number(frieght);
+			 $("#customerInvoice_taxIdcu").val(formatCurrency(Number(floorFigureoverall(taxAmt, 2))));
+			 $("#customerInvoice_totalID").val(formatCurrency(Number(floorFigureoverall(sum, 2))));	
+			 
+			 if(updateTaxTerritoryStatusOnChange!=undefined)
+				 {
+			 updateTaxTerritoryStatusOnChange=0;
+				 }
+		});
 	});
 	
 	//BID1682 & BID1618 Simon Added (Existing Customer Invoice should remain same.)
@@ -1249,6 +1292,7 @@
 			}); 
 			},2500);
 	}
+	
 	
 </script>
 

@@ -3534,38 +3534,38 @@ Description             : Inventory Settings fieldset.
 										<tr>
 											<td>
 <!-- 											<div style="width:180px;" > -->
-											<input type="text" name="tierpricingid0" class="tierpricingid0" id="prPriceLevel0"  style="width:50px;"maxlength="12" value="${requestScope.prPriceLevel0}"/>
+											<input type="text" name="tierpricingid0" class="tierpricingid0" id="prPriceLevel0"  style="width:50px;"maxlength="12" value="${requestScope.prPriceLevel0}" required/>
 											<label> Whse Cost  &divide;<input type="text" id="prPriceLevelval0" style="width:20px;" value="${requestScope.prPriceLevelval0}" maxlength="3" class="tierPriceValue"></label>
 <!-- 											</div> -->
 											</td>
 										</tr>
 											<tr>
 											<td>
-											<input type="text" name="tierpricingid1" class="tierpricingid1" id="prPriceLevel1"  style="width:50px;" maxlength="12" value="${requestScope.prPriceLevel1}"/>
+											<input type="text" name="tierpricingid1" class="tierpricingid1" id="prPriceLevel1"  style="width:50px;" maxlength="12" value="${requestScope.prPriceLevel1}" required/>
 											<label> Whse Cost  &divide;<input type="text" id="prPriceLevelval1" style="width:20px;"  value="${requestScope.prPriceLevelval1}" maxlength="3" class="tierPriceValue"></label>
 											</td>
 											</tr>
 											<tr>
 											<td>
-											<input type="text" name="tierpricingid2" class="tierpricingid2" id="prPriceLevel2"  style="width:50px;" maxlength="12" value="${requestScope.prPriceLevel2}"/>
+											<input type="text" name="tierpricingid2" class="tierpricingid2" id="prPriceLevel2"  style="width:50px;" maxlength="12" value="${requestScope.prPriceLevel2}" required/>
 											<label> Whse Cost  &divide;<input type="text" id="prPriceLevelval2" style="width:20px;"  value="${requestScope.prPriceLevelval2}" maxlength="3" class="tierPriceValue"></label>
 											</td>
 											</tr>
 											<tr>
 											<td>
-											<input type="text" name="tierpricingid3" class="tierpricingid3"  id="prPriceLevel3" style="width:50px;" maxlength="12" value="${requestScope.prPriceLevel3}"/>
+											<input type="text" name="tierpricingid3" class="tierpricingid3"  id="prPriceLevel3" style="width:50px;" maxlength="12" value="${requestScope.prPriceLevel3}" required/>
 											<label> Whse Cost  &divide;<input type="text" id="prPriceLevelval3" style="width:20px;"  value="${requestScope.prPriceLevelval3}" maxlength="3" class="tierPriceValue"></label>
 											</td>
 											</tr>
 											<tr>
 											<td>
-											<input type="text" name="tierpricingid4" class="tierpricingid4" id="prPriceLevel4" style="width:50px;" maxlength="12" value="${requestScope.prPriceLevel4}"/>
+											<input type="text" name="tierpricingid4" class="tierpricingid4" id="prPriceLevel4" style="width:50px;" maxlength="12" value="${requestScope.prPriceLevel4}" required/>
 											<label> Whse Cost  &divide;<input type="text" id="prPriceLevelval4" style="width:20px;"  value="${requestScope.prPriceLevelval4}" maxlength="3" class="tierPriceValue"></label>
 											</td>
 											</tr>
 											<tr>
 											<td>
-											<input type="text" name="tierpricingid5" class="tierpricingid5" id="prPriceLevel5" style="width:50px;" maxlength="12" value="${requestScope.prPriceLevel5}"/>
+											<input type="text" name="tierpricingid5" class="tierpricingid5" id="prPriceLevel5" style="width:50px;" maxlength="12" value="${requestScope.prPriceLevel5}" required/>
 											<label> Whse Cost  &divide;<input type="text" id="prPriceLevelval5" style="width:20px;"  value="${requestScope.prPriceLevelval5}" maxlength="3" class="tierPriceValue"></label>
 											</td>
 											</tr>

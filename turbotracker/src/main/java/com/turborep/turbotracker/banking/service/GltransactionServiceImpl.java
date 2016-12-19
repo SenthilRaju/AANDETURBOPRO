@@ -214,7 +214,8 @@ public class GltransactionServiceImpl implements GltransactionService {
 			throws BankingException {
 		Cofiscalperiod aCofiscalperiod = null;
 		Session aSession = itsSessionFactory.openSession();
-		String addressQuery = "SELECT cf.coFiscalPeriodID,cf.period,cf.StartDate,cf.EndDate FROM coFiscalPeriod cf JOIN sysInfo si ON cf.coFiscalPeriodID = si.CurrentPeriodID ORDER BY cf.coFiscalPeriodID DESC";
+		//BID1733 Simon Updated
+		String addressQuery = "SELECT cf.coFiscalPeriodID,cf.period,cf.StartDate,cf.EndDate,cf.coFiscalYearId FROM coFiscalPeriod cf JOIN sysInfo si ON cf.coFiscalPeriodID = si.CurrentPeriodID ORDER BY cf.coFiscalPeriodID DESC";
 		Query aQuery = aSession.createSQLQuery(addressQuery);
 		try {// coAccountIDAP coAccountIDFreight coAccountIDSalesTaxPaid
 				// coAccountIDDiscountsTaken
@@ -226,6 +227,7 @@ public class GltransactionServiceImpl implements GltransactionService {
 				aCofiscalperiod.setPeriod((Integer) aObj[1]);
 				aCofiscalperiod.setStartDate((Date) aObj[2]);
 				aCofiscalperiod.setEndDate((Date) aObj[3]);
+				aCofiscalperiod.setCoFiscalYearId((Integer) aObj[4]);
 			}
 			// aCoaccount = (Coaccount) aSession.get(Coaccount.class,
 			// amotransaction.getMoAccountId());
