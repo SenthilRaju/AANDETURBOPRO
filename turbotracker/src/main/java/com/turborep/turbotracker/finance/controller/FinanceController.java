@@ -818,7 +818,7 @@ public class FinanceController {
                          + " gll ON cA.coAccountID = gll.coAccountID AND cA.accountType IN ('Asset','Liability','Equity') WHERE cA.InActive <> 1 AND pdebits IS NOT NULL OR pcredits IS NOT NULL OR ydebits IS NOT NULL OR ycredits IS NOT NULL "
                          + " HAVING ycredits>0 OR ydebits>0 ORDER BY cA.Number) subquery  ORDER BY FinancialStatus,Number ";
            */ 
-            //added the pdebits desimal value to 
+            //added the pdebits desimal value to 4 #1735 #1736
             accDetailsQueryString="SELECT test.*,IF((FinancialStatus=4||FinancialStatus=5||FinancialStatus=6),1,2) AS overallaccounttype  FROM (SELECT coAccount.coAccountID,Number,Description,accountType,FinancialStatus,pdebits,pcredit,"
             		//+ "pdebits-pcredit AS PeriodAmount "
             		+"IF((FinancialStatus=4||FinancialStatus=5||FinancialStatus=6),(pdebits-pcredit),IF((FinancialStatus=7||FinancialStatus=8||FinancialStatus=9),((pdebits-pcredit)*-1),0)) AS PeriodAmount "

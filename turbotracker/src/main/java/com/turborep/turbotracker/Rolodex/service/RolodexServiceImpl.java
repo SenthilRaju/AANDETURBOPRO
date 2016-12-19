@@ -989,7 +989,7 @@ public class RolodexServiceImpl implements RolodexService {
 	@Override
 	public ArrayList<JobsBean> getContactIdbasedOpenQuotes(String theRolodexId, int theJobStatus, Integer theContactId) {
 		itsLogger.debug("getContactIdbasedOpenQuotes");
-		String rxJounalQry = "SELECT DISTINCT j.BidDate, j.JobNumber, j.Description, jb.rxContactID, CONCAT(rxc.FirstName,' ', rxc.LastName) AS Contact, j.EstimatedCost, j.ContractAmount,  jb.QuoteRev, jb.joBidderId, j.joMasterId, jb.rxMasterID, j.locationName,j.JobStatus FROM joMaster j " +
+		/*String rxJounalQry = "SELECT DISTINCT j.BidDate, j.JobNumber, j.Description, jb.rxContactID, CONCAT(rxc.FirstName,' ', rxc.LastName) AS Contact, j.EstimatedCost, j.ContractAmount,  jb.QuoteRev, jb.joBidderId, j.joMasterId, jb.rxMasterID, j.locationName,j.JobStatus FROM joMaster j " +
 								"RIGHT JOIN joBidder jb ON jb.JoMasterID = j.JoMasterID " +
 								"LEFT JOIN cuInvoice ci ON j.rxCustomerID = ci.rxCustomerID " +
 								"RIGHT JOIN rxContact rxc ON rxc.rxContactID = jb.rxContactID " +
@@ -997,6 +997,18 @@ public class RolodexServiceImpl implements RolodexService {
 								"(SELECT jb.joMasterId FROM joBidder jb LEFT JOIN cuInvoice ci  ON jb.rxMasterID = ci.rxCustomerID LEFT JOIN rxContact rxc ON rxc.rxContactID = jb.rxContactID " +
 								"WHERE jb.rxMasterID = "+theRolodexId+"  AND rxc.rxContactID = "+theContactId+"  AND ci.TransactionStatus = 1 ) " +
 								"AND jb.rxMasterID = "+theRolodexId+" AND QuoteDate IS NOT NULL  AND rxc.rxContactID = "+theContactId+" AND j.JobStatus = 1";
+		*/
+		String rxJounalQry = "SELECT DISTINCT j.BidDate, j.JobNumber, j.Description, jb.rxContactID, CONCAT(rxc.FirstName,' ', rxc.LastName) AS Contact, j.EstimatedCost, j.ContractAmount,  jb.QuoteRev, jb.joBidderId, j.joMasterId, jb.rxMasterID, j.locationName,j.JobStatus FROM joMaster j " +
+				"RIGHT JOIN joBidder jb ON jb.JoMasterID = j.JoMasterID " +
+			//	"LEFT JOIN cuInvoice ci ON j.rxCustomerID = ci.rxCustomerID " +
+				"RIGHT JOIN rxContact rxc ON rxc.rxContactID = jb.rxContactID " +
+				"WHERE EXISTS " +
+				"(SELECT jb.joMasterId FROM joBidder jb LEFT JOIN  rxContact rxc ON rxc.rxContactID = jb.rxContactID " +
+				"WHERE jb.rxMasterID = "+theRolodexId+"  AND rxc.rxContactID = "+theContactId+") " +
+				"AND jb.rxMasterID = "+theRolodexId+" AND QuoteDate IS NOT NULL  AND rxc.rxContactID = "+theContactId+" AND j.JobStatus = 1";
+
+		
+		
 		Session aSession = null;
 		ArrayList<JobsBean> aOpenQuotes = new ArrayList<JobsBean>();
 		try{

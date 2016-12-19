@@ -14,16 +14,16 @@
 				</label>
 				</legend>
 					<table  id="shipToAddress">
-					<tr><td><input type="text" id="shipToName" name="shipToName" class="validate[maxSize[100]" style="width: 300px;" disabled="disabled" onchange="validationMethodSplit();"></td></tr>
-	 				<tr><td><input type="text" id="shipToAddress1" name="shipToAddress1" class="validate[maxSize[100]" style="width: 300px;" disabled="disabled" onchange="validationMethodSplit();"></td></tr>
-	 				<tr><td><input type="text" id="shipToAddress2" name="shipToAddress2" class="validate[maxSize[40]" style="width: 300px;" disabled="disabled" onchange="validationMethodSplit();"></td></tr>
+					<tr><td><input type="text" id="shipToName" name="shipToName" class="validate[maxSize[100]" style="width: 300px;" readonly="readonly" onchange="validationMethodSplit();"></td></tr>
+	 				<tr><td><input type="text" id="shipToAddress1" name="shipToAddress1" class="validate[maxSize[100]" style="width: 300px;" readonly="readonly" onchange="validationMethodSplit();"></td></tr>
+	 				<tr><td><input type="text" id="shipToAddress2" name="shipToAddress2" class="validate[maxSize[40]" style="width: 300px;" readonly="readonly" onchange="validationMethodSplit();"></td></tr>
 						<tr>
 							<td>
-		 						<input type="text" id="shipToCity" name="shipToCity" style="width: 100px;" disabled="disabled" onchange="validationMethodSplit();">
+		 						<input type="text" id="shipToCity" name="shipToCity" style="width: 100px;" readonly="readonly" onchange="validationMethodSplit();">
 								<img alt="search" src="./../resources/scripts/jquery-autocomplete/search.png" style="display: none;">
 								
 									<input type="text" id="shipToState" name="shipToState" style="width: 30px; text-transform: uppercase" maxlength="2"  disabled="disabled" onchange="validationMethodSplit();">
-									<label>Zip: </label><input type="text" id="shipToZip" name="shipToZip" style="width: 75px;" disabled="disabled" onchange="validationMethodSplit();">
+									<label>Zip: </label><input type="text" id="shipToZip" name="shipToZip" style="width: 75px;" readonly="readonly" onchange="validationMethodSplit();">
 									
 								<span id="frandbw" >
 									<input type="button" id="backWard" value="" onclick="shiptoaddBackWard()" style="width:20px; background: url('./../resources/images/Arrowleft.png') no-repeat;background-position: center; cursor:pointer;">
@@ -108,12 +108,12 @@ function fn_override_taxIDBasedOnCustomer(){
 
 		//	alert(_global_override_taxTerritory+"=="+divflag+"=="+override_taxIDBasedOnCustomer)
 		
-		$(divflag).contents().find("#shipToName").attr("disabled",true); 
-		$(divflag).contents().find("#shipToAddress1").attr("disabled",true);  
-		$(divflag).contents().find("#shipToAddress2").attr("disabled",true);  
-		$(divflag).contents().find("#shipToCity").attr("disabled",true); 
-		$(divflag).contents().find("#shipToState").attr("disabled",true);  
-		$(divflag).contents().find("#shipToZip").attr("disabled",true); 
+		$(divflag).contents().find("#shipToName").attr("readonly",true); 
+		$(divflag).contents().find("#shipToAddress1").attr("readonly",true);  
+		$(divflag).contents().find("#shipToAddress2").attr("readonly",true);  
+		$(divflag).contents().find("#shipToCity").attr("readonly",true); 
+		$(divflag).contents().find("#shipToState").attr("readonly",true);  
+		$(divflag).contents().find("#shipToZip").attr("readonly",true); 
 
 		
 		if(mode == "0")
@@ -264,12 +264,12 @@ function fn_override_taxIDBasedOnCustomer(){
 		else
 		{
 			$(divflag).contents().find("#frandbw").css('display','none');
-			$(divflag).contents().find("#shipToName").removeAttr("disabled"); 
-			$(divflag).contents().find("#shipToAddress1").removeAttr("disabled"); 
-			$(divflag).contents().find("#shipToAddress2").removeAttr("disabled"); 
-			$(divflag).contents().find("#shipToCity").removeAttr("disabled"); 
-			$(divflag).contents().find("#shipToState").removeAttr("disabled"); 
-			$(divflag).contents().find("#shipToZip").removeAttr("disabled"); 
+			$(divflag).contents().find("#shipToName").removeAttr("readonly"); 
+			$(divflag).contents().find("#shipToAddress1").removeAttr("readonly"); 
+			$(divflag).contents().find("#shipToAddress2").removeAttr("readonly"); 
+			$(divflag).contents().find("#shipToCity").removeAttr("readonly"); 
+			$(divflag).contents().find("#shipToState").removeAttr("readonly"); 
+			$(divflag).contents().find("#shipToZip").removeAttr("readonly"); 
 			var coTaxTerritoryId = "${requestScope.joMasterDetails.coTaxTerritoryId}";
 			 
 			 if(addressid!="" && addressid!=null)

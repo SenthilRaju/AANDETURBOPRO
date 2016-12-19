@@ -318,7 +318,7 @@ WHERE cuSO.cuSOID=$P{cusoID} order by cuSODetail.position;]]>
 +($P{soldtoZip}!=null && !$P{soldtoZip}.equals("") ? $P{soldtoZip} : "" )]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement x="359" y="119" width="200" height="16" isRemoveLineWhenBlank="true" isPrintWhenDetailOverflows="true" uuid="e7380488-93cb-4a42-9f7e-d7b887de87a3"/>
+				<reportElement positionType="Float" x="359" y="119" width="200" height="16" isRemoveLineWhenBlank="true" isPrintWhenDetailOverflows="true" uuid="e7380488-93cb-4a42-9f7e-d7b887de87a3"/>
 				<textElement verticalAlignment="Middle" markup="html"/>
 				<textFieldExpression><![CDATA[($P{printJobName}.intValue()==1)?
 "<b>c/o:</b>"+(($F{joReleaseID}!=null ? $F{Job} : $F{Tag})):
@@ -360,7 +360,7 @@ WHERE cuSO.cuSOID=$P{cusoID} order by cuSODetail.position;]]>
 				<reportElement x="76" y="104" width="191" height="14" uuid="37a61d93-8fda-4461-8d5b-fc32b45d390d"/>
 				<textFieldExpression><![CDATA[$P{soldtoName}]]></textFieldExpression>
 			</textField>
-			<textField isBlankWhenNull="true">
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement x="357" y="104" width="202" height="14" uuid="62fab020-513e-456d-82ad-f38e9669d44d"/>
 				<textFieldExpression><![CDATA[$P{billName}]]></textFieldExpression>
 			</textField>
@@ -462,7 +462,7 @@ WHERE cuSO.cuSOID=$P{cusoID} order by cuSODetail.position;]]>
 				<textFieldExpression><![CDATA[$F{Initials}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement x="359" y="135" width="200" height="16" isRemoveLineWhenBlank="true" isPrintWhenDetailOverflows="true" uuid="d1a1a969-95f4-4ce1-a331-99c98fab2a08"/>
+				<reportElement positionType="Float" x="359" y="135" width="200" height="16" isRemoveLineWhenBlank="true" isPrintWhenDetailOverflows="true" uuid="d1a1a969-95f4-4ce1-a331-99c98fab2a08"/>
 				<textElement verticalAlignment="Middle" markup="html"/>
 				<textFieldExpression><![CDATA[($P{printJobName}.intValue()==1)?
 (( $P{billAddress1}!=null && !$P{billAddress1}.equals("") ? $P{billAddress1}+"<br>" : "" )

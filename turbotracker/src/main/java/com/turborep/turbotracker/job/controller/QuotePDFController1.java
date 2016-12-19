@@ -967,13 +967,15 @@ public class QuotePDFController1 {
 
 			 /**  Architect in Header Box  **/
 			 if(theArchitect != "" && theArchitect != null){
-			 aArchitechName = theArchitect.replaceAll("and", "&");
+				 //edited by prasant 1728
+			 aArchitechName = theArchitect;//.replaceAll("and", "&");
 			 }
 		 
 			 
 			 /**  Engineer in Header Box  **/
 			 if(theEnginner != "" && theEnginner != null){
-			 aEngineerName = theEnginner.replaceAll("and", "&");
+				 //edited by prasant 1728
+			 aEngineerName = theEnginner;//.replaceAll("and", "&");
 			 }
 		
 

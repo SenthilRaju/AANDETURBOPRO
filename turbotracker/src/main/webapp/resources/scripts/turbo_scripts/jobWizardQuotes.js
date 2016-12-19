@@ -5342,6 +5342,7 @@ function viewQuotePDF() {
 	}
 	var currenDate = currentMonth + "/" + date + "/"
 			+ currentDate.getFullYear();
+	alert("encodeBigurl(aEngineer):"+encodeBigurl(aEngineer));
 	/*window.open("./quotePDFController/viewnewQuotePdfForm?enginnerName="*/
 	  window.open("./quotePDFController1/viewoldQuotePdfForm?enginnerName="
 			+ encodeBigurl(aEngineer) + "&architectName=" + encodeBigurl(aArchitect) + "&bidDate="

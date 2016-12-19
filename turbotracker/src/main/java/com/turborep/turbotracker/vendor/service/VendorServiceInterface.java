@@ -219,5 +219,7 @@ public interface VendorServiceInterface {
 
 	//BID1682
 	Cuso getCuSo(Integer cuSoID) throws VendorException;
+//1724
+	public BigDecimal getVendorDiscountPercentage(Integer vendorID)throws VendorException;
 
 }

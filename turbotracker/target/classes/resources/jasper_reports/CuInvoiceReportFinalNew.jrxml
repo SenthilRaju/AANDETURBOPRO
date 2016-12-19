@@ -2,7 +2,7 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="CuInvoiceReport" pageWidth="612" pageHeight="792" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="35de86c0-16af-44d7-b699-f4837f07be00">
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="96"/>
+	<property name="ireport.y" value="0"/>
 	<parameter name="CuInvoice" class="java.lang.String"/>
 	<parameter name="shiptoName" class="java.lang.String"/>
 	<parameter name="shiptoAddress1" class="java.lang.String"/>
@@ -420,7 +420,7 @@ WHERE cuInvoice.cuInvoiceID=$P{CuInvoice} ORDER BY cuInvoiceDetail.position;]]>
 +( $P{billtoZip}!=null && !$P{billtoZip}.equals("") ? $P{billtoZip} : "" )]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement x="343" y="175" width="220" height="16" isRemoveLineWhenBlank="true" isPrintWhenDetailOverflows="true" uuid="75075df3-76c8-4120-aa27-c5e4c10a86fd"/>
+				<reportElement positionType="Float" x="343" y="175" width="220" height="16" isRemoveLineWhenBlank="true" isPrintWhenDetailOverflows="true" uuid="75075df3-76c8-4120-aa27-c5e4c10a86fd"/>
 				<textElement markup="html"/>
 				<textFieldExpression><![CDATA[($P{printJobName}.intValue()==1)?
 "<b>c/o:</b>"+($F{Job}):
@@ -433,7 +433,7 @@ WHERE cuInvoice.cuInvoiceID=$P{CuInvoice} ORDER BY cuInvoiceDetail.position;]]>
 			<elementGroup/>
 			<componentElement>
 				<reportElement stretchType="RelativeToTallestObject" x="116" y="3" width="295" height="83" isPrintWhenDetailOverflows="true" uuid="058f4159-dfd5-42c8-a6f7-48fdabca7d2a"/>
-				<hc:html xmlns:hc="http://jasperreports.sourceforge.net/htmlcomponent" xsi:schemaLocation="http://jasperreports.sourceforge.net/htmlcomponent http://jasperreports.sourceforge.net/xsd/htmlcomponent.xsd" scaleType="RetainShape" horizontalAlign="Left" verticalAlign="Middle">
+				<hc:html xmlns:hc="http://jasperreports.sourceforge.net/htmlcomponent" xsi:schemaLocation="http://jasperreports.sourceforge.net/htmlcomponent http://jasperreports.sourceforge.net/xsd/htmlcomponent.xsd" horizontalAlign="Left" verticalAlign="Middle">
 					<hc:htmlContentExpression><![CDATA[(($F{header}.replaceAll("`and`nbsp;", " ")).replaceAll("`", "")).replaceAll("amp;"," ")+" "]]></hc:htmlContentExpression>
 				</hc:html>
 			</componentElement>
@@ -578,7 +578,7 @@ WHERE cuInvoice.cuInvoiceID=$P{CuInvoice} ORDER BY cuInvoiceDetail.position;]]>
 + ( $F{remitToZip} !=null && !$F{remitToZip}.equals("")? $F{remitToZip} : "" )]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement x="343" y="191" width="220" height="16" isRemoveLineWhenBlank="true" isPrintWhenDetailOverflows="true" uuid="ba833510-6249-4b3d-bb53-aa53b0c7365a"/>
+				<reportElement positionType="Float" x="343" y="191" width="220" height="16" isRemoveLineWhenBlank="true" isPrintWhenDetailOverflows="true" uuid="ba833510-6249-4b3d-bb53-aa53b0c7365a"/>
 				<textElement markup="html"/>
 				<textFieldExpression><![CDATA[($P{printJobName}.intValue()==1)?
 (( $P{shiptoAddress1}!=null && !$P{shiptoAddress1}.equals("") ? $P{shiptoAddress1}+"<br>" : "" )

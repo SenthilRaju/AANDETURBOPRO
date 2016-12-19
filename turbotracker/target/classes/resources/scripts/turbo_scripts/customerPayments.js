@@ -1322,7 +1322,7 @@ function applypayments()
 	 
 	
 	 
-	//Check period is openy
+	// Check period is open
 	$.ajax({
 		url: "./checkAccountingCyclePeriods",
 		data:{"datetoCheck":$("#paymentdateid").val(),"UserStatus":checkpermission},

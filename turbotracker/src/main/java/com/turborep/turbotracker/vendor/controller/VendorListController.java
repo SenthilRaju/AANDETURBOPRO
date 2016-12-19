@@ -504,9 +504,31 @@ public class VendorListController {
 		return status;
 	}
 	
-	
+	@RequestMapping(value="/getVendorDiscountPercentage",method = RequestMethod.GET)
+	public @ResponseBody String getVendorDiscountPercentage(
+			@RequestParam(value = "vendorID", required = false) Integer vendorID,
+				HttpSession theSession,HttpServletResponse theResponse,HttpServletRequest theRequest) throws IOException, VendorException,
+	MessagingException {
+		ArrayList<Vebillpay> aVebillpays = new ArrayList<Vebillpay>();
+		String result="";
+		BigDecimal percentage =BigDecimal.ZERO;
+		try{
+			 percentage = itsVendorService.getVendorDiscountPercentage(vendorID);
+			
+			System.out.println("aVebillpays.length::"+aVebillpays.size());
+			
+		}catch (VendorException e) {
+			itsLogger.error(e.getMessage(), e);
+			theResponse.sendError(e.getItsErrorStatusCode(), e.getMessage());
+			sendTransactionException( vendorID+"","VendorListController",e,theSession,theRequest);
+			throw e;
+		}
+		return result+percentage;
+	}
 	@RequestMapping(value="/getBillPayDetails",method = RequestMethod.GET)
-	public @ResponseBody ArrayList<Vebillpay> getBillPayDetails(@RequestParam(value = "vebilID", required = false) Integer thevebilID, HttpSession theSession,HttpServletResponse theResponse,HttpServletRequest theRequest) throws IOException, VendorException, MessagingException {
+	public @ResponseBody ArrayList<Vebillpay> getBillPayDetails(@RequestParam(value = "vebilID", required = false) Integer thevebilID, 
+				HttpSession theSession,HttpServletResponse theResponse,HttpServletRequest theRequest) throws IOException, VendorException,
+	MessagingException {
 		ArrayList<Vebillpay> aVebillpays = new ArrayList<Vebillpay>();
 		try{
 			aVebillpays = itsVendorService.getBillPayDetails(thevebilID);
