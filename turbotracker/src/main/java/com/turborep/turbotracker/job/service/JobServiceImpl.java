@@ -11661,7 +11661,8 @@ public class JobServiceImpl implements JobService {
 
 			if (theCuso.getShipToMode() == 3) {
 				aRxmaster = new Rxmaster();
-				if(afmdbCuso.getRxShipToAddressId()!=null)
+				//added by prasant for validating ship to address #1757
+				if(afmdbCuso.getRxShipToAddressId()!=null || afmdbCuso.getRxShipToAddressId()!=0 )
 				{
 					Rxaddress aradd=new Rxaddress();
 					aradd = (Rxaddress) aCuSOSession.get(Rxaddress.class,afmdbCuso.getRxShipToAddressId());	
