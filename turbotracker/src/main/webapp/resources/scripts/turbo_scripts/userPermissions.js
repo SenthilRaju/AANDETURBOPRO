@@ -854,6 +854,8 @@ function updateGroupDefaultButtonAction(procedurename){
 }
 
 function GroupByprocedureSelect(selectedgroup){
+	
+console("permission:");
 	if(selectedgroup=='Customer'){
 		if($('#CompanyCustomerID').is(':checked')){
 			checkboxenableOrdisable('CompanyCustomerID',1);

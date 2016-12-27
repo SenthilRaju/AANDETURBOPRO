@@ -501,7 +501,7 @@ jQuery(function() {
 
 function createNewcreditdebitmemo()
 {
-	alert("it is calling..!");
+	// alert("it is calling..!");
 	document.getElementById("creditdebitmemoformID").reset();
 	
 	$("#addcreditDebitMemosDlg").dialog("open");

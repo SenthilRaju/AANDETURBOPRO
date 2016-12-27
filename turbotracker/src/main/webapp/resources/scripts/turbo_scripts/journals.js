@@ -1233,7 +1233,7 @@ function checkValuesAreNotEqual(){
 }
 function saveEditedJournalData(operation,formchange,gridchange) {
 	
-	alert("hi it is calling");
+	//alert("hi it is calling");
 	
 	$('#journalnewsave').attr("disabled",true);
 	$('#journalnewsave').css('background','-webkit-gradient(linear, left top, left bottom, from(#C1C3CA), to(#A4A4A5))');

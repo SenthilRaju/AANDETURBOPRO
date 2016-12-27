@@ -26,7 +26,7 @@ jQuery(document).ready(function() {
 	});
 	//BID1691 Simon (Reg : countyCode is expected to allow Alpha Numeric chars)
 	$("#CountyCodeId").keyup(function(){
-		alert("2");
+		//alert("2");
 		var countyCode=$("#CountyCodeId").val();
 		if(countyCode!=undefined && countyCode.match(/[^0-9a-z]/i)){
 			$('#CountyCodeId').css('border-color', 'red');
@@ -48,7 +48,7 @@ jQuery(document).ready(function() {
 	});
 	//BID1691 Simon (Reg : countyCode is expected to allow Alpha Numeric chars)
 	$("#stateCodeID").keyup(function(){
-		alert("1");
+		//alert("1");
 		var stateCode=$("#stateCodeID").val();
 		if(stateCode!=undefined && stateCode.match(/[^0-9a-z]/i)){
 			$('#stateCodeID').css('border-color', 'red');

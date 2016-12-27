@@ -10202,12 +10202,15 @@ public class JobServiceImpl implements JobService {
 	public Cuinvoice updateCusotmerInvoiceDetails(Cuinvoice theCuinvoice)
 			throws JobException {
 		Session aSession = itsSessionFactory.openSession();
+		boolean invoiceDate_Chnaged_flag=false;
 		Cuinvoice aCuinvoice = null;
 		try {
 			Transaction aTransaction = aSession.beginTransaction();
 			aTransaction.begin();
-			aCuinvoice = (Cuinvoice) aSession.get(Cuinvoice.class,
-					theCuinvoice.getCuInvoiceId());
+			aCuinvoice = (Cuinvoice) aSession.get(Cuinvoice.class,theCuinvoice.getCuInvoiceId());
+			//added by prasant check the Invoice date is changed or not 
+			invoiceDate_Chnaged_flag=aCuinvoice.equals(theCuinvoice);
+			
 			aCuinvoice.setInvoiceDate(theCuinvoice.getInvoiceDate());
 			// aCuinvoice.setInvoiceNumber(theCuinvoice.getInvoiceNumber());
 			aCuinvoice.setDueDate(theCuinvoice.getDueDate());
@@ -10274,8 +10277,11 @@ public class JobServiceImpl implements JobService {
 			aCuinvoice.setPrToWarehouseId(theCuinvoice.getPrToWarehouseId());
 			aCuinvoice.setTaxfreight(theCuinvoice.getTaxfreight());
 			//aCuinvoice.setPaymentMadeOn(theCuinvoice.getInvoiceDate());
-			//added by prasant #633
-		 aCuinvoice.setPaymentMadeOn(new Date());
+			//added by prasant #633 check the invoiced date is changed or not else we will insert InvoicedDate
+			if (invoiceDate_Chnaged_flag)
+		     aCuinvoice.setPaymentMadeOn(new Date());
+			else 
+				  aCuinvoice.setPaymentMadeOn(theCuinvoice.getInvoiceDate());
 			
 			aSession.update(aCuinvoice);
 			aTransaction.commit();
