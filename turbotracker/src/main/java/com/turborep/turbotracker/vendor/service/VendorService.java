@@ -3063,7 +3063,7 @@ l.			 * Table :veBillDetail
 	}
 	
 	@Override
-	public void receivingMiscellaneousBill(Vebill aVebill,Vebilldistribution veDist,Integer yearID,Integer periodID,String username,String reason) throws BankingException, VendorException, CompanyException, JobException
+	public void receivingMiscellaneousBill(Vebill aVebill,Vebilldistribution veDist,Integer yearID,Integer periodID,String username,String reason,Vebill veBillBeforeEdited) throws BankingException, VendorException, CompanyException, JobException
 	{
 		Session aSession1 = null;		
 		Transaction aTransaction = null;
@@ -3093,9 +3093,12 @@ l.			 * Table :veBillDetail
 								
 			}
 			
+			//BID1733 Simon Modified
 			// For Getting New Period	
-			Cofiscalperiod aCofiscalperiod =accountingCyclesService.getCurrentPeriod(periodID);
-			Cofiscalyear aCofiscalyear = accountingCyclesService.getCurrentYear(yearID);
+//			Cofiscalperiod aCofiscalperiod =accountingCyclesService.getCurrentPeriod(periodID);
+//			Cofiscalyear aCofiscalyear = accountingCyclesService.getCurrentYear(yearID);
+			Cofiscalperiod aCofiscalperiod =accountingCyclesService.getPeriodByDate(veBillBeforeEdited.getBillDate());
+			Cofiscalyear aCofiscalyear = accountingCyclesService.getCurrentYear(aCofiscalperiod.getCoFiscalYearId());
 			
 			if(reason!= null && !reason.trim().equals(""))
 			{
@@ -3110,7 +3113,7 @@ l.			 * Table :veBillDetail
 					for(GlTransaction glTransObj:arrayglTransList)
 					{
 						
-						glTransObj.setTransactionDate(aVebill.getBillDate());
+						glTransObj.setTransactionDate(veBillBeforeEdited.getBillDate());
 						
 						// period
 						glTransObj.setCoFiscalPeriodId(aCofiscalperiod.getCoFiscalPeriodId());

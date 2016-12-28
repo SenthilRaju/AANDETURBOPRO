@@ -88,4 +88,7 @@ public interface AccountingCyclesService {
 	//public Integer getPeriodIdForMe(Integer period, Integer yearId);
 
 	public Integer getPeriodIdForMe(String StartDate, String EndDate, Integer yearId);
+	
+	//BID1733 Simon Added
+	public Cofiscalperiod getPeriodByDate(Date dateToCheck);
 }
