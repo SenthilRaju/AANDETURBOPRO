@@ -70,7 +70,7 @@
 
 	function loadCutomerPaymentList(theUrl){
 	var aCupayPage = $("#customerpaymentID").val();
-	alert(""+theUrl);
+	//alert(""+theUrl);
 	$("#customerpaymentlist").jqGrid({
 		datatype: 'JSON',
 		mtype: 'GET',

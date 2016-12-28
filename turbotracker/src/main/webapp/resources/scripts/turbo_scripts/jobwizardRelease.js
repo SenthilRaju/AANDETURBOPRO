@@ -1472,6 +1472,7 @@ return element;
 } 
 
 function releasestatusImage(cellValue, options, rowObject) {
+	
 	var element = '';
 	var transstatus=rowObject['transStatus'];
 	var type=rowObject['type'];
@@ -8810,7 +8811,7 @@ $(function() { var cache = {}; var lastXhr='';
 
 function getCustomerInvoiceDetails(joDetailId, CustomerID){
 	
-	alert("hi in getCustomerInvoiceDetails");
+	//alert("hi in getCustomerInvoiceDetails");
 	
 	console.log('getCustomerInvoiceDetails');
 	$.ajax({

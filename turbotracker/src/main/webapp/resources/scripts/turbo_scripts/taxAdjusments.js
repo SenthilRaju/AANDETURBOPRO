@@ -299,7 +299,7 @@ function grandTotalCalculation(option)
 
 function saveTaxAdjustments()
 {
-	alert("tax adj is calling..!");
+	//alert("tax adj is calling..!");
 	var crTaxable;
 	var ogTaxable;
 	

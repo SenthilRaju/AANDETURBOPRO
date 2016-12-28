@@ -713,7 +713,7 @@
 		
 		
 	function loadVendorBillPay(manufacturer){
-
+//alert("it is calling..!");
 			
 			$("#vendorBills").jqGrid({
 				url:'./vendorscontroller/vendorbills_data?',
@@ -721,7 +721,7 @@
 				mtype: 'GET',
 				postData:{manufacturerID:manufacturer},
 				pager: jQuery('#vendorBillsPager'),
-				colNames: ['Pay','RxMasterID', 'Vendor', 'Due Date', 'PO #', 'Invoice #', 'Bill Date', 'Balance', 'VeBillID', 'RxMasterID','Applying Amount','DiscountAmount','tranStatus','reason'],
+				colNames: ['Pay','RxMasterID', 'Vendor', 'Due Date', 'PO #', 'Invoice #', 'Bill Date', 'Balance', 'VeBillID', 'RxMasterID','FreightAmount','Applying Amount','DiscountAmount','tranStatus','reason'],
 				colModel: [
 					{name:'payBill', index:'payBill', align:'center',sortable: false , hidden:false, width:20, editable:true, edittype:'text', editoptions:{size:30}, formatter:billApplyingFromatter, editrules:{required:false},cellattr: function (rowId, val, rawObject) {
 						
@@ -747,11 +747,14 @@
 		           	{name:'billDate', index:'billDate', align:'center', width:40, editable:true, edittype:'text', editoptions:{}, editrules:{required:false}},
 		           	{name:'balance', index:'balance', align:'right', width:40, editable:true,hidden:false, editrules:{required:false}, formatter:customCurrencyFormatter },
 		           	{name:'veBillID', index:'veBillID', align:'right', width:50, editable:true,hidden: true, editrules:{required:false}},
+		           
 		           	{name:'vendorRxMasterID', index:'vendorRxMasterID', align:'right', width:10, editable:true,hidden: true, editrules:{required:false},
 			           	formatter:function(cellvalue, options, rowObject){
 					    rxVendorList.push(cellvalue);
                     	 return cellvalue;
                      }},
+                 	{name:'freightAmount', index:'freightAmount', align:'right', width:50, editable:true,hidden: true, editrules:{required:false}},
+ 		           
 		           	{name:'applyingAmount', index:'applyingAmount', align:'right', width:50, editable:true,hidden: false, editrules:{required:false}, formatter:customCurrencyFormatter},
                      {name:'discountAmount', index:'discountAmount', align:'right', width:50, editable:true,hidden: true, editrules:{required:false}, formatter:customCurrencyFormatter},
 		           	{name:'tranStatus', index:'tranStatus', align:'right', width:50, editable:true,hidden: true, editrules:{required:false}},
@@ -864,15 +867,30 @@
 						data: {'vebilID' : vebillID},
 						success: function(data) {
 
-							
+							//added by prasant kuamr 
 							if(data != ''){
 								$.each(data, function(index, value) { 
-									var aDisCount = $("#discount1_ID").val().replace(/[^0-9\.]+/g,"");
-									var aDisCount1 = $("#originalAmonut_ID").html().replace(/[^0-9\.]+/g,"");
+									var aDisCount;
+									$.ajax({
+										url: "./vendorscontroller/getVendorDiscountPercentage",
+										type: "GET",
+										data: {'vendorID' : vendorID},
+										success: function(data) {
+											aDisCount=data;
+											//alert("aDisCount"+aDisCount)
+											$("#discount_ID").val(aDisCount);
+										}
+									});
 									
+									//var aDisCount = $("#discount1_ID").val().replace(/[^0-9\.]+/g,"");
+									var aDisCount1 = $("#originalAmonut_ID").html().replace(/[^0-9\.]+/g,"");
+									//Here Only we have to added #1724 related code
+									//alert("double click is calling....");
 									var aCalCulateNo = (value.discountAmount/aDisCount1)*100;
 									$("#discount_ID").val("");
-									$("#discount_ID").val(aCalCulateNo.toFixed(2));
+									//alert("aDisCount"+aDisCount)
+									/* aCalCulateNo.toFixed(2) */
+									
 									$("#Paying_ID").val("");
 									$("#Paying_ID").val(formatCurrency(value.applyingAmount));
 									$("#discount1_ID").val("");
@@ -1304,10 +1322,11 @@
  */
  function billApplyingFromatter(cellvalue, options, rowObject){
 
-		
+	//i have to change here #1724	
 		var anApplyingAmount = rowObject.applyingAmount;
 		var aBillAmount = rowObject.billAmount;
 		var balanceAmt = rowObject.balance;
+		
 		var disamt = rowObject.discountAmount;
 		var image = "";
 		//edited by prasant id=#548 date 27/06/2016
@@ -1416,7 +1435,7 @@
  
 		function payFullAmount(billAmt,rowId,img)
 		{
-			
+			//alert("it is calling...");
 			  if(img.src.match("bill_empty.png"))
 			   {				  
 			 	 
@@ -1424,11 +1443,12 @@
 			 	var grid = $('#vendorBills');
 			 	var vendorID = grid.jqGrid('getCell',rowId, 'vendorRxMasterID'); 
 				var billDate = new Date (grid.jqGrid('getCell',rowId, 'billDate'));
+				var FrieghtAmt=grid.jqGrid('getCell',rowId, 'freightAmount'); 
 				var curDate = new Date();
 				var aDisCount = 0;
  				var aPayingAmount = billAmt;
 
-
+         //i have to added fix code for 1724 
 			 	if($("#chk_termsDiscount").is(":checked"))
 				{
 					$.ajax({
@@ -1448,10 +1468,18 @@
 
 							if(billDate >= curDate)
 							{
+								//alert("data:-"+data.discountIncludesFreight);
+								//alert("data:-"+FrieghtAmt);
+								//Here I have to add code #1724
+								
+								if (data.discountIncludesFreight==true)
 							aDisCount = (Number(data.discountPercent)*Number(billAmt))/100;
+								else
+									aDisCount=(Number(data.discountPercent)*Number(billAmt-FrieghtAmt))/100;
 							aPayingAmount = Number(aPayingAmount)-Number(aDisCount);
 
-							img.src="../resources/Icons/View_Discount_Taken.BMP";							
+							img.src="../resources/Icons/View_Discount_Taken.BMP";	
+							//alert("related to #1724");
 						 	saveAddPayDigfromimageclick(aPayingAmount,aDisCount,rowId);
 							}
 							else
@@ -1459,7 +1487,7 @@
 								img.src="../resources/Icons/bill_full.png";							
 							 	saveAddPayDigfromimageclick(aPayingAmount,aDisCount,rowId);
 							}	
-
+           
 							
 
 							var rowData = $('#vendorBills').jqGrid('getRowData', rowId);
@@ -1643,7 +1671,7 @@
 			var aDisCount = discAmt;
 			var aPayingAmount =parseFloat(billAmt);
 			console.log("4");	
-
+              //here BillPayDetails are going to save ,#1724
 				var aDetails = "veBillID="+aVeBillID+"&disCountPrice="+aDisCount+"&payingAmount="+aPayingAmount+"&isAlreadyExist="+isAlreadyExist+"&moAccountId="+$("#bankAccount").val();
 					console.log("5" +aDetails);		
 					

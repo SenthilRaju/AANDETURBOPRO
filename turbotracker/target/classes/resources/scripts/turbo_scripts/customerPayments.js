@@ -1257,46 +1257,7 @@ function applypayments()
 	var res = month.split("/");
 	var date=new  Date();
 	var UserLoginID=  $("#userLogin_Id").val();
-	//commented by prasant Bartos Fixes
-	
-	//alert("sdfasf:"+())
-	
-	
-	
-	//to check is Admin
- /* $.ajax({
-    url: "./usercontroller/checkAdminOrNot",
-    async:false,
-    data: { 'UserLoginID':UserLoginID},
-    type: 'POST',
-    success: function(data){
-    	if(data==1)
-    		{
-    	checkpermission=true;
-    	flag=1;
-    		}
-    	}
-	});*/
-  
-
-  
-	//var prevMonth=date.getMonth()*1;
-	//var paymentMonth=res[0]*1;
-	
-	/*if( (prevMonth+1)==paymentMonth &&  flag!=1)
-	{
-		checkpermission=true;;
-	}*/
-	
-
-	
-	/*	if(checkpermission==false)
-		{
-		   // $("#LoadingDialog").css({"display":"none"});
-			showDeniedPopup1();
-		}*/
 		
-	//else{
 	$("#LoadingDialog").css({"display":"inherit"});
 	//Get Paid Rows only
 	var rows = jQuery("#customerPaymets").getDataIDs();
@@ -1322,7 +1283,7 @@ function applypayments()
 	 
 	
 	 
-	//Check period is openy
+	// Check period is open
 	$.ajax({
 		url: "./checkAccountingCyclePeriods",
 		data:{"datetoCheck":$("#paymentdateid").val(),"UserStatus":checkpermission},
@@ -1347,7 +1308,10 @@ function applypayments()
 					"reference":$("#payCheckId").val(),
 					"cuReceiptTypeId":$("#paymentReciptTypeId option:selected").val(),
 					"discountAmt":$("#discountgivenId").val().replace(/[$,]+/g,""),
-					"paidInvoiceDetails":JSON.stringify(paidInvoiceDetails)},
+					"paidInvoiceDetails":JSON.stringify(paidInvoiceDetails),
+					"periodid":periodid,
+					"yearid":yearid
+					},
 					type: "POST",
 					success: function(data) { 
 						$('#customerPaymets').trigger("reloadGrid");

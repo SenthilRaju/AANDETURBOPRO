@@ -15,12 +15,12 @@
 			<td id="customerBookedFields">
 			</td> 
 			<td><input type="hidden" id="JobCustomerId" name="empCustomerID" value="${requestScope.joMasterDetails.rxCustomerId}" class="jobCustomerID">
-			<td style="float:right;">&nbsp;<b>Job #: </b>
-				<input type="text" class="jobHeader_JobNumber" name="jobHeader_JobNumber_name" disabled="disabled"></td>
+			<td style="float:right;">&nbsp;<b>Job #: </b> <!-- modified by prasant for #1684 -->
+				<input type="text" class="jobHeader_JobNumber" name="jobHeader_JobNumber_name" readonly="readonly"></td>
 		</tr>
 		<tr id= "OriJobNumber" align="right" style="display: none;">
-			<td colspan="7" align="right"><b>Original Quote#:</b>
-			<input type="text" class="jobHeader_ORI_JobNumber" name="jobHeader_ORI_JobNumber_name" disabled="disabled" value="${requestScope.joMasterDetails.quoteNumber}"></td>
+			<td colspan="7" align="right"><b>Original Quote#:</b><!-- modified by prasant for #1684 -->
+			<input type="text" class="jobHeader_ORI_JobNumber" name="jobHeader_ORI_JobNumber_name" readonly="readonly" value="${requestScope.joMasterDetails.quoteNumber}"></td>
 		</tr>
 	</table> 
 	</form>

@@ -78,7 +78,7 @@ function showPurchaseOrderList(searchData,fromDate,toDate){
 		     return { 'vePOID' : vePOID};
 		    },
 		    afterSubmit:function(response,postData){
-		    	alert('after submit');
+		    	//alert('after submit');
 		      return [true, $('#PurchaseOrdersGrid').trigger("reloadGrid")];
 		    }
 		   }

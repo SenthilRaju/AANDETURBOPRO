@@ -349,6 +349,8 @@ public class CustomerPaymentsController {
 															@RequestParam(value="cuReceiptTypeId", required=false) Byte cuReceiptTypeId,
 															@RequestParam(value="discountAmt", required=false) BigDecimal discountAmt,
 															@RequestParam(value="paidInvoiceDetails", required=false) String paidInvoiceDetails,
+															@RequestParam(value="yearid", required=false) Integer yearId,
+															@RequestParam(value="periodid", required=false) Integer periodId,
 															HttpSession session,HttpServletResponse response,HttpServletRequest therequest) throws CommandException,BankingException, MessagingException, IOException, CompanyException {
 		
 		Cureceipt cuReceipt =new Cureceipt();
@@ -361,27 +363,27 @@ public class CustomerPaymentsController {
 		logger.info("Applied Amount: payMultipleInvoice");
 		
 		//added by prasant kumar for #633
-        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        String strDate = dateFormat.format(receiptDate);
-        String datePerticles[]=strDate.split("-");
+      //  DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+       // String strDate = dateFormat.format(receiptDate);
+      //  String datePerticles[]=strDate.split("-");
         
         //added by prasant to get startdate and end date #633
-        String monthStartDate1=datePerticles[0]+"-"+datePerticles[1]+"-"+1;
-        String monthEndDate2=datePerticles[0]+"-"+datePerticles[1]+"-"+31;
+      //  String monthStartDate1=datePerticles[0]+"-"+datePerticles[1]+"-"+1;
+     //   String monthEndDate2=datePerticles[0]+"-"+datePerticles[1]+"-"+31;
         
 		try {
 			Sysinfo aSysinfo = accountingCyclesService.getSysinfo();
 			
 			//added by prasant kumar for #633
-			Integer yearId=	accountingCyclesService.getYearId(datePerticles[0]);
-			Integer period=Integer.parseInt(datePerticles[1]);
+			//Integer yearId=	accountingCyclesService.getYearId(datePerticles[0]);
+		//	Integer period=Integer.parseInt(datePerticles[1]);
 			
-			Integer periodId=	accountingCyclesService.getPeriodIdForMe(monthStartDate1,monthEndDate2, yearId);
-			if(periodId==0 )
-					periodId=aSysinfo.getCurrentPeriodId();
+		//	Integer periodId=	accountingCyclesService.getPeriodIdForMe(monthStartDate1,monthEndDate2, yearId);
+		//	if(periodId==0 )
+			//		periodId=aSysinfo.getCurrentPeriodId();
 			
-			if(yearId==0)
-				yearId=aSysinfo.getCurrentFiscalYearId();
+			//if(yearId==0)
+			//	yearId=aSysinfo.getCurrentFiscalYearId();
 			
 			
 			cuReceipt.setRxCustomerId(rxCustomerID);
@@ -391,10 +393,13 @@ public class CustomerPaymentsController {
 			cuReceipt.setReference(reference);
 			cuReceipt.setCuReceiptTypeId(cuReceiptTypeId);
 			cuReceipt.setCuReceiptId(receiptID);
-
-			//itsCuMasterService.savePayment(cuReceipt,aSysinfo.getCurrentFiscalYearId(),aSysinfo.getCurrentPeriodId(),aUserBean,paidInvoiceDetails,discountAmt);
 			//edited by prasant #633
-			itsCuMasterService.savePayment(cuReceipt,yearId,periodId,aUserBean,paidInvoiceDetails,discountAmt);
+             if (yearId!=null  && periodId !=null)
+            	 itsCuMasterService.savePayment(cuReceipt,yearId,periodId,aUserBean,paidInvoiceDetails,discountAmt);
+             else
+			     itsCuMasterService.savePayment(cuReceipt,aSysinfo.getCurrentFiscalYearId(),aSysinfo.getCurrentPeriodId(),aUserBean,paidInvoiceDetails,discountAmt);
+			
+			
 			
 			
 		} catch (Exception excep) {

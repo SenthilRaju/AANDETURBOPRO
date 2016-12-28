@@ -742,7 +742,7 @@ public class VendorService implements VendorServiceInterface{
 		if(rxMasterID != null){
 			aVendorBillPayQryStr = new StringBuilder("SELECT veBill.DueDate, CONCAT(rxMaster.Name, ' ', rxMaster.FirstName) AS Vendor, vePO.PONumber, veBill.InvoiceNumber,")
 				.append(" veBill.BillDate, veBill.BillAmount-veBill.AppliedAmount AS Balance, veBill.BillAmount, veBill.AppliedAmount,")
-				.append(" veBill.veBillID, veBill.rxMasterID, veBill.FreightAmount, veBillPay.ApplyingAmount, veBillPay.ApplyingAmount,veBillPay.DiscountAmount,veBill.TransactionStatus,veBill.Reason")
+				.append(" veBill.veBillID, veBill.rxMasterID, veBill.FreightAmount, veBillPay.ApplyingAmount,veBillPay.DiscountAmount,veBill.TransactionStatus,veBill.Reason")
 				.append(" FROM (veBill LEFT JOIN vePO ON veBill.vePOID = vePO.vePOID) LEFT JOIN rxMaster ON veBill.rxMasterID = rxMaster.rxMasterID")
 				.append(" LEFT JOIN veBillPay veBillPay ON veBill.veBillID = veBillPay.veBillID")
 				.append(" WHERE ( veBill.TransactionStatus=1 OR veBill.TransactionStatus=-2 ) AND (veBill.Applied=0) AND (veBill.BillAmount <> veBill.AppliedAmount) AND rxMaster.rxMasterID = ")
@@ -6120,6 +6120,24 @@ public Integer getTransactionDailogStatus(Integer vepoID) {
 		Transaction tx=session.beginTransaction();
 		session.save(vebilllog);
 		tx.commit();
+	}
+
+	@Override
+	public BigDecimal getVendorDiscountPercentage(Integer vendorID)throws VendorException {
+		Session aSession = null;
+		BigDecimal Dis=BigDecimal.ZERO;
+		try {
+			aSession = itsSessionFactory.openSession();
+			Vemaster vendorMaster=(Vemaster) aSession.get(Vemaster.class,vendorID);
+			if (vendorMaster!=null)
+				Dis=vendorMaster.getDiscountPercent().setScale(2, BigDecimal.ROUND_FLOOR);
+			
+		} catch (Exception e) {
+			itsLogger.error(e.getMessage(), e);
+			VendorException aVendorException = new VendorException(e.getCause().getMessage(), e);
+			throw aVendorException;
+		}
+		return Dis;
 	}
 	
 }

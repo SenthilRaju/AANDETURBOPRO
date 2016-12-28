@@ -3573,7 +3573,7 @@ Description             : Inventory Settings fieldset.
 											
 											<tr align="left">
 											<td>
-											<input	type="submit" id="savecucategory" name="savecucategory"	value="Save" class="savehoverbutton turbo-blue">
+											<input	type="submit" id="savecucategory" name="savecucategory"	value="Save" class="savehoverbutton turbo-blue"     onclick="savePriceTier()">
 											</td>
 											</tr>
 											<tr>
