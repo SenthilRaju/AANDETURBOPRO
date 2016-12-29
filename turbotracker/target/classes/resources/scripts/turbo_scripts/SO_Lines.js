@@ -1260,7 +1260,7 @@ function loadSOLineItemGrid(){
 						//timeout :1000,
 						autoSelectFirst:true,
 						 
-						//autoFocus: true,
+						autoFocus: true,
 						tabDisabled:true,
 							source: "jobtabs3/productCodeWithNameList",
 							select: function( event, ui ){
@@ -1652,9 +1652,24 @@ function loadSOLineItemGrid(){
 		                 			    $("#SaveLineSOReleaseID").prop("disabled",false);
 		                 			   $("#SaveLineSOReleaseID").css("background","");
 		                    		    return false;  
-		                    		  }
+		                    		  }    		 
+		                    		 
 		                         }
+		                        },
+		                        {
+		                        	 type: 'keydown',
+			                         fn: function(e) {
+			                        				                        	 
+			                        	 if (e.keyCode == 9) {  //tab pressed
+			                    			e.preventDefault(); 
+			                    			// return false;// stops its action
+			                    		    }                    		 
+			                         }
+		                        	
+		                        	
 		                        }
+		                        
+		                        
 	                    ],decimalPlaces: 4
 			
 		}, formatter:customCurrencyFormatterWithoutDollar, editrules:{edithidden:true}},
@@ -1681,7 +1696,10 @@ function loadSOLineItemGrid(){
 			    			  //jQuery("#SOlineItemGrid").jqGrid('resetSelection');
 				    			jQuery("#SOlineItemGrid").jqGrid('setSelection',soLines_selectRow, true);
 		    				  e.target.select(); 
-		    				  } }
+		    				  } },
+		    				  
+		    				  
+		    				  
 		    			  ]
 		},editrules:{edithidden:false},formatter:totalFormatter},
 		{name:'searchImage', index:'searchImage', align:'right', width:10,hidden:false, editable:false, formatter:searchImage, editoptions:{size:15, alignText:'right'},editrules:{edithidden:true}},

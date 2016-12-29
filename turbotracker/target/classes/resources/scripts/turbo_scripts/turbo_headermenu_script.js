@@ -340,7 +340,7 @@ function getSearchDetails(){
 				entityValue = value.entity;
 				rxId =value.pk_fields; 
 			});
-			var value = $('#searchJob').val().split(":");
+			var value = $('#searchJob').val().split(" ");
 			var entity = value[0];
 			var text = value[1];
 			var text1 = text.split(",");

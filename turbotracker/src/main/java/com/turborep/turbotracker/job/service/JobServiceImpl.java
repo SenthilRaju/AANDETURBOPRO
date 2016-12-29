@@ -11553,7 +11553,8 @@ public class JobServiceImpl implements JobService {
 			String Query = "FROM Cuinvoicedetail WHERE cuInvoiceId= :cuInvoiceID";
 			aSession = itsSessionFactory.openSession();
 			Query aQuery = aSession.createQuery(Query);
-			aQuery.setParameter("cuInvoiceID", cuInvoiceID);
+			//edited by prasant to solve Exception 
+			aQuery.setParameter("cuInvoiceID", new Integer(cuInvoiceID));
 			List<?> aList = aQuery.list();
 			if (!aList.isEmpty()) {
 				aCuinvoicedetail = (Cuinvoicedetail) aList.get(0);
