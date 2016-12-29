@@ -951,5 +951,28 @@ SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 		return period;
 	}
 	
-	
+	//BID1733 Simon Added
+	@Override
+	public Cofiscalperiod getPeriodByDate(Date dateToCheck) {
+		Session aSession = null;
+		Query query = null;
+		Cofiscalperiod aCofiscalperiod = null;
+		try {
+
+			aSession = itsSessionFactory.openSession();
+			query = aSession
+					.createQuery("from Cofiscalperiod c where c.startDate <= :Date and c.endDate >= :Date");
+			query.setMaxResults(1);
+			query.setParameter("Date", dateToCheck);
+			List<Cofiscalperiod> list=query.list();
+			aCofiscalperiod=list.get(0);
+		} catch (Exception e) {
+			itsLogger.error(e.getMessage(), e);
+		} finally {
+			aSession.flush();
+			aSession.close();
+			query = null;
+		}
+		return aCofiscalperiod;
+	}
 }

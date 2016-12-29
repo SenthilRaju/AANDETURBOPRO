@@ -63,8 +63,10 @@ import com.turborep.turbotracker.banking.exception.BankingException;
 import com.turborep.turbotracker.banking.service.GltransactionService;
 import com.turborep.turbotracker.company.Exception.CompanyException;
 import com.turborep.turbotracker.company.dao.Coaccount;
+import com.turborep.turbotracker.company.dao.Cofiscalperiod;
 import com.turborep.turbotracker.company.dao.Coledgersource;
 import com.turborep.turbotracker.company.dao.Rxaddress;
+import com.turborep.turbotracker.company.service.AccountingCyclesService;
 import com.turborep.turbotracker.company.service.CompanyService;
 import com.turborep.turbotracker.customer.dao.Cuso;
 import com.turborep.turbotracker.customer.dao.Cusodetail;
@@ -154,6 +156,10 @@ public class VendorInvoiceBillController {
 	
 	@Resource(name = "jobService")
 	private JobService itsJobService;
+	
+	//BID1733 Simon Added
+	@Resource(name="accountingCyclesService")
+	AccountingCyclesService accountingCyclesService;
 	
 	@InitBinder
 	private void dateBinder(WebDataBinder binder) {
@@ -422,6 +428,8 @@ public class VendorInvoiceBillController {
 				itsGltransactionService.recieveVendorBill(null,vebill,  0,yearId,periodId,aUserBean.getFullName());
 				
 			}else if(theOper.equalsIgnoreCase("edit")){
+				//BID1733 Simon Added
+				Vebill editedVebill=(theVeBillID!=null?vendorService.getVeBillObj(theVeBillID):null);
 				
 				aVebill.setReason(invReasonfmjob);
 				if(delData!=null){
@@ -516,13 +524,18 @@ public class VendorInvoiceBillController {
 				if(!invReasonfmjob.equals(""))
 				{
 				Coledgersource aColedgersource = itsGltransactionService.getColedgersourceDetail("VB");
+				//BID1733 Simon Added
+				Cofiscalperiod cfp=accountingCyclesService.getPeriodByDate(editedVebill.getBillDate());
 				
 				GlRollback glRollback = new GlRollback();
 				glRollback.setVeBillID(updateVebill.getVeBillId());
 				glRollback.setCoLedgerSourceID(aColedgersource.getCoLedgerSourceId());
-				glRollback.setPeriodID(periodId);
-				glRollback.setYearID(yearId);
-				glRollback.setTransactionDate(updateVebill.getBillDate());
+//				glRollback.setPeriodID(periodId);
+//				glRollback.setYearID(yearId);
+//				glRollback.setTransactionDate(updateVebill.getBillDate());
+				glRollback.setPeriodID(cfp.getCoFiscalPeriodId());
+				glRollback.setYearID(cfp.getCoFiscalYearId());
+				glRollback.setTransactionDate(editedVebill.getBillDate());
 				itsGltransactionService.rollBackGlTransaction(glRollback);
 				
 				updateVebill.setInsorouts("INS_JOBEdit");
@@ -530,7 +543,7 @@ public class VendorInvoiceBillController {
 				itsGltransactionService.recieveVendorBill(null,updateVebill,  0,yearId,periodId,aUserBean.getFullName());
 				}
 			}
-		}catch (VendorException e) {
+		}catch (VendorException | JobException e) {
 			logger.error(e.getMessage());
 			
 			sendTransactionException( theReleaseDate+"","VendorInvoiceBillController",e,theSession,theRequest);
@@ -796,6 +809,8 @@ public class VendorInvoiceBillController {
 		
 		System.out.println(coFiscalPeriodId+".....>>>>>>"+coFiscalYearId);
 		
+		//BID1733 Simon Added
+		Vebill veBillBeforeEdited=(veBillId!=null?vendorService.getVeBillObj(veBillId):null);
 		
 		try {
 			if(rxMasterID != null)
@@ -912,7 +927,7 @@ public class VendorInvoiceBillController {
 				}*/
 				
 			}
-			vendorService.receivingMiscellaneousBill(aVebill,null,coFiscalYearId,coFiscalPeriodId,aUserBean.getFullName(),invReason);
+			vendorService.receivingMiscellaneousBill(aVebill,null,coFiscalYearId,coFiscalPeriodId,aUserBean.getFullName(),invReason,veBillBeforeEdited);
 	
 		}
 		catch (VendorException e) {
@@ -1982,6 +1997,8 @@ public class VendorInvoiceBillController {
 			else
 			{
 			//update the edited vendor invoice	
+				//BID1733 Simon Added
+				Vebill editedVebill=(veBillIdPO!=null?vendorService.getVeBillObj(veBillIdPO):null);
 				if(!reason.equals(""))
 				{
 				vendorService.rollbackupdatePrMaster(veBillIdPO);
@@ -2077,9 +2094,14 @@ public class VendorInvoiceBillController {
 				GlRollback glRollback = new GlRollback();
 				glRollback.setVeBillID(aVebill.getVeBillId());
 				glRollback.setCoLedgerSourceID(aColedgersource.getCoLedgerSourceId());
-				glRollback.setPeriodID(periodId);
-				glRollback.setYearID(yearId);
-				glRollback.setTransactionDate(aVebill.getBillDate());
+				//BID1733 Simon Added
+				Cofiscalperiod cfp=accountingCyclesService.getPeriodByDate(editedVebill.getBillDate());
+//				glRollback.setPeriodID(periodId);
+//				glRollback.setYearID(yearId);
+//				glRollback.setTransactionDate(aVebill.getBillDate());
+				glRollback.setPeriodID(cfp.getCoFiscalPeriodId());
+				glRollback.setYearID(cfp.getCoFiscalYearId());
+				glRollback.setTransactionDate(editedVebill.getBillDate());
 				itsGltransactionService.rollBackGlTransaction(glRollback);
 				//vendorService.rollbackupdatePrMaster(veBillIdPO);
 				}

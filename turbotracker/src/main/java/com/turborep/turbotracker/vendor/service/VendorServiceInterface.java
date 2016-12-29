@@ -197,8 +197,9 @@ public interface VendorServiceInterface {
 	public Integer insertVebillHistory(Integer veBillid, Integer vepoID, Integer userID)
 			throws VendorException;
 
+	//BID1733 Simon Modified
 	public void receivingMiscellaneousBill(Vebill aVebill, Vebilldistribution veDist,
-			Integer yearID, Integer periodID, String username,String reason)
+			Integer yearID, Integer periodID, String username,String reason,Vebill veBillBeforeEdited)
 			throws BankingException, VendorException, CompanyException,
 			JobException;
 	
