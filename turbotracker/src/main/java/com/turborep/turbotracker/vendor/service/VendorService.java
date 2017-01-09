@@ -3677,8 +3677,8 @@ l.			 * Table :veBillDetail
 	
 	@Override
 	public List<Rxaddress> getCustomerAddresses(Integer rxMasterID) throws VendorException {
-		
-		String aQry = "SELECT rxMaster.Name,address.Address1,address.Address2,address.city,address.State,address.Zip,address.rxAddressId FROM rxAddress AS address JOIN rxMaster ON rxMaster.rxMasterID = address.rxMasterID WHERE address.rxMasterID = "+rxMasterID;
+		//Issue fix Added By Simon
+		String aQry = "SELECT rxMaster.Name,address.Address1,address.Address2,address.city,address.State,address.Zip,address.rxAddressId FROM rxAddress AS address JOIN rxMaster ON rxMaster.rxMasterID = address.rxMasterID WHERE address.IsRemitTo=1 and address.rxMasterID = "+rxMasterID;
 		Session aSession=null;
 		Rxaddress objRxaddress = null;
 		List<Rxaddress> alRxaddress = new ArrayList<Rxaddress>();
