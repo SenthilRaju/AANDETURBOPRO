@@ -1260,3 +1260,10 @@ $.ajax({
 }
 return Number(totalamt);
 }
+/*
+Issue Fix Added By Simon
+Reason : To disable Line-Items tab when General Tab is not saved.
+*/
+$(document).ready(function(){
+	$( "#po_tabs ul li:nth-child(2)" ).addClass("ui-state-disabled");
+});
