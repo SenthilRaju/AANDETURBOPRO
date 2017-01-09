@@ -1338,7 +1338,8 @@ function SetoverAllPOTotal(){
 	 var taxamount=0;
 	 var taxcellValue;
 	var aTotal = 0;
-	
+	//Issue fix 3.0.70
+	var taxpercentage=$('#taxLineId').val();
 	
 	
 	var ids = $("#lineItemGrid").jqGrid('getDataIDs');
