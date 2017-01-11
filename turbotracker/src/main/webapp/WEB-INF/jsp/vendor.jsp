@@ -57,6 +57,7 @@
 								</fieldset>
 							</td>
 						</tr>
+						<!-- ID631 Simon -->
 						<tr><td>
 							<fieldset style="width:280px;height:85px" class=" ui-widget-content ui-corner-all">
 								<legend><label><b>1099 Expense </b></label></legend>
@@ -216,6 +217,7 @@
 			$("#factorySoftware").val(factorysoftware);
 			var discountIncludesFreight="${requestScope.veMasterRecord.discountIncludesFreight}";
 			$("#Fin_altMan").attr("checked",discountIncludesFreight);
+			//ID631 Simon
 			$("#expenseFlag").on('click', function() {
 			    if (jQuery("#expenseFlag").is(":checked")) {
 			    	$("#expenseCheck").text("Yes");
