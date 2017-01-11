@@ -76,9 +76,11 @@ var allText = $('#apacct').html();
 				$('#payable').keyup(function(){
 					var payable=$('#payable').val();
 					if(payable==undefined || payable=="" || payable.length==0){
+						$('#payable').css('border-color', 'red');
 						$("#saveTermsButton").prop("disabled",true);
 						$("#saveTermsButton").fadeTo("slow",0.4);
 					}else{
+						$('#payable').css('border-color', '');
 						$('#saveTermsButton').css('border-color', '');
 						$("#saveTermsButton").prop("disabled",false);
 						$("#saveTermsButton").fadeTo("slow",1);
@@ -5471,9 +5473,11 @@ function validatePayableField(){
 	console.log("validatePayableField is called");
 	var payable=$('#payable').val();
 	if(payable==undefined || payable=="" || payable.length==0){
+		$('#payable').css('border-color', 'red');
 		$("#saveTermsButton").prop("disabled",true);
 		$("#saveTermsButton").fadeTo("slow",0.4);
 	}else{
+		$('#payable').css('border-color', '');
 		$('#saveTermsButton').css('border-color', '');
 		$("#saveTermsButton").prop("disabled",false);
 		$("#saveTermsButton").fadeTo("slow",1);
