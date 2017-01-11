@@ -31,42 +31,11 @@ public class Vemaster implements java.io.Serializable {
 	private Integer importType;
 	private String accountNumber;
 	private String coaccountDescription;
-	
+	//ID631 Simon
+	private boolean expense1099Flag;
+	private String expense1099Id;
 
 	public Vemaster() {
-	}
-
-	public Vemaster(int veMasterId, int dueDays, int discountDays,
-			BigDecimal discountPercent, boolean dueOnDay, boolean discOnDay,
-			boolean discountIncludesFreight, boolean tax1099) {
-		this.veMasterId = veMasterId;
-		this.dueDays = dueDays;
-		this.discountDays = discountDays;
-		this.discountPercent = discountPercent;
-		this.dueOnDay = dueOnDay;
-		this.discOnDay = discOnDay;
-		this.discountIncludesFreight = discountIncludesFreight;
-		this.tax1099 = tax1099;
-	}
-
-	public Vemaster(int veMasterId, int dueDays, int discountDays,
-			BigDecimal discountPercent, boolean dueOnDay, boolean discOnDay,
-			boolean discountIncludesFreight, String manufacturer,
-			Integer coExpenseAccountId, boolean tax1099, String ssn,
-			Integer importType, String accountNumber) {
-		this.veMasterId = veMasterId;
-		this.dueDays = dueDays;
-		this.discountDays = discountDays;
-		this.discountPercent = discountPercent;
-		this.dueOnDay = dueOnDay;
-		this.discOnDay = discOnDay;
-		this.discountIncludesFreight = discountIncludesFreight;
-		this.manufacturer = manufacturer;
-		this.coExpenseAccountId = coExpenseAccountId;
-		this.tax1099 = tax1099;
-		this.ssn = ssn;
-		this.importType = importType;
-		this.accountNumber = accountNumber;
 	}
 
 	@Id
@@ -194,6 +163,24 @@ public class Vemaster implements java.io.Serializable {
 
 	public void setCoaccountDescription(String coaccountDescription) {
 		this.coaccountDescription = coaccountDescription;
+	}
+
+	@Column(name = "expense1099Flag", nullable = false)
+	public boolean isExpense1099Flag() {
+		return expense1099Flag;
+	}
+
+	public void setExpense1099Flag(boolean expense1099Flag) {
+		this.expense1099Flag = expense1099Flag;
+	}
+
+	@Column(name = "expense1099Id", length = 30)
+	public String getExpense1099Id() {
+		return expense1099Id;
+	}
+
+	public void setExpense1099Id(String expense1099Id) {
+		this.expense1099Id = expense1099Id;
 	}
 
 }

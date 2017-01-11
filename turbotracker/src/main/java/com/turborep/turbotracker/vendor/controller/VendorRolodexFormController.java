@@ -272,7 +272,10 @@ public class VendorRolodexFormController {
 			@RequestParam(value = "Manufacturer", required = true) String Manufacturer,
 			@RequestParam(value = "coExpenseAccountID", required = true) Integer coExpenseAccountID,
 			@RequestParam(value = "ImportType", required = true) Integer ImportType,
-			@RequestParam(value = "AccountNumber", required = true) String AccountNumber
+			@RequestParam(value = "AccountNumber", required = true) String AccountNumber,
+			//ID631 Added By Simon
+			@RequestParam(value = "expenseFlag", required = true) boolean expenseFlag,
+			@RequestParam(value = "fin_1099_expense", required = true) String fin_1099_expense
 			) {
 		Vemaster aVemaster=new Vemaster();
 		try {
@@ -295,6 +298,8 @@ public class VendorRolodexFormController {
 			aVemaster.setCoExpenseAccountId(coExpenseAccountID);
 			aVemaster.setImportType(ImportType);
 			aVemaster.setAccountNumber(AccountNumber);
+			aVemaster.setExpense1099Flag(expenseFlag);
+			aVemaster.setExpense1099Id(fin_1099_expense);
 			
 		Boolean	returnValue = itsVendorService.UpdateVendorFinancialTab(aVemaster);
 		} catch (Exception e) {

@@ -314,7 +314,8 @@ public class VendorService implements VendorServiceInterface{
 	}
 
 	public ArrayList<Vemaster> getVendorMaster(String rxMasterId) throws VendorException {
-		StringBuilder veMasterQry = new StringBuilder("SELECT veMasterId, dueDays, disCountDays, discountPercent, dueOnDay, discOnDay, discountIncludesFreight, manufacturer, coExpenseAccountId, ssn, importType, accountNumber,coAccount.Description ")
+		//ID631 Modified By Simon
+		StringBuilder veMasterQry = new StringBuilder("SELECT veMasterId, dueDays, disCountDays, discountPercent, dueOnDay, discOnDay, discountIncludesFreight, manufacturer, coExpenseAccountId, ssn, importType, accountNumber,coAccount.Description,expense1099Flag,expense1099Id")
 											.append(" FROM veMaster LEFT JOIN coAccount ON(veMaster.coExpenseAccountId=coAccount.coAccountID)  WHERE veMasterID = ").append(rxMasterId);
 		Session aSession = null;
 		ArrayList<Vemaster> aVeMasterRecords = null;
@@ -364,6 +365,13 @@ public class VendorService implements VendorServiceInterface{
 					aVeMaster.setAccountNumber((String) aObj[11]);
 				}
 				aVeMaster.setCoaccountDescription((String) aObj[12]);
+				if((Byte)aObj[13] == 0){
+					aVeMaster.setExpense1099Flag(false);
+				} else {
+					aVeMaster.setExpense1099Flag(true);
+				}
+				if(aObj[14] != null)
+					aVeMaster.setExpense1099Id((String)aObj[14]);
 				aVeMasterRecords.add(aVeMaster);
 			}
 		} catch (Exception excep) {
@@ -5411,6 +5419,9 @@ l.			 * Table :veBillDetail
 			aVemaster.setCoExpenseAccountId(theVemaster.getCoExpenseAccountId());
 			aVemaster.setImportType(theVemaster.getImportType());
 			aVemaster.setAccountNumber(theVemaster.getAccountNumber());
+			//ID631 Added By Simon
+			aVemaster.setExpense1099Flag(theVemaster.isExpense1099Flag());
+			aVemaster.setExpense1099Id(theVemaster.getExpense1099Id());
 			aSession.update(aVemaster);
 			transaction.commit();
 		}catch (Exception e) {
