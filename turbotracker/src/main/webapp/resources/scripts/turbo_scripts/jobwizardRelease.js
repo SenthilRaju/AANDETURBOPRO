@@ -6603,6 +6603,7 @@ function invoicebillToAddress(){
 }
 var transaction = "";
  function savecustomerinvoice(operation) {
+	 debugger;
 	 var itemCode=$("#new_row_itemCode").val();
 	 var cuinvId = $('#cuinvoiceIDhidden').val();
 	 
@@ -6754,6 +6755,11 @@ var transaction = "";
 		_globalold_cIlineitemform = _globalold_cIlineitemform.replace('{}', '[]');*/
 		//var aInvoiceDetailsTotal=$("#custoemrInvoiceFormTotalID").serialize();
 		
+		//added by prasant for 3.0.70 issue fixes
+		var gridRows = $('#customerInvoice_lineitems').getRowData();
+	 	_globaloldcustomerInvoicegrid =  JSON.stringify(gridRows)+$("#customerInvoice_invoiceDateID").val();
+	
+		
 		if(_globaloldcustomerInvoiceform != generalTabFormval ){
 				console.log("ERROR:::_globaloldcustomerInvoiceform=="+_globaloldcustomerInvoiceform);
 				console.log("ERROR:::_globalnewcustomerInvoiceform=="+generalTabFormval);
@@ -6872,7 +6878,7 @@ var transaction = "";
 	else
 		{
 		if(operation =="closedialog"){
-
+     
 			 
 			if(cusoId!==null && cusoId !=="" && $('#cuinvoiceIDhidden').val()!=""){
 			if(releasType=='Stock Order'||releasType=='Bill Only'||releasType=='Service'){
@@ -10995,6 +11001,7 @@ var posit_job_customerInvoice=0;
 var CuInvoiceDetailrowid;
 var cuLines_selectRow;
 function loadCustomerInvoice(){
+	debugger;
 	$("#customerInvoice_lineitems").jqGrid('GridUnload');
 	var id = $('#cuinvoiceIDhidden').val();
 	
@@ -11365,8 +11372,8 @@ function loadCustomerInvoice(){
 	     gridComplete: function () {
 	    	 jQuery("#customerInvoice_lineitems").closest(".ui-jqgrid-bdiv").scrollTop(posit_job_customerInvoice);
 	            posit_job_customerInvoice=0;
-//	            var gridRows = $('#customerInvoice_lineitems').getRowData();
-//			 	_globaloldcustomerInvoicegrid =  JSON.stringify(gridRows)+$("#customerInvoice_invoiceDateID").val();
+	            var gridRows = $('#customerInvoice_lineitems').getRowData();
+			 	_globaloldcustomerInvoicegrid =  JSON.stringify(gridRows)+$("#customerInvoice_invoiceDateID").val();
 	     },
 			loadBeforeSend: function(xhr) {
 				posit_job_customerInvoice= jQuery("#customerInvoice_lineitems").closest(".ui-jqgrid-bdiv").scrollTop();
@@ -11627,6 +11634,7 @@ function loadCustomerInvoice(){
 	//commented By Aravind 
 	//to hide ^ 
 	//$('#customerInvoice_lineitems').jqGrid('navButtonAdd',"#customerInvoice_lineitemspager",{ caption:"", buttonicon:"", onClickButton:showHiddenCost, position: "last", title:"Show/Hide Cost", cursor: "pointer"});
+
 }
 
 
