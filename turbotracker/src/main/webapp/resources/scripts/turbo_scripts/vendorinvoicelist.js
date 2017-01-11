@@ -29,7 +29,6 @@ var allText = $('#apacct').html();
 				$('#vendorAccountList').val('2');
 				$('#accountsPayableImgID').hide();
 				$('#mandveinvno').hide();
-				
 				// $("#search").css("display", "none");
 				// loadInvoicesList();
 				loadInvoicesList(searchData,fromDate,toDate);
@@ -73,6 +72,18 @@ var allText = $('#apacct').html();
 					
 				});
 				
+				//Issue Fix Added By Simon
+				$('#payable').keyup(function(){
+					var payable=$('#payable').val();
+					if(payable==undefined || payable=="" || payable.length==0){
+						$("#saveTermsButton").prop("disabled",true);
+						$("#saveTermsButton").fadeTo("slow",0.4);
+					}else{
+						$('#saveTermsButton').css('border-color', '');
+						$("#saveTermsButton").prop("disabled",false);
+						$("#saveTermsButton").fadeTo("slow",1);
+					}
+				});
 			});
 			
 			$("#postdate").change( function() {
@@ -583,7 +594,7 @@ var allText = $('#apacct').html();
 					//added by prsant #1723
 					$("#viStatusButton").css({ opacity: 0.3});
 				    $("#viStatusButton").attr("disabled", true);
-				     
+				    validatePayableField();
 					return true;
 				}
 				
@@ -2786,6 +2797,9 @@ function preloadVendorInvoiceFromJobData(veBillId)
 				
 				
 				 $(".invReason").show();
+				 
+				//Issue Fix Added By Simon
+					validatePayableField();
 				return true;
 					
 							        
@@ -5450,4 +5464,18 @@ function generatewopoFormSeriallize(){
 	var viStatusButtontxt=$("#viStatusButtontxt").val();
 	var overallvariable=payable+recDateId+vendorInvoice+apacct+due+viStatusButtontxt;
 	return overallvariable;
+}
+
+//Issue Fix Added By Simon
+function validatePayableField(){
+	console.log("validatePayableField is called");
+	var payable=$('#payable').val();
+	if(payable==undefined || payable=="" || payable.length==0){
+		$("#saveTermsButton").prop("disabled",true);
+		$("#saveTermsButton").fadeTo("slow",0.4);
+	}else{
+		$('#saveTermsButton').css('border-color', '');
+		$("#saveTermsButton").prop("disabled",false);
+		$("#saveTermsButton").fadeTo("slow",1);
+	}
 }
