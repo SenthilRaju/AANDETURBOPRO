@@ -10821,7 +10821,8 @@ function displayChkNo(cellValue, options, rowObject)
 	var finaldate1 ="";
 	if(chFind == -1)
 		{
-		if(rowObject.creditUsed != "0")
+		//BID1780 Added By Simon
+		if(rowObject.creditUsed!=undefined && rowObject.creditUsed != "0")
 			cellValue = "Credit"
 			
 		return cellValue;	
