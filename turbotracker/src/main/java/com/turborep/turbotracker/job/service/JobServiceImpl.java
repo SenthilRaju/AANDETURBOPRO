@@ -1606,7 +1606,7 @@ public class JobServiceImpl implements JobService {
 					+ "(SELECT DISTINCT GROUP_CONCAT(CAST(vph.checkNo AS CHAR)) FROM veBillPaymentHistory vph WHERE vph.veBillID = ve.veBillID) AS reference,"
 					+ "Date((SELECT DISTINCT GROUP_CONCAT(CAST(vph.datePaid AS CHAR)) FROM veBillPaymentHistory vph WHERE vph.veBillID = ve.veBillID)) AS datePaid,"
 					+ "(SELECT DISTINCT GROUP_CONCAT(CAST(vph.amountVal AS CHAR)) FROM veBillPaymentHistory vph WHERE vph.veBillID = ve.veBillID) AS Amount,"
-					+ "cu.cIopenStatus,ve.BillAmount , cu.InvoiceAmount, ve.BillDate,ship.trackUrl,ve.trackingNumber FROM joRelease jr "  //ve.AppliedAmount,
+					+ "cu.cIopenStatus,ve.BillAmount , cu.InvoiceAmount, ve.BillDate,ship.trackUrl,ve.trackingNumber,ve.creditUsed FROM joRelease jr "  //ve.AppliedAmount,
 					+ "JOIN joReleaseDetail jrd ON jr.joReleaseId=jrd.joReleaseID "
 					+ "LEFT JOIN veBill ve ON ve.joReleaseDetailID=jrd.joReleaseDetailID "
 					//+ "LEFT JOIN moTransaction ON moTransactionID IN (SELECT DISTINCT moTransactionID FROM moLinkageDetail WHERE veBillID = ve.veBillID group by veBillID) "
@@ -1705,7 +1705,10 @@ public class JobServiceImpl implements JobService {
 				if (aObj[28] != null) {
 					aJobShippingBean.setTrackingNumber((String)aObj[28]);
 				}
-				
+				//BID1780 Added By Simon
+				if (aObj[29] != null) {
+					aJobShippingBean.setCreditUsed((String)aObj[29]);
+				}
 				aQryArrayList.add(aJobShippingBean);
 			}
 			aShippingQry=null;

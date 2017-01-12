@@ -1937,7 +1937,7 @@ var posit_job_shiping=0;
 	url:'./jobtabs5/shipping?jobNumber='+jobnumber+'&joDetailsID='+joDetailId+'&releaseType='+releaseType,
 	datatype: 'JSON',
 	mtype: 'GET',
-	colNames:['Ship Date','Shipping Line ','Vendor Date','Vendor Invoice','Vendor Amount ($)','','Customer Date','Customer Amount ($)', 'ShipID', 'JoReleaseID', 'VeBillID', 'CoAccID', 'CuInvoiceID','InvoiceDate','ShiptoMode','vendorSubTotalAmt','transStatus','chkno','datepaid','vendorappliedamt','cIopenStatus','trackingURL','',''],
+	colNames:['Ship Date','Shipping Line ','Vendor Date','Vendor Invoice','Vendor Amount ($)','','Customer Date','Customer Amount ($)', 'ShipID', 'JoReleaseID', 'VeBillID', 'CoAccID', 'CuInvoiceID','InvoiceDate','ShiptoMode','vendorSubTotalAmt','transStatus','chkno','datepaid','vendorappliedamt','cIopenStatus','trackingURL','creditUsed','',''],
 	colModel:[
 		{name:'shipDate',index:'shipDate',align:'center',width:50},
 		{name:'shippingLine',index:'shippingLine',align:'center',width:50},
@@ -1963,6 +1963,7 @@ var posit_job_shiping=0;
 		{name:'cIopenStatus',index:'cIopenStatus',align:'right',width:60, hidden: true},
 		{name:'webSight',index:'webSight',align:'right',width:60, hidden: true},
 		{name:'trackingNumber',index:'trackingNumber',align:'right',width:60, hidden: true},
+		{name:'creditUsed',index:'creditUsed',align:'right',width:60, hidden: true},
 		{name:'',index:'',align:'center',width:50, hidden: false,formatter:buttonAddCostfn}
 		],
 		rowNum: 0,	pgbuttons: false,	recordtext: '',	rowList: [],	pgtext: null,	viewrecords: false,
@@ -10827,6 +10828,7 @@ function displayChkNo(cellValue, options, rowObject)
 	var finaldate1 ="";
 	if(chFind == -1)
 		{
+		console.log("Heyyyyyyyyyyyyyyyy82547852"+rowObject.creditUsed)
 		//BID1780 Added By Simon
 		if(rowObject.creditUsed!=undefined && rowObject.creditUsed != "0")
 			cellValue = "Credit"

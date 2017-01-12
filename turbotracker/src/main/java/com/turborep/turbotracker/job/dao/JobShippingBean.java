@@ -29,6 +29,8 @@ public class JobShippingBean {
 	private  String veBillDate;
 	private String webSight;
 	private String trackingNumber;
+	//BID1780 Added By Simon
+	private String creditUsed;
 	
 	public String getShipDate() {
 		return shipDate;
@@ -175,4 +177,11 @@ public class JobShippingBean {
 	public void setTrackingNumber(String trackingNumber) {
 		this.trackingNumber = trackingNumber;
 	}
+	public String getCreditUsed() {
+		return creditUsed;
+	}
+	public void setCreditUsed(String creditUsed) {
+		this.creditUsed = creditUsed;
+	}
+	
 }
