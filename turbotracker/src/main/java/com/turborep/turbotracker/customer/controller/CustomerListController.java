@@ -1398,7 +1398,7 @@ public class CustomerListController {
 						+ "  WHERE (ABS(I.InvoiceAmount) - ABS(I.AppliedAmount+(IFNULL(I.DiscountAmt,0))) > 0.01) AND IF(I.CreditMemo = 0,I.CreditMemo=0,I.memoStatus=1  AND IsCredit<>1) AND " 
 						+ "  (I.TransactionStatus>0) AND (I.InvoiceDate <= '"+sdf.format(date)+"') "
 						+ "AND rxm.`InActive`=0 "/*Only for Monthly Statement By Eric he need all customer invoice need to show .So we have to show inactive customer also*/
-						+ "GROUP BY I.cuInvoiceID ORDER BY CustomerName,JobNumber";
+						+ "GROUP BY I.cuInvoiceID ORDER BY I.rxCustomerID,JobNumber";
 				
 				//subQueryString="SELECT ifnull(SUM( (CASE WHEN Days<=30 THEN Balance ELSE 0 END) ),0) AS AmtCur, ifnull(SUM( (CASE WHEN Days>30 AND Days<=60 THEN Balance ELSE 0 END) ),0) AS Amt30, ifnull(SUM( (CASE WHEN Days>60 AND Days<=90 THEN Balance ELSE 0 END) ),0) AS Amt60, ifnull(SUM( (CASE WHEN Days>90 THEN Balance ELSE 0 END) ),0) AS Amt90 FROM (SELECT  InvoiceAmount-(AppliedAmount+DiscountAmt) AS Balance, DATEDIFF('"+sdf.format(date)+"',InvoiceDate) AS Days FROM cuInvoice WHERE IF(CreditMemo = 0,CreditMemo=0,memoStatus=1  AND IsCredit<>1) AND TransactionStatus>0 AND (ABS(InvoiceAmount-(AppliedAmount+DiscountAmt)) > .01) AND (rxCustomerID=$P{rxCustomerID} ) AND (InvoiceDate <= '"+sdf.format(date)+"') ORDER BY rxCustomerID) AS subquery";
 				subQueryString="SELECT ifnull(SUM( (CASE WHEN Days<=30 THEN Balance ELSE 0 END) ),0) AS AmtCur, ifnull(SUM( (CASE WHEN Days>30 AND Days<=60 THEN Balance ELSE 0 END) ),0) AS Amt30, ifnull(SUM( (CASE WHEN Days>60 AND Days<=90 THEN Balance ELSE 0 END) ),0) AS Amt60, ifnull(SUM( (CASE WHEN Days>90 THEN Balance ELSE 0 END) ),0) AS Amt90 FROM (SELECT  InvoiceAmount-(AppliedAmount+(IFNULL(DiscountAmt,0))) AS Balance, DATEDIFF('"+sdf.format(date)+"',InvoiceDate) AS Days FROM cuInvoice WHERE IF(CreditMemo = 0,CreditMemo=0,memoStatus=1  AND IsCredit<>1) AND TransactionStatus>0 AND (ABS(InvoiceAmount-(AppliedAmount+(IFNULL(DiscountAmt,0)))) > .01) AND (rxCustomerID=$P{rxCustomerID} ) AND (InvoiceDate <= '"+sdf.format(date)+"') ORDER BY rxCustomerID) AS subquery";
@@ -1413,7 +1413,7 @@ public class CustomerListController {
 						+ "  LEFT JOIN joMaster AS J ON R.joMasterID = J.joMasterID LEFT JOIN rxMaster rxm ON rxm.rxMasterID=I.rxCustomerID"
 						+ "  LEFT JOIN rxAddress rxA ON rxA.rxMasterID=I.rxCustomerID "
 						+ "  WHERE (ABS(I.InvoiceAmount) - ABS((I.AppliedAmount+(IFNULL(I.DiscountAmt,0)))) > 0.01) AND IF(I.CreditMemo = 0,I.CreditMemo=0,I.memoStatus=1 AND IsCredit<>1) AND " 
-						+ "  (I.TransactionStatus>0) AND (I.InvoiceDate <= '"+sdf.format(date)+"') AND (I.rxCustomerID in ("+rxMasterIds+")) GROUP BY I.cuInvoiceID ORDER BY CustomerName,JobNumber";
+						+ "  (I.TransactionStatus>0) AND (I.InvoiceDate <= '"+sdf.format(date)+"') AND (I.rxCustomerID in ("+rxMasterIds+")) GROUP BY I.cuInvoiceID ORDER BY I.rxCustomerID,JobNumber";
 				
 				subQueryString="SELECT ifnull(SUM( (CASE WHEN Days<=30 THEN Balance ELSE 0 END) ),0) AS AmtCur, ifnull(SUM( (CASE WHEN Days>30 AND Days<=60 THEN Balance ELSE 0 END) ),0) AS Amt30, ifnull(SUM( (CASE WHEN Days>60 AND Days<=90 THEN Balance ELSE 0 END) ),0) AS Amt60, ifnull(SUM( (CASE WHEN Days>90 THEN Balance ELSE 0 END) ),0) AS Amt90 FROM (SELECT  InvoiceAmount-(AppliedAmount+(IFNULL(DiscountAmt,0))) AS Balance, DATEDIFF('"+sdf.format(date)+"',InvoiceDate) AS Days FROM cuInvoice WHERE IF(CreditMemo = 0,CreditMemo=0,memoStatus=1  AND IsCredit<>1) AND TransactionStatus>0 AND (ABS(InvoiceAmount-(AppliedAmount+(IFNULL(DiscountAmt,0)))) > .01) AND (rxCustomerID=$P{rxCustomerID} ) AND (InvoiceDate <= '"+sdf.format(date)+"') ORDER BY rxCustomerID) AS subquery";
 			}
@@ -1429,7 +1429,7 @@ public class CustomerListController {
 						+ "  WHERE IF(I.CreditMemo = 1,I.memoStatus=1 AND I.InvoiceAmount <> (I.AppliedAmount+(IFNULL(I.DiscountAmt,0))),I.InvoiceAmount - (I.AppliedAmount+(IFNULL(I.DiscountAmt,0))) > 0.01 OR (I.InvoiceAmount - (I.AppliedAmount+(IFNULL(I.DiscountAmt,0))) < -0.01))  AND " 
 						+ "  (I.TransactionStatus>0) AND (I.InvoiceDate <= '"+sdf.format(date)+"') "
 						+ "AND rxm.`InActive`=0  "/*Only for Monthly Statement  By Eric he need all customer invoice need to show .So we have to show inactive customer also*/
-						+ "GROUP BY I.cuInvoiceID ORDER BY CustomerName,JobNumber";
+						+ "GROUP BY I.cuInvoiceID ORDER BY I.rxCustomerID,JobNumber";
 						
 				subQueryString="SELECT ifnull(SUM( (CASE WHEN Days<=30 THEN Balance ELSE 0 END) ),0) AS AmtCur, ifnull(SUM( (CASE WHEN Days>30 AND Days<=60 THEN Balance ELSE 0 END) ),0) AS Amt30, ifnull(SUM( (CASE WHEN Days>60 AND Days<=90 THEN Balance ELSE 0 END) ),0) AS Amt60 , ifnull(SUM( (CASE WHEN Days>90 THEN Balance ELSE 0 END) ),0) AS Amt90 FROM (SELECT  InvoiceAmount-(AppliedAmount+(IFNULL(DiscountAmt,0))) AS Balance, DATEDIFF('"+sdf.format(date)+"',InvoiceDate) Days FROM cuInvoice WHERE IF(CreditMemo = 1,memoStatus=1 AND InvoiceAmount <> (AppliedAmount+(IFNULL(DiscountAmt,0))),ABS(InvoiceAmount - (AppliedAmount+(IFNULL(DiscountAmt,0))))  > 0.01  OR (InvoiceAmount - (AppliedAmount+(IFNULL(DiscountAmt,0))) < -0.01) ) AND TransactionStatus>0  AND (rxCustomerID=$P{rxCustomerID} ) AND (InvoiceDate <= '"+sdf.format(date)+"') ORDER BY rxCustomerID) AS subquery";
 			}else if(isCredit!=null){
@@ -1442,7 +1442,7 @@ public class CustomerListController {
 						+ "  LEFT JOIN joMaster AS J ON R.joMasterID = J.joMasterID LEFT JOIN rxMaster rxm ON rxm.rxMasterID=I.rxCustomerID"
 						+ "  LEFT JOIN rxAddress rxA ON rxA.rxMasterID=I.rxCustomerID "
 						+ "  WHERE IF(I.CreditMemo = 1,I.memoStatus=1 AND I.InvoiceAmount <> (I.AppliedAmount+(IFNULL(I.DiscountAmt,0))),(I.InvoiceAmount - (I.AppliedAmount+(IFNULL(I.DiscountAmt,0))) > 0.01) OR (I.InvoiceAmount - (I.AppliedAmount+(IFNULL(I.DiscountAmt,0))) < -0.01))  AND " 
-						+ "  (I.TransactionStatus>0) AND (I.InvoiceDate <= '"+sdf.format(date)+"') AND (I.rxCustomerID in ("+rxMasterIds+")) GROUP BY I.cuInvoiceID ORDER BY CustomerName,JobNumber";
+						+ "  (I.TransactionStatus>0) AND (I.InvoiceDate <= '"+sdf.format(date)+"') AND (I.rxCustomerID in ("+rxMasterIds+")) GROUP BY I.cuInvoiceID ORDER BY I.rxCustomerID,JobNumber";
 						
 				subQueryString="SELECT ifnull(SUM( (CASE WHEN Days<=30 THEN Balance ELSE 0 END) ),0) AS AmtCur, ifnull(SUM( (CASE WHEN Days>30 AND Days<=60 THEN Balance ELSE 0 END) ),0) AS Amt30, ifnull(SUM( (CASE WHEN Days>60 AND Days<=90 THEN Balance ELSE 0 END) ),0) AS Amt60 , ifnull(SUM( (CASE WHEN Days>90 THEN Balance ELSE 0 END) ),0) AS Amt90 FROM (SELECT  InvoiceAmount-(AppliedAmount+(IFNULL(DiscountAmt,0))) AS Balance, DATEDIFF('"+sdf.format(date)+"',InvoiceDate) Days FROM cuInvoice WHERE IF(CreditMemo = 1,memoStatus=1 AND InvoiceAmount <> (AppliedAmount+(IFNULL(DiscountAmt,0))),ABS(InvoiceAmount - (AppliedAmount+(IFNULL(DiscountAmt,0))))  > 0.01  OR (InvoiceAmount - (AppliedAmount+(IFNULL(DiscountAmt,0))) < -0.01) ) AND TransactionStatus>0  AND (rxCustomerID=$P{rxCustomerID} ) AND (InvoiceDate <= '"+sdf.format(date)+"') ORDER BY rxCustomerID) AS subquery";
 		
