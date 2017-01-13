@@ -32,7 +32,8 @@ public class Cofiscalperiod implements java.io.Serializable {
 	private Integer period;
 	private String strdate;
 	private BigInteger activityCount;
-	private Boolean openStatus;
+	//BID #1781 Added By Simon
+	private Boolean openStatus=false;
 	private String authStatus;
 	private Integer currentPeriodid;
 	private Integer currentYearid;
