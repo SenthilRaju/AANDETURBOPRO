@@ -5507,7 +5507,12 @@ function validateDateAgainstOpenPeriod(dateID){
 			jQuery(newDialogDiv).dialog({modal: true, width:300, height:150, title:"Information.", 
 									buttons: [{text: "OK",click: function(){
 										$("#"+dateID).datepicker("setDate", new Date());
-										$(this).dialog("close"); }}]
+										$(this).dialog("close"); }}],
+										close: function( event ) {
+											if ( event.originalEvent ) {
+												$("#"+dateID).datepicker("setDate", new Date());
+											  }
+										}
 								}).dialog("open");
 			}
 	  	},
