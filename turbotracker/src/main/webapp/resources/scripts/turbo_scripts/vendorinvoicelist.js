@@ -59,7 +59,7 @@ var allText = $('#apacct').html();
 				// on change dated field from po
 				
 				$("#datePO").change(function(){
-					
+					validateDateAgainstOpenPeriod('datePO');
 					getDueonDayswithDate($('#rxMasterIDPayablePO').val(),$("#datePO").val(),"withPO")
 					
 				})
@@ -67,9 +67,8 @@ var allText = $('#apacct').html();
 				// on change dated field from po
 				
 				$("#date").change(function(){
-
+					validateDateAgainstOpenPeriod('date');
 					getDueonDayswithDate($('#rxMasterID').val(),$("#date").val(),"withoutPO")
-					
 				});
 				
 				//Issue Fix Added By Simon
@@ -2937,6 +2936,9 @@ $('#taxGeneralId').keyup(function () {
 function editInvoiceDetails(operStatus){
 	 $('#invreasondialog').data('operStatus', operStatus);
 	 jQuery( "#invreasondialog" ).dialog("open");
+	 setTimeout(function(){
+		 $('#vendorInvoiceGrid').trigger( 'reloadGrid' );
+			}, 2000);
 	return true;
 }
 
@@ -4502,8 +4504,8 @@ function SaveVendorInvoicewithPO(operation){
 		}
 	else
 		{	
-		var itemCode=$("#new_row_prItemCode").val();
-		if(itemCode!=undefined){
+//		var itemCode=$("#new_row_prItemCode").val();
+//		if(itemCode!=undefined){
 	if($('#veBillIdPO').val()!=null && $('#veBillIdPO').val()!="" ){
 	if(global_vendorInvoicePOForm != vendorInvoiceDetails || global_vendorInvoicegridPOForm != vendorInvoiceGridDetails || global_vendorInvoicetotalPOForm != vendorInvoiceDetailsTotal)
 	{
@@ -4535,20 +4537,20 @@ function SaveVendorInvoicewithPO(operation){
 		}
 		
 	}
-		}else{
-			 var newDialogDiv = jQuery(document.createElement('div'));
-				jQuery(newDialogDiv).html('<span><b style="color:Green;">You have made changes, please save prior to continuing.</b></span>');
-				jQuery(newDialogDiv).dialog({modal: true, width:300, height:150, title:"Information.", 
-				closeOnEscape: false,
-				open: function(event, ui) { $(".ui-dialog-titlebar-close").hide(); },
-				buttons:{
-					"OK": function(){
-						jQuery(this).dialog("close");
-						//$( "#salesreleasetab ul li:nth-child(2)" ).addClass("ui-state-disabled");
-						//$("#new_row_quantityOrdered").focus();
-					   // return false;
-					}}}).dialog("open");
-		 }
+//		}else{
+//			 var newDialogDiv = jQuery(document.createElement('div'));
+//				jQuery(newDialogDiv).html('<span><b style="color:Green;">You have made changes, please save prior to continuing.</b></span>');
+//				jQuery(newDialogDiv).dialog({modal: true, width:300, height:150, title:"Information.", 
+//				closeOnEscape: false,
+//				open: function(event, ui) { $(".ui-dialog-titlebar-close").hide(); },
+//				buttons:{
+//					"OK": function(){
+//						jQuery(this).dialog("close");
+//						//$( "#salesreleasetab ul li:nth-child(2)" ).addClass("ui-state-disabled");
+//						//$("#new_row_quantityOrdered").focus();
+//					   // return false;
+//					}}}).dialog("open");
+//		 }
 		}
 	
 	
@@ -4561,6 +4563,7 @@ function SaveVendorInvoicewithPO(operation){
 		//added by prsant #1723 viStatusButtonPO
 		$("#viStatusButtonPO").css({ opacity: "1"});
 	    $("#viStatusButtonPO").attr("disabled", false);
+	    $('#vendorInvoiceGrid').trigger( 'reloadGrid' );
 	 
 }
 function removedollarsymbol(value,id){
@@ -5487,4 +5490,29 @@ function validatePayableField(){
 		$("#saveTermsButton").prop("disabled",false);
 		$("#saveTermsButton").fadeTo("slow",1);
 	}
+}
+
+//Issue Fix Added By Simon #3.0.70
+function validateDateAgainstOpenPeriod(dateID){
+	var checkpermission=getGrantpermissionprivilage('OpenPeriod_PostingOnly',0);
+	$.ajax({
+		url: "./checkAccountingCyclePeriods",
+		data:{"datetoCheck":$("#"+dateID).val(),"UserStatus":checkpermission},
+		type: "POST",
+		success: function(data) { 
+			if(data.AuthStatus == "granted")
+			{	
+			var newDialogDiv = jQuery(document.createElement('div'));
+			jQuery(newDialogDiv).html('<span><b style="color:red;">Current Transcation Date is not under open period.</b></span>');
+			jQuery(newDialogDiv).dialog({modal: true, width:300, height:150, title:"Information.", 
+									buttons: [{text: "OK",click: function(){
+										$("#"+dateID).datepicker("setDate", new Date());
+										$(this).dialog("close"); }}]
+								}).dialog("open");
+			}
+	  	},
+			error:function(data){
+				console.log('error');
+				}
+			});
 }
