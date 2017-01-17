@@ -1166,6 +1166,7 @@ var allText = $('#apacct').html();
 					
 					var newformserializewithoutpo = $('#addNewVendorInvoiceForm').serialize();
 					var newlgserializewithoutpo = jQuery("#vendorInvoiceGrid").jqGrid('getRowData');
+					console.log(newformserializewithoutpo+" === "+newlgserializewithoutpo)
 					comparegridwithoutpo=comparetwogriddata(oldlgserializewithoutpo,newlgserializewithoutpo);
 						if((oldformserializewithoutpo==newformserializewithoutpo)&&comparegridwithoutpo)
 						{
@@ -5214,8 +5215,8 @@ function setnewvendorinvoiceGridDetails(){
 function SaveVendorInvoicewithoutPO(operation){
 	//BID1633 Simon
 	$("#saveTermsButton").prop("disabled",true);
-	var itemCode=$("#new_row_number").val();
-	if(itemCode!=undefined){
+//	var itemCode=$("#new_row_number").val();
+//	if(itemCode!=undefined){
 	//$('#SOReleaseSuggestedPriceID').css('background','-webkit-gradient(linear, left top, left bottom, from(#FFD499), to(#8E6433))');
 	
 	var vendorInvoiceDetails=generatewopoFormSeriallize();
@@ -5260,30 +5261,34 @@ function SaveVendorInvoicewithoutPO(operation){
 	}else{
 		if(operation=="close"){
 		jQuery("#addNewVendorInvoiceDlg").dialog("close");
+		$('#vendorInvoiceGrid').trigger( 'reloadGrid' );
 		}
 	}
 	}else{
 		if(operation=='close'){
 			jQuery("#addNewVendorInvoiceDlg").dialog("close");
+			$('#vendorInvoiceGrid').trigger( 'reloadGrid' );
 		}else{
 			addVendorInvoice(operation);
+//			oldformserializewithoutpo=
+			$('#vendorInvoiceGrid').trigger( 'reloadGrid' );
 		}
 		
 	}
-	}else{
-		 var newDialogDiv = jQuery(document.createElement('div'));
-			jQuery(newDialogDiv).html('<span><b style="color:Green;">You have made changes, please save prior to continuing.</b></span>');
-			jQuery(newDialogDiv).dialog({modal: true, width:300, height:150, title:"Information.", 
-			closeOnEscape: false,
-			open: function(event, ui) { $(".ui-dialog-titlebar-close").hide(); },
-			buttons:{
-				"OK": function(){
-					jQuery(this).dialog("close");
-					//$( "#salesreleasetab ul li:nth-child(2)" ).addClass("ui-state-disabled");
-					//$("#new_row_quantityOrdered").focus();
-				   // return false;
-				}}}).dialog("open");
-	 }
+//	}else{
+//		 var newDialogDiv = jQuery(document.createElement('div'));
+//			jQuery(newDialogDiv).html('<span><b style="color:Green;">You have made changes, please save prior to continuing.</b></span>');
+//			jQuery(newDialogDiv).dialog({modal: true, width:300, height:150, title:"Information.", 
+//			closeOnEscape: false,
+//			open: function(event, ui) { $(".ui-dialog-titlebar-close").hide(); },
+//			buttons:{
+//				"OK": function(){
+//					jQuery(this).dialog("close");
+//					//$( "#salesreleasetab ul li:nth-child(2)" ).addClass("ui-state-disabled");
+//					//$("#new_row_quantityOrdered").focus();
+//				   // return false;
+//				}}}).dialog("open");
+//	 }
 	
 	  //BID1633 Simon
 	 setTimeout(function(){
