@@ -1299,7 +1299,7 @@ function cancelEditQuote() {
 }
 
 function cancelCopyQuote() {
-
+debugger;
 	/*aCancelQuote = "cancelQuoteList";
 	var headerID = $("#joHeaderID").val();
 	deleteQuickQuote(headerID, aCancelQuote);

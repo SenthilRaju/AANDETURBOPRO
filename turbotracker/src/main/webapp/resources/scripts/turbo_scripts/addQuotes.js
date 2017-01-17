@@ -6554,6 +6554,9 @@ function loadnewquotesList(){
 								lasteditcel=id;
 								$("#SaveQuoteButtonID").css({ opacity: 0.3 });
 								$("#SaveQuoteButtonID").attr("disabled", true);
+								//EDITED BY PRASANT FOR 3.0.70 ISSUE FIXES
+								$("#CloseQuoteButtonID").css({ opacity: 0.3 });
+								$("#CloseQuoteButtonID").attr("disabled", true);
 								categorybaseddisplay(id);
 							},
 							successfunc : function(response) {
@@ -6607,6 +6610,10 @@ function loadnewquotesList(){
 							    validatequotedisabledbuttons();
 							    $("#SaveQuoteButtonID").css({ opacity: 'initial'});
 							    $("#SaveQuoteButtonID").attr("disabled", false);
+							    
+							  //EDITED BY PRASANT FOR 3.0.70 ISSUE FIXES
+								$("#CloseQuoteButtonID").css({ opacity:'initial' });
+								$("#CloseQuoteButtonID").attr("disabled", false);
 							},
 							errorfunc : function(rowid, response) {
 								return false;
@@ -6671,6 +6678,10 @@ function loadnewquotesList(){
 						    validatequotedisabledbuttons();
 						    $("#SaveQuoteButtonID").css({ opacity: 'initial'});
 						    $("#SaveQuoteButtonID").attr("disabled", false);
+						    
+						    //EDITED BY PRASANT FOR 3.0.70 ISSUE FIXES
+							$("#CloseQuoteButtonID").css({ opacity:'initial' });
+							$("#CloseQuoteButtonID").attr("disabled", false);
 						    jQuery("#addnewquotesList").closest(".ui-jqgrid-bdiv").scrollTop(posit_job_addnewquotesList);
 						},
 						errorfunc : function(rowid, response) {
@@ -6682,6 +6693,12 @@ function loadnewquotesList(){
 							lasteditcel=id;
 							$("#SaveQuoteButtonID").css({ opacity:0.3});
 							$("#SaveQuoteButtonID").attr("disabled", true);
+							
+							
+							 //EDITED BY PRASANT FOR 3.0.70 ISSUE FIXES
+							$("#CloseQuoteButtonID").css({opacity:0.3});
+							$("#CloseQuoteButtonID").attr("disabled", true);
+							
 							categorybaseddisplay(id);
 //							$("#"+id+"_ackDate").datepicker();
 //							$("#"+id+"_shipDate").datepicker();

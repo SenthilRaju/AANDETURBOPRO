@@ -1221,7 +1221,11 @@ public class Salesserviceimpl implements SalesService {
 			aSession = itsSessionFactory.openSession();
 			Query aQuery = aSession.createSQLQuery(esSQuery);
 			List<?> aList = aQuery.list();
-			if (((BigDecimal) aList.get(0)).compareTo(new BigDecimal("0.0000")) > 0) {
+			System.out.println("=====================================================================>");
+			System.out.println("---------------------->"+aList.size());
+			System.out.println("=====================================================================>");
+			//added by prasant for indexOutofBound Exception while creating new Customer Invoices outside without SO
+			if (aList.size()>0 &&((BigDecimal) aList.get(0)).compareTo(new BigDecimal("0.0000")) > 0) {
 				message = "YY";
 			} else {
 				culQuery = " SELECT R.ReceiptDate FROM cuLinkageDetail AS L INNER JOIN cuReceipt AS R ON "

@@ -3315,8 +3315,17 @@ function loadTaxTerritoryRate(coTaxTerritoryId) {
 	}
 }
 
+//added by prasant for issue fixes while saving the cuInvocies if tax territory is not selected then after giveing the tax territory the save button is diseabled 
+$( "#customerInvoice_TaxTerritory" ).change(function() {
+	
+	if( $("#customerInvoice_TaxTerritory").val()!=""||$("#customerInvoice_TaxTerritory").val().length == 0)
+		document.getElementById("CuInvoiceSaveID").disabled = false;
+		else 
+			document.getElementById("CuInvoiceSaveID").disabled = true;
+	});
 function savecustomerinvoice(operation) {
 	//BID1633 Simon
+	debugger;
 	$("#CuInvoiceSaveID").prop('disabled', true);
 	var customerInvoice_TaxTerritory = $("#customerInvoice_TaxTerritory").val();
 	
@@ -3325,8 +3334,7 @@ function savecustomerinvoice(operation) {
 	else
 		$('#custInvCloseSaveHiddenOut').val("");
 	
-	if (operation != 'closedialog'
-			&& (customerInvoice_TaxTerritory == null|| customerInvoice_TaxTerritory == "" || customerInvoice_TaxTerritory.length == 0)
+	if (operation != 'closedialog' && (customerInvoice_TaxTerritory == null|| customerInvoice_TaxTerritory == "" || customerInvoice_TaxTerritory.length == 0)
 					) {
 
 		var newDialogDiv = jQuery(document.createElement('div'));
@@ -3347,6 +3355,8 @@ function savecustomerinvoice(operation) {
 		}).dialog("open");
 		return false;
 	}
+
+
 	var customerinvoicecustomerid = $("#rxCustomerID").val();
 	if (customerinvoicecustomerid == null || customerinvoicecustomerid == "") {
 		var newDialogDiv = jQuery(document.createElement('div'));
@@ -3584,6 +3594,7 @@ function savecustomerinvoice(operation) {
 		if (_globalold_cIgeneralform != invoiceformdetails
 				|| _globalold_cIlineitemform != (dataToSend)
 				|| _globalold_cIgeneralTotalform != aInvoiceDetailsTotal) {
+			
 
 			var checkpermission = getGrantpermissionprivilage(
 					'OpenPeriod_PostingOnly', 0);
@@ -3715,6 +3726,8 @@ function savecustomerinvoice(operation) {
 						}
 					});
 		} else {
+			
+			
 
 			$('#showMessageCuInvoice').css("margin-left", "1666%");
 			$('#showMessageCuInvoiceLine').css("margin-left", "1666%");
@@ -3782,7 +3795,8 @@ function savecustomerinvoice(operation) {
 
 							var rows = jQuery("#customerInvoice_lineitems")
 									.getDataIDs();
-							cuInvOut_LineItemsToBeDeleted = new Array();
+							//edited by prasant for line item not deleted while creating a cuInvoice using SO i 3.0.70
+							//cuInvOut_LineItemsToBeDeleted = new Array();
 							for (var a = 0; a < rows.length; a++) {
 								row = jQuery("#customerInvoice_lineitems")
 										.getRowData(rows[a]);
@@ -3822,7 +3836,7 @@ function savecustomerinvoice(operation) {
 											'coFiscalPeriodId' : periodid,
 											'coFiscalYearId' : yearid,
 											'gridData' : dataToSend,
-											'delData' : cuInvOut_LineItemsToBeDeleted
+											'delData' :cuInvOut_LineItemsToBeDeleted 
 										},
 										success : function(data) {
 											createtpusage(
@@ -3850,10 +3864,10 @@ function savecustomerinvoice(operation) {
 														'option', 'selected');
 												
 												loadCustomerInvoice("1");
-												PreloadDataFromInvoiceTable("1");
-												
-												
 												//PreloadDataFromInvoiceTable("1");
+												
+										
+												PreloadDataFromInvoiceTable("1");
 												
 												$('#showMessageCuInvoice').css(
 														"margin-left", "1666%");
@@ -4030,6 +4044,8 @@ function checkTaxTerryAftSaveInv() {
 
 				}
 			});
+	
+	
 }
 
 function PreloadDataFromInvoiceTable(initialValue) {
@@ -8068,6 +8084,7 @@ function deleteRowFrom_cuInvLineItemsJqGrid(jqGridRowId)
 	var cuInvoiceDetailId = jQuery("#customerInvoice_lineitems").jqGrid ('getCell', jqGridRowId, 'cuInvoiceDetailId');
 	 if(cuInvoiceDetailId != null && cuInvoiceDetailId != 0 && cuInvoiceDetailId != undefined ){
 		 cuInvOut_LineItemsToBeDeleted.push(cuInvoiceDetailId);
+		 
 		 $('#customerInvoice_lineitems').jqGrid('delRowData',jqGridRowId);
 		// $( "#customerInvoice_lineitems_iladd" ).trigger( "click" );		 
 	 }else{

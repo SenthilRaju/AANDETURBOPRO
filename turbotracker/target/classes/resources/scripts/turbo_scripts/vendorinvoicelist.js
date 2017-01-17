@@ -29,7 +29,6 @@ var allText = $('#apacct').html();
 				$('#vendorAccountList').val('2');
 				$('#accountsPayableImgID').hide();
 				$('#mandveinvno').hide();
-				
 				// $("#search").css("display", "none");
 				// loadInvoicesList();
 				loadInvoicesList(searchData,fromDate,toDate);
@@ -73,6 +72,20 @@ var allText = $('#apacct').html();
 					
 				});
 				
+				//Issue Fix Added By Simon
+				$('#payable').keyup(function(){
+					var payable=$('#payable').val();
+					if(payable==undefined || payable=="" || payable.length==0){
+						$('#payable').css('border-color', 'red');
+						$("#saveTermsButton").prop("disabled",true);
+						$("#saveTermsButton").fadeTo("slow",0.4);
+					}else{
+						$('#payable').css('border-color', '');
+						$('#saveTermsButton').css('border-color', '');
+						$("#saveTermsButton").prop("disabled",false);
+						$("#saveTermsButton").fadeTo("slow",1);
+					}
+				});
 			});
 			
 			$("#postdate").change( function() {
@@ -583,7 +596,7 @@ var allText = $('#apacct').html();
 					//added by prsant #1723
 					$("#viStatusButton").css({ opacity: 0.3});
 				    $("#viStatusButton").attr("disabled", true);
-				     
+				    validatePayableField();
 					return true;
 				}
 				
@@ -2786,6 +2799,9 @@ function preloadVendorInvoiceFromJobData(veBillId)
 				
 				
 				 $(".invReason").show();
+				 
+				//Issue Fix Added By Simon
+					validatePayableField();
 				return true;
 					
 							        
@@ -3490,6 +3506,7 @@ function checkLatestInvoice(prMasterID)
 
 var posit_outside_loadlineItemGrid=0;
 var global_Qty=0;
+var global_quantityBilled=0;
 function loadlineItemGrid()
 {
 	//alert("hi it is calling....");
@@ -3692,8 +3709,12 @@ function loadlineItemGrid()
         							jQuery(newDialogDiv).html('<span><b style="color:Green;">All lineItems are Received so you cannot edit</b></span>');
         							jQuery(newDialogDiv).dialog({modal: true, width:320, height:170, title:"Warning",
         							buttons: [{height:35,text: "OK",click: function() { $(this).dialog("close")        						
-        							$("#lineItemGrid").jqGrid('setCell',row,'quantityOrdered', global_Qty);       							
+        							$("#lineItemGrid").jqGrid('setCell',row,'quantityOrdered', global_Qty);
+        							//Issue Fix added By Simon
+        							$("#lineItemGrid").jqGrid('setCell',row,'quantityBilled', global_quantityBilled);
         							global_Qty=0;
+        							global_quantityBilled=0;
+        							setvendorInvoicegridtotal();
         							}}]}).dialog("open");
         							
         							//$("#" + rowId).find('td').eq('4').html('newText')
@@ -3702,6 +3723,9 @@ function loadlineItemGrid()
         			 
         							}
 	                            	//alert("prMasterID :"+row);
+	                            	/*var unitCost=$('#lineItemGrid').jqGrid('getCell',rowid,'unitCost');
+	                            	alert(unitCost);
+	                            	$("#"+rowid+"_unitCost" ).val(unitCost);*/
 	                       			Calculategrideditrowvalues_VI(rowid);
 	                       			checkLatestInvoice(prMasterID);
 	                       			 $("#lineItemGrid_ilsave").trigger("click");
@@ -3926,6 +3950,7 @@ function loadlineItemGrid()
 			},
 			ondblClickRow: function(rowid) {
 		    global_Qty=	$('#lineItemGrid').jqGrid('getCell',rowid,'quantityOrdered');//$("#"+rowid+"_quantityOrdered").val();
+		    global_quantityBilled=$('#lineItemGrid').jqGrid('getCell',rowid,'quantityBilled');
 			
 			//alert(global_Qty);
 				
@@ -4318,6 +4343,10 @@ $('#balDuePO').val(formatCurrencynodollar(aTotal));
 
 function Calculategrideditrowvalues_VI(editrowid){
 	   var unitCost=$("#"+editrowid+"_unitCost" ).val();
+	   //Issue Fix added by Simon
+	   if(unitCost===undefined){
+		   unitCost=$('#lineItemGrid').jqGrid('getCell',editrowid,'unitCost');
+	   }
 		 unitCost=unitCost.replace(/[^0-9\.-]+/g,"");
 		 if(unitCost==""){
 			 unitCost=0;
@@ -5183,7 +5212,8 @@ function setnewvendorinvoiceGridDetails(){
 }
 
 function SaveVendorInvoicewithoutPO(operation){
-	
+	//BID1633 Simon
+	$("#saveTermsButton").prop("disabled",true);
 	var itemCode=$("#new_row_number").val();
 	if(itemCode!=undefined){
 	//$('#SOReleaseSuggestedPriceID').css('background','-webkit-gradient(linear, left top, left bottom, from(#FFD499), to(#8E6433))');
@@ -5255,14 +5285,15 @@ function SaveVendorInvoicewithoutPO(operation){
 				}}}).dialog("open");
 	 }
 	
+	  //BID1633 Simon
+	 setTimeout(function(){
+		 $("#saveTermsButton").prop('disabled', false);		
+			},3000);
 	
 	//added by prsant #1723
 	$("#viStatusButton").css({ opacity: "1"});
     $("#viStatusButton").attr("disabled", false);
-    
-    
-
-	
+    	
 }
 
 function generatevendorInvoiceWOPOFormTotalIDSeriallize(){
@@ -5435,4 +5466,20 @@ function generatewopoFormSeriallize(){
 	var viStatusButtontxt=$("#viStatusButtontxt").val();
 	var overallvariable=payable+recDateId+vendorInvoice+apacct+due+viStatusButtontxt;
 	return overallvariable;
+}
+
+//Issue Fix Added By Simon
+function validatePayableField(){
+	console.log("validatePayableField is called");
+	var payable=$('#payable').val();
+	if(payable==undefined || payable=="" || payable.length==0){
+		$('#payable').css('border-color', 'red');
+		$("#saveTermsButton").prop("disabled",true);
+		$("#saveTermsButton").fadeTo("slow",0.4);
+	}else{
+		$('#payable').css('border-color', '');
+		$('#saveTermsButton').css('border-color', '');
+		$("#saveTermsButton").prop("disabled",false);
+		$("#saveTermsButton").fadeTo("slow",1);
+	}
 }

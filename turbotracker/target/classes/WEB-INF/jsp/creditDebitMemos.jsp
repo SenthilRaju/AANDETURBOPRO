@@ -63,7 +63,7 @@
 			</tr>
 			<tr>
 			<td>Description:</td>			
-			<td><input type="text" class="alpha" id="DescriptionID" name="DescriptionName" style="padding-left:4px; width:209px;"/>
+			<td><input type="text" class="alpha" id="DescriptionID" maxlength="50" name="DescriptionName" style="padding-left:4px; width:209px;"/>
 			
 			</td>
 			</tr>
