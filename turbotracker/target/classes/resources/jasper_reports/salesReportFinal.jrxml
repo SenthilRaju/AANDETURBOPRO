@@ -2,7 +2,7 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="SalesOrderReport" pageWidth="612" pageHeight="792" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" isSummaryWithPageHeaderAndFooter="true" uuid="f6516305-2963-4957-b0da-063adc58159b">
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="30"/>
+	<property name="ireport.y" value="131"/>
 	<parameter name="cusoID" class="java.lang.String"/>
 	<parameter name="billName" class="java.lang.String"/>
 	<parameter name="billAddress1" class="java.lang.String"/>
@@ -608,68 +608,71 @@ WHERE cuSO.cuSOID=$P{cusoID} order by cuSODetail.position;]]>
 		</band>
 	</detail>
 	<pageFooter>
-		<band height="98" splitType="Prevent">
+		<band splitType="Prevent"/>
+	</pageFooter>
+	<lastPageFooter>
+		<band height="98">
 			<rectangle radius="10">
 				<reportElement positionType="FixRelativeToBottom" x="1" y="3" width="358" height="92" uuid="d9c9101b-2ad2-438d-8374-ecf15bbac6bc"/>
 			</rectangle>
+			<textField>
+				<reportElement x="11" y="14" width="344" height="64" uuid="a9b948f9-24ac-4f23-873a-0cb136ef2f9e"/>
+				<textElement markup="html"/>
+				<textFieldExpression><![CDATA[$P{SOFooterText}]]></textFieldExpression>
+			</textField>
 			<rectangle radius="10">
 				<reportElement positionType="FixRelativeToBottom" x="362" y="3" width="210" height="92" uuid="d5174dd8-8548-47b5-9678-ab674f8656cc"/>
 			</rectangle>
 			<staticText>
-				<reportElement positionType="FixRelativeToBottom" x="372" y="14" width="77" height="19" uuid="dd5f85d4-9caa-45d9-9d4b-0e0ba1ba9e37"/>
+				<reportElement positionType="FixRelativeToBottom" x="374" y="14" width="77" height="19" uuid="dd5f85d4-9caa-45d9-9d4b-0e0ba1ba9e37"/>
 				<textElement textAlignment="Right">
 					<font isBold="false" pdfFontName="Helvetica-Bold" isPdfEmbedded="true"/>
 				</textElement>
 				<text><![CDATA[SUBTOTAL:]]></text>
 			</staticText>
 			<staticText>
-				<reportElement positionType="FixRelativeToBottom" x="372" y="33" width="77" height="20" uuid="a700305f-a9f6-4ed0-9e81-193e141692b2"/>
+				<reportElement positionType="FixRelativeToBottom" x="374" y="33" width="77" height="20" uuid="a700305f-a9f6-4ed0-9e81-193e141692b2"/>
 				<textElement textAlignment="Right">
 					<font isBold="false" pdfFontName="Helvetica-Bold" isPdfEmbedded="true"/>
 				</textElement>
 				<text><![CDATA[SHIPPING:]]></text>
 			</staticText>
 			<staticText>
-				<reportElement positionType="FixRelativeToBottom" x="372" y="73" width="77" height="20" uuid="9c8bdd4a-f6d2-42b1-a750-bb56a4fb6169"/>
+				<reportElement positionType="FixRelativeToBottom" x="374" y="73" width="77" height="20" uuid="9c8bdd4a-f6d2-42b1-a750-bb56a4fb6169"/>
 				<textElement textAlignment="Right">
 					<font size="10" isBold="false" pdfFontName="Helvetica-Bold" isPdfEmbedded="true"/>
 				</textElement>
 				<text><![CDATA[ORDER TOTAL:]]></text>
 			</staticText>
 			<textField isBlankWhenNull="true">
-				<reportElement positionType="FixRelativeToBottom" x="466" y="14" width="97" height="20" uuid="5d349cab-5c8c-4213-8dc2-3df9986a806f"/>
+				<reportElement positionType="FixRelativeToBottom" x="468" y="14" width="97" height="20" uuid="5d349cab-5c8c-4213-8dc2-3df9986a806f"/>
 				<textElement textAlignment="Right"/>
 				<textFieldExpression><![CDATA[($V{total_2} == null) ? "" : new java.text.DecimalFormat("$ #,##0.00").format($V{total_1})]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement positionType="FixRelativeToBottom" x="462" y="33" width="97" height="20" uuid="96456307-6346-4c79-a701-829430f3e24d"/>
+				<reportElement positionType="FixRelativeToBottom" x="464" y="33" width="97" height="20" uuid="96456307-6346-4c79-a701-829430f3e24d"/>
 				<textElement textAlignment="Right"/>
 				<textFieldExpression><![CDATA[new java.text.DecimalFormat("$ #,##0.00").format($V{SoldFreight})]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement positionType="FixRelativeToBottom" x="463" y="73" width="96" height="20" uuid="b9ece03d-5091-4cc0-b840-3fa6760ffc6b"/>
+				<reportElement positionType="FixRelativeToBottom" x="465" y="73" width="96" height="20" uuid="b9ece03d-5091-4cc0-b840-3fa6760ffc6b"/>
 				<textElement textAlignment="Right"/>
 				<textFieldExpression><![CDATA[($V{total_2} == null) ? "" : new java.text.DecimalFormat("$ #,##0.00").format($V{total_1}.add($V{SoldFreight}).add($V{SoldTaxTotal}))]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement positionType="FixRelativeToBottom" x="372" y="53" width="77" height="20" uuid="3228460d-d379-4bc4-ab32-4c9aceac43a0"/>
+				<reportElement positionType="FixRelativeToBottom" x="374" y="53" width="77" height="20" uuid="3228460d-d379-4bc4-ab32-4c9aceac43a0"/>
 				<textElement textAlignment="Right">
 					<font isBold="false" pdfFontName="Helvetica-Bold" isPdfEmbedded="true"/>
 				</textElement>
 				<text><![CDATA[Tax (%) :]]></text>
 			</staticText>
 			<textField isBlankWhenNull="true">
-				<reportElement positionType="FixRelativeToBottom" x="462" y="53" width="97" height="20" uuid="afd95d35-89e2-47f8-bf2e-12ee8289ae11"/>
+				<reportElement positionType="FixRelativeToBottom" x="464" y="53" width="97" height="20" uuid="afd95d35-89e2-47f8-bf2e-12ee8289ae11"/>
 				<textElement textAlignment="Right"/>
 				<textFieldExpression><![CDATA[new java.text.DecimalFormat("$ #,##0.00").format($V{SoldTaxTotal})]]></textFieldExpression>
 			</textField>
-			<textField>
-				<reportElement x="11" y="14" width="344" height="64" uuid="a9b948f9-24ac-4f23-873a-0cb136ef2f9e"/>
-				<textElement markup="html"/>
-				<textFieldExpression><![CDATA[$P{SOFooterText}]]></textFieldExpression>
-			</textField>
 		</band>
-	</pageFooter>
+	</lastPageFooter>
 	<summary>
 		<band height="54">
 			<textField isStretchWithOverflow="true">

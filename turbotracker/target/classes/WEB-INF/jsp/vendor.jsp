@@ -57,6 +57,27 @@
 								</fieldset>
 							</td>
 						</tr>
+						<!-- ID631 Simon -->
+						<tr><td>
+							<fieldset style="width:280px;height:85px" class=" ui-widget-content ui-corner-all">
+								<legend><label><b>1099 Expense </b></label></legend>
+								<table>
+								<c:set var="expenseFlag"></c:set>
+								<c:choose>
+								<c:when test="${requestScope.veMasterRecord.expense1099Flag}">
+								<c:set value="checked" var="expenseFlag"></c:set>
+								</c:when>
+								<c:otherwise>
+								<c:set value="" var="expenseFlag"></c:set>
+								</c:otherwise>
+								</c:choose>
+									<tr ><td><input type="checkbox" id="expenseFlag" <c:out value="${expenseFlag}"/> style="float: left; margin-top: 0px;>"/>&nbsp;<div style="margin-left: 25px;margin-top: -16px;"><label id="expenseCheck"></label></div></td></tr>
+									<tr><td><label>&nbsp;ID#</label></td></tr>
+									<tr><td><input type="text" id="Fin_1099_expense" maxlength="30" value="${requestScope.veMasterRecord.expense1099Id}"/></td></tr>
+								</table>
+							</fieldset>
+						</td>
+						</tr>
 						</table>
 						</td>
 						<td style="padding-left: 0px; vertical-align: top;">
@@ -96,7 +117,7 @@
 						</tr>
 						</table>
 						</td>
-					<td>
+					<td style="padding-left: 0px; vertical-align: top; ">
 						<table>
 							<tr>
 								<td>
@@ -145,7 +166,7 @@
 							</tr>
 						</table>
 					</td>
-			<td>
+			<td style="padding-left: 0px; vertical-align: top; ">
 				<div>
 					<table id="vendorGrid" style="width: 20px"></table>
 					<div id="vendorpager1"></div>
@@ -196,6 +217,21 @@
 			$("#factorySoftware").val(factorysoftware);
 			var discountIncludesFreight="${requestScope.veMasterRecord.discountIncludesFreight}";
 			$("#Fin_altMan").attr("checked",discountIncludesFreight);
+			//ID631 Simon
+			$("#expenseFlag").on('click', function() {
+			    if (jQuery("#expenseFlag").is(":checked")) {
+			    	$("#expenseCheck").text("Yes");
+			    }
+			    else {
+			    	$("#expenseCheck").text("No");
+			    }
+			});
+			if (jQuery("#expenseFlag").is(":checked")) {
+		    	$("#expenseCheck").text("Yes");
+		    }
+		    else {
+		    	$("#expenseCheck").text("No");
+		    }
 		});
 
 		
@@ -376,6 +412,8 @@
 			//var DirectDeposit 			=$("#").val();
 			//var POName 					=$("#").val();
 			//var VendorTerms 			=$("#").val();	
+			var expenseFlag 				=(jQuery("#expenseFlag").is(":checked")?true:false);
+			var fin_1099_expense 			=$("#Fin_1099_expense").val();
 			$.ajax({
 		        url: "./rolodexforms/UpdateVendorFinancialTab",
 		        data: {'veMasterID':veMasterID,'DueDays':DueDays,'DueOnDay':DueOnDay,
@@ -383,7 +421,7 @@
 			        	'DiscOnDay':DiscOnDay,'DiscountIncludesFreight':DiscountIncludesFreight,
 			        	'Manufacturer':Manufacturer,
 			        	'coExpenseAccountID':coExpenseAccountID,
-			        	'ImportType':ImportType,'AccountNumber':AccountNumber},
+			        	'ImportType':ImportType,'AccountNumber':AccountNumber,'expenseFlag':expenseFlag,'fin_1099_expense':fin_1099_expense},
 		        type: 'GET',
 		        success: function(data){
 		        	$("#successMsg").html("<b>Data has been updated successfully</b>");

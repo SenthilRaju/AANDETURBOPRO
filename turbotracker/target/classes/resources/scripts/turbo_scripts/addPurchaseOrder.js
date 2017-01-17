@@ -801,6 +801,9 @@ function SetoverAllPOTotal(){
 	var sum = 0;
 	var taxAmount = 0;
 	var aTotal = 0;
+	//Issue fix 3.0.70
+	var taxpercentage=$('#taxLineId').val();
+	
 	var ids = $("#lineItemGrid").jqGrid('getDataIDs');
 	$.each(allRowsInGrid, function(index, value) {
 		aVal[index] = value.quantityBilled;
@@ -1257,3 +1260,10 @@ $.ajax({
 }
 return Number(totalamt);
 }
+/*
+Issue Fix Added By Simon
+Reason : To disable Line-Items tab when General Tab is not saved.
+*/
+$(document).ready(function(){
+	$( "#po_tabs ul li:nth-child(2)" ).addClass("ui-state-disabled");
+});
