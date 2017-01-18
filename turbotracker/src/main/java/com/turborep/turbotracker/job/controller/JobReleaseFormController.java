@@ -2407,7 +2407,7 @@ public class JobReleaseFormController {
 						}
 					}*/
 				//BID1733 Simon Added
-				if((aCuinvoize.getInvoiceDate()!=aCuinvoice.getInvoiceDate()) || (aCuinvoize.getInvoiceAmount().compareTo(aCuinvoice.getInvoiceAmount())!=0  ||(dateval!=0))){
+				if(!(AreDatesMatching(aCuinvoize.getInvoiceDate(), aCuinvoice.getInvoiceDate())) || (aCuinvoize.getInvoiceAmount().compareTo(aCuinvoice.getInvoiceAmount())!=0  ||(dateval!=0))){
 					itsLogger.info("Transaction Rollback. .. ..."+aCuinvoize.getInvoiceAmount()+"#@#"+aCuinvoice.getInvoiceAmount());
 					Coledgersource aColedgersource = itsGltransactionService.getColedgersourceDetail("CI");
 					Cofiscalperiod cfp=accountingCyclesService.getPeriodByDate(aCuinvoize.getInvoiceDate());
@@ -3176,7 +3176,7 @@ public class JobReleaseFormController {
 				Integer dateval=(aCuinvoize.getInvoiceDate()==null?"":aCuinvoize.getInvoiceDate().toString()).indexOf(invdate);
 				if(transaction!=null && transaction.equalsIgnoreCase("close") ||(dateval!=0)){
 					//BID1733 Simon Added
-					if((aCuinvoize.getInvoiceDate()!=aCuinvoice.getInvoiceDate()) || (aCuinvoize.getInvoiceAmount().compareTo(aCuinvoice.getInvoiceAmount())!=0  ||(dateval!=0))){
+					if(!(AreDatesMatching(aCuinvoize.getInvoiceDate(), aCuinvoice.getInvoiceDate())) || (aCuinvoize.getInvoiceAmount().compareTo(aCuinvoice.getInvoiceAmount())!=0  ||(dateval!=0))){
 						itsLogger.info("Transaction Rollback. .. ..."+aCuinvoize.getInvoiceAmount()+"#@#"+aCuinvoice.getInvoiceAmount());
 						Coledgersource aColedgersource = itsGltransactionService.getColedgersourceDetail("CI");
 						Cofiscalperiod cfp=accountingCyclesService.getPeriodByDate(aCuinvoize.getInvoiceDate());
@@ -5309,5 +5309,11 @@ public@ResponseBody String getCommissionPaidDetails(
 			return 1;
 
 		}
-		
+	//Issue fix added By Simon
+	private boolean AreDatesMatching(Date previousDate,Date newInvoiceDate) throws ParseException{
+		SimpleDateFormat simpleDateFormat=new SimpleDateFormat("yyyy/MM/dd");
+		previousDate=simpleDateFormat.parse(simpleDateFormat.format(previousDate));
+		newInvoiceDate=simpleDateFormat.parse(simpleDateFormat.format(newInvoiceDate));
+		return previousDate.equals(newInvoiceDate);
+	}
 } 	
