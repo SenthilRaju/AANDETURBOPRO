@@ -975,4 +975,50 @@ SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 		}
 		return aCofiscalperiod;
 	}
+	
+	@Override
+	public boolean isItCurrentYear(Integer currentYearId) {
+		boolean flag=false;
+		Session aSession = null;
+		Query query = null;
+		try {
+
+			aSession = itsSessionFactory.openSession();
+			query = aSession
+					.createQuery("from com.turborep.turbotracker.system.dao.Sysinfo WHERE currentFiscalYearId=:currentYearId");
+			query.setParameter("currentYearId", currentYearId);
+			Sysinfo sysInfo=(Sysinfo) query.uniqueResult();
+			flag=((sysInfo!=null)?true:false);
+		} catch (Exception e) {
+			itsLogger.error(e.getMessage(), e);
+		} finally {
+			aSession.flush();
+			aSession.close();
+			query = null;
+		}
+		return flag;
+	}
+	
+	@Override
+	public boolean isIt13ThPeriod(Integer currentYearId, Integer currentPeriodId) {
+		boolean flag=false;
+		Session aSession = null;
+		Query query = null;
+		try {
+			aSession = itsSessionFactory.openSession();
+			query = aSession
+					.createQuery("from Cofiscalperiod c where c.coFiscalYearId=:coFiscalYearId AND c.coFiscalPeriodId=:coFiscalPeriodId and c.period=13");
+			query.setParameter("coFiscalYearId", currentYearId);
+			query.setParameter("coFiscalPeriodId", currentPeriodId);
+			Cofiscalperiod cofiscalperiod=(Cofiscalperiod) query.uniqueResult();
+			flag=((cofiscalperiod!=null)?true:false);
+		} catch (Exception e) {
+			itsLogger.error(e.getMessage(), e);
+		} finally {
+			aSession.flush();
+			aSession.close();
+			query = null;
+		}
+		return flag;
+	}
 }

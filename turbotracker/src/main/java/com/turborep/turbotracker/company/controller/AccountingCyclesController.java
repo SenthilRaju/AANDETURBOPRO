@@ -522,5 +522,18 @@ public class AccountingCyclesController {
 		}
 		return true;
 	}
-	
+	@RequestMapping(value = "validate13thPeriod", method = RequestMethod.GET)
+	public @ResponseBody boolean validate13ThPeriod(@RequestParam(value = "currentyear", required = false) Integer currentYear,
+			@RequestParam(value = "currentperiod", required = false) Integer currentPeriod,
+			HttpServletRequest request,HttpServletResponse theResponse,HttpSession session) throws IOException, CompanyException, MessagingException {
+		boolean flag=false;
+		flag=accountingCyclesService.isItCurrentYear(currentYear);
+		if(flag){
+			flag=accountingCyclesService.isIt13ThPeriod(currentYear, currentPeriod);
+			flag=(flag==false)?true:false;
+		}else{
+			flag=false;
+		}
+		return flag;
+	}
 }

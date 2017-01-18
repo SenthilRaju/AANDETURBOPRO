@@ -91,4 +91,10 @@ public interface AccountingCyclesService {
 	
 	//BID1733 Simon Added
 	public Cofiscalperiod getPeriodByDate(Date dateToCheck);
+	
+	//Added By Simon for Issue Fix
+	public boolean isItCurrentYear(Integer currentYearId);
+	
+	//Added By Simon for Issue Fix
+	public boolean isIt13ThPeriod(Integer currentYearId,Integer currentPeriodId);
 }
