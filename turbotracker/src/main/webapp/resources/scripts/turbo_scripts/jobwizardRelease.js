@@ -66,7 +66,10 @@ $(document).keydown(function (e) {
         e.preventDefault();
 });
 
-
+$("#customerInvoice_invoiceDateID").change(function() {
+	validateDateAgainstOpenPeriod('customerInvoice_invoiceDateID');
+//	paymentTermsDue($('#customerinvoicepaymentId').val());
+});
 jQuery(document).ready(function(){
 	$("#mailTimestampLines").hide();
 	$("#mailTimestampGeneral").hide();
@@ -7275,33 +7278,7 @@ var transaction = "";
 		 $('#cuinvoiceIDhidden').val(cusoInvId);
 		 getCustomerInvoiceDetailsforpopup(cusoInvId);
 		 
-			var InvoiceDateforCheck=$("#customerInvoice_lineinvoiceDateID").val();
 			
-			//editted by prasant kumar for cuInvoice if invoice created on is on closed period then
-			//invoice date is going to desable
-			var checkpermission=false;
-			if(InvoiceDateforCheck!='' && InvoiceDateforCheck!=null && InvoiceDateforCheck!=undefined)
-				{
-		 debugger;
-			$.ajax({
-				url: "./checkAccountingCyclePeriods",
-				data:{"datetoCheck":InvoiceDateforCheck,"UserStatus":checkpermission},
-				type: "POST",
-				success: function(data) { 
-						if(data.cofiscalperiod!=null && typeof(data.cofiscalperiod.period) !== "undefined" )
-						{							
-							$("#customerInvoice_invoiceDateID").prop('disabled', false);
-							
-						}
-						else
-						{							
-						$("#customerInvoice_invoiceDateID").prop('disabled', true);
-						
-						}
-		 
-				}
-			});
-				}
 		 	 if(aCusotmerDate === ''){
 		 		$('#imgInvoicePDF').empty();
 		 		$('#imgInvoicePDF').append('<input type="image" src="./../resources/Icons/PDF_new_disabled.png" title="View CuInvoice" return false;" style="background: #EEDEBC;cursor:default;">');
@@ -7548,6 +7525,10 @@ var transaction = "";
 											$('#custoemrInvoiceFormTotalID').find("#costdetails").css('display','none');
 //											alert($("#jobHeader_JobName_id").val());
 											$("#jobnodescription").val($("#jobHeader_JobName_id").val());
+											
+											//eddited by prasant 3.0.70 Issue Fixes
+											debugger;
+											$("#customerInvoice_invoiceDateID").prop('disabled', false);
 						},
 					"No": function ()	{
 						jQuery(this).dialog("close");
@@ -9908,10 +9889,13 @@ function Releasetypeselectboxrefresh(){
 }
 
 function getCustomerInvoiceDetailsforpopup(InvoiceID){
-	
+debugger;
 	if(InvoiceID==null){
 		InvoiceID=0;
+		
 	}
+	
+	var aInvoiceDate;
 	console.log('getCustomerInvoiceDetailsforpopup');
 	$.ajax({
 		url: "./jobtabs5/getCustomerInvoiceDetailsForPopup",
@@ -9973,6 +9957,36 @@ function getCustomerInvoiceDetailsforpopup(InvoiceID){
 				
 				var aDueDate = getFormattedDate(dueDate);
 				var aInvoiceDate = getFormattedDate(receiveDate);
+				
+					var InvoiceDateforCheck=aInvoiceDate;
+					debugger;
+					//editted by prasant kumar for cuInvoice if invoice created on is on closed period then
+					//invoice date is going to desable
+					var checkpermission=false;
+					if(InvoiceDateforCheck!='' && InvoiceDateforCheck!=null && InvoiceDateforCheck!=undefined)
+						{
+
+					$.ajax({
+						url: "./checkAccountingCyclePeriods",
+						data:{"datetoCheck":InvoiceDateforCheck,"UserStatus":checkpermission},
+						type: "POST",
+						success: function(data) { 
+								if(data.cofiscalperiod!=null && typeof(data.cofiscalperiod.period) !== "undefined" )
+								{							
+									$("#customerInvoice_invoiceDateID").prop('disabled', false);
+									
+								}
+								else
+								{							
+								$("#customerInvoice_invoiceDateID").prop('disabled', true);
+								
+								}
+				 
+						}
+					});
+						}
+					
+					
 				
 				if (typeof (shipDate) != 'undefined' && shipDate!= null ){
 					shipDate = new Date(shipDate);
@@ -10100,6 +10114,8 @@ function getCustomerInvoiceDetailsforpopup(InvoiceID){
 			}
 		}
 	});
+	
+	
 return true;
 }
 
@@ -12236,6 +12252,34 @@ function cuLineItemChanges_Out(formvalue)
     }	
     }
 	return ret_val;
+}
+function validateDateAgainstOpenPeriod(dateID){
+	var checkpermission=getGrantpermissionprivilage('OpenPeriod_PostingOnly',0);
+	$.ajax({
+		url: "./checkAccountingCyclePeriods",
+		data:{"datetoCheck":$("#"+dateID).val(),"UserStatus":checkpermission},
+		type: "POST",
+		success: function(data) { 
+			if(data.AuthStatus == "granted")
+			{	
+			var newDialogDiv = jQuery(document.createElement('div'));
+			jQuery(newDialogDiv).html('<span><b style="color:red;">Current Transcation Date is not under open period.</b></span>');
+			jQuery(newDialogDiv).dialog({modal: true, width:300, height:150, title:"Information.", 
+									buttons: [{text: "OK",click: function(){
+										$("#"+dateID).datepicker("setDate", new Date());
+										$(this).dialog("close"); }}],
+										close: function( event ) {
+											if ( event.originalEvent ) {
+												$("#"+dateID).datepicker("setDate", new Date());
+											  }
+										}
+								}).dialog("open");
+			}
+	  	},
+			error:function(data){
+				console.log('error');
+				}
+			});
 }
 //BID1682 Simon
 var updateTaxTerritoryStatusOnChange=0;
