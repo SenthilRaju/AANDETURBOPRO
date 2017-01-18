@@ -23,6 +23,10 @@ $(toggledivflag).contents().find("#frandbw").css('display','inline');
 globalshiptoid = $(toggledivflag).contents().find("#shiptohiddenid").val();
 var warehouseID = -1;
 
+//Issue fix added by Simon
+if(updateTaxTerritoryStatusOnChange!=undefined){
+	updateTaxTerritoryStatusOnChange=1;
+}
 preloadShiptoAddress(toggledivflag,'','','0','0',$("#jobCustomerName_ID").text());
 
 $(toggledivflag).contents().find("#shiptomoderhiddenid").val("0");
@@ -43,6 +47,10 @@ function shiptoaddressforCustomerbutton()
 console.log("Customer");	
 $(toggledivflag).contents().find("#frandbw").css('display','inline');
 clearshiptoAddress();
+//Issue fix added by Simon
+if(updateTaxTerritoryStatusOnChange!=undefined){
+	updateTaxTerritoryStatusOnChange=1;
+}
 preloadShiptoAddress(toggledivflag,'','','1','0',$("#jobCustomerName_ID").text());
 //console.log($("#shipToRadioButtonSet input[type='radio']:checked").val())
 $(toggledivflag).contents().find("#shiptomoderhiddenid").val("1");
@@ -64,6 +72,10 @@ $(toggledivflag).contents().find("#frandbw").css('display','none');
 clearshiptoAddress();
 
 if(toggledivflag=="#CI_Shipto"){
+	//Issue fix added by Simon
+	if(updateTaxTerritoryStatusOnChange!=undefined){
+		updateTaxTerritoryStatusOnChange=1;
+	}
 	preloadShiptoAddress(toggledivflag,'',GLB_joMasterID,'2','0',$("#customerInvoice_customerInvoiceID").text());
 }
 if(toggledivflag=="#SO_Shipto"){
@@ -93,6 +105,11 @@ function shiptoaddressforOtherbutton()
 console.log("Other");	
 $(toggledivflag).contents().find("#frandbw").css('display','none');
 clearshiptoAddress();
+
+//Issue fix added by Simon
+if(updateTaxTerritoryStatusOnChange!=undefined){
+	updateTaxTerritoryStatusOnChange=1;
+}
 preloadShiptoAddress(toggledivflag,'','','3','0',$("#jobCustomerName_ID").text());
 $(toggledivflag).contents().find("#shiptomoderhiddenid").val("3");
 

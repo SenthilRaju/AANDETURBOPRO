@@ -1060,6 +1060,7 @@ Logger logger = Logger.getLogger(JobQuoteFormController.class);
 			params.put("releaseType", booleanvalue);
 			params.put("printJobName",printJobNameStatus);
 			 connection = con.getConnection();
+			 
 			if(WriteorView!=null&&WriteorView.equals("write")){
 				ReportService.WriteReportCall(theRequest,theResponse,params,"pdf",path_JRXML,filename,connection);
 			}else{

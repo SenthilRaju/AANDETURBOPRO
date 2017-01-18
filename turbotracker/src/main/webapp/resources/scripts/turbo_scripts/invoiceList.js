@@ -4049,6 +4049,7 @@ function checkTaxTerryAftSaveInv() {
 }
 
 function PreloadDataFromInvoiceTable(initialValue) {
+	
 	var cuInvoiceId = $('#cuinvoiceIDhidden').val();
 	var rxMasterID = $('#rxCustomerID').val();
 	cuinvoiceID = cuInvoiceId;
@@ -6084,9 +6085,33 @@ function clickcheckboxChanges(id) {
 var posit_outside_cuInvoice_lineItemsGrid = 0;
 var CuInvoiceDetailrowid;
 function loadCustomerInvoice(loadValue) {
+	debugger;
 	$("#customerInvoice_lineitems").jqGrid('GridUnload');
 	var id = $('#cuinvoiceIDhidden').val();
+	var InvoiceDateforCheck=$("#customerInvoice_lineinvoiceDateID").val();
+	
+	//editted by prasant kumar for cuInvoice if invoice created on is on closed period then
+	//invoice date is going to desable
+	if(InvoiceDateforCheck!='' && InvoiceDateforCheck!=null && InvoiceDateforCheck!=undefined)
+	{
+    var checkpermission=false;
+   $.ajax({
+	url: "./checkAccountingCyclePeriods",
+	data:{"datetoCheck":InvoiceDateforCheck,"UserStatus":checkpermission},
+	type: "POST",
+	success: function(data) { 
+			if(data.cofiscalperiod!=null && typeof(data.cofiscalperiod.period) !== "undefined" )
+			{							
+				$("#customerInvoice_invoiceDateID").prop('disabled', false);				
+			}
+			else
+			{							
+			$("#customerInvoice_invoiceDateID").prop('disabled', true);			
+			}
 
+	}
+});
+	}
 	$("#customerInvoice_lineitems")
 			.jqGrid(
 					{
