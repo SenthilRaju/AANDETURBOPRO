@@ -338,11 +338,6 @@ public class AccountingCyclesController {
 			 AuthStatus="granted";
 			}
 		
-			/*else if ((aUserBean.getSystemAdministrator() == 1 || UserStatus  )	&& ((flag!=null) && (flag.equals("allow")))){
-				 cofiscalperiod = accountingCyclesService.getAllOpenPeriods(datetoCheck);
-				 if(cofiscalperiod==null)
-				 AuthStatus="granted";
-			}*/
 			else
 			{
 			 cofiscalperiod = accountingCyclesService.getCurrentOpenPeriods(datetoCheck,aSysinfo.getCurrentFiscalYearId(),aSysinfo.getCurrentPeriodId());

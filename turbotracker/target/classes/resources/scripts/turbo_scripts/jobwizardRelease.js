@@ -25,6 +25,7 @@ var releasselectrowid=1;
 var customerName='';
 var _globalvarvenodorinvoiceform;
 var _globalvarvenodorinvoicegrid;
+var isAnyLineItemsDeleted=false;
 
 
 var _globaloldcustomerInvoiceform=null;
@@ -6674,7 +6675,7 @@ var transaction = "";
 	var vePOID = bidderGrid.jqGrid('getCell', bidderGridRowId, 'vePoId');
 	var joReleaseID = bidderGrid.jqGrid('getCell', bidderGridRowId, 'joReleaseId');
 	var type_release= bidderGrid.jqGrid('getCell', bidderGridRowId, 'type');
-	
+	 debugger;
 	if(cuinvId == null || cuinvId == '')
 	{
 		aAddOREdit = 'add';
@@ -6886,7 +6887,8 @@ var transaction = "";
 			var rowId = $("#release").jqGrid('getGridParam', 'selrow');
 			var transStatus = $("#release").jqGrid('getCell', rowId,'transactionStatus');
 			console.log('Transacion Status before Update :-:'+transStatus);
-			if(transStatus!==2){
+			//Editted by prasant to show this pop up when All SO lines item is Invoiced
+			if(transStatus!==2  && isAnyLineItemsDeleted!=true){
 			var newDialogDiv = jQuery(document.createElement('div'));
 			jQuery(newDialogDiv).html('<span><b style="color:Green;">Do You want to close the SO transaction Status?</b></span>');
 			jQuery(newDialogDiv).dialog({modal: true, width:300, height:150, title:"Success.", 
@@ -6926,6 +6928,8 @@ var transaction = "";
 				}}}).dialog("open");
 			}else{
 				cancelcustomerinvoice();
+				isAnyLineItemsDeleted=false;
+				
 			}
 			}else{
 				cancelcustomerinvoice();
@@ -7270,6 +7274,34 @@ var transaction = "";
 		 
 		 $('#cuinvoiceIDhidden').val(cusoInvId);
 		 getCustomerInvoiceDetailsforpopup(cusoInvId);
+		 
+			var InvoiceDateforCheck=$("#customerInvoice_lineinvoiceDateID").val();
+			
+			//editted by prasant kumar for cuInvoice if invoice created on is on closed period then
+			//invoice date is going to desable
+			var checkpermission=false;
+			if(InvoiceDateforCheck!='' && InvoiceDateforCheck!=null && InvoiceDateforCheck!=undefined)
+				{
+		 debugger;
+			$.ajax({
+				url: "./checkAccountingCyclePeriods",
+				data:{"datetoCheck":InvoiceDateforCheck,"UserStatus":checkpermission},
+				type: "POST",
+				success: function(data) { 
+						if(data.cofiscalperiod!=null && typeof(data.cofiscalperiod.period) !== "undefined" )
+						{							
+							$("#customerInvoice_invoiceDateID").prop('disabled', false);
+							
+						}
+						else
+						{							
+						$("#customerInvoice_invoiceDateID").prop('disabled', true);
+						
+						}
+		 
+				}
+			});
+				}
 		 	 if(aCusotmerDate === ''){
 		 		$('#imgInvoicePDF').empty();
 		 		$('#imgInvoicePDF').append('<input type="image" src="./../resources/Icons/PDF_new_disabled.png" title="View CuInvoice" return false;" style="background: #EEDEBC;cursor:default;">');
@@ -7525,7 +7557,8 @@ var transaction = "";
 				
 			}else{
 				//BID#1618 related code is loading
-				//alert("Else is calling while loading ...!");
+			//alert("Else is calling while loading ...!");
+				debugger;
 				
 				$('#imgInvoicePDF').empty();
 		 		$('#imgInvoicePDF').append('<input type="image" src="./../resources/Icons/PDF_new.png" title="View CuInvoice" onclick="viewCuInvoicePDF(); return false;"	style="background: #EEDEBC;">');
@@ -8818,7 +8851,7 @@ $(function() { var cache = {}; var lastXhr='';
 
 function getCustomerInvoiceDetails(joDetailId, CustomerID){
 	
-	//alert("hi in getCustomerInvoiceDetails");
+	alert("hi in getCustomerInvoiceDetails");
 	
 	console.log('getCustomerInvoiceDetails');
 	$.ajax({
@@ -9875,6 +9908,7 @@ function Releasetypeselectboxrefresh(){
 }
 
 function getCustomerInvoiceDetailsforpopup(InvoiceID){
+	
 	if(InvoiceID==null){
 		InvoiceID=0;
 	}
@@ -9949,6 +9983,11 @@ function getCustomerInvoiceDetailsforpopup(InvoiceID){
 				$("#customerInvoice_dueDateID").val(aDueDate);
 				$("#customerInvoice_invoiceDateID").val(aInvoiceDate);
 				$("#customerInvoice_lineinvoiceDateID").val(aInvoiceDate);
+				//editted by prasant kumar for cuInvoice if invoice created on is on closed period then
+				//invoice date is going to desable
+				
+				
+				
 				$("#customerInvoice_invoiceNumberId").val(invoiceNumber);
 				console.log("Invoice Number is ----->"+invoiceNumber);
 				$("#customerInvoice_lineinvoiceNumberId").val(invoiceNumber);
@@ -12046,6 +12085,7 @@ function deleteRowFrom_cuInvLineItemsJqGrid(jqGridRowId)
 	 var cuInvoiceDetailId = jQuery("#customerInvoice_lineitems").jqGrid ('getCell', jqGridRowId, 'cuInvoiceDetailId');
 	 if(cuInvoiceDetailId != null && cuInvoiceDetailId != 0 && cuInvoiceDetailId != undefined ){
 		 cuInv_LineItemsToBeDeleted.push(cuInvoiceDetailId);
+		 isAnyLineItemsDeleted=true;
 		 $('#customerInvoice_lineitems').jqGrid('delRowData',jqGridRowId);
 		// $( "#customerInvoice_lineitems_iladd" ).trigger( "click" );		 
 	 }else{
