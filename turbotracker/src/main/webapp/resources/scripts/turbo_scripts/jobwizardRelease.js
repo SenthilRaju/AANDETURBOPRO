@@ -65,7 +65,9 @@ $(document).keydown(function (e) {
     if (preventKeyPress)
         e.preventDefault();
 });
-
+$("#customerInvoice_invoiceDateID").click(function(){
+	previous_Customer_Invoice_Date=$("#customerInvoice_invoiceDateID").val();
+});
 $("#customerInvoice_invoiceDateID").change(function() {
 	validateDateAgainstOpenPeriod('customerInvoice_invoiceDateID');
 //	paymentTermsDue($('#customerinvoicepaymentId').val());
@@ -319,9 +321,14 @@ jQuery("#openPaidCommissionDialog").dialog({
 		 }
 	//	 billnoteinlinenote = new nicEditor({buttonList : ['bold','italic','underline','left','center','right','justify','ol','ul','fontSize','fontFamily','fontFormat','forecolor'], maxHeight : 300}).panelInstance('billNote');
 		 billnoteinlinenote = CKEDITOR.replace('billNote', ckEditorconfigforinline);
-		
+		 
+		 $(".ui-datepicker-trigger").click(function(){
+			 previous_Vendor_Invoice_Date=$("#datedID").val();
+		 });
+		 
 		  $("#datedID").change(function(){
-				getDueonDayswithDate( $("#rxMasterID").val()); 
+			  validateDateAgainstOpenPeriod('datedID');
+			  getDueonDayswithDate( $("#rxMasterID").val()); 
 		  });
 		
 		  chkSplitCommissionBOValidation();
@@ -12253,6 +12260,10 @@ function cuLineItemChanges_Out(formvalue)
     }
 	return ret_val;
 }
+//BID1682 Simon
+var updateTaxTerritoryStatusOnChange=0;
+
+//Issue Fix Added By Simon #3.0.70
 function validateDateAgainstOpenPeriod(dateID){
 	var checkpermission=getGrantpermissionprivilage('OpenPeriod_PostingOnly',0);
 	$.ajax({
@@ -12266,11 +12277,19 @@ function validateDateAgainstOpenPeriod(dateID){
 			jQuery(newDialogDiv).html('<span><b style="color:red;">Current Transcation Date is not under open period.</b></span>');
 			jQuery(newDialogDiv).dialog({modal: true, width:300, height:150, title:"Information.", 
 									buttons: [{text: "OK",click: function(){
-										$("#"+dateID).datepicker("setDate", new Date());
+										if(dateID=='customerInvoice_invoiceDateID'){
+											$("#"+dateID).val(previous_Customer_Invoice_Date);
+										}else if(dateID=='datedID'){
+											$("#"+dateID).val(previous_Vendor_Invoice_Date);
+										}
 										$(this).dialog("close"); }}],
 										close: function( event ) {
 											if ( event.originalEvent ) {
-												$("#"+dateID).datepicker("setDate", new Date());
+												if(dateID=='customerInvoice_invoiceDateID'){
+													$("#"+dateID).val(previous_Customer_Invoice_Date);
+												}else if(dateID=='datedID'){
+													$("#"+dateID).val(previous_Vendor_Invoice_Date);
+												}
 											  }
 										}
 								}).dialog("open");
@@ -12281,5 +12300,5 @@ function validateDateAgainstOpenPeriod(dateID){
 				}
 			});
 }
-//BID1682 Simon
-var updateTaxTerritoryStatusOnChange=0;
+var previous_Customer_Invoice_Date;
+var previous_Vendor_Invoice_Date;

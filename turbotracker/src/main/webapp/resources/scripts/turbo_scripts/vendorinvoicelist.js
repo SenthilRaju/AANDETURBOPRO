@@ -58,6 +58,10 @@ var allText = $('#apacct').html();
 				
 				// on change dated field from po
 				
+				$("#datePO").click(function(){
+					previous_vendor1_invoice_date=$("#datePO").val();
+				});
+				
 				$("#datePO").change(function(){
 					validateDateAgainstOpenPeriod('datePO');
 					getDueonDayswithDate($('#rxMasterIDPayablePO').val(),$("#datePO").val(),"withPO")
@@ -65,6 +69,9 @@ var allText = $('#apacct').html();
 				})
 				
 				// on change dated field from po
+				$("#date").click(function(){
+					previous_vendor2_invoice_date=$("#date").val();
+				});
 				
 				$("#date").change(function(){
 					validateDateAgainstOpenPeriod('date');
@@ -5506,11 +5513,19 @@ function validateDateAgainstOpenPeriod(dateID){
 			jQuery(newDialogDiv).html('<span><b style="color:red;">Current Transcation Date is not under open period.</b></span>');
 			jQuery(newDialogDiv).dialog({modal: true, width:300, height:150, title:"Information.", 
 									buttons: [{text: "OK",click: function(){
-										$("#"+dateID).datepicker("setDate", new Date());
+										if(dateID=='datePO'){
+											$("#"+dateID).val(previous_vendor1_invoice_date);
+										}else if(dateID=='date'){
+											$("#"+dateID).val(previous_vendor2_invoice_date);
+										}
 										$(this).dialog("close"); }}],
 										close: function( event ) {
 											if ( event.originalEvent ) {
-												$("#"+dateID).datepicker("setDate", new Date());
+												if(dateID=='datePO'){
+													$("#"+dateID).val(previous_vendor1_invoice_date);
+												}else if(dateID=='date'){
+													$("#"+dateID).val(previous_vendor2_invoice_date);
+												}
 											  }
 										}
 								}).dialog("open");
@@ -5521,3 +5536,5 @@ function validateDateAgainstOpenPeriod(dateID){
 				}
 			});
 }
+var previous_vendor1_invoice_date;
+var previous_vendor2_invoice_date;
