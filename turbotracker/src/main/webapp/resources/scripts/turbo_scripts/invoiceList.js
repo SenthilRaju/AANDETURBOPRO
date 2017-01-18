@@ -132,7 +132,7 @@ jQuery(document).ready(function() {
 	 */
 
 	$("#customerInvoice_invoiceDateID").change(function() {
-
+		validateDateAgainstOpenPeriod('customerInvoice_invoiceDateID');
 		paymentTermsDue($('#customerinvoicepaymentId').val());
 	});
 	$('#cusinvoicetab').bind('dialogclose', function(event) {
@@ -8301,3 +8301,33 @@ function setproductWareHouseCostBycuMasterID(prMasterID,rxMasterID){
 }
 //BID1682 Simon
 var updateTaxTerritoryStatusOnChange=0;
+
+//Issue Fix Added By Simon #3.0.70
+function validateDateAgainstOpenPeriod(dateID){
+	var checkpermission=getGrantpermissionprivilage('OpenPeriod_PostingOnly',0);
+	$.ajax({
+		url: "./checkAccountingCyclePeriods",
+		data:{"datetoCheck":$("#"+dateID).val(),"UserStatus":checkpermission},
+		type: "POST",
+		success: function(data) { 
+			if(data.AuthStatus == "granted")
+			{	
+			var newDialogDiv = jQuery(document.createElement('div'));
+			jQuery(newDialogDiv).html('<span><b style="color:red;">Current Transcation Date is not under open period.</b></span>');
+			jQuery(newDialogDiv).dialog({modal: true, width:300, height:150, title:"Information.", 
+									buttons: [{text: "OK",click: function(){
+										$("#"+dateID).datepicker("setDate", new Date());
+										$(this).dialog("close"); }}],
+										close: function( event ) {
+											if ( event.originalEvent ) {
+												$("#"+dateID).datepicker("setDate", new Date());
+											  }
+										}
+								}).dialog("open");
+			}
+	  	},
+			error:function(data){
+				console.log('error');
+				}
+			});
+}
