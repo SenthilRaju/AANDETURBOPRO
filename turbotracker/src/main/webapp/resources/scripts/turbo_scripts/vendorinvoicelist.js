@@ -1673,8 +1673,9 @@ var allText = $('#apacct').html();
 			
 			function UpdatePOStatusfromPO(vepoId,status)
 			{
+				//Issuefix Modified By Simon
 				$.ajax({
-					url: "./veInvoiceBillController/UpdatePOStatusfromPO?vePoID="+vepoId,
+					url: "./veInvoiceBillController/UpdatePOStatusfromPO?vepoId="+vepoId,
 					type: "POST",
 					success: function(data) {
 					
