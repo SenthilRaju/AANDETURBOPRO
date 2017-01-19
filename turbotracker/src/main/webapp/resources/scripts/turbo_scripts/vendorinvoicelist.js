@@ -2943,9 +2943,6 @@ $('#taxGeneralId').keyup(function () {
 function editInvoiceDetails(operStatus){
 	 $('#invreasondialog').data('operStatus', operStatus);
 	 jQuery( "#invreasondialog" ).dialog("open");
-	 setTimeout(function(){
-		 $('#vendorInvoiceGrid').trigger( 'reloadGrid' );
-			}, 2000);
 	return true;
 }
 
@@ -5271,17 +5268,17 @@ function SaveVendorInvoicewithoutPO(operation){
 	}else{
 		if(operation=="close"){
 		jQuery("#addNewVendorInvoiceDlg").dialog("close");
-		$('#vendorInvoiceGrid').trigger( 'reloadGrid' );
+		$('#invoicesGrid').trigger( 'reloadGrid' );
 		}
 	}
 	}else{
 		if(operation=='close'){
 			jQuery("#addNewVendorInvoiceDlg").dialog("close");
-			$('#vendorInvoiceGrid').trigger( 'reloadGrid' );
+			$('#invoicesGrid').trigger( 'reloadGrid' );
 		}else{
 			addVendorInvoice(operation);
 //			oldformserializewithoutpo=
-			$('#vendorInvoiceGrid').trigger( 'reloadGrid' );
+			$('#invoicesGrid').trigger( 'reloadGrid' );
 		}
 		
 	}
