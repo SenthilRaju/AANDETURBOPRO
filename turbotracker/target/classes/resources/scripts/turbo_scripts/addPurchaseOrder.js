@@ -323,7 +323,8 @@ function loadLineItemGrid() {
 			return vePOID;
 			} },
 		pager: jQuery('#lineItemPager'),
-		colNames:["Product No","", "Description1","Notes",'NotesDesc','Qty','Received','Invoiced', 'Cost Each', 'Mult.', 'Tax','Net Each', 'Amount', 'VepoID', 'prMasterID' , 'vePodetailID','Posiion', 'Move', 'TaxTotal', 'Ack.','Ship','Order #','InLineNote',''],
+		//editted by prasant for 3.0.70 UAT Issue fixes
+		colNames:["Product No","", "Description","Notes",'NotesDesc','Qty','Received','Invoiced', 'Cost Each', 'Mult.', 'Tax','Net Each', 'Amount', 'VepoID', 'prMasterID' , 'vePodetailID','Posiion', 'Move', 'TaxTotal', 'Ack.','Ship','Order #','InLineNote',''],
 		colModel :[
 			{name:'note',index:'note',align:'left',width:60,editable:true,hidden:false, edittype:'text', editoptions:{size:40,
 				dataInit: function (elem) {

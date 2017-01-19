@@ -27,7 +27,7 @@
 cuInvoiceDetail.*, prMaster.ItemCode,
 tsUserLogin.Initials AS SalesRep,
 veShipVia.Description AS ShippedVia,
-(CASE WHEN joMaster.Description  IS NULL THEN cuInvoice.jobnodescription ELSE joMaster.Description  END) AS Job,
+(CASE WHEN cuInvoice.jobnodescription  IS NULL THEN joMaster.Description ELSE cuInvoice.jobnodescription  END) AS Job,
 cuInvoice.*,
 cuInvoiceDetail.UnitCost*cuInvoiceDetail.QuantityBilled AS ExtList,
 (IFNULL(NULLIF(cuInvoiceDetail.UnitCost, '' ), 0) * IFNULL(NULLIF(cuInvoiceDetail.QuantityBilled, '' ), 0)*IFNULL(NULLIF(cuInvoiceDetail.PriceMultiplier , '' ),1)) AS total,
@@ -433,7 +433,7 @@ WHERE cuInvoice.cuInvoiceID=$P{CuInvoice} ORDER BY cuInvoiceDetail.position;]]>
 			<elementGroup/>
 			<componentElement>
 				<reportElement stretchType="RelativeToTallestObject" x="116" y="3" width="295" height="83" isPrintWhenDetailOverflows="true" uuid="058f4159-dfd5-42c8-a6f7-48fdabca7d2a"/>
-				<hc:html xmlns:hc="http://jasperreports.sourceforge.net/htmlcomponent" xsi:schemaLocation="http://jasperreports.sourceforge.net/htmlcomponent http://jasperreports.sourceforge.net/xsd/htmlcomponent.xsd" horizontalAlign="Left" verticalAlign="Middle">
+				<hc:html xmlns:hc="http://jasperreports.sourceforge.net/htmlcomponent" xsi:schemaLocation="http://jasperreports.sourceforge.net/htmlcomponent http://jasperreports.sourceforge.net/xsd/htmlcomponent.xsd" scaleType="RetainShape" horizontalAlign="Left" verticalAlign="Middle">
 					<hc:htmlContentExpression><![CDATA[(($F{header}.replaceAll("`and`nbsp;", " ")).replaceAll("`", "")).replaceAll("amp;"," ")+" "]]></hc:htmlContentExpression>
 				</hc:html>
 			</componentElement>
