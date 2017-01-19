@@ -517,7 +517,7 @@ function createNewcreditdebitmemo()
 	$("#savememo").show()
 	$("#editmemo").css("display","none");
 	$("#customerID").prop('readonly',false);
-
+	$("#datepickerbox").prop('disabled', false);
 	
 }
 
@@ -627,6 +627,7 @@ function FormatDate(createdDate){
 }
 //BID1277 Simon Added
 function loadCreditDebitMemo(acuInvoiceID,rxMasterID,memoStatus){
+	
 	$.ajax({
 		url: "./salesOrderController/getPreInvoiceData",
 		type: "POST",
@@ -667,6 +668,38 @@ function loadCreditDebitMemo(acuInvoiceID,rxMasterID,memoStatus){
 			$("#JobCustomerId").val(data.cuInvoice.rxCustomerId)
 			$("#taxfreight").val(data.cuInvoice.taxfreight);
 			console.log(data.cuInvoice.taxRate);
+			
+			//eddited by prasant issue fixes for 3.0.70
+		//	var aInvoiceDate =data.Cuinvoicedetail.cuInvoiceDetailId
+			
+				var InvoiceDateforCheck=$("#datepickerbox").val();
+				debugger;
+				//editted by prasant kumar for cuInvoice if invoice created on is on closed period then
+				//invoice date is going to desable
+				var checkpermission=false;
+				if(InvoiceDateforCheck!='' && InvoiceDateforCheck!=null && InvoiceDateforCheck!=undefined)
+					{
+
+				$.ajax({
+					url: "./checkAccountingCyclePeriods",
+					data:{"datetoCheck":InvoiceDateforCheck,"UserStatus":checkpermission},
+					type: "POST",
+					success: function(data) { 
+							if(data.cofiscalperiod!=null && typeof(data.cofiscalperiod.period) !== "undefined" )
+							{							
+								$("#datepickerbox").prop('disabled', false);
+								
+							}
+							else
+							{							
+							$("#datepickerbox").prop('disabled', true);
+							
+							}
+			 
+					}
+				});
+					}
+			
 			
 			
 			if(data.Cuinvoicedetail.taxable == 1)

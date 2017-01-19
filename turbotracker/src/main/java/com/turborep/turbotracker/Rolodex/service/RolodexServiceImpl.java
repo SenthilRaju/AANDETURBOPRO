@@ -2596,6 +2596,8 @@ public class RolodexServiceImpl implements RolodexService {
 					Vemaster thevemaster=new Vemaster();
 					thevemaster.setVeMasterId(therxMaster.getRxMasterId());
 					thevemaster.setImportType(0);
+					//editted by prasant for Bartos UAT 3.0.70 Issue Fixes 01-19-2017
+					thevemaster.setDiscountPercent(BigDecimal.ZERO);
 					aSession.save(thevemaster);
 				}
 			}else{

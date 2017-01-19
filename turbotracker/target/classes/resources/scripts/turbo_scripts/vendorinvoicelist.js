@@ -4528,16 +4528,20 @@ function SaveVendorInvoicewithPO(operation){
 				
 				 jQuery(this).dialog("close");
 				 jQuery("#addNewVendorInvoiceFromPODlg").dialog("close");
+				 $('#invoicesGrid').trigger( 'reloadGrid' );
 			return false;	
 			}}}).dialog("open");
 	}else{
 		jQuery("#addNewVendorInvoiceFromPODlg").dialog("close");
+		$('#invoicesGrid').trigger( 'reloadGrid' );
 	}
 	}else{
 		if(operation=='close'){
 			jQuery("#addNewVendorInvoiceFromPODlg").dialog("close");
+			$('#invoicesGrid').trigger( 'reloadGrid' );
 		}else{
 			addVendorInvoiceFromPO('close');
+			$('#invoicesGrid').trigger( 'reloadGrid' );
 		}
 		
 	}
@@ -5209,7 +5213,8 @@ function setnewvendorinvoiceGridDetails(){
 		var number4 = number3.replace(",", "");
 		var number5 = number4.replace(",", "");
 		var number6 = number5.replace(",", "");
-		sum = Number(sum) + Number(number6);
+		//Issue fix Modified By Simon
+		sum = Number(parseFloat(Number(sum)).toFixed(2)) + parseFloat(Number(number6));
 		}
 		}
 	}
@@ -5262,6 +5267,7 @@ function SaveVendorInvoicewithoutPO(operation){
 			"No": function ()	{
 				 jQuery(this).dialog("close");
 				 jQuery("#addNewVendorInvoiceDlg").dialog("close");
+				 $('#invoicesGrid').trigger( 'reloadGrid' );
 				 
 			return false;	
 			}}}).dialog("open");

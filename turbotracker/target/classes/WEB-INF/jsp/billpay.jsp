@@ -1436,6 +1436,7 @@
 		function payFullAmount(billAmt,rowId,img)
 		{
 			//alert("it is calling...");
+			debugger;
 			  if(img.src.match("bill_empty.png"))
 			   {				  
 			 	 
