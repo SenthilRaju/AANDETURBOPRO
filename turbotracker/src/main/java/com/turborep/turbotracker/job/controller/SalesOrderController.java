@@ -511,9 +511,9 @@ public class SalesOrderController {
 					Integer countNoOfVendorInvoiced=jobService.getnumberofVendorNumber( aVepo.getVePoid());
 					
 					if(countofinvoiceforrelease.intValue()>0)
-						countofinvoiceforrelease=countofinvoiceforrelease+1;
+						countofinvoiceforrelease=countNoOfVendorInvoiced+1;
 					
-					countofinvoiceforrelease=countofinvoiceforrelease+1;
+					//countofinvoiceforrelease=countofinvoiceforrelease+1;
 					
 					String newCustomerInvoiceNumber = "";
 					Integer requireCuInvoiceNumberOrNot = 0;
@@ -529,7 +529,7 @@ public class SalesOrderController {
 					if(vendorInvoiceSerialNumber!=null)
 						aVepo.setPonumber(requireCuInvoiceNumberOrNot>0?newCustomerInvoiceNumber:aVepo.getPonumber()+vendorInvoiceSerialNumber);
 					else
-					aVepo.setPonumber(requireCuInvoiceNumberOrNot>0?newCustomerInvoiceNumber:aVepo.getPonumber()+countofinvoiceforrelease);
+					aVepo.setPonumber(requireCuInvoiceNumberOrNot>0?newCustomerInvoiceNumber:aVepo.getPonumber()+countNoOfVendorInvoiced);
 					
 					System.out.println("After Checking poNumber---->"+(requireCuInvoiceNumberOrNot>0?newCustomerInvoiceNumber:aVepo.getPonumber()+countofinvoiceforrelease));
 					/*

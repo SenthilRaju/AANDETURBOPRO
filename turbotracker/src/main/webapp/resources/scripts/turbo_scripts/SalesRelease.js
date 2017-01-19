@@ -321,6 +321,7 @@ function PreloadDataInvoice(CIdivFlag){
 	var vePOID = grid.jqGrid('getCell', SelectedRow, 'vePoId');
 	var count = $("#shiping").getGridParam("reccount");
 	var vendorInvoiceSerialNumber=$("#shiping").jqGrid ('getGridParam', 'selrow');
+	
 	//alert("i am hear SalesRelease");
 	//+"&vendorInvoiceSerialNumber="+vendorInvoiceSerialNumber
 	
@@ -333,8 +334,11 @@ function PreloadDataInvoice(CIdivFlag){
 	}
 	var releaseType = grid.jqGrid('getCell', SelectedRow, 'type');
 	var jobNumber = $('.jobHeader_JobNumber').val();
+	//eddited by prasant kumar for 3.0.70 issue fixes
 	if(vendorInvoiceSerialNumber==null)
-		vendorInvoiceSerialNumber="0";
+		{
+		vendorInvoiceSerialNumber=jQuery("#shiping tr").length;
+		}
 	$.ajax({
 		url: "./salesOrderController/getPreLoadData",
 		type: "POST",

@@ -58,6 +58,10 @@ var allText = $('#apacct').html();
 				
 				// on change dated field from po
 				
+				$("#datePO").click(function(){
+					previous_vendor1_invoice_date=$("#datePO").val();
+				});
+				
 				$("#datePO").change(function(){
 					validateDateAgainstOpenPeriod('datePO');
 					getDueonDayswithDate($('#rxMasterIDPayablePO').val(),$("#datePO").val(),"withPO")
@@ -65,6 +69,9 @@ var allText = $('#apacct').html();
 				})
 				
 				// on change dated field from po
+				$("#date").click(function(){
+					previous_vendor2_invoice_date=$("#date").val();
+				});
 				
 				$("#date").change(function(){
 					validateDateAgainstOpenPeriod('date');
@@ -2936,9 +2943,6 @@ $('#taxGeneralId').keyup(function () {
 function editInvoiceDetails(operStatus){
 	 $('#invreasondialog').data('operStatus', operStatus);
 	 jQuery( "#invreasondialog" ).dialog("open");
-	 setTimeout(function(){
-		 $('#vendorInvoiceGrid').trigger( 'reloadGrid' );
-			}, 2000);
 	return true;
 }
 
@@ -5264,17 +5268,17 @@ function SaveVendorInvoicewithoutPO(operation){
 	}else{
 		if(operation=="close"){
 		jQuery("#addNewVendorInvoiceDlg").dialog("close");
-		$('#vendorInvoiceGrid').trigger( 'reloadGrid' );
+		$('#invoicesGrid').trigger( 'reloadGrid' );
 		}
 	}
 	}else{
 		if(operation=='close'){
 			jQuery("#addNewVendorInvoiceDlg").dialog("close");
-			$('#vendorInvoiceGrid').trigger( 'reloadGrid' );
+			$('#invoicesGrid').trigger( 'reloadGrid' );
 		}else{
 			addVendorInvoice(operation);
 //			oldformserializewithoutpo=
-			$('#vendorInvoiceGrid').trigger( 'reloadGrid' );
+			$('#invoicesGrid').trigger( 'reloadGrid' );
 		}
 		
 	}
@@ -5506,11 +5510,19 @@ function validateDateAgainstOpenPeriod(dateID){
 			jQuery(newDialogDiv).html('<span><b style="color:red;">Current Transcation Date is not under open period.</b></span>');
 			jQuery(newDialogDiv).dialog({modal: true, width:300, height:150, title:"Information.", 
 									buttons: [{text: "OK",click: function(){
-										$("#"+dateID).datepicker("setDate", new Date());
+										if(dateID=='datePO'){
+											$("#"+dateID).val(previous_vendor1_invoice_date);
+										}else if(dateID=='date'){
+											$("#"+dateID).val(previous_vendor2_invoice_date);
+										}
 										$(this).dialog("close"); }}],
 										close: function( event ) {
 											if ( event.originalEvent ) {
-												$("#"+dateID).datepicker("setDate", new Date());
+												if(dateID=='datePO'){
+													$("#"+dateID).val(previous_vendor1_invoice_date);
+												}else if(dateID=='date'){
+													$("#"+dateID).val(previous_vendor2_invoice_date);
+												}
 											  }
 										}
 								}).dialog("open");
@@ -5521,3 +5533,5 @@ function validateDateAgainstOpenPeriod(dateID){
 				}
 			});
 }
+var previous_vendor1_invoice_date;
+var previous_vendor2_invoice_date;

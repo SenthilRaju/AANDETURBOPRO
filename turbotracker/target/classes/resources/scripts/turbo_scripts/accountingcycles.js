@@ -723,14 +723,15 @@ jQuery(document).ready(function(){
 					{
 					_globalPeriodStatus=valueMap;
 					}
-				else if(key=="yearflag")
+				//Issue Fix added By Simon
+				/*else if(key=="yearflag")
 					{
 					//alert(valueMap);
 					if(valueMap=="Disable")
 						$("#closefiscalyearid").attr("disabled",true);//alert(valueMap)
 					else
 						$("#closefiscalyearid").attr("disabled",false);//alert(valueMap)
-					}
+					}*/
 		});
 		}
 		});
@@ -750,14 +751,15 @@ function call13periodbuttonval()
 					{
 					_globalPeriodStatus=valueMap;
 					}
-				else if(key=="yearflag")
+				//Issue Fix added By Simon
+				/*else if(key=="yearflag")
 					{
 					//alert(valueMap);
 					if(valueMap=="Disable")
 						$("#closefiscalyearid").attr("disabled",true);//alert(valueMap)
 					else
 						$("#closefiscalyearid").attr("disabled",false);//alert(valueMap)
-					}
+					}*/
 		});
 		}
 		});
@@ -766,34 +768,58 @@ function call13periodbuttonval()
 
 function closefiscalYear()
 {
-	if(_globalPeriodStatus=="Disable")
-		{
-		var newDialogDiv = jQuery(document.createElement('div'));
-		jQuery(newDialogDiv).html('<span><b style="color:Red;">All Periods must be Closed. Would you like to Close all Open Periods?</b></span>');
-		jQuery(newDialogDiv).dialog({
-			modal : true,
-			width : 400,
-			height : 200,
-			title : "Error.",
-			buttons : [ {
-					text : "Yes",
-					click : function() {
-					$(this).dialog("close");
-					$("#LoadingDialog").css({"display":"inline"});
-					close13periods();
-				}},
-				 {
-					text : "No",
-					click : function() {
-					$(this).dialog("close");
+	//Modified By Simon
+	$.ajax({
+		url: "./validate13thPeriod",
+		type: "GET",
+		data : {"currentperiod":$("#currentPeriodId").val(),"currentyear":$("#drp_yearList option:selected").val()},
+		success: function(data) {
+			if(data){
+				var newDialogDiv = jQuery(document.createElement('div'));
+				jQuery(newDialogDiv).html('<span><b style="color:Red;">You are not past the 13th Period for this Fiscal Year.</b></span>');
+				jQuery(newDialogDiv).dialog({
+					modal : true,
+					width : 400,
+					height : 200,
+					title : "Error.",
+					buttons : [ {
+							text : "Ok",
+							click : function() {
+							$(this).dialog("close");
+						}}]
+				}).dialog("open");
+			}
+			else if(_globalPeriodStatus=="Disable")
+				{
+				var newDialogDiv = jQuery(document.createElement('div'));
+				jQuery(newDialogDiv).html('<span><b style="color:Red;">All Periods must be Closed. Would you like to Close all Open Periods?</b></span>');
+				jQuery(newDialogDiv).dialog({
+					modal : true,
+					width : 400,
+					height : 200,
+					title : "Error.",
+					buttons : [ {
+							text : "Yes",
+							click : function() {
+							$(this).dialog("close");
+							$("#LoadingDialog").css({"display":"inline"});
+							close13periods();
+						}},
+						 {
+							text : "No",
+							click : function() {
+							$(this).dialog("close");
+						}
+					}]
+				}).dialog("open");
 				}
-			}]
-		}).dialog("open");
+			else
+				{
+				close13periods();
+				}
 		}
-	else
-		{
-		close13periods();
-		}
+		});
+	
 }
 
 function close13periods()
@@ -814,4 +840,3 @@ function close13periods()
 	});
 
 }
-
