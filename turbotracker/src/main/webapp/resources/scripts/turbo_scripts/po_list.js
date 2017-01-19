@@ -11,6 +11,7 @@ jQuery(document).ready(function(){
 });
 
 function showPurchaseOrderList(searchData,fromDate,toDate){
+	debugger;
 	$("#PurchaseOrdersGrid").jqGrid({
 		url:'./po_listgrid?searchData='+searchData+'&fromDate='+fromDate+'&toDate='+toDate,
 		datatype: 'JSON',

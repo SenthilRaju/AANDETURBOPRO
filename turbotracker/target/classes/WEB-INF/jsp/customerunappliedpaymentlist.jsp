@@ -69,6 +69,7 @@
 	});
 
 	function loadCutomerPaymentList(theUrl){
+		debugger;
 	var aCupayPage = $("#customerpaymentID").val();
 	//alert(""+theUrl);
 	$("#customerpaymentlist").jqGrid({

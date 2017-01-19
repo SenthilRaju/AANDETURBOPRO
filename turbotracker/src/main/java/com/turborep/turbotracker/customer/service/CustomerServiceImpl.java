@@ -249,9 +249,10 @@ public class CustomerServiceImpl implements CustomerService {
 				+ " LEFT JOIN cuLinkageDetail AS cdp ON (cr.rxCustomerID = cdp.rxCustomerID AND cdp.cuReceiptID = cr.cuReceiptID)"
 				+ " GROUP BY cr.cuReceiptID,cr.ReceiptDate, cr.rxCustomerID HAVING unApplied>0 ORDER BY  unApplied DESC";
 		*/
+		//edited by prasant for ID#659
 		String aPaymentsCountStr = "SELECT cr.cuReceiptID, cr.rxCustomerID, cr.ReceiptDate, CONCAT(rm.Name, ' ', rm.FirstName) AS Customer,cr.Reference, cr.Memo, cr.Amount, cr.cuReceiptTypeID,SUM(cdp.PaymentApplied) AS PaymentRecieved,(cr.Amount - SUM(IFNULL(cdp.PaymentApplied,0))) AS unApplied"
 				+ " FROM rxMaster rm RIGHT JOIN cuReceipt cr ON (rm.rxMasterID = cr.rxCustomerID) LEFT JOIN cuLinkageDetail AS cdp ON (cr.rxCustomerID = cdp.rxCustomerID AND cdp.cuReceiptID = cr.cuReceiptID) where reversePaymentStatus <> 1 "
-				+ "GROUP BY cr.cuReceiptID,cr.ReceiptDate, cr.rxCustomerID HAVING unApplied>0 ";
+				+ "GROUP BY cr.cuReceiptID,cr.ReceiptDate, cr.rxCustomerID HAVING unApplied>0 or unApplied<0 ";
 		
 		
 		Session aSession = null;Query aQuery =null;
@@ -765,11 +766,11 @@ public class CustomerServiceImpl implements CustomerService {
 
 		String condition = "where reversePaymentStatus <> 1 ";
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
-
+// editted by prasant for ID#659
 		String aPaymentsselectQry = "SELECT cr.cuReceiptID, cr.rxCustomerID, cr.ReceiptDate, CONCAT(rm.Name, ' ', rm.FirstName) AS Customer,cr.Reference, cr.Memo, cr.Amount, cr.cuReceiptTypeID,SUM(cdp.PaymentApplied) AS PaymentRecieved,(cr.Amount - SUM(IFNULL(cdp.PaymentApplied,0))) AS unApplied"
 				+ " FROM rxMaster rm RIGHT JOIN cuReceipt cr ON (rm.rxMasterID = cr.rxCustomerID) LEFT JOIN cuLinkageDetail AS cdp ON (cr.rxCustomerID = cdp.rxCustomerID AND cdp.cuReceiptID = cr.cuReceiptID) "
 				+ condition
-				+ "GROUP BY cr.cuReceiptID,cr.ReceiptDate, cr.rxCustomerID HAVING unApplied>0 ORDER BY "+sidx +" "+sord.toUpperCase()+"  LIMIT "
+				+ "GROUP BY cr.cuReceiptID,cr.ReceiptDate, cr.rxCustomerID HAVING unApplied>0  or unApplied<0 ORDER BY "+sidx +" "+sord.toUpperCase()+"  LIMIT "
 			//	+ "GROUP BY cr.rxCustomerID ORDER BY cr.ReceiptDate DESC LIMIT "
 				+ theFrom + ", " + theRows + ";";
 		Session aSession = null;Query aQuery =null;
