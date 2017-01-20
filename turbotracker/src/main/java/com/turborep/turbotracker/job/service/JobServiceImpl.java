@@ -15051,9 +15051,11 @@ public class JobServiceImpl implements JobService {
 					   
 					}
 					
-					if(aCuso.getJoReleaseId()==null || aCuso.getJoReleaseId()==0)
-					return (Cuso) aQueryList.get(0);
-					else
+					if(aCuso.getJoReleaseId()==null || aCuso.getJoReleaseId()==0){
+					Cuso cuSO=(Cuso) aQueryList.get(0);
+					cuSO.setCuSOUsed(isCuSOUsed(aSession, cuSO.getCuSoid()));
+					return cuSO;
+					}else
 					return new Cuso();
 				}
 				else
@@ -23170,6 +23172,18 @@ private void saveCuSOLog(CuSOLog cuSOLog,Session aSession){
 	tx.commit();
 }
 
-
+//Issue Fix added By Simon
+private boolean isCuSOUsed(Session existingSession,Integer cuSOID){
+	boolean flag=false;
+	Query query=existingSession.createQuery("FROM Cuinvoice WHERE cuSoid=:cuSOID");
+	query.setParameter("cuSOID", cuSOID);
+	List<Cuinvoice> invoices=query.list();
+	if(invoices!=null && query.list().size()!=0){
+		flag=true;
+	}else{
+		flag=false;
+	}
+	return flag;
+}
 }
 	

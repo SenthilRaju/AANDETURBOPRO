@@ -2378,9 +2378,9 @@ public class Searchservice implements SearchServiceInterface {
 	
 	@Override
 	public List<AutoCompleteBean> searchCreditDebitMemos(String theSearchString) throws SearchException {
-		String aSearchSelectQry = "SELECT DISTINCT cuInvoiceID, InvoiceNumber,InvoiceDate,InvoiceAmount,CONCAT(rxMaster.Name, ' ', rxMaster.FirstName) AS Customer,cuInvoice.rxCustomerID,memoStatus, CASE WHEN CONCAT(InvoiceDate, CONCAT(rxMaster.Name, ' ', rxMaster.FirstName), InvoiceAmount, InvoiceNumber) LIKE '%"
-				+ JobUtil.removeSpecialcharacterswithslash(theSearchString)
-				+ "%' THEN 'and' ELSE '' END AS result FROM rxMaster , cuInvoice WHERE rxMaster.rxMasterID = cuInvoice.rxCustomerID AND CreditMemo=1 HAVING result != '' ORDER BY cuInvoiceID DESC";
+		String aSearchSelectQry = "SELECT test.* FROM(SELECT DISTINCT cuInvoiceID, InvoiceNumber,InvoiceDate,InvoiceAmount,CONCAT(rxMaster.Name, ' ', rxMaster.FirstName) AS Customer,cuInvoice.rxCustomerID,memoStatus,CONCAT(InvoiceDate, CONCAT(rxMaster.Name, ' ', rxMaster.FirstName), InvoiceAmount, InvoiceNumber) AS searchString FROM rxMaster , cuInvoice WHERE rxMaster.rxMasterID = cuInvoice.rxCustomerID AND CreditMemo=1 ORDER BY cuInvoiceID DESC) AS test WHERE UPPER(searchString) LIKE '%"
+				+ JobUtil.removeSpecialcharacterswithslash(theSearchString).toUpperCase()
+				+ "%' ORDER BY cuInvoiceID DESC";
 		Session aSession = null;
 		ArrayList<AutoCompleteBean> aQueryList = new ArrayList<AutoCompleteBean>();
 		AutoCompleteBean aAutoCompleteBean = null;

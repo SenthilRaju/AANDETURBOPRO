@@ -380,9 +380,9 @@ public class CustomerServiceImpl implements CustomerService {
 		}
 		//BID1277 Simon Modified
 		if(searchTerm!=null){
-			aPaymentsselectQry = "SELECT DISTINCT cuInvoiceID, InvoiceNumber,InvoiceDate,InvoiceAmount,CONCAT(rxMaster.Name, ' ', rxMaster.FirstName) AS Customer,cuInvoice.rxCustomerID,memoStatus, CASE WHEN CONCAT(InvoiceDate, CONCAT(rxMaster.Name, ' ', rxMaster.FirstName), InvoiceAmount, InvoiceNumber) LIKE '%"
-					+ JobUtil.removeSpecialcharacterswithslash(searchTerm)
-					+ "%' THEN 'and' ELSE '' END AS result FROM rxMaster , cuInvoice WHERE rxMaster.rxMasterID = cuInvoice.rxCustomerID AND CreditMemo=1 HAVING result != '' ORDER BY cuInvoiceID DESC";
+			aPaymentsselectQry = "SELECT test.* FROM(SELECT DISTINCT cuInvoiceID, InvoiceNumber,InvoiceDate,InvoiceAmount,CONCAT(rxMaster.Name, ' ', rxMaster.FirstName) AS Customer,cuInvoice.rxCustomerID,memoStatus,CONCAT(InvoiceDate, CONCAT(rxMaster.Name, ' ', rxMaster.FirstName), InvoiceAmount, InvoiceNumber) AS searchString FROM rxMaster , cuInvoice WHERE rxMaster.rxMasterID = cuInvoice.rxCustomerID AND CreditMemo=1 ORDER BY cuInvoiceID DESC) AS test WHERE UPPER(searchString) LIKE '%"
+					+ JobUtil.removeSpecialcharacterswithslash(searchTerm).toUpperCase()
+					+ "%' ORDER BY cuInvoiceID DESC";
 		}else{
 			aPaymentsselectQry = " SELECT DISTINCT cuInvoiceID, InvoiceNumber,InvoiceDate,InvoiceAmount,CONCAT(rxMaster.Name, ' ', rxMaster.FirstName) AS Customer,cuInvoice.rxCustomerID,memoStatus  "
 					+ " FROM rxMaster , cuInvoice where rxMaster.rxMasterID = cuInvoice.rxCustomerID "

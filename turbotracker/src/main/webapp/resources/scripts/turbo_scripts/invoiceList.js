@@ -1242,9 +1242,32 @@ function getSONumber(sonumber) {
 			type : "POST",
 			data : "SONumber=" + $('#sonumber').val(),
 			success : function(data) {
-				if (data.cuSoid != null)
-					PreloadSODataForInvoice(data);
-				else {
+				if (data.cuSoid != null){
+					if(!data.cuSOUsed){
+						PreloadSODataForInvoice(data);
+					}else{
+						var newInvoiceSO = jQuery(document.createElement('div'));
+						jQuery(newInvoiceSO).attr("id", "newSO");
+						jQuery(newInvoiceSO).html(
+								'<span style="color:red; id="errorSpan">Sales Order #'
+										+ sonumber + ' is already in Use.</span>');
+						jQuery(newInvoiceSO).dialog({
+							modal : true,
+							width : 300,
+							height : 250,
+							title : "SO Number",
+							buttons : {
+								"Ok" : function() {
+									jQuery(this).dialog("close");
+								},
+								"cancel" : function() {
+									$('#sonumber').val('');
+									addNewInvoice();
+								}
+							}
+						}).dialog("open");
+					}
+				}else {
 					var newInvoiceSO = jQuery(document.createElement('div'));
 					jQuery(newInvoiceSO).attr("id", "newSO");
 					jQuery(newInvoiceSO).html(
@@ -1260,6 +1283,7 @@ function getSONumber(sonumber) {
 								jQuery(this).dialog("close");
 							},
 							"cancel" : function() {
+								$('#sonumber').val('');
 								jQuery(this).dialog("close");
 							}
 						}
