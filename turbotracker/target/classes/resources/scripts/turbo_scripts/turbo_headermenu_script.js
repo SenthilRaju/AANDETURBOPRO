@@ -696,25 +696,6 @@ function customerPage(){
 		return false;
 	}
 	
-	/*var editPOLocalGridRowsOut = $('#lineItemGrid').getRowData();
-	var	editPOLocalGridOut = JSON.stringify(editPOLocalGridRowsOut);
-	var editPOLocalFormOut = $("form[name=editPOOut]").serialize();
-	console.log(editPOLocalFormOut+" AVAVA "+editPOLocalFormOut);
-	if(editPOGlobalFormOut!=editPOLocalFormOut){
-		var newDialogDiv = jQuery(document.createElement('div'));
-		var errorText = "Purchase Order Details modified, please save before leave the page!";
-		jQuery(newDialogDiv).attr("id","msgDlg");
-		jQuery(newDialogDiv).html('<span><b style="color:red;">'+errorText+'</b></span>');
-		jQuery(newDialogDiv).dialog({modal: true, width:300, height:150, title:"Information",
-			buttons: [{height:35,text: "OK",click: function() {
-					$(this).dialog("close");
-					$(this).dialog('destroy').remove();
-					return false;
-				}
-			}]}).dialog("open");
-		return false;
-	}*/
-	
 	
 	
 	
@@ -3152,7 +3133,7 @@ function createtpusage(screen,action,loglevel,description,jobnumber){
 
 function validatePageEdited(){
 	
-	
+	debugger;
 	
 	var page ='';
 	var editPOLocalGridRowsOut = $('#lineItemGrid').getRowData();
@@ -3193,12 +3174,13 @@ function validatePageEdited(){
 		}else{
 			 var gridRows = $('#lineItemGrid').getRowData();
 			 var new_PO_lines_form =  JSON.stringify(gridRows);
-			 var freightLineId=$("#freightLineId").val();
+			/* var freightLineId=$("#freightLineId").val();
 			    if((freightLineId+"").contains("$")){
 			    	freightLineId=freightLineId.replace(/[^0-9\.-]+/g,"");
 			    }
 			    freightLineId=formatCurrency(freightLineId);
-			    new_PO_lines_form=new_PO_lines_form+freightLineId;
+			  */  //new_PO_lines_form=new_PO_lines_form+freightLineId;
+			    
 			 if(new_PO_lines_form != Purchase_lines_form){
 				 errorLevel='1';
 				 page='PurchaseOrder';

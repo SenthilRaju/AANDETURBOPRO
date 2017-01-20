@@ -411,11 +411,3 @@ a {color:white;}
 	-webkit-box-shadow: inset 0 0 3px #000000;
 	box-shadow:         inset 0 0 5px #000000;
 }
-
-.turbo_version label{
-	display:none;
-}
-
-.turbo_version:after{
-	content:'Version 2.0.11.z';
-}

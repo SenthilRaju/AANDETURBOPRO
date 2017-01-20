@@ -2152,13 +2152,19 @@ function POLineItemTabformChanges(formvalue){
     }
 	return false;
 }
-
+var checkUserPermission="yes";
+var popdetails;
+	 
 function SaveLinesPurchaseOrder(popupdetail){
+	debugger;
 	//BID1633 Simon
 	//alert("PORelease_Lines.js  is calling.....!");
 	$("#SaveLinesPOButton").prop('disabled', true);
 	var newDialogDiv = jQuery(document.createElement('div'));
 	
+	popdetails=popupdetail;
+
+
 	var vePOID = $("#vePOID").val();
 	var Frieght = $('#freightLineId').val();
 	Frieght= parseFloat(Frieght.replace(/[^0-9-.]/g, ''));
@@ -2197,11 +2203,11 @@ function SaveLinesPurchaseOrder(popupdetail){
 		async:false,
 		data :{ "vePOID":vePOID,"frieght":Frieght,"subTotal":subTotal,"Total":Total,"taxValue":taxValue,			
 			"gridData":dataToSend,
-			"DelPOData":vePodetailIdsToBeDeleted
+			"DelPOData":vePodetailIdsToBeDeleted,"checkUserPermission":checkUserPermission
 			},
 		success: function(data) {
 			
-			if (data==""){
+			if (data=="" || checkUserPermission=="Conform" ){
 			vePodetailIdsToBeDeleted =[];
 			$('#ShowInfo').html("Saved");
 			POlineItemgridLoad=true;
@@ -2224,7 +2230,8 @@ function SaveLinesPurchaseOrder(popupdetail){
 			}
 			else
 				{
-				showInfoPopup(data);
+				if(checkUserPermission!="Conform")
+				showInfoPopup(data);				
 				//alert("Line Item "+data+" containing Duplicate Line in Inline Note please ");
 				}
 		}
@@ -2239,9 +2246,32 @@ function showInfoPopup(data)
 	var information = "Line Item No "+data+" InLine Note has some Duplicate Lines please check";
 	var newDialogDiv = jQuery(document.createElement('div'));
 	jQuery(newDialogDiv).html('<span><b style="color:blue;">'+information+'</b></span>');
-	jQuery(newDialogDiv).dialog({modal: true, width:340, height:150, title:"Information", 
+	jQuery(newDialogDiv).dialog({modal: true, width:400, height:180, title:"<b>Information</b>", 
 							buttons: [{height:35,text: "OK",click: function() { 
-								$(this).dialog("close"); }}]}).dialog("open");
+								$(this).dialog("close");
+								showInfoPopup2();
+							}}]}).dialog("open");
+	return true;
+}
+
+function showInfoPopup2()
+{
+	var information = "Do You want to Continue..!";
+	var newDialogDiv1 = jQuery(document.createElement('div'));
+	jQuery(newDialogDiv1).html('<span><b style="color:blue;">'+information +'</b></span>');
+	jQuery(newDialogDiv1).dialog({modal: true, width:300, height:140, title:"<b>Need Permission</b>", 
+							buttons: [{height:35,text: "Yes",click: function() { 
+								$(this).dialog("close");
+								checkUserPermission="Conform";
+								SaveLinesPurchaseOrder(popdetails);
+							
+							}},{height:35,text: "No",click: function() { 
+									$(this).dialog("close");
+									 if(popdetails=="close"){
+										 $("#porelease").dialog("close");
+									 }
+							}}
+							]}).dialog("open");
 	return true;
 }
 function closePurchaseOrderLineItemTab(){

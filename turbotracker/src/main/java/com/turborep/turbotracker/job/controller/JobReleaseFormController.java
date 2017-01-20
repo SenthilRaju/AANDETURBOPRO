@@ -4920,6 +4920,7 @@ public@ResponseBody String getCommissionPaidDetails(
 				@RequestParam(value = "taxValue", required = false) BigDecimal taxValue,
 				@RequestParam(value = "gridData",required = false) String gridData,
 				@RequestParam(value = "DelPOData[]",required = false) ArrayList<String>  delData,
+				@RequestParam(value = "checkUserPermission",required = false) String checkUserPermission, 
 				HttpSession session, HttpServletResponse theResponse,HttpServletRequest theRequest)
 				throws IOException, JobException, MessagingException, ParseException {
 			JsonParser parser = new JsonParser();
@@ -4938,7 +4939,7 @@ public@ResponseBody String getCommissionPaidDetails(
 				}
 			}
 			
-			
+			//added by prasant to check line item inline note contain any duplicate lines or not
 			if ( gridData!=null) {
 
 				System.out.println("gridData"+gridData);
@@ -4957,17 +4958,20 @@ public@ResponseBody String getCommissionPaidDetails(
 						status=checkDuplicateLineInsideInlineNote(inLineNote);
 						if(status)
 						{						
-							serverStatus=serverStatus+(ki+1);
-							break;
+							serverStatus=serverStatus+(ki+1)+",";
+							//break;
 						}
 					
 				}
+				if(serverStatus.endsWith(","))
+				serverStatus=serverStatus.substring(0,serverStatus.length()-1);
 			
 			}
-			
+			if (checkUserPermission==null)
+				checkUserPermission="Yes";
 			
 		
-			if(!status)
+			if(serverStatus.equals("") || checkUserPermission.equals("Conform"))
 			{
 			if ( gridData!=null) {
 
@@ -5072,8 +5076,8 @@ public@ResponseBody String getCommissionPaidDetails(
 				}
 			}
 			}
-			if(status)
-				return serverStatus=serverStatus;
+			//if(status)
+			//	return serverStatus=serverStatus;
 			Vepo avepo=new Vepo();
 			avepo.setVePoid(vePOID);
 			avepo.setSubtotal(subTotal);
