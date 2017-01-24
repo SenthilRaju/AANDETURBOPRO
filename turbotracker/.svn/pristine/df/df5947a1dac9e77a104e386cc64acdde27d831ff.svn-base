@@ -669,24 +669,7 @@ function customerPage(){
 		return false;
 	}
 	
-	/*var editPOLocalGridRowsOut = $('#lineItemGrid').getRowData();
-	var	editPOLocalGridOut = JSON.stringify(editPOLocalGridRowsOut);
-	var editPOLocalFormOut = $("form[name=editPOOut]").serialize();
-	console.log(editPOLocalFormOut+" AVAVA "+editPOLocalFormOut);
-	if(editPOGlobalFormOut!=editPOLocalFormOut){
-		var newDialogDiv = jQuery(document.createElement('div'));
-		var errorText = "Purchase Order Details modified, please save before leave the page!";
-		jQuery(newDialogDiv).attr("id","msgDlg");
-		jQuery(newDialogDiv).html('<span><b style="color:red;">'+errorText+'</b></span>');
-		jQuery(newDialogDiv).dialog({modal: true, width:300, height:150, title:"Information",
-			buttons: [{height:35,text: "OK",click: function() {
-					$(this).dialog("close");
-					$(this).dialog('destroy').remove();
-					return false;
-				}
-			}]}).dialog("open");
-		return false;
-	}*/
+	
 	
 	
 	

@@ -2152,13 +2152,19 @@ function POLineItemTabformChanges(formvalue){
     }
 	return false;
 }
-
+var checkUserPermission="yes";
+var popdetails;
+	 
 function SaveLinesPurchaseOrder(popupdetail){
+	debugger;
 	//BID1633 Simon
 	//alert("PORelease_Lines.js  is calling.....!");
 	$("#SaveLinesPOButton").prop('disabled', true);
 	var newDialogDiv = jQuery(document.createElement('div'));
 	
+	popdetails=popupdetail;
+
+
 	var vePOID = $("#vePOID").val();
 	var Frieght = $('#freightLineId').val();
 	Frieght= parseFloat(Frieght.replace(/[^0-9-.]/g, ''));
@@ -2189,7 +2195,7 @@ function SaveLinesPurchaseOrder(popupdetail){
 	
 	var gridRows = $('#lineItemGrid').getRowData();
 	var dataToSend = JSON.stringify(gridRows);
-
+	
 		
 	$.ajax({
 		url: "./jobtabs5/SaveLinesPurchaseOrder",
@@ -2197,11 +2203,11 @@ function SaveLinesPurchaseOrder(popupdetail){
 		async:false,
 		data :{ "vePOID":vePOID,"frieght":Frieght,"subTotal":subTotal,"Total":Total,"taxValue":taxValue,			
 			"gridData":dataToSend,
-			"DelPOData":vePodetailIdsToBeDeleted
+			"DelPOData":vePodetailIdsToBeDeleted,"checkUserPermission":checkUserPermission
 			},
 		success: function(data) {
 			
-			if (data==""){
+			if (data=="" || checkUserPermission=="Conform" ){
 			vePodetailIdsToBeDeleted =[];
 			$('#ShowInfo').html("Saved");
 			POlineItemgridLoad=true;
@@ -2224,7 +2230,8 @@ function SaveLinesPurchaseOrder(popupdetail){
 			}
 			else
 				{
-				showInfoPopup(data);
+				if(checkUserPermission!="Conform")
+				showInfoPopup(data);				
 				//alert("Line Item "+data+" containing Duplicate Line in Inline Note please ");
 				}
 		}
@@ -2239,9 +2246,32 @@ function showInfoPopup(data)
 	var information = "Line Item No "+data+" InLine Note has some Duplicate Lines please check";
 	var newDialogDiv = jQuery(document.createElement('div'));
 	jQuery(newDialogDiv).html('<span><b style="color:blue;">'+information+'</b></span>');
-	jQuery(newDialogDiv).dialog({modal: true, width:340, height:150, title:"Information", 
+	jQuery(newDialogDiv).dialog({modal: true, width:400, height:180, title:"<b>Information</b>", 
 							buttons: [{height:35,text: "OK",click: function() { 
-								$(this).dialog("close"); }}]}).dialog("open");
+								$(this).dialog("close");
+								showInfoPopup2();
+							}}]}).dialog("open");
+	return true;
+}
+
+function showInfoPopup2()
+{
+	var information = "Do You want to Continue..!";
+	var newDialogDiv1 = jQuery(document.createElement('div'));
+	jQuery(newDialogDiv1).html('<span><b style="color:blue;">'+information +'</b></span>');
+	jQuery(newDialogDiv1).dialog({modal: true, width:300, height:140, title:"<b>Need Permission</b>", 
+							buttons: [{height:35,text: "Yes",click: function() { 
+								$(this).dialog("close");
+								checkUserPermission="Conform";
+								SaveLinesPurchaseOrder(popdetails);
+							
+							}},{height:35,text: "No",click: function() { 
+									$(this).dialog("close");
+									 if(popdetails=="close"){
+										 $("#porelease").dialog("close");
+									 }
+							}}
+							]}).dialog("open");
 	return true;
 }
 function closePurchaseOrderLineItemTab(){
@@ -2710,6 +2740,8 @@ function POinlineNoteImage(cellValue, options, rowObject){
 } 
 
 function ShowPOLineNote(row){
+	
+	debugger;
 	/*try{
 		*/
 		var jobStatus=$('#jobStatusList').val();
@@ -2717,8 +2749,9 @@ function ShowPOLineNote(row){
 		/*if(typeof(jobStatus) != "undefined")
 		{*/
 		if(CKEDITOR.instances["lineItemNoteID_POIn"]!=undefined)			
-		{CKEDITOR.instances["lineItemNoteID_POIn"].destroy(true);}
-		CKEDITOR.replace('lineItemNoteID_POIn', ckEditorconfigforinline);
+		{
+			CKEDITOR.instances["lineItemNoteID_POIn"].destroy(true);}
+	     	CKEDITOR.replace('lineItemNoteID_POIn', ckEditorconfigforinline);
 		/*}
 		else
 		{
@@ -2747,8 +2780,12 @@ function ShowPOLineNote(row){
 	}
 
 	function SavePOLineItemNote_In(row){
+		debugger;
 		var inlineText=  CKEDITOR.instances["lineItemNoteID_POIn"].getData(); 
-		
+	
+
+		// var values=  document.getElementsByClassName("cke_editable cke_editable_themed cke_contents_ltr cke_show_borders").length;
+	
 		//var rows = jQuery("#customerInvoice_lineitems").getDataIDs();
 		//var id = jQuery("#customerInvoice_lineitems").jqGrid('getGridParam','selrow');
 //		row=jQuery("#customerInvoice_lineitems").getRowData(rows[id-1]);
@@ -2757,18 +2794,20 @@ function ShowPOLineNote(row){
 		  //var aLineItem = new Array();
 		  //aLineItem.push(inlineText);
 		  var image="<img src='./../resources/images/lineItem_new.png' style='vertical-align: middle;'>";
-		  if(inlineText==null || inlineText==undefined || inlineText==""){
+		  if(inlineText==null ||  typeof inlineText == 'undefined' || inlineText==""){
 			  image=undefined;
 			  inlineText=undefined;
+			  CKEDITOR.instances["lineItemNoteID_POIn"].setData("");
+			 $('#lineItemGrid').setCell(row,'inLineNote',null,null,null);
+			  $("#PONoteImageIcon_"+row).attr("src","./../resources/images/inline_jqGrid.png");
 		  }
-//		  if(isNaN(row)==true || row==undefined){
-//			  $("#new_row_noteImage").val(image);
-//			  $("#new_row_note").val(inlineText);
-//		  }else{
+		  else{
 		  	$("#lineItemGrid").jqGrid('setCell',row,'inLineNote', inlineText);  
 			  $("#lineItemGrid").jqGrid('setCell',row,'inLineNoteImage', image);
+			  //added by prasant to show proper image after inline note is eddited
+			  $("#PONoteImageIcon_"+row).attr("src","./../resources/images/inline_jqGrid1.png");				
 			  
-//		  }
+	  }
 		  
 		  
 		  jQuery("#POLineItemNote_In").dialog("close");
@@ -2784,6 +2823,29 @@ function ShowPOLineNote(row){
 				$("#customerInvoice_lineitems").trigger("reloadGrid");
 			}
 			});*/
+		  
+		 //var d= document.body.innerHTML
+		  
+		  
+		 /* $(function() {
+			    $("body").click(function() {
+			        if ($(this).attr("contentEditable") == "true") {
+			          //  $( "#hello" ).show();
+			            alert("yes");
+			        } else {
+			            alert("no");
+			         // $( "#hello" ).hide(); 
+			        }
+			    });
+		  }
+		 var inNote=document.body.innerHTML;
+		   if(inNote !== '' && inNote !== null && inNote != undefined){
+			   element = "<div><div align='center'><img src='./../resources/images/inline_jqGrid1.png' style='vertical-align: middle;' id='"+id+"' onclick=\"ShowPOLineNote('"+test+"')\"/></div></div>";	   
+		   }else{
+			   element = "<div><div align='center'><img src='./../resources/images/inline_jqGrid.png' style='vertical-align: middle;' id='"+id+"' onclick=\"ShowPOLineNote('"+test+"')\"/></div></div>";
+		   }*/
+		  
+		 
 	}
 
 	function POCancelInLineNote_In(){

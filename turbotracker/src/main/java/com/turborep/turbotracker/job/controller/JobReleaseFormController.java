@@ -4389,6 +4389,10 @@ public@ResponseBody String getCommissionPaidDetails(
 		return lsvepoDetail;
 
 	}
+	
+	
+	
+	
 	@RequestMapping(value = "/checkImportTypeSelectornot", method = RequestMethod.POST)
 	public @ResponseBody Boolean checkImportTypeSelectornot(@RequestParam("manufactureid") Integer manufactureid,
 			HttpServletResponse response,HttpServletRequest therequest,HttpSession session)throws VendorException {                 
@@ -4678,8 +4682,15 @@ public@ResponseBody String getCommissionPaidDetails(
 				aVepodetail.setTaxable(false);
 				String description=getTextValue(eElement,"ProductDescription");
 				String inlinenote=getinlinenotefromXML(nNode,eElement);
+				System.out.println("==============================================================");
+				System.out.println("inlinenote:-"+inlinenote);
+				System.out.println("Description :-:-"+description);
+				System.out.println("==============================================================");
+				
 				inlinenote="<span style=\"font-family: 'Times New Roman', serif; font-size: 10pt;\">"+description+"</span>"+inlinenote;
+				if(inlinenote!=null && inlinenote!="")
 				aVepodetail.setInLineNote(inlinenote);
+				if(inlinenote!=null && inlinenote!="")
 				aVepodetail.setInLineNoteImage(inlinenote);
 				
 				
@@ -4720,6 +4731,7 @@ public@ResponseBody String getCommissionPaidDetails(
 			NodeList nl = ele.getElementsByTagName(tagName);
 			if(nl != null && nl.getLength() > 0) {
 				Element el = (Element)nl.item(0);
+				if(el!=null && el.getFirstChild()!=null)
 				textVal = el.getFirstChild().getNodeValue();
 			}
 	
@@ -4727,6 +4739,8 @@ public@ResponseBody String getCommissionPaidDetails(
 		}
 		private String getinlinenotefromXML(Node anode, Element alement) throws ParserConfigurationException, SAXException, IOException {
 			String textVal = null;
+			//added by prasant  ID #683. date 01_23_2017
+			String textVal_MV_Tags="";
 			NodeList nl = alement.getElementsByTagName("Question");
 			System.out.println("nl.getLength()==="+nl.getLength());
 			for(int i=0;i<nl.getLength();i++){
@@ -4739,11 +4753,46 @@ public@ResponseBody String getCommissionPaidDetails(
 				    is.setCharacterStream(new StringReader(SalesXML));
 				    Document doc = db.parse(is);
 				    textVal=GetInlineNoteFromStringXML(doc);
+				    
 				}
+				//added by prasant  ID #683. date 01_23_2017
+				if((((Element)nl.item(i)).getAttribute("Name")).equals("MV_Tags")){
+					System.out.println();
+					textVal_MV_Tags="<br>TAG:";
+					Element eElement =(Element)nl.item(i);
+					String answers=getTextValue(eElement,"Answer");
+					//DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+				   // DocumentBuilder db = dbf.newDocumentBuilder();
+				   // InputSource is = new InputSource();
+				    //is.setCharacterStream(new StringReader(removeUTF8BOM(answers)));
+				    //System.out.println("why we are getting Exception:--"+is);
+				   // Document doc = db.parse(is);
+				    textVal_MV_Tags=textVal_MV_Tags+GetInlineNoteFromStringXMLNew(answers)+",";
+				    if (answers==null)
+				    	textVal_MV_Tags="";
+				}
+				
 			}
 			
-			return textVal;
+			//added by prasant ID 683
+			if(textVal_MV_Tags!="")
+			textVal_MV_Tags=textVal_MV_Tags.substring(0,textVal_MV_Tags.length()-1)	;
+			
+			//if(textVal_MV_Tags.contains("null"))
+				//textVal_MV_Tags="";
+			return textVal+textVal_MV_Tags;
 		}
+		
+		// FEFF because this is the Unicode char represented by the UTF-8 byte order mark (EF BB BF).
+	    public static final String UTF8_BOM = "\uFEFF";
+
+	    private static String removeUTF8BOM(String s) {
+	        if (s!=null &&s.startsWith(UTF8_BOM)) {
+	            s = s.substring(1);
+	        }
+	        return s;
+	    }
+		
 		
 		public String GetInlineNoteFromStringXML(Document doc){
 			String returnValue="";
@@ -4768,6 +4817,28 @@ public@ResponseBody String getCommissionPaidDetails(
 			return returnValue;
 		}
 		
+		public String GetInlineNoteFromStringXMLNew(String doc){
+			String returnValue="";
+			//NodeList nList = doc.getElementsByTagName("LineItems");
+			//System.out.println("nList.getLength()"+nList.getLength());
+			
+			//for (int temp = 0; temp < nList.getLength(); temp++) {
+			//	Element eElement = (Element)nList.item(temp);
+			//	NodeList nl = eElement.getElementsByTagName("LineItems");
+			//	for (int temp1 = 0; temp1 < nl.getLength(); temp1++) {
+				//	Element insElement = (Element)nl.item(temp1);
+				//	NodeList nestedele = insElement.getElementsByTagName("LineItem");
+					//for (int temp2 = 0; temp2 < nestedele.getLength(); temp2++) {
+					//	Element nested1Element = (Element)nestedele.item(temp2);
+						//String text=getTextValue(nested1Element,"Description");
+						returnValue=returnValue+"<span style=\"font-family: 'Times New Roman', serif; font-size: 10pt;\">"+doc+"</span>";
+				//	}
+				
+				
+			
+			//System.out.println("HTML INPUT===>"+returnValue);
+			return returnValue;
+		}
 		
 		@RequestMapping(value = "jobReleaseLineItemForrecieveInventory",method = RequestMethod.POST)
 		public @ResponseBody CustomResponse jobReleaseLineItemForrecieveInventory(@RequestParam(value="vePoId", required=false) Integer theVepoId, 
@@ -4920,6 +4991,7 @@ public@ResponseBody String getCommissionPaidDetails(
 				@RequestParam(value = "taxValue", required = false) BigDecimal taxValue,
 				@RequestParam(value = "gridData",required = false) String gridData,
 				@RequestParam(value = "DelPOData[]",required = false) ArrayList<String>  delData,
+				@RequestParam(value = "checkUserPermission",required = false) String checkUserPermission, 
 				HttpSession session, HttpServletResponse theResponse,HttpServletRequest theRequest)
 				throws IOException, JobException, MessagingException, ParseException {
 			JsonParser parser = new JsonParser();
@@ -4938,7 +5010,7 @@ public@ResponseBody String getCommissionPaidDetails(
 				}
 			}
 			
-			
+			//added by prasant to check line item inline note contain any duplicate lines or not
 			if ( gridData!=null) {
 
 				System.out.println("gridData"+gridData);
@@ -4957,17 +5029,20 @@ public@ResponseBody String getCommissionPaidDetails(
 						status=checkDuplicateLineInsideInlineNote(inLineNote);
 						if(status)
 						{						
-							serverStatus=serverStatus+(ki+1);
-							break;
+							serverStatus=serverStatus+(ki+1)+",";
+							//break;
 						}
 					
 				}
+				if(serverStatus.endsWith(","))
+				serverStatus=serverStatus.substring(0,serverStatus.length()-1);
 			
 			}
-			
+			if (checkUserPermission==null)
+				checkUserPermission="Yes";
 			
 		
-			if(!status)
+			if(serverStatus.equals("") || checkUserPermission.equals("Conform"))
 			{
 			if ( gridData!=null) {
 
@@ -5072,8 +5147,8 @@ public@ResponseBody String getCommissionPaidDetails(
 				}
 			}
 			}
-			if(status)
-				return serverStatus=serverStatus;
+			//if(status)
+			//	return serverStatus=serverStatus;
 			Vepo avepo=new Vepo();
 			avepo.setVePoid(vePOID);
 			avepo.setSubtotal(subTotal);

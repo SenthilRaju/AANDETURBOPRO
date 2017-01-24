@@ -744,3 +744,43 @@ function getSearchDetails(){
 		$('#searchJob').val('');
 	}
 }
+//Issue Fix Added By Simon #3.0.70
+function validateDateAgainstOpenPeriod(dateID){
+	var checkpermission=getGrantpermissionprivilage('OpenPeriod_PostingOnly',0);
+	$.ajax({
+		url: "./checkAccountingCyclePeriods",
+		data:{"datetoCheck":$("#"+dateID).val(),"UserStatus":checkpermission},
+		type: "POST",
+		success: function(data) { 
+			if(data.AuthStatus == "granted")
+			{	
+			var newDialogDiv = jQuery(document.createElement('div'));
+			jQuery(newDialogDiv).html('<span><b style="color:red;">Current Transcation Date is not under open period.</b></span>');
+			jQuery(newDialogDiv).dialog({modal: true, width:300, height:150, title:"Information.", 
+									buttons: [{text: "OK",click: function(){
+										if(dateID=='datepickerbox'){
+											$("#"+dateID).val(credit_Debit_Invoice_Date);
+										}
+										$(this).dialog("close"); }}],
+										close: function( event ) {
+											if ( event.originalEvent ) {
+												if(dateID=='datepickerbox'){
+													$("#"+dateID).val(credit_Debit_Invoice_Date);
+												}
+											  }
+										}
+								}).dialog("open");
+			}
+	  	},
+			error:function(data){
+				console.log('error');
+				}
+			});
+}
+$("#datepickerbox").click(function(){
+	credit_Debit_Invoice_Date=$("#datepickerbox").val();
+});
+$("#datepickerbox").change(function(){
+	validateDateAgainstOpenPeriod('datepickerbox');
+});
+var credit_Debit_Invoice_Date;

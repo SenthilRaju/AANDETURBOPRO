@@ -1038,13 +1038,16 @@ public class VendorListController {
 				System.out.println("obj.get('inLineNote')"+obj.get("inLineNote"));
 				if(obj.get("inLineNote")!=null && !(obj.get("inLineNote").equals("null"))){
 					String inLineNote=obj.get("inLineNote").getAsString();
-					if(inLineNote!=null && inLineNote!="" && !inLineNote.contains("null")){
+					if(inLineNote!=null && inLineNote!="" && !inLineNote.contains("null") ){
 						
-						//added to check the line item for #1325
+						//added to check the line item for #1325 ediited by prasant on Bartos Requirement date :01_23_2016
+			
 						String str[]=inLineNote.split("<br>");
 						System.out.println(""+str.toString());
 						aVepodetail.setInLineNote(inLineNote);
-						aVepodetail.setInLineNoteImage(inLineNote);						
+						aVepodetail.setInLineNoteImage(inLineNote);
+						
+						
 					}
 				}
 				
