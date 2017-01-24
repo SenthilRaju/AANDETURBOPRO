@@ -3990,6 +3990,28 @@ function loadvebilldetails(aJoReleaseDetailsID,veBillID){
 				//document.getElementById('datedID').disabled = true;
 				$("#datedID").attr("readonly", "true"); 
 				$("#datedID").val(aBillDate); 
+				//Issue fix added by Simon
+				var checkpermission=getGrantpermissionprivilage('OpenPeriod_PostingOnly',0);
+				 $.ajax({
+						url: "./checkAccountingCyclePeriods",
+						data:{"datetoCheck":$('#datedID').val(),"UserStatus":checkpermission},
+						type: "POST",
+						success: function(data) { 
+								if(data.cofiscalperiod!=null && typeof(data.cofiscalperiod.period) !== "undefined" )
+								{	
+									$("#vendorinvoiceidbutton").prop('disabled', false);
+									$("#vendorinvoiceidbutton").fadeTo("slow",1);
+									
+								}
+								else
+								{
+								$(".ui-datepicker-trigger").unbind('click');
+								$("#vendorinvoiceidbutton").prop('disabled', true);
+								$("#vendorinvoiceidbutton").fadeTo("slow",0.4);
+								}
+
+						}
+				 });
 				$("#postDateID").val('');
 				$("#proNumberID").val(data.trackingNumber);
 				$("#postDateID").val('');
@@ -6616,556 +6638,561 @@ function invoicebillToAddress(){
 var transaction = "";
  function savecustomerinvoice(operation) {
 	 debugger;
-	 var itemCode=$("#new_row_itemCode").val();
-	 var cuinvId = $('#cuinvoiceIDhidden').val();
-	 
-		if(operation=='closedialog'){
-			$('#custInvCloseSaveHidden').val("closeCusinvoiceGrid");
-		}
-//	 if(itemCode.length==0){
-/*	 if((itemCode == "" && operation == "close" )   ){*/
-	if(itemCode!=undefined ||  (cuinvId == null || cuinvId == '' || cuinvId == 0)  ){
-	 var customerInvoice_TaxTerritory=$("#customerInvoice_TaxTerritory").val();
-	 
-	 if(operation!='closedialog' && (customerInvoice_TaxTerritory==null || customerInvoice_TaxTerritory=="" ||customerInvoice_TaxTerritory.length==0)){
+	 if($('#CuInvoiceSaveID').is('[disabled]')){
+		 jQuery("#cusinvoicetab").dialog("close");
+		 $("#release").trigger("reloadGrid");
+	 }else{
+		 var itemCode=$("#new_row_itemCode").val();
+		 var cuinvId = $('#cuinvoiceIDhidden').val();
+		 
+			if(operation=='closedialog'){
+				$('#custInvCloseSaveHidden').val("closeCusinvoiceGrid");
+			}
+//		 if(itemCode.length==0){
+	/*	 if((itemCode == "" && operation == "close" )   ){*/
+		if(itemCode!=undefined ||  (cuinvId == null || cuinvId == '' || cuinvId == 0)  ){
+		 var customerInvoice_TaxTerritory=$("#customerInvoice_TaxTerritory").val();
+		 
+		 if(operation!='closedialog' && (customerInvoice_TaxTerritory==null || customerInvoice_TaxTerritory=="" ||customerInvoice_TaxTerritory.length==0)){
 
-			var newDialogDiv = jQuery(document.createElement('div'));
-			jQuery(newDialogDiv).html('<span><b style="color:red;">please set Tax Territory in Customer->Roldex->Financial tab</b></span>');
-			jQuery(newDialogDiv).dialog({modal: true, width:300, height:150, title:"Warning.", 
-			buttons:{
-				"OK": function(){
-					$(this).dialog("close");
-				    return false;
-				}
-				}}).dialog("open");
-			return false;
-	 }
-	 
-	console.log('Inside jobwizardRelease.js - savecustomerinvoice');
-	var cuinvId = $('#cuinvoiceIDhidden').val();
-	var aVeBillID = '';
-	var aAddOREdit = '';
-	var bidderGrid = $("#release");
-	var bidderGridRowId = bidderGrid.jqGrid('getGridParam', 'selrow');
-	var ponumberAlphabet = bidderGrid.jqGrid('getCell', bidderGridRowId, 'ponumber');
-	var InvoiceNumbers = $('#customerInvoice_invoiceNumberId').val();
-	if(InvoiceNumbers==''){
-		$('#customerInvoice_invoiceNumberId').val($("#jobNumber_ID").text().trim()+''+ponumberAlphabet);
-	}
-	var customerID = $('#rxCustomer_ID').text();
-	var cusoId =  $('#Cuso_ID').text();
-	var aInvoiceDetails = $("#custoemrInvoiceFormID").serialize();
-	console.log("=======================================================================");
-	console.log(_globaloldcustomerInvoiceform+" ========== "+aInvoiceDetails);
-	console.log("=======================================================================");
-	var gridRows = $('#customerInvoice_lineitems').getRowData();
- 	var invoiceGridDetails =  JSON.stringify(gridRows)+$("#customerInvoice_invoiceDateID").val();
- 	console.log(_globaloldcustomerInvoicegrid+" ========== "+invoiceGridDetails);
-	console.log("=======================================================================");
-	var aInvoiceDetailsTotal=generatecustoemrInvoiceFormTotalIDSeriallize();
-	var generalTabFormval= CIGeneralTabSeriallize();
-	
-	
-	var aSubTotal = $("#customerInvoice_subTotalID").val().replace(/[^0-9\.-]+/g,"");
-	var aFreight = $("#customerInvoice_frightIDcu").val().replace(/[^0-9\.-]+/g,"");
-	var aTax = $("#customerInvoice_taxIdcu").val().replace(/[^0-9\.-]+/g,"");
-	var aTotal = $("#customerInvoice_totalID").val().replace(/[^0-9\.-]+/g,"");
-	var title = $('#cusinvoicetab').dialog('option', 'title');
-	var grid = $("#shiping");
-	var rowId = grid.jqGrid('getGridParam', 'selrow');
-	var cIopenStatus =  $('#ciOpenStatusID').val();
-	var poNumber = $('#customerInvoice_proNumberID').val().replace(/[^0-9\.-]+/g,"");
-	var taxrate = $('#customerInvoice_taxIdcu').val().replace(/[^0-9\.-]+/g,"");
-	var InvoiceNo = $('#customerInvoice_invoiceNumberId').val();
-	var shipDate = $('#customerInvoice_shipDateID').val();
-	var joReleaseDetailID ='';
-	if(rowId!=null){
-	joReleaseDetailID = grid.jqGrid('getCell', rowId, 'joReleaseDetailID');
-	}
-	var vePOID = bidderGrid.jqGrid('getCell', bidderGridRowId, 'vePoId');
-	var joReleaseID = bidderGrid.jqGrid('getCell', bidderGridRowId, 'joReleaseId');
-	var type_release= bidderGrid.jqGrid('getCell', bidderGridRowId, 'type');
-	 debugger;
-	if(cuinvId == null || cuinvId == '')
-	{
-		aAddOREdit = 'add';
-		transaction = 'close';
-		$('#operationID').val('add');
-		cuinvId = $('#cuInvoiceID').text();
-		$('#cuinvoiceIDhidden').val(cuinvId);
-	}else{
-		aVeBillID = grid.jqGrid('getCell', rowId, 'veBillID');
-		aAddOREdit = 'edit';
-		if(transaction==''){
-			transaction = 'add';
-		}else{
-			transaction = 'close';
-		}
-		
-		$('#operationID').val('edit');
-	}
-	
-	/**
-	 * Added for tax calculation
-	 * 2014-09-05
-	 * 
-	 */
-	aTax = $("#customerInvoice_generaltaxId").val().replace(/[^0-9\.-]+/g,"");
-	if(parseFloat(aTax)>0){
-		taxrate = aTax;
-	}
-	var taxAmountnew = ((aSubTotal*taxrate)/100);
-	taxTotalAmt = taxAmountnew;
-	
-	var taxAmountField = $('#customerInvoice_taxIdcu').val();
-	var releaseType = 2;
-	if(vePOID != ''|| type_release=='Drop Ship'){
-		releaseType = 1;
-		cusoId = vePOID;
-	}
-	
-	
-	var grids = $("#release");
-	var rowsId = grids.jqGrid('getGridParam', 'selrow');
-	var releasType = grids.jqGrid('getCell', rowsId, 'type');
-	var shipToAddressIDs = $('#prShiptowarehouseID').val();
-	var shipToModeIn = $('#shiptoModeID').val();
-	var customerInvoie_doNotMailID=0;
-	if($("#customerInvoie_doNotMailID").is(":checked")){
-		customerInvoie_doNotMailID=1;
-	}
-	
-	var taxfreight=$('#CI_taxfreight').val();
-	console.log('Address Detais: \n'+add1+"\n"+add2+'\n'+add3+'\n'+city+'\n'+state+'\n'+zip);
-	
-	/*var  aCustomerInvoiceDetails = aInvoiceDetails+"&customerInvoice_subTotalName="+aSubTotal+"&customerInvoice_frightname="+aFreight+"&customerInvoice_taxName="+taxAmountnew+"&customerInvoice_totalName="+aTotal+"&oper="+aAddOREdit+"&joReleaseDetailsID="+joReleaseDetailID+'&cuSOID='+cusoId+'&poNumber='+poNumber
-	+'&InvoiceNo='+InvoiceNo+'&shipDate='+shipDate+'&taxRate='+taxrate+'&cuInvHiddenId='+cuinvId+"&releaseType="+releaseType+'&customerID='+customerID+'&shipToCustomerAddressID='+$('#shipToCustomerAddressID').val()+"&from=job&joReleaseID="+joReleaseID
-	+"&transaction="+transaction+"&rxShiptoAddressID="+shipToAddressIDs+"&shipToMode="+shipToModeIn+"&customerInvoiceShipToAddressName="+add1+"&customerInvoiceShipToAddress1="+add2+"&customerInvoiceShipToAddress2="+add3+"&customerInvoiceShipToCity="+city
-	+"&customerInvoiceShipToState="+state+"&customerInvoiceShipToZip="+zip+"&customerInvoie_doNotMailID="+customerInvoie_doNotMailID+"&customerInvoice_taxIdcuname="+taxAmountField;*/
-	
-	var  aCustomerInvoiceDetails = aInvoiceDetails+"&customerInvoice_subTotalName="+aSubTotal+"&customerInvoice_frightname="+aFreight+"&customerInvoice_taxName="+taxAmountnew+"&customerInvoice_totalName="+aTotal+"&oper="+aAddOREdit+"&joReleaseDetailsID="+joReleaseDetailID+'&cuSOID='+cusoId+'&poNumber='+poNumber
-	+'&InvoiceNo='+InvoiceNo+'&shipDate='+shipDate+'&taxRate='+taxrate+'&cuInvHiddenId='+cuinvId+"&releaseType="+releaseType+'&customerID='+customerID+'&shipToCustomerAddressID='+$('#shipToCustomerAddressID').val()+"&from=job&joReleaseID="+joReleaseID
-	+"&transaction="+transaction+"&customerInvoie_doNotMailID="+customerInvoie_doNotMailID+"&customerInvoice_taxIdcuname="+taxAmountField+"&CIjoMasterID="+$("#joMasterHiddenID").val()
-	+"&CIrxShiptoid="+ $("#CI_Shipto").contents().find("#shiptoaddrhiddenfromuiid").val()+"&CIrxShiptomodevalue="+ $("#CI_Shipto").contents().find("#shiptomoderhiddenid").val()+"&taxfreight="+taxfreight;
-	//"&rxShiptoAddressID="+shipToAddressIDs+"&shipToMode="+shipToModeIn+
-	 
-	if(operation != "closedialog"){
-		$('#CuInvoiceSaveID').css('background','-webkit-gradient(linear, left top, left bottom, from(#FFD499), to(#8E6433))');
-		$('#CuInvoiceSaveCloseID').css('background','-webkit-gradient(linear, left top, left bottom, from(#FFD499), to(#8E6433))');
-		document.getElementById("CuInvoiceSaveID").disabled = true;
-		document.getElementById("CuInvoiceSaveCloseID").disabled = true;
-	}
-	if(aAddOREdit == 'edit' && cIopenStatus == 'false')
-		{
-		$('#invreasondialog').data('cusoId', cusoId);
-		$('#invreasondialog').data('transaction', "close");
-		$('#invreasondialog').data('releasType', releasType);
-		$('#invreasondialog').data('title', title);
-		$('#invreasondialog').data('joReleaseID', joReleaseID);
-		
-		/*if(_globalold_cIlineitemform == "{}")
-		_globalold_cIlineitemform = _globalold_cIlineitemform.replace('{}', '[]');*/
-		//var aInvoiceDetailsTotal=$("#custoemrInvoiceFormTotalID").serialize();
-		
-		//added by prasant for 3.0.70 issue fixes
-		var gridRows = $('#customerInvoice_lineitems').getRowData();
-	 	_globaloldcustomerInvoicegrid =  JSON.stringify(gridRows)+$("#customerInvoice_invoiceDateID").val();
-	
-		
-		if(_globaloldcustomerInvoiceform != generalTabFormval ){
-				console.log("ERROR:::_globaloldcustomerInvoiceform=="+_globaloldcustomerInvoiceform);
-				console.log("ERROR:::_globalnewcustomerInvoiceform=="+generalTabFormval);
-			}
-			if(_globaloldcustomerInvoicegrid != invoiceGridDetails){
-				console.log("ERROR:::_globaloldcustomerInvoicegrid=="+_globaloldcustomerInvoicegrid);
-				console.log("ERROR:::_invoiceGridDetails=="+invoiceGridDetails);
-			}
-			if(_globaloldcustomerInvoiceformTotal != aInvoiceDetailsTotal){
-				console.log("ERROR:::_globaloldcustomerInvoiceformTotal=="+_globaloldcustomerInvoiceformTotal);
-				console.log("ERROR:::_aInvoiceDetailsTotal=="+aInvoiceDetailsTotal);
-			}
-				
-			
-		if(_globaloldcustomerInvoiceform != generalTabFormval || _globaloldcustomerInvoicegrid != invoiceGridDetails || _globaloldcustomerInvoiceformTotal != aInvoiceDetailsTotal)
-		{
-			transaction="close";
-			var  aCustomerInvoiceDetails = aInvoiceDetails+"&customerInvoice_subTotalName="+aSubTotal+"&customerInvoice_frightname="+aFreight+"&customerInvoice_taxName="+taxAmountnew+"&customerInvoice_totalName="+aTotal+"&oper="+aAddOREdit+"&joReleaseDetailsID="+joReleaseDetailID+'&cuSOID='+cusoId+'&poNumber='+poNumber
-			+'&InvoiceNo='+InvoiceNo+'&shipDate='+shipDate+'&taxRate='+taxrate+'&cuInvHiddenId='+cuinvId+"&releaseType="+releaseType+'&customerID='+customerID+"&from=job&joReleaseID="+joReleaseID
-			+"&transaction="+transaction+"&customerInvoie_doNotMailID="+customerInvoie_doNotMailID+"&customerInvoice_taxIdcuname="+taxAmountField
-			+"&CIrxShiptoid="+ $("#CI_Shipto").contents().find("#shiptoaddrhiddenfromuiid").val()+"&CIrxShiptomodevalue="+ $("#CI_Shipto").contents().find("#shiptomoderhiddenid").val()+"&CIjoMasterID="+$("#joMasterHiddenID").val()+"&taxfreight="+taxfreight;
-			//+'&shipToCustomerAddressID='+$('#shipToCustomerAddressID').val()
-			$('#invreasondialog').data('aCustomerInvoiceDetails', aCustomerInvoiceDetails);
-			
-			
-			var newDialogDiv = jQuery(document.createElement('div'));
-			jQuery(newDialogDiv).html('<span><b style="color:Green;">You have made changes,would you like to save?</b></span>');
-			jQuery(newDialogDiv).dialog({modal: true, width:300, height:150, title:"Success.", 
-			closeOnEscape: false,
-			open: function(event, ui) { $(".ui-dialog-titlebar-close").hide(); },
-			buttons:{
-				"Yes": function(){
-					jQuery(this).dialog("close");
-					jQuery( "#invreasondialog" ).dialog("open");
-				    return false;
-				},
-				"No": function ()	{
-					document.getElementById("CuInvoiceSaveID").disabled = false;
-					document.getElementById("CuInvoiceSaveCloseID").disabled = false;
-					$('#CuInvoiceSaveID').css('background','-webkit-gradient(linear, left top, left bottom, from(#b47015), to(#6f4c23))');
-					$('#CuInvoiceSaveCloseID').css('background','-webkit-gradient(linear, left top, left bottom, from(#b47015), to(#6f4c23))');
-					$('#transactionID').val('add');
-					jQuery(this).dialog("close");
-					if(operation=='closedialog'){
-						cancelcustomerinvoice();
+				var newDialogDiv = jQuery(document.createElement('div'));
+				jQuery(newDialogDiv).html('<span><b style="color:red;">please set Tax Territory in Customer->Roldex->Financial tab</b></span>');
+				jQuery(newDialogDiv).dialog({modal: true, width:300, height:150, title:"Warning.", 
+				buttons:{
+					"OK": function(){
+						$(this).dialog("close");
+					    return false;
 					}
-					 
-				return false;	
-				}}}).dialog("open");
+					}}).dialog("open");
+				return false;
+		 }
+		 
+		console.log('Inside jobwizardRelease.js - savecustomerinvoice');
+		var cuinvId = $('#cuinvoiceIDhidden').val();
+		var aVeBillID = '';
+		var aAddOREdit = '';
+		var bidderGrid = $("#release");
+		var bidderGridRowId = bidderGrid.jqGrid('getGridParam', 'selrow');
+		var ponumberAlphabet = bidderGrid.jqGrid('getCell', bidderGridRowId, 'ponumber');
+		var InvoiceNumbers = $('#customerInvoice_invoiceNumberId').val();
+		if(InvoiceNumbers==''){
+			$('#customerInvoice_invoiceNumberId').val($("#jobNumber_ID").text().trim()+''+ponumberAlphabet);
 		}
-		else
+		var customerID = $('#rxCustomer_ID').text();
+		var cusoId =  $('#Cuso_ID').text();
+		var aInvoiceDetails = $("#custoemrInvoiceFormID").serialize();
+		console.log("=======================================================================");
+		console.log(_globaloldcustomerInvoiceform+" ========== "+aInvoiceDetails);
+		console.log("=======================================================================");
+		var gridRows = $('#customerInvoice_lineitems').getRowData();
+	 	var invoiceGridDetails =  JSON.stringify(gridRows)+$("#customerInvoice_invoiceDateID").val();
+	 	console.log(_globaloldcustomerInvoicegrid+" ========== "+invoiceGridDetails);
+		console.log("=======================================================================");
+		var aInvoiceDetailsTotal=generatecustoemrInvoiceFormTotalIDSeriallize();
+		var generalTabFormval= CIGeneralTabSeriallize();
+		
+		
+		var aSubTotal = $("#customerInvoice_subTotalID").val().replace(/[^0-9\.-]+/g,"");
+		var aFreight = $("#customerInvoice_frightIDcu").val().replace(/[^0-9\.-]+/g,"");
+		var aTax = $("#customerInvoice_taxIdcu").val().replace(/[^0-9\.-]+/g,"");
+		var aTotal = $("#customerInvoice_totalID").val().replace(/[^0-9\.-]+/g,"");
+		var title = $('#cusinvoicetab').dialog('option', 'title');
+		var grid = $("#shiping");
+		var rowId = grid.jqGrid('getGridParam', 'selrow');
+		var cIopenStatus =  $('#ciOpenStatusID').val();
+		var poNumber = $('#customerInvoice_proNumberID').val().replace(/[^0-9\.-]+/g,"");
+		var taxrate = $('#customerInvoice_taxIdcu').val().replace(/[^0-9\.-]+/g,"");
+		var InvoiceNo = $('#customerInvoice_invoiceNumberId').val();
+		var shipDate = $('#customerInvoice_shipDateID').val();
+		var joReleaseDetailID ='';
+		if(rowId!=null){
+		joReleaseDetailID = grid.jqGrid('getCell', rowId, 'joReleaseDetailID');
+		}
+		var vePOID = bidderGrid.jqGrid('getCell', bidderGridRowId, 'vePoId');
+		var joReleaseID = bidderGrid.jqGrid('getCell', bidderGridRowId, 'joReleaseId');
+		var type_release= bidderGrid.jqGrid('getCell', bidderGridRowId, 'type');
+		 debugger;
+		if(cuinvId == null || cuinvId == '')
 		{
-			transaction="";
-			if(operation =="closedialog"){
-				cancelcustomerinvoice();
+			aAddOREdit = 'add';
+			transaction = 'close';
+			$('#operationID').val('add');
+			cuinvId = $('#cuInvoiceID').text();
+			$('#cuinvoiceIDhidden').val(cuinvId);
+		}else{
+			aVeBillID = grid.jqGrid('getCell', rowId, 'veBillID');
+			aAddOREdit = 'edit';
+			if(transaction==''){
+				transaction = 'add';
+			}else{
+				transaction = 'close';
 			}
-			if(operation=='close'){
+			
+			$('#operationID').val('edit');
+		}
+		
+		/**
+		 * Added for tax calculation
+		 * 2014-09-05
+		 * 
+		 */
+		aTax = $("#customerInvoice_generaltaxId").val().replace(/[^0-9\.-]+/g,"");
+		if(parseFloat(aTax)>0){
+			taxrate = aTax;
+		}
+		var taxAmountnew = ((aSubTotal*taxrate)/100);
+		taxTotalAmt = taxAmountnew;
+		
+		var taxAmountField = $('#customerInvoice_taxIdcu').val();
+		var releaseType = 2;
+		if(vePOID != ''|| type_release=='Drop Ship'){
+			releaseType = 1;
+			cusoId = vePOID;
+		}
+		
+		
+		var grids = $("#release");
+		var rowsId = grids.jqGrid('getGridParam', 'selrow');
+		var releasType = grids.jqGrid('getCell', rowsId, 'type');
+		var shipToAddressIDs = $('#prShiptowarehouseID').val();
+		var shipToModeIn = $('#shiptoModeID').val();
+		var customerInvoie_doNotMailID=0;
+		if($("#customerInvoie_doNotMailID").is(":checked")){
+			customerInvoie_doNotMailID=1;
+		}
+		
+		var taxfreight=$('#CI_taxfreight').val();
+		console.log('Address Detais: \n'+add1+"\n"+add2+'\n'+add3+'\n'+city+'\n'+state+'\n'+zip);
+		
+		/*var  aCustomerInvoiceDetails = aInvoiceDetails+"&customerInvoice_subTotalName="+aSubTotal+"&customerInvoice_frightname="+aFreight+"&customerInvoice_taxName="+taxAmountnew+"&customerInvoice_totalName="+aTotal+"&oper="+aAddOREdit+"&joReleaseDetailsID="+joReleaseDetailID+'&cuSOID='+cusoId+'&poNumber='+poNumber
+		+'&InvoiceNo='+InvoiceNo+'&shipDate='+shipDate+'&taxRate='+taxrate+'&cuInvHiddenId='+cuinvId+"&releaseType="+releaseType+'&customerID='+customerID+'&shipToCustomerAddressID='+$('#shipToCustomerAddressID').val()+"&from=job&joReleaseID="+joReleaseID
+		+"&transaction="+transaction+"&rxShiptoAddressID="+shipToAddressIDs+"&shipToMode="+shipToModeIn+"&customerInvoiceShipToAddressName="+add1+"&customerInvoiceShipToAddress1="+add2+"&customerInvoiceShipToAddress2="+add3+"&customerInvoiceShipToCity="+city
+		+"&customerInvoiceShipToState="+state+"&customerInvoiceShipToZip="+zip+"&customerInvoie_doNotMailID="+customerInvoie_doNotMailID+"&customerInvoice_taxIdcuname="+taxAmountField;*/
+		
+		var  aCustomerInvoiceDetails = aInvoiceDetails+"&customerInvoice_subTotalName="+aSubTotal+"&customerInvoice_frightname="+aFreight+"&customerInvoice_taxName="+taxAmountnew+"&customerInvoice_totalName="+aTotal+"&oper="+aAddOREdit+"&joReleaseDetailsID="+joReleaseDetailID+'&cuSOID='+cusoId+'&poNumber='+poNumber
+		+'&InvoiceNo='+InvoiceNo+'&shipDate='+shipDate+'&taxRate='+taxrate+'&cuInvHiddenId='+cuinvId+"&releaseType="+releaseType+'&customerID='+customerID+'&shipToCustomerAddressID='+$('#shipToCustomerAddressID').val()+"&from=job&joReleaseID="+joReleaseID
+		+"&transaction="+transaction+"&customerInvoie_doNotMailID="+customerInvoie_doNotMailID+"&customerInvoice_taxIdcuname="+taxAmountField+"&CIjoMasterID="+$("#joMasterHiddenID").val()
+		+"&CIrxShiptoid="+ $("#CI_Shipto").contents().find("#shiptoaddrhiddenfromuiid").val()+"&CIrxShiptomodevalue="+ $("#CI_Shipto").contents().find("#shiptomoderhiddenid").val()+"&taxfreight="+taxfreight;
+		//"&rxShiptoAddressID="+shipToAddressIDs+"&shipToMode="+shipToModeIn+
+		 
+		if(operation != "closedialog"){
+			$('#CuInvoiceSaveID').css('background','-webkit-gradient(linear, left top, left bottom, from(#FFD499), to(#8E6433))');
+			$('#CuInvoiceSaveCloseID').css('background','-webkit-gradient(linear, left top, left bottom, from(#FFD499), to(#8E6433))');
+			document.getElementById("CuInvoiceSaveID").disabled = true;
+			document.getElementById("CuInvoiceSaveCloseID").disabled = true;
+		}
+		if(aAddOREdit == 'edit' && cIopenStatus == 'false')
+			{
+			$('#invreasondialog').data('cusoId', cusoId);
+			$('#invreasondialog').data('transaction', "close");
+			$('#invreasondialog').data('releasType', releasType);
+			$('#invreasondialog').data('title', title);
+			$('#invreasondialog').data('joReleaseID', joReleaseID);
+			
+			/*if(_globalold_cIlineitemform == "{}")
+			_globalold_cIlineitemform = _globalold_cIlineitemform.replace('{}', '[]');*/
+			//var aInvoiceDetailsTotal=$("#custoemrInvoiceFormTotalID").serialize();
+			
+			//added by prasant for 3.0.70 issue fixes
+			var gridRows = $('#customerInvoice_lineitems').getRowData();
+		 	_globaloldcustomerInvoicegrid =  JSON.stringify(gridRows)+$("#customerInvoice_invoiceDateID").val();
+		
+			
+			if(_globaloldcustomerInvoiceform != generalTabFormval ){
+					console.log("ERROR:::_globaloldcustomerInvoiceform=="+_globaloldcustomerInvoiceform);
+					console.log("ERROR:::_globalnewcustomerInvoiceform=="+generalTabFormval);
+				}
+				if(_globaloldcustomerInvoicegrid != invoiceGridDetails){
+					console.log("ERROR:::_globaloldcustomerInvoicegrid=="+_globaloldcustomerInvoicegrid);
+					console.log("ERROR:::_invoiceGridDetails=="+invoiceGridDetails);
+				}
+				if(_globaloldcustomerInvoiceformTotal != aInvoiceDetailsTotal){
+					console.log("ERROR:::_globaloldcustomerInvoiceformTotal=="+_globaloldcustomerInvoiceformTotal);
+					console.log("ERROR:::_aInvoiceDetailsTotal=="+aInvoiceDetailsTotal);
+				}
+					
+				
+			if(_globaloldcustomerInvoiceform != generalTabFormval || _globaloldcustomerInvoicegrid != invoiceGridDetails || _globaloldcustomerInvoiceformTotal != aInvoiceDetailsTotal)
+			{
+				transaction="close";
+				var  aCustomerInvoiceDetails = aInvoiceDetails+"&customerInvoice_subTotalName="+aSubTotal+"&customerInvoice_frightname="+aFreight+"&customerInvoice_taxName="+taxAmountnew+"&customerInvoice_totalName="+aTotal+"&oper="+aAddOREdit+"&joReleaseDetailsID="+joReleaseDetailID+'&cuSOID='+cusoId+'&poNumber='+poNumber
+				+'&InvoiceNo='+InvoiceNo+'&shipDate='+shipDate+'&taxRate='+taxrate+'&cuInvHiddenId='+cuinvId+"&releaseType="+releaseType+'&customerID='+customerID+"&from=job&joReleaseID="+joReleaseID
+				+"&transaction="+transaction+"&customerInvoie_doNotMailID="+customerInvoie_doNotMailID+"&customerInvoice_taxIdcuname="+taxAmountField
+				+"&CIrxShiptoid="+ $("#CI_Shipto").contents().find("#shiptoaddrhiddenfromuiid").val()+"&CIrxShiptomodevalue="+ $("#CI_Shipto").contents().find("#shiptomoderhiddenid").val()+"&CIjoMasterID="+$("#joMasterHiddenID").val()+"&taxfreight="+taxfreight;
+				//+'&shipToCustomerAddressID='+$('#shipToCustomerAddressID').val()
+				$('#invreasondialog').data('aCustomerInvoiceDetails', aCustomerInvoiceDetails);
+				
+				
+				var newDialogDiv = jQuery(document.createElement('div'));
+				jQuery(newDialogDiv).html('<span><b style="color:Green;">You have made changes,would you like to save?</b></span>');
+				jQuery(newDialogDiv).dialog({modal: true, width:300, height:150, title:"Success.", 
+				closeOnEscape: false,
+				open: function(event, ui) { $(".ui-dialog-titlebar-close").hide(); },
+				buttons:{
+					"Yes": function(){
+						jQuery(this).dialog("close");
+						jQuery( "#invreasondialog" ).dialog("open");
+					    return false;
+					},
+					"No": function ()	{
+						document.getElementById("CuInvoiceSaveID").disabled = false;
+						document.getElementById("CuInvoiceSaveCloseID").disabled = false;
+						$('#CuInvoiceSaveID').css('background','-webkit-gradient(linear, left top, left bottom, from(#b47015), to(#6f4c23))');
+						$('#CuInvoiceSaveCloseID').css('background','-webkit-gradient(linear, left top, left bottom, from(#b47015), to(#6f4c23))');
+						$('#transactionID').val('add');
+						jQuery(this).dialog("close");
+						if(operation=='closedialog'){
+							cancelcustomerinvoice();
+						}
+						 
+					return false;	
+					}}}).dialog("open");
+			}
+			else
+			{
+				transaction="";
+				if(operation =="closedialog"){
+					cancelcustomerinvoice();
+				}
+				if(operation=='close'){
+					 
+					if(cusoId!==null && cusoId !==""){
+					if(releasType=='Stock Order' || releasType=='Service'){
+					var rowId = $("#release").jqGrid('getGridParam', 'selrow');
+					var transStatus = $("#release").jqGrid('getCell', rowId,'transactionStatus');
+					console.log('Transacion Status before Update :-:'+transStatus);
+					if(transStatus!==2){
+					var newDialogDiv = jQuery(document.createElement('div'));
+					jQuery(newDialogDiv).html('<span><b style="color:Green;">Do You want to close the SO transaction Status?</b></span>');
+					jQuery(newDialogDiv).dialog({modal: true, width:300, height:150, title:"Success.", 
+					buttons:{
+						"OK": function(){
+							
+								$.ajax({
+									url: "./salesOrderController/setSalesOrderStatus",
+									type: "POST",
+									async:false,
+									data :{cusoID:cusoId,status:2},
+									success: function(data) {
+									}
+								});
+							
+							$(this).dialog("close");
+						    return false;
+						},
+						Cancel: function ()	{
+							jQuery(this).dialog("close");
+						return false;	
+						}}}).dialog("open");
+					}
+					}
+					}
+				}
+				
+				
+				$('#transactionID').val('add');
+				$('#showMessageCuInvoice').css("margin-left", "1666%");
+				$('#showMessageCuInvoiceLine').css("margin-left", "1666%");
+				$('#showMessageCuInvoice').html("Saved");
+				$('#showMessageCuInvoiceLine').html("Saved");
+				
+				$('#imgInvoicePDF').empty();
+				$('#imgInvoicePDF').append('<input type="image" src="./../resources/Icons/PDF_new.png" title="View CuInvoice" onclick="viewCuInvoicePDF(); return false;"	style="background: #EEDEBC;">');
+
+				$('#imgInvoiceEmail').empty();
+				$('#imgInvoiceEmail').append(' <input id="contactEmailID" type="image" src="./../resources/Icons/mail_new.png" title="Email Customer Invoice" style="background:#EEDEBC;" onclick="sendPOEmail(\'CuInvoice\');return false;">');
+
+				document.getElementById("CuInvoiceSaveID").disabled = false;
+				document.getElementById("CuInvoiceSaveCloseID").disabled = false;
+				$('#CuInvoiceSaveID').css('background','-webkit-gradient(linear, left top, left bottom, from(#b47015), to(#6f4c23))');
+				$('#CuInvoiceSaveCloseID').css('background','-webkit-gradient(linear, left top, left bottom, from(#b47015), to(#6f4c23))');
+				
+				setTimeout(function(){
+					$('#showMessageCuInvoice').html("");
+					$('#showMessageCuInvoiceLine').html("");
+					},3000);
+			}
+			}
+		else
+			{
+			if(operation =="closedialog"){
+	     
 				 
-				if(cusoId!==null && cusoId !==""){
-				if(releasType=='Stock Order' || releasType=='Service'){
+				if(cusoId!==null && cusoId !=="" && $('#cuinvoiceIDhidden').val()!=""){
+				if(releasType=='Stock Order'||releasType=='Bill Only'||releasType=='Service'){
 				var rowId = $("#release").jqGrid('getGridParam', 'selrow');
 				var transStatus = $("#release").jqGrid('getCell', rowId,'transactionStatus');
 				console.log('Transacion Status before Update :-:'+transStatus);
-				if(transStatus!==2){
+				//Editted by prasant to show this pop up when All SO lines item is Invoiced
+				if(transStatus!==2  && isAnyLineItemsDeleted!=true){
 				var newDialogDiv = jQuery(document.createElement('div'));
 				jQuery(newDialogDiv).html('<span><b style="color:Green;">Do You want to close the SO transaction Status?</b></span>');
 				jQuery(newDialogDiv).dialog({modal: true, width:300, height:150, title:"Success.", 
 				buttons:{
 					"OK": function(){
-						
+						if(releasType=='Bill Only'){
+							$.ajax({
+								url: "./salesOrderController/setBillOnlyStatus",
+								type: "POST",
+								async:false,
+								data :{'joReleaseID':joReleaseID,'status':2},
+								success: function(data) {
+									jQuery(this).dialog("close");
+									cancelcustomerinvoice();
+								}
+							});
+						}else{
 							$.ajax({
 								url: "./salesOrderController/setSalesOrderStatus",
 								type: "POST",
 								async:false,
 								data :{cusoID:cusoId,status:2},
 								success: function(data) {
+									jQuery(this).dialog("close");
+									cancelcustomerinvoice();
 								}
 							});
+						}
 						
-						$(this).dialog("close");
+						jQuery(this).dialog("close");
 					    return false;
 					},
 					Cancel: function ()	{
 						jQuery(this).dialog("close");
+						cancelcustomerinvoice();
 					return false;	
 					}}}).dialog("open");
-				}
-				}
-				}
-			}
-			
-			
-			$('#transactionID').val('add');
-			$('#showMessageCuInvoice').css("margin-left", "1666%");
-			$('#showMessageCuInvoiceLine').css("margin-left", "1666%");
-			$('#showMessageCuInvoice').html("Saved");
-			$('#showMessageCuInvoiceLine').html("Saved");
-			
-			$('#imgInvoicePDF').empty();
-			$('#imgInvoicePDF').append('<input type="image" src="./../resources/Icons/PDF_new.png" title="View CuInvoice" onclick="viewCuInvoicePDF(); return false;"	style="background: #EEDEBC;">');
-
-			$('#imgInvoiceEmail').empty();
-			$('#imgInvoiceEmail').append(' <input id="contactEmailID" type="image" src="./../resources/Icons/mail_new.png" title="Email Customer Invoice" style="background:#EEDEBC;" onclick="sendPOEmail(\'CuInvoice\');return false;">');
-
-			document.getElementById("CuInvoiceSaveID").disabled = false;
-			document.getElementById("CuInvoiceSaveCloseID").disabled = false;
-			$('#CuInvoiceSaveID').css('background','-webkit-gradient(linear, left top, left bottom, from(#b47015), to(#6f4c23))');
-			$('#CuInvoiceSaveCloseID').css('background','-webkit-gradient(linear, left top, left bottom, from(#b47015), to(#6f4c23))');
-			
-			setTimeout(function(){
-				$('#showMessageCuInvoice').html("");
-				$('#showMessageCuInvoiceLine').html("");
-				},3000);
-		}
-		}
-	else
-		{
-		if(operation =="closedialog"){
-     
-			 
-			if(cusoId!==null && cusoId !=="" && $('#cuinvoiceIDhidden').val()!=""){
-			if(releasType=='Stock Order'||releasType=='Bill Only'||releasType=='Service'){
-			var rowId = $("#release").jqGrid('getGridParam', 'selrow');
-			var transStatus = $("#release").jqGrid('getCell', rowId,'transactionStatus');
-			console.log('Transacion Status before Update :-:'+transStatus);
-			//Editted by prasant to show this pop up when All SO lines item is Invoiced
-			if(transStatus!==2  && isAnyLineItemsDeleted!=true){
-			var newDialogDiv = jQuery(document.createElement('div'));
-			jQuery(newDialogDiv).html('<span><b style="color:Green;">Do You want to close the SO transaction Status?</b></span>');
-			jQuery(newDialogDiv).dialog({modal: true, width:300, height:150, title:"Success.", 
-			buttons:{
-				"OK": function(){
-					if(releasType=='Bill Only'){
-						$.ajax({
-							url: "./salesOrderController/setBillOnlyStatus",
-							type: "POST",
-							async:false,
-							data :{'joReleaseID':joReleaseID,'status':2},
-							success: function(data) {
-								jQuery(this).dialog("close");
-								cancelcustomerinvoice();
-							}
-						});
-					}else{
-						$.ajax({
-							url: "./salesOrderController/setSalesOrderStatus",
-							type: "POST",
-							async:false,
-							data :{cusoID:cusoId,status:2},
-							success: function(data) {
-								jQuery(this).dialog("close");
-								cancelcustomerinvoice();
-							}
-						});
-					}
-					
-					jQuery(this).dialog("close");
-				    return false;
-				},
-				Cancel: function ()	{
-					jQuery(this).dialog("close");
+				}else{
 					cancelcustomerinvoice();
-				return false;	
-				}}}).dialog("open");
-			}else{
-				cancelcustomerinvoice();
-				isAnyLineItemsDeleted=false;
-				
-			}
-			}else{
-				cancelcustomerinvoice();
-			}
-			}else{
-				cancelcustomerinvoice();
-			}
-			return true;
-		}
-		var add1 = $("#CI_Shipto").contents().find('#shipToName').val();
-		var add2 = $("#CI_Shipto").contents().find('#shipToAddress1').val();
-		var add3 = $("#CI_Shipto").contents().find('#shipToAddress2').val();
-		var city = $("#CI_Shipto").contents().find('#shipToCity').val();
-		var state =$("#CI_Shipto").contents().find('#shipToState').val();
-		var zip = $("#CI_Shipto").contents().find('#shipToZip').val();	
-		var checkpermission=getGrantpermissionprivilage('OpenPeriod_PostingOnly',0);
-		$.ajax({
-			url: "./checkAccountingCyclePeriods",
-			data:{"datetoCheck":$('#customerInvoice_invoiceDateID').val(),"UserStatus":checkpermission},
-			type: "POST",
-			success: function(data) { 
-				
-				  createtpusage('job-Release Tab','Customer Invoice Save','Info','Job,Release Tab,Saving Customer Invoice,JobNumber:'+$('input:text[name=jobHeader_JobNumber_name]').val()+',PO ID:'+vePOID+',Invoice No:'+InvoiceNo);
-
-				if(data.cofiscalperiod!=null && typeof(data.cofiscalperiod.period) !== "undefined" )
-				{
-					periodid=data.cofiscalperiod.coFiscalPeriodId;
-					yearid = data.cofiscalperiod.coFiscalYearId;
+					isAnyLineItemsDeleted=false;
 					
-					var rows = jQuery("#customerInvoice_lineitems").getDataIDs();
-					/*deleteinvoiceDetailId=new Array();
-		 			 for(var a=0;a<rows.length;a++)
-		 			 {
-		 			    row=jQuery("#customerInvoice_lineitems").getRowData(rows[a]);
-		 			   var id="#canDoID_"+rows[a];
-		 			   var canDo=$(id).is(':checked');
-			 			   if(canDo){
-			 				  var cuInvoiceDetailId=row['cuInvoiceDetailId'];
-			 				  if(cuInvoiceDetailId!=undefined && cuInvoiceDetailId!=null && cuInvoiceDetailId!="" && cuInvoiceDetailId!=0){
-			 				 		deleteinvoiceDetailId.push(cuInvoiceDetailId);
-			 				 	}
-			 				 $('#customerInvoice_lineitems').jqGrid('delRowData',rows[a]);
-			 			   }
-		 			   }*/
-		 			 console.log("I am in create=="+aCustomerInvoiceDetails);
-		 			var gridRows = $('#customerInvoice_lineitems').getRowData();
-					var dataToSend = JSON.stringify(gridRows);
-						$.ajax({
-							url: "./jobtabs5/updateCustomerInvoiceDetails?"+aCustomerInvoiceDetails,
-							type: "POST",
-							data : {'customerInvoiceShipToAddressName':add1,'customerInvoiceShipToAddress1':add2,
-								'customerInvoiceShipToAddress2':add3,'customerInvoiceShipToCity':city,
-								'customerInvoiceShipToState':state,'customerInvoiceShipToZip':zip,
-								'coFiscalPeriodId':periodid,'coFiscalYearId':yearid,'gridData':dataToSend,'delData':cuInv_LineItemsToBeDeleted},
-							success: function(data) {
-								cuInv_LineItemsToBeDeleted = new Array();
-								transaction="";
-								$('#operationID').val('edit');
-								$('#ciOpenStatusID').val(data.cIopenStatus);
-								$('#imgInvoicePDF').empty();
-						 		$('#imgInvoicePDF').append('<input type="image" src="./../resources/Icons/PDF_new.png" title="View CuInvoice" onclick="viewCuInvoicePDF(); return false;"	style="background: #EEDEBC;">');
-
-								$('#imgInvoiceEmail').empty();
-								$('#imgInvoiceEmail').append(' <input id="contactEmailID" type="image" src="./../resources/Icons/mail_new.png" title="Email Customer Invoice" style="background:#EEDEBC;" onclick="sendPOEmail(\'CuInvoice\');return false;">');
-								if(operation=='closedialog'){
-									 
-									//alert('#'+cusoId+'#');
-									if(cusoId!==null && cusoId !==""){
-									if(releasType=='Stock Order'||releasType=='Bill Only'||releasType=='Service'){
-									var rowId = $("#release").jqGrid('getGridParam', 'selrow');
-									var transStatus = $("#release").jqGrid('getCell', rowId,'transactionStatus');
-									console.log('Transacion Status before Update :-:'+transStatus);
-									if(transStatus!==2){
-									var newDialogDiv = jQuery(document.createElement('div'));
-									jQuery(newDialogDiv).html('<span><b style="color:Green;">Do You want to close the SO transaction Status?</b></span>');
-									jQuery(newDialogDiv).dialog({modal: true, width:300, height:150, title:"Success.", 
-									buttons:{
-										"OK": function(){
-											if(releasType=='Bill Only'){
-												$.ajax({
-													url: "./salesOrderController/setBillOnlyStatus",
-													type: "POST",
-													async:false,
-													data :{'joReleaseID':joReleaseID,'status':2},
-													success: function(data) {
-														$("#release").trigger("reloadGrid");
-													}
-												});
-											}else{
-												$.ajax({
-													url: "./salesOrderController/setSalesOrderStatus",
-													type: "POST",
-													async:false,
-													data :{cusoID:cusoId,status:2},
-													success: function(data) {
-														$("#release").trigger("reloadGrid");
-													}
-												});
-											}
-											
-											$(this).dialog("close");
-										    return false;
-										},
-										Cancel: function ()	{
-											jQuery(this).dialog("close");
-											$("#release").trigger("reloadGrid");
-										return false;	
-										}}}).dialog("open");
-									}
-									}
-									}
-									jQuery('#shiping').jqGrid('clearGridData')
-									 loadShipingGrid(joReleaseID,"");
-								}
-								
-								document.getElementById("CuInvoiceSaveID").disabled = false;
-								document.getElementById("CuInvoiceSaveCloseID").disabled = false;
-								$('#CuInvoiceSaveID').css('background','-webkit-gradient(linear, left top, left bottom, from(#b47015), to(#6f4c23))');
-								$('#CuInvoiceSaveCloseID').css('background','-webkit-gradient(linear, left top, left bottom, from(#b47015), to(#6f4c23))');
-								
-								$('#cuInvoiceID').text(data.cuInvoiceId);
-								$('#cuinvoiceIDhidden').val(data.cuInvoiceId);
-								
-								 if(data.shipToMode == 0)
-							         $("#CI_Shipto").contents().find('#shiptoaddrhiddenfromuiid').val(data.prToWarehouseId);
-							     else if(data.shipToMode == 1)
-							         $("#CI_Shipto").contents().find('#shiptoaddrhiddenfromuiid').val(data.rxShipToId);
-							     else if(data.shipToMode == 2)
-							         $("#CI_Shipto").contents().find('#shiptoaddrhiddenfromuiid').val(data.rxShipToId);
-							     else if(data.shipToMode == 3)
-							         $("#CI_Shipto").contents().find('#shiptoaddrhiddenfromuiid').val(data.rxShipToAddressId);
-								
-								$("#customerInvoice_lineitems").jqGrid('GridUnload');
-								loadCustomerInvoice();
-								$("#customerInvoice_lineitems").trigger("reloadGrid");
-								$('#showMessageCuInvoice').css("margin-left", "1666%");
-								$('#showMessageCuInvoiceLine').css("margin-left", "1666%");
-								deleteinvoiceDetailId=new Array();
-								$('#showMessageCuInvoice').html("Saved");
-								$('#showMessageCuInvoiceLine').html("Saved");
-								
-								$('#imgInvoicePDF').empty();
-								$('#imgInvoicePDF').append('<input type="image" src="./../resources/Icons/PDF_new.png" title="View CuInvoice" onclick="viewCuInvoicePDF(); return false;"	style="background: #EEDEBC;">');
-
-								$('#imgInvoiceEmail').empty();
-								$('#imgInvoiceEmail').append(' <input id="contactEmailID" type="image" src="./../resources/Icons/mail_new.png" title="Email Customer Invoice" style="background:#EEDEBC;" onclick="sendPOEmail(\'CuInvoice\');return false;">');
-
-								
-								$("#cusinvoicetab").tabs({
-								       disabled : false
-								      });
-								$('#prWareHouseSelectlineID').val($('#prWareHouseSelectID').val());
-								$('#shipViaCustomerSelectlineID').val($('#shipViaCustomerSelectID').val());
-								$('#customerInvoice_lineshipDateID').val($('#customerInvoice_shipDateID').val());
-								$('#customerInvoice_lineproNumberID').val($('#customerInvoice_proNumberID').val());
-								
-								if(title === 'New Customer Invoice' && transaction == 'save'){
-									$('#cusinvoicetab').dialog('option', 'title','Customer Invoice');	
-								}
-												 $('#loadingDivForCIGeneralTab').css({
-						"display": "block"
-					}); 
-								
-								setTimeout(function(){
-									//updateTaxableLines();
-									$('#showMessageCuInvoice').html("");
-									$('#showMessageCuInvoiceLine').html("");
-									//_globaloldcustomerInvoiceformTotal= $("#custoemrInvoiceFormTotalID").serialize();
-									_globaloldcustomerInvoiceformTotal=generatecustoemrInvoiceFormTotalIDSeriallize();
-									_globaloldcustomerInvoiceform =  CIGeneralTabSeriallize();
-								 	var gridRows = $('#customerInvoice_lineitems').getRowData();
-								 	_globaloldcustomerInvoicegrid =  JSON.stringify(gridRows)+$("#customerInvoice_invoiceDateID").val();
-								console.log("setglobe");
-									$('#loadingDivForCIGeneralTab').css({
-							"display": "none"
-						});	
-								},2500);
-								
-								getCustomerInvoiceDetailsforpopup(data.cuInvoiceId);
-								
-								
-							}
-						});
 				}
-				else
-					{
+				}else{
+					cancelcustomerinvoice();
+				}
+				}else{
+					cancelcustomerinvoice();
+				}
+				return true;
+			}
+			var add1 = $("#CI_Shipto").contents().find('#shipToName').val();
+			var add2 = $("#CI_Shipto").contents().find('#shipToAddress1').val();
+			var add3 = $("#CI_Shipto").contents().find('#shipToAddress2').val();
+			var city = $("#CI_Shipto").contents().find('#shipToCity').val();
+			var state =$("#CI_Shipto").contents().find('#shipToState').val();
+			var zip = $("#CI_Shipto").contents().find('#shipToZip').val();	
+			var checkpermission=getGrantpermissionprivilage('OpenPeriod_PostingOnly',0);
+			$.ajax({
+				url: "./checkAccountingCyclePeriods",
+				data:{"datetoCheck":$('#customerInvoice_invoiceDateID').val(),"UserStatus":checkpermission},
+				type: "POST",
+				success: function(data) { 
 					
-					if(data.AuthStatus == "granted")
-					{	
-					var newDialogDiv = jQuery(document.createElement('div'));
-					jQuery(newDialogDiv).html('<span><b style="color:red;">Current Transcation Date is not under open period.</b></span>');
-					jQuery(newDialogDiv).dialog({modal: true, width:300, height:150, title:"Information.", 
-											buttons: [{text: "OK",click: function(){
-												document.getElementById("CuInvoiceSaveID").disabled = false;
-												document.getElementById("CuInvoiceSaveCloseID").disabled = false;
-												$('#CuInvoiceSaveID').css('background','-webkit-gradient(linear, left top, left bottom, from(#b47015), to(#6f4c23))');
-												$('#CuInvoiceSaveCloseID').css('background','-webkit-gradient(linear, left top, left bottom, from(#b47015), to(#6f4c23))');
-												$(this).dialog("close"); }}]
-										}).dialog("open");
+					  createtpusage('job-Release Tab','Customer Invoice Save','Info','Job,Release Tab,Saving Customer Invoice,JobNumber:'+$('input:text[name=jobHeader_JobNumber_name]').val()+',PO ID:'+vePOID+',Invoice No:'+InvoiceNo);
+
+					if(data.cofiscalperiod!=null && typeof(data.cofiscalperiod.period) !== "undefined" )
+					{
+						periodid=data.cofiscalperiod.coFiscalPeriodId;
+						yearid = data.cofiscalperiod.coFiscalYearId;
+						
+						var rows = jQuery("#customerInvoice_lineitems").getDataIDs();
+						/*deleteinvoiceDetailId=new Array();
+			 			 for(var a=0;a<rows.length;a++)
+			 			 {
+			 			    row=jQuery("#customerInvoice_lineitems").getRowData(rows[a]);
+			 			   var id="#canDoID_"+rows[a];
+			 			   var canDo=$(id).is(':checked');
+				 			   if(canDo){
+				 				  var cuInvoiceDetailId=row['cuInvoiceDetailId'];
+				 				  if(cuInvoiceDetailId!=undefined && cuInvoiceDetailId!=null && cuInvoiceDetailId!="" && cuInvoiceDetailId!=0){
+				 				 		deleteinvoiceDetailId.push(cuInvoiceDetailId);
+				 				 	}
+				 				 $('#customerInvoice_lineitems').jqGrid('delRowData',rows[a]);
+				 			   }
+			 			   }*/
+			 			 console.log("I am in create=="+aCustomerInvoiceDetails);
+			 			var gridRows = $('#customerInvoice_lineitems').getRowData();
+						var dataToSend = JSON.stringify(gridRows);
+							$.ajax({
+								url: "./jobtabs5/updateCustomerInvoiceDetails?"+aCustomerInvoiceDetails,
+								type: "POST",
+								data : {'customerInvoiceShipToAddressName':add1,'customerInvoiceShipToAddress1':add2,
+									'customerInvoiceShipToAddress2':add3,'customerInvoiceShipToCity':city,
+									'customerInvoiceShipToState':state,'customerInvoiceShipToZip':zip,
+									'coFiscalPeriodId':periodid,'coFiscalYearId':yearid,'gridData':dataToSend,'delData':cuInv_LineItemsToBeDeleted},
+								success: function(data) {
+									cuInv_LineItemsToBeDeleted = new Array();
+									transaction="";
+									$('#operationID').val('edit');
+									$('#ciOpenStatusID').val(data.cIopenStatus);
+									$('#imgInvoicePDF').empty();
+							 		$('#imgInvoicePDF').append('<input type="image" src="./../resources/Icons/PDF_new.png" title="View CuInvoice" onclick="viewCuInvoicePDF(); return false;"	style="background: #EEDEBC;">');
+
+									$('#imgInvoiceEmail').empty();
+									$('#imgInvoiceEmail').append(' <input id="contactEmailID" type="image" src="./../resources/Icons/mail_new.png" title="Email Customer Invoice" style="background:#EEDEBC;" onclick="sendPOEmail(\'CuInvoice\');return false;">');
+									if(operation=='closedialog'){
+										 
+										//alert('#'+cusoId+'#');
+										if(cusoId!==null && cusoId !==""){
+										if(releasType=='Stock Order'||releasType=='Bill Only'||releasType=='Service'){
+										var rowId = $("#release").jqGrid('getGridParam', 'selrow');
+										var transStatus = $("#release").jqGrid('getCell', rowId,'transactionStatus');
+										console.log('Transacion Status before Update :-:'+transStatus);
+										if(transStatus!==2){
+										var newDialogDiv = jQuery(document.createElement('div'));
+										jQuery(newDialogDiv).html('<span><b style="color:Green;">Do You want to close the SO transaction Status?</b></span>');
+										jQuery(newDialogDiv).dialog({modal: true, width:300, height:150, title:"Success.", 
+										buttons:{
+											"OK": function(){
+												if(releasType=='Bill Only'){
+													$.ajax({
+														url: "./salesOrderController/setBillOnlyStatus",
+														type: "POST",
+														async:false,
+														data :{'joReleaseID':joReleaseID,'status':2},
+														success: function(data) {
+															$("#release").trigger("reloadGrid");
+														}
+													});
+												}else{
+													$.ajax({
+														url: "./salesOrderController/setSalesOrderStatus",
+														type: "POST",
+														async:false,
+														data :{cusoID:cusoId,status:2},
+														success: function(data) {
+															$("#release").trigger("reloadGrid");
+														}
+													});
+												}
+												
+												$(this).dialog("close");
+											    return false;
+											},
+											Cancel: function ()	{
+												jQuery(this).dialog("close");
+												$("#release").trigger("reloadGrid");
+											return false;	
+											}}}).dialog("open");
+										}
+										}
+										}
+										jQuery('#shiping').jqGrid('clearGridData')
+										 loadShipingGrid(joReleaseID,"");
+									}
+									
+									document.getElementById("CuInvoiceSaveID").disabled = false;
+									document.getElementById("CuInvoiceSaveCloseID").disabled = false;
+									$('#CuInvoiceSaveID').css('background','-webkit-gradient(linear, left top, left bottom, from(#b47015), to(#6f4c23))');
+									$('#CuInvoiceSaveCloseID').css('background','-webkit-gradient(linear, left top, left bottom, from(#b47015), to(#6f4c23))');
+									
+									$('#cuInvoiceID').text(data.cuInvoiceId);
+									$('#cuinvoiceIDhidden').val(data.cuInvoiceId);
+									
+									 if(data.shipToMode == 0)
+								         $("#CI_Shipto").contents().find('#shiptoaddrhiddenfromuiid').val(data.prToWarehouseId);
+								     else if(data.shipToMode == 1)
+								         $("#CI_Shipto").contents().find('#shiptoaddrhiddenfromuiid').val(data.rxShipToId);
+								     else if(data.shipToMode == 2)
+								         $("#CI_Shipto").contents().find('#shiptoaddrhiddenfromuiid').val(data.rxShipToId);
+								     else if(data.shipToMode == 3)
+								         $("#CI_Shipto").contents().find('#shiptoaddrhiddenfromuiid').val(data.rxShipToAddressId);
+									
+									$("#customerInvoice_lineitems").jqGrid('GridUnload');
+									loadCustomerInvoice();
+									$("#customerInvoice_lineitems").trigger("reloadGrid");
+									$('#showMessageCuInvoice').css("margin-left", "1666%");
+									$('#showMessageCuInvoiceLine').css("margin-left", "1666%");
+									deleteinvoiceDetailId=new Array();
+									$('#showMessageCuInvoice').html("Saved");
+									$('#showMessageCuInvoiceLine').html("Saved");
+									
+									$('#imgInvoicePDF').empty();
+									$('#imgInvoicePDF').append('<input type="image" src="./../resources/Icons/PDF_new.png" title="View CuInvoice" onclick="viewCuInvoicePDF(); return false;"	style="background: #EEDEBC;">');
+
+									$('#imgInvoiceEmail').empty();
+									$('#imgInvoiceEmail').append(' <input id="contactEmailID" type="image" src="./../resources/Icons/mail_new.png" title="Email Customer Invoice" style="background:#EEDEBC;" onclick="sendPOEmail(\'CuInvoice\');return false;">');
+
+									
+									$("#cusinvoicetab").tabs({
+									       disabled : false
+									      });
+									$('#prWareHouseSelectlineID').val($('#prWareHouseSelectID').val());
+									$('#shipViaCustomerSelectlineID').val($('#shipViaCustomerSelectID').val());
+									$('#customerInvoice_lineshipDateID').val($('#customerInvoice_shipDateID').val());
+									$('#customerInvoice_lineproNumberID').val($('#customerInvoice_proNumberID').val());
+									
+									if(title === 'New Customer Invoice' && transaction == 'save'){
+										$('#cusinvoicetab').dialog('option', 'title','Customer Invoice');	
+									}
+													 $('#loadingDivForCIGeneralTab').css({
+							"display": "block"
+						}); 
+									
+									setTimeout(function(){
+										//updateTaxableLines();
+										$('#showMessageCuInvoice').html("");
+										$('#showMessageCuInvoiceLine').html("");
+										//_globaloldcustomerInvoiceformTotal= $("#custoemrInvoiceFormTotalID").serialize();
+										_globaloldcustomerInvoiceformTotal=generatecustoemrInvoiceFormTotalIDSeriallize();
+										_globaloldcustomerInvoiceform =  CIGeneralTabSeriallize();
+									 	var gridRows = $('#customerInvoice_lineitems').getRowData();
+									 	_globaloldcustomerInvoicegrid =  JSON.stringify(gridRows)+$("#customerInvoice_invoiceDateID").val();
+									console.log("setglobe");
+										$('#loadingDivForCIGeneralTab').css({
+								"display": "none"
+							});	
+									},2500);
+									
+									getCustomerInvoiceDetailsforpopup(data.cuInvoiceId);
+									
+									
+								}
+							});
 					}
 					else
-					{
-						showDeniedPopup();
-					}
-					}
-		  	},
-   			error:function(data){
-   				console.log('error');
-   				}
-   			});
-		}
-	
-	 }
-	 else{
-		 var newDialogDiv = jQuery(document.createElement('div'));
-			jQuery(newDialogDiv).html('<span><b style="color:Green;">You have made changes, please save prior to continuing.</b></span>');
-			jQuery(newDialogDiv).dialog({modal: true, width:300, height:150, title:"Information.", 
-			closeOnEscape: false,
-			open: function(event, ui) { $(".ui-dialog-titlebar-close").hide(); },
-			buttons:{
-				"OK": function(){
-					jQuery(this).dialog("close");
-					//$( "#salesreleasetab ul li:nth-child(2)" ).addClass("ui-state-disabled");
-					//$("#new_row_quantityOrdered").focus();
-				   // return false;
-				}}}).dialog("open");
+						{
+						
+						if(data.AuthStatus == "granted")
+						{	
+						var newDialogDiv = jQuery(document.createElement('div'));
+						jQuery(newDialogDiv).html('<span><b style="color:red;">Current Transcation Date is not under open period.</b></span>');
+						jQuery(newDialogDiv).dialog({modal: true, width:300, height:150, title:"Information.", 
+												buttons: [{text: "OK",click: function(){
+													document.getElementById("CuInvoiceSaveID").disabled = false;
+													document.getElementById("CuInvoiceSaveCloseID").disabled = false;
+													$('#CuInvoiceSaveID').css('background','-webkit-gradient(linear, left top, left bottom, from(#b47015), to(#6f4c23))');
+													$('#CuInvoiceSaveCloseID').css('background','-webkit-gradient(linear, left top, left bottom, from(#b47015), to(#6f4c23))');
+													$(this).dialog("close"); }}]
+											}).dialog("open");
+						}
+						else
+						{
+							showDeniedPopup();
+						}
+						}
+			  	},
+	   			error:function(data){
+	   				console.log('error');
+	   				}
+	   			});
+			}
+		
+		 }
+		 else{
+			 var newDialogDiv = jQuery(document.createElement('div'));
+				jQuery(newDialogDiv).html('<span><b style="color:Green;">You have made changes, please save prior to continuing.</b></span>');
+				jQuery(newDialogDiv).dialog({modal: true, width:300, height:150, title:"Information.", 
+				closeOnEscape: false,
+				open: function(event, ui) { $(".ui-dialog-titlebar-close").hide(); },
+				buttons:{
+					"OK": function(){
+						jQuery(this).dialog("close");
+						//$( "#salesreleasetab ul li:nth-child(2)" ).addClass("ui-state-disabled");
+						//$("#new_row_quantityOrdered").focus();
+					   // return false;
+					}}}).dialog("open");
+		 }
 	 }
 	
 }
@@ -9981,12 +10008,14 @@ debugger;
 								if(data.cofiscalperiod!=null && typeof(data.cofiscalperiod.period) !== "undefined" )
 								{							
 									$("#customerInvoice_invoiceDateID").prop('disabled', false);
-									
+									$("#CuInvoiceSaveID").prop('disabled', false);
+									$("#CuInvoiceSaveID").fadeTo("slow",1);
 								}
 								else
 								{							
 								$("#customerInvoice_invoiceDateID").prop('disabled', true);
-								
+								$("#CuInvoiceSaveID").prop('disabled', true);
+								$("#CuInvoiceSaveID").fadeTo("slow",0.4);
 								}
 				 
 						}

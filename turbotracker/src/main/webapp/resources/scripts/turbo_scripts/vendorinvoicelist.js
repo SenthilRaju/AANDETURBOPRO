@@ -2575,6 +2575,28 @@ function FormatDatedDate(createdDate){
 	createdDate = createdMonth+"/"+CreatedOn+"/"+createdYear;
 	$('#datePO').val(createdDate);
 	$('#ui-dialog-title-addNewVendorInvoiceFromPODlg').text(createdDate);
+	var checkpermission=getGrantpermissionprivilage('OpenPeriod_PostingOnly',0);
+	 $.ajax({
+			url: "./checkAccountingCyclePeriods",
+			data:{"datetoCheck":$('#datePO').val(),"UserStatus":checkpermission},
+			type: "POST",
+			success: function(data) { 
+					if(data.cofiscalperiod!=null && typeof(data.cofiscalperiod.period) !== "undefined" )
+					{							
+						$("#datePO").prop('disabled', false);
+						$("#addNewVeInvFmDlgbuttonsave").prop('disabled', false);
+						$("#addNewVeInvFmDlgbuttonsave").fadeTo("slow",1);
+						
+					}
+					else
+					{							
+					$("#datePO").prop('disabled', true);		
+					$("#addNewVeInvFmDlgbuttonsave").prop('disabled', true);
+					$("#addNewVeInvFmDlgbuttonsave").fadeTo("slow",0.4);
+					}
+
+			}
+	 });
 	
 }
 function FormatDueDate(createdDate){
@@ -2847,7 +2869,28 @@ function FormatDatedDateJob(createdDate){
 	createdDate = createdMonth+"/"+CreatedOn+"/"+createdYear;
 	$('#date').val(createdDate);
 	$('#ui-dialog-title-addNewVendorInvoiceDlg').text(createdDate);
-	
+	var checkpermission=getGrantpermissionprivilage('OpenPeriod_PostingOnly',0);
+	 $.ajax({
+			url: "./checkAccountingCyclePeriods",
+			data:{"datetoCheck":$('#date').val(),"UserStatus":checkpermission},
+			type: "POST",
+			success: function(data) { 
+					if(data.cofiscalperiod!=null && typeof(data.cofiscalperiod.period) !== "undefined" )
+					{							
+						$("#date").prop('disabled', false);
+						$("#saveTermsButton").prop('disabled', false);
+						$("#saveTermsButton").fadeTo("slow",1);
+						
+					}
+					else
+					{							
+					$("#date").prop('disabled', true);		
+					$("#saveTermsButton").prop('disabled', true);
+					$("#saveTermsButton").fadeTo("slow",0.4);
+					}
+
+			}
+	 });
 }
 function FormatDueDateJob(createdDate){
 	var date = new Date(createdDate);
@@ -3623,8 +3666,10 @@ function loadlineItemGrid()
 										
 										$("#new_row_description").focus();
 										$("#"+aSelectedRowId+"_description").focus();
+										if(!$('#addNewVeInvFmDlgbuttonsave').is('[disabled]')){
 										$("#addNewVeInvFmDlgbuttonsave").prop("disabled",true);
 										$("#addNewVeInvFmDlgbuttonsave").css("background","rgb(204, 204, 204)");
+										}
 									}							        		
 								});
 					        }
@@ -3664,8 +3709,10 @@ function loadlineItemGrid()
 	                       			Calculategrideditrowvalues_VI(rowid);
 	                       			checkLatestInvoice(prMasterID);
 	                       			 $("#lineItemGrid_ilsave").trigger("click");
+	                       			if(!$('#addNewVeInvFmDlgbuttonsave').is('[disabled]')){
 	                       			 $("#addNewVeInvFmDlgbuttonsave").prop("disabled",false);
 									 $("#addNewVeInvFmDlgbuttonsave").css("background","");
+	                       			}
 	                       		      return true;
 	                       		  }
 	                                             }
@@ -3737,8 +3784,10 @@ function loadlineItemGrid()
 	                       			Calculategrideditrowvalues_VI(rowid);
 	                       			checkLatestInvoice(prMasterID);
 	                       			 $("#lineItemGrid_ilsave").trigger("click");
+	                       			if(!$('#addNewVeInvFmDlgbuttonsave').is('[disabled]')){
 	                       			 $("#addNewVeInvFmDlgbuttonsave").prop("disabled",false);
 									 $("#addNewVeInvFmDlgbuttonsave").css("background","");
+	                       			}
 	                       		      return true;
 	                       		  }
 	                                             }
@@ -3784,8 +3833,10 @@ function loadlineItemGrid()
 	                       			Calculategrideditrowvalues_VI(rowid);
 	                       			checkLatestInvoice(prMasterID);
 	                       			$("#lineItemGrid_ilsave").trigger("click")
+	                       			if(!$('#addNewVeInvFmDlgbuttonsave').is('[disabled]')){
 	                       		    $("#addNewVeInvFmDlgbuttonsave").prop("disabled",false);
 								    $("#addNewVeInvFmDlgbuttonsave").css("background","");
+	                       			}
 	                       		  }
 	                                             }
 	                            }   
@@ -3832,8 +3883,10 @@ function loadlineItemGrid()
 	                       			Calculategrideditrowvalues_VI(rowid);
 	                       			checkLatestInvoice(prMasterID);
 	                       			$("#lineItemGrid_ilsave").trigger("click");
+	                       			if(!$('#addNewVeInvFmDlgbuttonsave').is('[disabled]')){
 	                       		    $("#addNewVeInvFmDlgbuttonsave").prop("disabled",false);
 								    $("#addNewVeInvFmDlgbuttonsave").css("background","");
+	                       			}
 	                       		  }
 	                                             }
 	                            }
@@ -3873,8 +3926,10 @@ function loadlineItemGrid()
 		                       {
 		                    	  checkLatestInvoice(prMasterID);
 		                       $("#lineItemGrid_ilsave").trigger("click");
+		                       if(!$('#addNewVeInvFmDlgbuttonsave').is('[disabled]')){
 		                       $("#addNewVeInvFmDlgbuttonsave").prop("disabled",false);
 							   $("#addNewVeInvFmDlgbuttonsave").css("background","");
+		                       }
 		                       }
 		                                         }
 		                        } 
@@ -4479,101 +4534,105 @@ function check_productNofromoutside( value, colname ) {
 
 
 function SaveVendorInvoicewithPO(operation){
-	//BID1633 Simon
-	$("#addNewVeInvFmDlgbuttonsave").prop("disabled",true);
-	//alert("in SaveVendorInvoicewithPO  "+operation);
-	var vendorInvoiceDetails=$("#addNewVendorInvoiceFromPOForm").serialize();
-	var gridRows = $('#lineItemGrid').getRowData();
-	var vendorInvoiceGridDetails= JSON.stringify(gridRows);
-	//var vendorInvoiceGridDetails =generatevendorInvoiceFormTotalIDSeriallize();
-	
-	var vendorInvoiceDetailsTotal=generatevendorInvoiceFormTotalIDSeriallize();
-	if(global_vendorInvoicePOForm != vendorInvoiceDetails){
-		console.log(global_vendorInvoicePOForm+"==="+vendorInvoiceDetails);
-	}
-	if(global_vendorInvoicegridPOForm != vendorInvoiceGridDetails){
-		console.log(global_vendorInvoicegridPOForm+"==="+vendorInvoiceGridDetails);
-	}
-	if(global_vendorInvoicetotalPOForm != vendorInvoiceDetailsTotal){
-		console.log(global_vendorInvoicetotalPOForm+"==="+vendorInvoiceDetailsTotal);
-	}
-	
-	console.log($("#veInvnomandatory").data("manvalue")+"---"+operation);
-	
-	if($("#veInvnomandatory").data("manvalue")==1 && $("#vendorInvoicePO").val() =="" && operation !='close')
-		{
-		$('#mandveinvno').show();
-		setTimeout(function(){
-			$('#mandveinvno').hide();
-			}, 2000);
-		}
-	else
-		{	
-//		var itemCode=$("#new_row_prItemCode").val();
-//		if(itemCode!=undefined){
-	if($('#veBillIdPO').val()!=null && $('#veBillIdPO').val()!="" ){
-	if(global_vendorInvoicePOForm != vendorInvoiceDetails || global_vendorInvoicegridPOForm != vendorInvoiceGridDetails || global_vendorInvoicetotalPOForm != vendorInvoiceDetailsTotal)
-	{
-		var newDialogDiv = jQuery(document.createElement('div'));
-		jQuery(newDialogDiv).html('<span><b style="color:Green;">You have made changes,would you like to save?</b></span>');
-		jQuery(newDialogDiv).dialog({modal: true, width:300, height:150, title:"Success.", 
-		closeOnEscape: false,
-		open: function(event, ui) { $(".ui-dialog-titlebar-close").hide(); },
-		buttons:{
-			"Yes": function(){
-				jQuery(this).dialog("close");
-				addVendorInvoiceFromPO('close');
-			    return false;
-			},
-			"No": function ()	{
-				
-				 jQuery(this).dialog("close");
-				 jQuery("#addNewVendorInvoiceFromPODlg").dialog("close");
-				 $('#invoicesGrid').trigger( 'reloadGrid' );
-			return false;	
-			}}}).dialog("open");
-	}else{
+	if($('#addNewVeInvFmDlgbuttonsave').is('[disabled]')){
 		jQuery("#addNewVendorInvoiceFromPODlg").dialog("close");
 		$('#invoicesGrid').trigger( 'reloadGrid' );
-	}
 	}else{
-		if(operation=='close'){
-			jQuery("#addNewVendorInvoiceFromPODlg").dialog("close");
-			$('#invoicesGrid').trigger( 'reloadGrid' );
-		}else{
-			addVendorInvoiceFromPO('close');
-			$('#invoicesGrid').trigger( 'reloadGrid' );
+		//BID1633 Simon
+		$("#addNewVeInvFmDlgbuttonsave").prop("disabled",true);
+		//alert("in SaveVendorInvoicewithPO  "+operation);
+		var vendorInvoiceDetails=$("#addNewVendorInvoiceFromPOForm").serialize();
+		var gridRows = $('#lineItemGrid').getRowData();
+		var vendorInvoiceGridDetails= JSON.stringify(gridRows);
+		//var vendorInvoiceGridDetails =generatevendorInvoiceFormTotalIDSeriallize();
+		
+		var vendorInvoiceDetailsTotal=generatevendorInvoiceFormTotalIDSeriallize();
+		if(global_vendorInvoicePOForm != vendorInvoiceDetails){
+			console.log(global_vendorInvoicePOForm+"==="+vendorInvoiceDetails);
+		}
+		if(global_vendorInvoicegridPOForm != vendorInvoiceGridDetails){
+			console.log(global_vendorInvoicegridPOForm+"==="+vendorInvoiceGridDetails);
+		}
+		if(global_vendorInvoicetotalPOForm != vendorInvoiceDetailsTotal){
+			console.log(global_vendorInvoicetotalPOForm+"==="+vendorInvoiceDetailsTotal);
 		}
 		
-	}
-//		}else{
-//			 var newDialogDiv = jQuery(document.createElement('div'));
-//				jQuery(newDialogDiv).html('<span><b style="color:Green;">You have made changes, please save prior to continuing.</b></span>');
-//				jQuery(newDialogDiv).dialog({modal: true, width:300, height:150, title:"Information.", 
-//				closeOnEscape: false,
-//				open: function(event, ui) { $(".ui-dialog-titlebar-close").hide(); },
-//				buttons:{
-//					"OK": function(){
-//						jQuery(this).dialog("close");
-//						//$( "#salesreleasetab ul li:nth-child(2)" ).addClass("ui-state-disabled");
-//						//$("#new_row_quantityOrdered").focus();
-//					   // return false;
-//					}}}).dialog("open");
-//		 }
+		console.log($("#veInvnomandatory").data("manvalue")+"---"+operation);
+		
+		if($("#veInvnomandatory").data("manvalue")==1 && $("#vendorInvoicePO").val() =="" && operation !='close')
+			{
+			$('#mandveinvno').show();
+			setTimeout(function(){
+				$('#mandveinvno').hide();
+				}, 2000);
+			}
+		else
+			{	
+//			var itemCode=$("#new_row_prItemCode").val();
+//			if(itemCode!=undefined){
+		if($('#veBillIdPO').val()!=null && $('#veBillIdPO').val()!="" ){
+		if(global_vendorInvoicePOForm != vendorInvoiceDetails || global_vendorInvoicegridPOForm != vendorInvoiceGridDetails || global_vendorInvoicetotalPOForm != vendorInvoiceDetailsTotal)
+		{
+			var newDialogDiv = jQuery(document.createElement('div'));
+			jQuery(newDialogDiv).html('<span><b style="color:Green;">You have made changes,would you like to save?</b></span>');
+			jQuery(newDialogDiv).dialog({modal: true, width:300, height:150, title:"Success.", 
+			closeOnEscape: false,
+			open: function(event, ui) { $(".ui-dialog-titlebar-close").hide(); },
+			buttons:{
+				"Yes": function(){
+					jQuery(this).dialog("close");
+					addVendorInvoiceFromPO('close');
+				    return false;
+				},
+				"No": function ()	{
+					
+					 jQuery(this).dialog("close");
+					 jQuery("#addNewVendorInvoiceFromPODlg").dialog("close");
+					 $('#invoicesGrid').trigger( 'reloadGrid' );
+				return false;	
+				}}}).dialog("open");
+		}else{
+			jQuery("#addNewVendorInvoiceFromPODlg").dialog("close");
+			$('#invoicesGrid').trigger( 'reloadGrid' );
 		}
-	
-	
-	
-	//BID1633 Simon
-	 setTimeout(function(){
-		 $("#addNewVeInvFmDlgbuttonsave").prop('disabled', false);		
-			},3000);
-	 
-		//added by prsant #1723 viStatusButtonPO
-		$("#viStatusButtonPO").css({ opacity: "1"});
-	    $("#viStatusButtonPO").attr("disabled", false);
-	    $('#vendorInvoiceGrid').trigger( 'reloadGrid' );
-	 
+		}else{
+			if(operation=='close'){
+				jQuery("#addNewVendorInvoiceFromPODlg").dialog("close");
+				$('#invoicesGrid').trigger( 'reloadGrid' );
+			}else{
+				addVendorInvoiceFromPO('close');
+				$('#invoicesGrid').trigger( 'reloadGrid' );
+			}
+			
+		}
+//			}else{
+//				 var newDialogDiv = jQuery(document.createElement('div'));
+//					jQuery(newDialogDiv).html('<span><b style="color:Green;">You have made changes, please save prior to continuing.</b></span>');
+//					jQuery(newDialogDiv).dialog({modal: true, width:300, height:150, title:"Information.", 
+//					closeOnEscape: false,
+//					open: function(event, ui) { $(".ui-dialog-titlebar-close").hide(); },
+//					buttons:{
+//						"OK": function(){
+//							jQuery(this).dialog("close");
+//							//$( "#salesreleasetab ul li:nth-child(2)" ).addClass("ui-state-disabled");
+//							//$("#new_row_quantityOrdered").focus();
+//						   // return false;
+//						}}}).dialog("open");
+//			 }
+			}
+		
+		
+		
+		//BID1633 Simon
+		 setTimeout(function(){
+			 $("#addNewVeInvFmDlgbuttonsave").prop('disabled', false);		
+				},3000);
+		 
+			//added by prsant #1723 viStatusButtonPO
+			$("#viStatusButtonPO").css({ opacity: "1"});
+		    $("#viStatusButtonPO").attr("disabled", false);
+		    $('#vendorInvoiceGrid').trigger( 'reloadGrid' );
+	}
 }
 function removedollarsymbol(value,id){
 	if(value!=null && value!=""){
@@ -5057,7 +5116,11 @@ function coaccountidvalidation( value, colname ) {
 			else{
 					
 					$('#saveTermsButton').css('background','-webkit-gradient(linear, left top, left bottom, from(#637c92), to(#3b4f60))');
-					document.getElementById("saveTermsButton").disabled = false;
+					//Modified By Simon for an issue fix
+					if($('#saveTermsButton').is('[disabled]')){
+					}else{
+						document.getElementById("saveTermsButton").disabled = false;
+					}
 					
 				 result = [true,""];
 			}
@@ -5084,7 +5147,11 @@ function coaccountidvalidation( value, colname ) {
 		}
 		else{
 				$('#saveTermsButton').css('background','-webkit-gradient(linear, left top, left bottom, from(#637c92), to(#3b4f60))');
-				document.getElementById("saveTermsButton").disabled = false;
+				//Modified By Simon for an issue fix
+				if($('#saveTermsButton').is('[disabled]')){
+				}else{
+					document.getElementById("saveTermsButton").disabled = false;
+				}
 			
 			 result = [true,""];
 		}
@@ -5226,93 +5293,97 @@ function setnewvendorinvoiceGridDetails(){
 }
 
 function SaveVendorInvoicewithoutPO(operation){
-	//BID1633 Simon
-	$("#saveTermsButton").prop("disabled",true);
-//	var itemCode=$("#new_row_number").val();
-//	if(itemCode!=undefined){
-	//$('#SOReleaseSuggestedPriceID').css('background','-webkit-gradient(linear, left top, left bottom, from(#FFD499), to(#8E6433))');
-	
-	var vendorInvoiceDetails=generatewopoFormSeriallize();
-	var gridRows = $('#vendorInvoiceGrid').getRowData();
-	var vendorInvoiceGridDetails= JSON.stringify(gridRows);
-	//var vendorInvoiceGridDetails =generatevendorInvoiceFormTotalIDSeriallize();
-	var vendorInvoiceDetailsTotal=generatevendorInvoiceWOPOFormTotalIDSeriallize();
-	if(global_vendorInvoiceWOPOForm != vendorInvoiceDetails){
-		console.log(global_vendorInvoiceWOPOForm+"==="+vendorInvoiceDetails);
-	}
-	if(global_vendorInvoicegridWOPOForm != vendorInvoiceGridDetails){
-		console.log(global_vendorInvoicegridWOPOForm+"==="+vendorInvoiceGridDetails);
-	}
-	if(global_vendorInvoicetotalWOPOForm != vendorInvoiceDetailsTotal){
-		console.log(global_vendorInvoicetotalWOPOForm+"==="+vendorInvoiceDetailsTotal);
-	}
-//	console.log("global_vendorInvoiceWOPOForm"+global_vendorInvoiceWOPOForm);
-//	console.log("vendorInvoiceDetails"+vendorInvoiceDetails);
-	//$('#rxMasterID').val(data.Vebill.rxMasterId);
-	//$('#veBillIdJob').val(data.Vebill.veBillId);
-	if($('#veBillIdJob').val()!=null && $('#veBillIdJob').val()!="" && ($('#veBillIdJob').val()!= 0 ||operation=='close')){
-	if(global_vendorInvoiceWOPOForm != vendorInvoiceDetails || global_vendorInvoicegridWOPOForm != vendorInvoiceGridDetails || global_vendorInvoicetotalWOPOForm != vendorInvoiceDetailsTotal)
-	{
-		
-		var newDialogDiv = jQuery(document.createElement('div'));
-		jQuery(newDialogDiv).html('<span><b style="color:Green;">You have made changes,would you like to save?</b></span>');
-		jQuery(newDialogDiv).dialog({modal: true, width:300, height:150, title:"Success.", 
-		closeOnEscape: false,
-		open: function(event, ui) { $(".ui-dialog-titlebar-close").hide(); },
-		buttons:{
-			"Yes": function(){
-				jQuery(this).dialog("close");
-				addVendorInvoice(operation);
-			    return false;
-			},
-			"No": function ()	{
-				 jQuery(this).dialog("close");
-				 jQuery("#addNewVendorInvoiceDlg").dialog("close");
-				 $('#invoicesGrid').trigger( 'reloadGrid' );
-				 
-			return false;	
-			}}}).dialog("open");
-	}else{
-		if(operation=="close"){
+	if($('#saveTermsButton').is('[disabled]')){
 		jQuery("#addNewVendorInvoiceDlg").dialog("close");
 		$('#invoicesGrid').trigger( 'reloadGrid' );
-		}
-	}
 	}else{
-		if(operation=='close'){
+		//BID1633 Simon
+		$("#saveTermsButton").prop("disabled",true);
+//		var itemCode=$("#new_row_number").val();
+//		if(itemCode!=undefined){
+		//$('#SOReleaseSuggestedPriceID').css('background','-webkit-gradient(linear, left top, left bottom, from(#FFD499), to(#8E6433))');
+		
+		var vendorInvoiceDetails=generatewopoFormSeriallize();
+		var gridRows = $('#vendorInvoiceGrid').getRowData();
+		var vendorInvoiceGridDetails= JSON.stringify(gridRows);
+		//var vendorInvoiceGridDetails =generatevendorInvoiceFormTotalIDSeriallize();
+		var vendorInvoiceDetailsTotal=generatevendorInvoiceWOPOFormTotalIDSeriallize();
+		if(global_vendorInvoiceWOPOForm != vendorInvoiceDetails){
+			console.log(global_vendorInvoiceWOPOForm+"==="+vendorInvoiceDetails);
+		}
+		if(global_vendorInvoicegridWOPOForm != vendorInvoiceGridDetails){
+			console.log(global_vendorInvoicegridWOPOForm+"==="+vendorInvoiceGridDetails);
+		}
+		if(global_vendorInvoicetotalWOPOForm != vendorInvoiceDetailsTotal){
+			console.log(global_vendorInvoicetotalWOPOForm+"==="+vendorInvoiceDetailsTotal);
+		}
+//		console.log("global_vendorInvoiceWOPOForm"+global_vendorInvoiceWOPOForm);
+//		console.log("vendorInvoiceDetails"+vendorInvoiceDetails);
+		//$('#rxMasterID').val(data.Vebill.rxMasterId);
+		//$('#veBillIdJob').val(data.Vebill.veBillId);
+		if($('#veBillIdJob').val()!=null && $('#veBillIdJob').val()!="" && ($('#veBillIdJob').val()!= 0 ||operation=='close')){
+		if(global_vendorInvoiceWOPOForm != vendorInvoiceDetails || global_vendorInvoicegridWOPOForm != vendorInvoiceGridDetails || global_vendorInvoicetotalWOPOForm != vendorInvoiceDetailsTotal)
+		{
+			
+			var newDialogDiv = jQuery(document.createElement('div'));
+			jQuery(newDialogDiv).html('<span><b style="color:Green;">You have made changes,would you like to save?</b></span>');
+			jQuery(newDialogDiv).dialog({modal: true, width:300, height:150, title:"Success.", 
+			closeOnEscape: false,
+			open: function(event, ui) { $(".ui-dialog-titlebar-close").hide(); },
+			buttons:{
+				"Yes": function(){
+					jQuery(this).dialog("close");
+					addVendorInvoice(operation);
+				    return false;
+				},
+				"No": function ()	{
+					 jQuery(this).dialog("close");
+					 jQuery("#addNewVendorInvoiceDlg").dialog("close");
+					 $('#invoicesGrid').trigger( 'reloadGrid' );
+					 
+				return false;	
+				}}}).dialog("open");
+		}else{
+			if(operation=="close"){
 			jQuery("#addNewVendorInvoiceDlg").dialog("close");
 			$('#invoicesGrid').trigger( 'reloadGrid' );
-		}else{
-			addVendorInvoice(operation);
-//			oldformserializewithoutpo=
-			$('#invoicesGrid').trigger( 'reloadGrid' );
+			}
 		}
+		}else{
+			if(operation=='close'){
+				jQuery("#addNewVendorInvoiceDlg").dialog("close");
+				$('#invoicesGrid').trigger( 'reloadGrid' );
+			}else{
+				addVendorInvoice(operation);
+//				oldformserializewithoutpo=
+				$('#invoicesGrid').trigger( 'reloadGrid' );
+			}
+			
+		}
+//		}else{
+//			 var newDialogDiv = jQuery(document.createElement('div'));
+//				jQuery(newDialogDiv).html('<span><b style="color:Green;">You have made changes, please save prior to continuing.</b></span>');
+//				jQuery(newDialogDiv).dialog({modal: true, width:300, height:150, title:"Information.", 
+//				closeOnEscape: false,
+//				open: function(event, ui) { $(".ui-dialog-titlebar-close").hide(); },
+//				buttons:{
+//					"OK": function(){
+//						jQuery(this).dialog("close");
+//						//$( "#salesreleasetab ul li:nth-child(2)" ).addClass("ui-state-disabled");
+//						//$("#new_row_quantityOrdered").focus();
+//					   // return false;
+//					}}}).dialog("open");
+//		 }
 		
+		  //BID1633 Simon
+		 setTimeout(function(){
+			 $("#saveTermsButton").prop('disabled', false);		
+				},3000);
+		
+		//added by prsant #1723
+		$("#viStatusButton").css({ opacity: "1"});
+	    $("#viStatusButton").attr("disabled", false);
 	}
-//	}else{
-//		 var newDialogDiv = jQuery(document.createElement('div'));
-//			jQuery(newDialogDiv).html('<span><b style="color:Green;">You have made changes, please save prior to continuing.</b></span>');
-//			jQuery(newDialogDiv).dialog({modal: true, width:300, height:150, title:"Information.", 
-//			closeOnEscape: false,
-//			open: function(event, ui) { $(".ui-dialog-titlebar-close").hide(); },
-//			buttons:{
-//				"OK": function(){
-//					jQuery(this).dialog("close");
-//					//$( "#salesreleasetab ul li:nth-child(2)" ).addClass("ui-state-disabled");
-//					//$("#new_row_quantityOrdered").focus();
-//				   // return false;
-//				}}}).dialog("open");
-//	 }
-	
-	  //BID1633 Simon
-	 setTimeout(function(){
-		 $("#saveTermsButton").prop('disabled', false);		
-			},3000);
-	
-	//added by prsant #1723
-	$("#viStatusButton").css({ opacity: "1"});
-    $("#viStatusButton").attr("disabled", false);
-    	
 }
 
 function generatevendorInvoiceWOPOFormTotalIDSeriallize(){
