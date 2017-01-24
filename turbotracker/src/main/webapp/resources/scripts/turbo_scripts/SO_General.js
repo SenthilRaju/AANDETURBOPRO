@@ -3214,3 +3214,4 @@ function initiateGenerataTabOfSO(cuSOID){
 
 //BID1682 Simon
 var updateTaxTerritoryStatusWhenChanged=0;
+var updateTaxTerritoryStatusOnChange=0;
