@@ -107,7 +107,7 @@
 					 					<tr>
 					 						<td><input type="text" id="shipToCity" name="shipToCity" style="width: 100px;" disabled="disabled">
 													<img alt="search" src="./../resources/scripts/jquery-autocomplete/search.png" style="display: none;">
-					 								<input type="text" id="shipToState" name="shipToState" style="width: 30px; text-transform: uppercase" maxlength="2"  disabled="disabled">
+					 								<input type="text" id="shipToState" name="shipToState" style="width: 30px; text-transform: uppercase" maxlength="2" >
 					 								<input type="hidden" id="prWarehouseID" name="prWarehouseID" style="width: 30px; text-transform: uppercase" maxlength="2"  disabled="disabled" value = "1">
 					 								<label>Zip: </label><input type="text" id="shipToZipID" name="shipToZip" style="width: 75px;" disabled="disabled">
 					 								<input type="button" id="backWardId" value="" onclick="shipBackWard()" style="width:20px; background: url('./../resources/images/Arrowleft.png') no-repeat;background-position: center; cursor:pointer;">
