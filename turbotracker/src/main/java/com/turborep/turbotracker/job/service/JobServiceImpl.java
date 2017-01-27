@@ -23185,5 +23185,44 @@ private boolean isCuSOUsed(Session existingSession,Integer cuSOID){
 	}
 	return flag;
 }
+//added by prasant for BID#1723
+@Override
+public String[] getProjectArchitectEnginnerName(String thejoMasterID) {
+	Session aSession = itsSessionFactory.openSession();
+	Jomaster joMaster=new Jomaster();
+	Rxmaster rxMaster=new Rxmaster();
+	String [] projectArcEngName=new String[3];
+	try {
+
+	if(thejoMasterID!=null && thejoMasterID!="")
+	 joMaster= (Jomaster) aSession.load(Jomaster.class, Integer.parseInt(thejoMasterID));
+	
+	projectArcEngName[0]=joMaster.getDescription();
+	 if(joMaster.getRxCategory1()!=null)
+		 rxMaster= (Rxmaster) aSession.load(Rxmaster.class, joMaster.getRxCategory1());
+	
+	 projectArcEngName[1]=rxMaster.getName();
+	 
+	 projectArcEngName[0]=joMaster.getDescription();
+	 if(joMaster.getRxCategory2()!=null)
+		 rxMaster= (Rxmaster) aSession.load(Rxmaster.class, joMaster.getRxCategory2());
+	
+	 projectArcEngName[2]=rxMaster.getName();
+	} catch (Exception excep) {
+		itsLogger.error(excep.getMessage(), excep);
+		JobException aJobException = new JobException(excep.getMessage(),
+				excep);
+		
+	} finally {
+		aSession.flush();
+		aSession.close();
+		joMaster=null;
+		rxMaster=null;
+		
+	}
+	
+	
+	return projectArcEngName;
+}
 }
 	

@@ -1406,4 +1406,6 @@ public interface JobService {
 	public Integer getnumberofVendorNumber(Integer vePOID);
 
 	public boolean updateShipToIDforThisCustomer(Integer cuInvoiceID, Integer shipToID);
+
+	public String[] getProjectArchitectEnginnerName(String theJobNumber);
 }

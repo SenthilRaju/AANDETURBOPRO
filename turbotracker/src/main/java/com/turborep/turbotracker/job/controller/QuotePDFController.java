@@ -10037,7 +10037,8 @@ Logger logger = Logger.getLogger(JobQuoteFormController.class);
 			if(theProjectNamePDF!=null)
 				theProjectNamePDF=theProjectNamePDF.replaceAll("`and`", "&");
 			
-			
+			if(theEnginner!=null)
+				theEnginner=theEnginner.replaceAll("`and`", "&");
 			
 			getProjectInformation(theProjectNamePDF, theQuoteName, theBidderContact, theJobNumber, theBidDate, theArchitect, thePlanDate, 
 					theJoQuoteRev, aBoldFont, aNormalFont, aBoldTitleFont, theState, theCity, theEnginner, aPDFDocument, aUserLoginSetting,quotes_numberandtype);

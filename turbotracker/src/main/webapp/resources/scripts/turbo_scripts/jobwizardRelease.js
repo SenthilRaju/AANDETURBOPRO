@@ -12134,6 +12134,7 @@ function deleteRowFromJqGrid_VeInv(jqGridRowId)
 }
 function deleteRowFrom_cuInvLineItemsJqGrid(jqGridRowId)
 {
+	debugger;
 	 var cuInvoiceDetailId = jQuery("#customerInvoice_lineitems").jqGrid ('getCell', jqGridRowId, 'cuInvoiceDetailId');
 	 if(cuInvoiceDetailId != null && cuInvoiceDetailId != 0 && cuInvoiceDetailId != undefined ){
 		 cuInv_LineItemsToBeDeleted.push(cuInvoiceDetailId);

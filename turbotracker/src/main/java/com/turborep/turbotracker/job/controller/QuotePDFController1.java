@@ -227,9 +227,10 @@ public class QuotePDFController1 {
 				@RequestParam(value="QuotePDF", required= false) String theQuotePDFIdnti,
 				@RequestParam(value="WriteorView", required= false) String WriteorView,
 				@RequestParam(value="quotes_numberandtype", required = false)String quotes_numberandtype,
+					
 				HttpSession session,HttpServletResponse aResponse, HttpServletRequest theRequest) throws IOException, DocumentException, SQLException, JobException, UserException, JRException, MessagingException{
 		 
-			
+		
 		 TsUserSetting aUserLoginSetting = userService.getSingleUserSettingsDetails(1);
 		 int height=60;
 		 if(aUserLoginSetting.getQuotesFooter()!=null){
@@ -306,10 +307,24 @@ public class QuotePDFController1 {
 		JoQuoteHeader aJoQuoteHeader = jobService.getjoQuoteAmount(theJoQuoteHeaderID);
 		String alternatetext=getalternatetextinhtml(theJoQuoteHeaderID.toString());
 		getHeaderInformation(theJoQuoteHeaderID.toString(), aPDFDocument, aPdfWriter, aUserBean, theQuoteThru, aBoldFont, aNormalFont, aBoldTitleFont, null, aJoQuoteHeader.getCreatedByName(), theTodayDate,aUserLoginSetting,alternatetext);
+		//added by prasant for BID 1723	
 		
+	     String projectArcEngName[]=	jobService.getProjectArchitectEnginnerName(theJoMasterID);
 		JoQuoteHeader afJoQuoteHeader =jobService.getjoQuoteHeader(theJoQuoteHeaderID);
-		if(theProjectNamePDF!=null)
+		/*if(theProjectNamePDF!=null && istheProjectNameHaveAmpersand)
 			theProjectNamePDF=theProjectNamePDF.replaceAll("`and`", "&");
+		
+		if(theArchitect!=null && istheArchitectHaveAmpersand )
+			theArchitect=theArchitect.replace("and", "&");	
+		
+		if(theEnginner!=null && istheEnginnerHaveAmpersand )
+			theEnginner=theEnginner.replace("and", "&");
+		*/
+		theProjectNamePDF=projectArcEngName[0];
+		theArchitect=projectArcEngName[1];
+		theEnginner=projectArcEngName[2];
+		
+		
 		
 		getProjectInformation(theProjectNamePDF, theQuoteName, theBidderContact, theJobNumber, theBidDate, theArchitect, thePlanDate, 
 				theJoQuoteRev, aBoldFont, aNormalFont, aBoldTitleFont, theState, theCity, theEnginner, aPDFDocument, aUserLoginSetting,quotes_numberandtype,theRequest);

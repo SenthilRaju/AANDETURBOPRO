@@ -4839,6 +4839,7 @@ function cancelQuote() {
 	}
 	return true;
 }
+
 function addquotesdialog() {
 	 getquoteformvalue=true;
 	$("#Quotes_editorCopy").val("add");

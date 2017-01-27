@@ -3235,6 +3235,8 @@ function deleteBidQuote(joBidderId) {
 }
 
 function openPDF(aQuotePDF) {
+	
+	debugger;
 	var bidderGrid = $("#quotesBidlist");
 	var bidderGridRowId = bidderGrid.jqGrid('getGridParam', 'selrow');
 	if (bidderGridRowId === null) {
@@ -3325,12 +3327,14 @@ function openPDF(aQuotePDF) {
 	var quotes_numberandtype=bidderGrid.jqGrid('getCell', bidderGridRowId,'quoteType');
 	var name = $("#engineerHiddenID").val();
 	var enggName = name.replace('&', 'and');
-	var aEngineer = enggName.replace('&', 'and');
+	var aEngineer = name.replace('&', 'and');
 	var architectName = $("#architectHiddenID").val();
 	var archName = architectName.replace('&', 'and');
 	var aArchitect = archName.replace('&', 'and');
 	var aBidDate = $("#bidDateHiddenID").val();
+	var checkProjectName= $("#projectNameHiddenID").val();
 	var aProjectName = $("#projectNameHiddenID").val().replace('&', '`and`');
+	
 	var aPlanDate = $("#plan_date_format").val();
 	var aThruAddendum = $("#quoteThru_id").val();
 	var aLocationCity = $("#locationCityHiddenID").val();
@@ -3340,7 +3344,8 @@ function openPDF(aQuotePDF) {
 	var currenDate = currentMonth + "/" + currentDate.getDate() + "/"
 			+ currentDate.getFullYear();
 	var aJobNumber = $("#jobNumberHiddenID").val();
-	
+
+		
 	
 	var aQuoteType = bidderGrid.jqGrid('getCell', bidderGridRowId, 'quoteType');
 	
@@ -3385,6 +3390,7 @@ function openPDF(aQuotePDF) {
 						type : "GET",
 						//url : "./quotePDFController/SaveAsBidList",
 						url : "./quotePDFController1/viewNewQuoteBidPdfForm",
+						//edited by prasant for BID 1723
 						data : {
 							'enginnerName' : aEngineer,
 							'architectName' : aArchitect,
@@ -3416,6 +3422,8 @@ function openPDF(aQuotePDF) {
 						}
 					});
 				} else {
+					//edited by prasant for BID 1723
+					
 				window.open("./quotePDFController1/viewNewQuoteBidPdfForm?enginnerName="		
 						+ aEngineer + "&architectName=" + aArchitect + "&bidDate="
 						+ aBidDate + "&projectName=" + aProjectName + "&planDate="
@@ -3426,7 +3434,9 @@ function openPDF(aQuotePDF) {
 						+ aJoBidderRev + "&joMasterID=" + joMasterID + "&QuoteThru="
 						+ aThruAddendum + "&todayDate=" + currenDate + "&jobNumber="
 						+ aJobNumber + "&paragraphCheck=" + aParagraph
-						+ "&manufactureCheck=" + aVendor + "&QuotePDF=" + aQuotePDF+"&quotes_numberandtype="+quotes_numberandtype);
+						+ "&manufactureCheck=" + aVendor + "&QuotePDF=" + aQuotePDF
+						+ "&quotes_numberandtype="+ quotes_numberandtype
+					);
 				}
 				
 			}
