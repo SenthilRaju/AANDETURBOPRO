@@ -2020,3 +2020,5 @@ function ShowPOLineNote(row){
 				}	
 		});
 	});
+//Issue Fix Added By Simon
+var updateTaxTerritoryStatusOnChange=0;

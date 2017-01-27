@@ -4009,7 +4009,7 @@ function loadvebilldetails(aJoReleaseDetailsID,veBillID){
 								$("#vendorinvoiceidbutton").prop('disabled', true);
 								$("#vendorinvoiceidbutton").fadeTo("slow",0.4);
 								}
-
+								alert($('#CuInvoiceSaveID').is('[disabled]'));
 						}
 				 });
 				$("#postDateID").val('');
@@ -7492,7 +7492,7 @@ var transaction = "";
 									 $(CIdivFlag).contents().find("#shiptoaddrhiddenfromdbid").val("");
 									 $(CIdivFlag).contents().find("#shiptomodehiddenfromdbid").val("");
 									 $(CIdivFlag).contents().find("#shiptomodehiddenfromdbid").val(2);
-									 alert("2 is calling ...!");
+//									 alert("2 is calling ...!");
 									 preloadShiptoAddress("#CI_Shipto",'',null,'2','0',$("#jobCustomerName_ID").text(),"");
 									 $("#CI_Shipto").contents().find("#shiptomoderhiddenid").val('2');
 									 boolean = false;
@@ -7563,6 +7563,8 @@ var transaction = "";
 											//eddited by prasant 3.0.70 Issue Fixes
 											debugger;
 											$("#customerInvoice_invoiceDateID").prop('disabled', false);
+											$("#CuInvoiceSaveID").prop('disabled', false);
+											$("#CuInvoiceSaveID").fadeTo("slow",1);
 						},
 					"No": function ()	{
 						jQuery(this).dialog("close");
