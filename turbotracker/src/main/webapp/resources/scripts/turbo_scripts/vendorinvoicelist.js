@@ -1156,7 +1156,7 @@ var allText = $('#apacct').html();
 
 			function addVendorInvoice(operation)
 			{
-				
+				debugger;
 				if($('#rxMasterID').val() == null || $('#rxMasterID').val() == '')
 				{
 					$('#errorMsg').show();
@@ -1188,6 +1188,7 @@ var allText = $('#apacct').html();
 							},2000);
 						
 						}else{
+							$("textarea#invreasonttextid").val("");
 							editInvoiceDetails(operation);
 						}
 				
@@ -1258,7 +1259,8 @@ var allText = $('#apacct').html();
 //												}else{
 												$("#vendorinvoiceWoPO").html("Saved.");
 												$('#veBillIdJob').val(data);
-												$("#vendorInvoiceGrid").trigger("reloadGrid");
+												preloadVendorInvoiceFromJobData(data);
+//												$("#vendorInvoiceGrid").trigger("reloadGrid");
 												setTimeout(function(){
 													$("#vendorinvoiceWoPO").html("");					
 													},2000);

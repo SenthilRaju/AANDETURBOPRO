@@ -6812,7 +6812,8 @@ var transaction = "";
 				}
 					
 				
-			if(_globaloldcustomerInvoiceform != generalTabFormval || _globaloldcustomerInvoicegrid != invoiceGridDetails || _globaloldcustomerInvoiceformTotal != aInvoiceDetailsTotal)
+//			if(_globaloldcustomerInvoiceform != generalTabFormval || _globaloldcustomerInvoicegrid != invoiceGridDetails || _globaloldcustomerInvoiceformTotal != aInvoiceDetailsTotal)
+			if(_globaloldcustomerInvoiceform != generalTabFormval || globaloldcustomerInvoicegrid != invoiceGridDetails || globaloldcustomerInvoiceformTotal != aInvoiceDetailsTotal || cuInv_LineItemsToBeDeleted.length>0)
 			{
 				transaction="close";
 				var  aCustomerInvoiceDetails = aInvoiceDetails+"&customerInvoice_subTotalName="+aSubTotal+"&customerInvoice_frightname="+aFreight+"&customerInvoice_taxName="+taxAmountnew+"&customerInvoice_totalName="+aTotal+"&oper="+aAddOREdit+"&joReleaseDetailsID="+joReleaseDetailID+'&cuSOID='+cusoId+'&poNumber='+poNumber
