@@ -6794,8 +6794,9 @@ var transaction = "";
 			//var aInvoiceDetailsTotal=$("#custoemrInvoiceFormTotalID").serialize();
 			
 			//added by prasant for 3.0.70 issue fixes
-			var gridRows = $('#customerInvoice_lineitems').getRowData();
-		 	_globaloldcustomerInvoicegrid =  JSON.stringify(gridRows)+$("#customerInvoice_invoiceDateID").val();
+			//edited by prasant for BID#1794
+			//var gridRows = $('#customerInvoice_lineitems').getRowData();
+		 //	_globaloldcustomerInvoicegrid =  JSON.stringify(gridRows)+$("#customerInvoice_invoiceDateID").val();
 		
 			
 			if(_globaloldcustomerInvoiceform != generalTabFormval ){
@@ -6811,9 +6812,12 @@ var transaction = "";
 					console.log("ERROR:::_aInvoiceDetailsTotal=="+aInvoiceDetailsTotal);
 				}
 					
+			//edited by prasant for BID#1790	
+			//if(_globaloldcustomerInvoiceform != generalTabFormval || _globaloldcustomerInvoicegrid != invoiceGridDetails || _globaloldcustomerInvoiceformTotal != aInvoiceDetailsTotal )
 				
-			if(_globaloldcustomerInvoiceform != generalTabFormval || _globaloldcustomerInvoicegrid != invoiceGridDetails || _globaloldcustomerInvoiceformTotal != aInvoiceDetailsTotal)
-			{
+			if(_globaloldcustomerInvoiceform != generalTabFormval || _globaloldcustomerInvoicegrid != invoiceGridDetails || _globaloldcustomerInvoiceformTotal != aInvoiceDetailsTotal || cuInv_LineItemsToBeDeleted.length>0)
+				
+				{
 				transaction="close";
 				var  aCustomerInvoiceDetails = aInvoiceDetails+"&customerInvoice_subTotalName="+aSubTotal+"&customerInvoice_frightname="+aFreight+"&customerInvoice_taxName="+taxAmountnew+"&customerInvoice_totalName="+aTotal+"&oper="+aAddOREdit+"&joReleaseDetailsID="+joReleaseDetailID+'&cuSOID='+cusoId+'&poNumber='+poNumber
 				+'&InvoiceNo='+InvoiceNo+'&shipDate='+shipDate+'&taxRate='+taxrate+'&cuInvHiddenId='+cuinvId+"&releaseType="+releaseType+'&customerID='+customerID+"&from=job&joReleaseID="+joReleaseID
@@ -7073,7 +7077,9 @@ var transaction = "";
 												jQuery(this).dialog("close");
 												$("#release").trigger("reloadGrid");
 											return false;	
-											}}}).dialog("open");
+											}
+											}
+										}).dialog("open");
 										}
 										}
 										}
@@ -7125,9 +7131,7 @@ var transaction = "";
 									if(title === 'New Customer Invoice' && transaction == 'save'){
 										$('#cusinvoicetab').dialog('option', 'title','Customer Invoice');	
 									}
-													 $('#loadingDivForCIGeneralTab').css({
-							"display": "block"
-						}); 
+													 $('#loadingDivForCIGeneralTab').css({"display": "block"}); 
 									
 									setTimeout(function(){
 										//updateTaxableLines();
@@ -7139,9 +7143,7 @@ var transaction = "";
 									 	var gridRows = $('#customerInvoice_lineitems').getRowData();
 									 	_globaloldcustomerInvoicegrid =  JSON.stringify(gridRows)+$("#customerInvoice_invoiceDateID").val();
 									console.log("setglobe");
-										$('#loadingDivForCIGeneralTab').css({
-								"display": "none"
-							});	
+										$('#loadingDivForCIGeneralTab').css({"display": "none"});	
 									},2500);
 									
 									getCustomerInvoiceDetailsforpopup(data.cuInvoiceId);
@@ -7563,6 +7565,9 @@ var transaction = "";
 											//eddited by prasant 3.0.70 Issue Fixes
 											debugger;
 											$("#customerInvoice_invoiceDateID").prop('disabled', false);
+											$("#CuInvoiceSaveID").prop('disabled', false);
+									          $("#CuInvoiceSaveID").fadeTo("slow",1);
+											
 						},
 					"No": function ()	{
 						jQuery(this).dialog("close");
@@ -12134,7 +12139,6 @@ function deleteRowFromJqGrid_VeInv(jqGridRowId)
 }
 function deleteRowFrom_cuInvLineItemsJqGrid(jqGridRowId)
 {
-	debugger;
 	 var cuInvoiceDetailId = jQuery("#customerInvoice_lineitems").jqGrid ('getCell', jqGridRowId, 'cuInvoiceDetailId');
 	 if(cuInvoiceDetailId != null && cuInvoiceDetailId != 0 && cuInvoiceDetailId != undefined ){
 		 cuInv_LineItemsToBeDeleted.push(cuInvoiceDetailId);

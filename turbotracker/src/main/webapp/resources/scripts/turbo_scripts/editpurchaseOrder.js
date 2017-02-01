@@ -1474,7 +1474,7 @@ function ReOrderButtonClick(){
 
 function SaveLinesPurchaseOrder(popupdetail){
 	//BID1633 Simon
-	//alert("editpurchaseOrder.js  is calling.....!");
+//alert("editpurchaseOrder.js  is calling.....!");
 	$("#SaveLinesPOButton").prop('disabled', true);
 	var newDialogDiv = jQuery(document.createElement('div'));
 	

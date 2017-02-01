@@ -1927,8 +1927,7 @@ public class JobQuoteFormController {
 		JoQuoteHeader aJoQuoteHeaderID = new JoQuoteHeader();
 		Integer aJoQuoteHeaderId = 0;
 		try {
-			aJoQuoteHeaderId = pdfService.getHeaderID(theQuoteTypeID,
-					theJoMasterID);
+			aJoQuoteHeaderId = pdfService.getHeaderID(theQuoteTypeID,theJoMasterID);
 			if (aJoQuoteHeaderId != 0) {
 				aJoQuoteHeaderID = jobService
 						.getSingleQuoteHeaderDetails(aJoQuoteHeaderId);

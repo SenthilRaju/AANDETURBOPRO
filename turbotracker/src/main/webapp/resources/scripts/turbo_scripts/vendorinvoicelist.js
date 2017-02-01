@@ -4534,6 +4534,7 @@ function check_productNofromoutside( value, colname ) {
 
 
 function SaveVendorInvoicewithPO(operation){
+	debugger;
 	if($('#addNewVeInvFmDlgbuttonsave').is('[disabled]')){
 		jQuery("#addNewVendorInvoiceFromPODlg").dialog("close");
 		$('#invoicesGrid').trigger( 'reloadGrid' );

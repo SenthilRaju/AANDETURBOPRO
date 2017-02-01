@@ -560,6 +560,7 @@ function sendsubmitMailFunction5(arxContactid,aEmail, poGeneralKey, cusotmerPONu
 	}
 
 function submitemailattachment(){
+	debugger;
 	 var $led = $("#emailpopup");
 	 
 	 if($led.data('type') === "Quotes")

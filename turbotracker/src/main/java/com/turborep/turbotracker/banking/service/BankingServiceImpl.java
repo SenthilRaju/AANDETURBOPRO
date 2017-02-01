@@ -4110,11 +4110,11 @@ public class BankingServiceImpl implements BankingService {
 			{
 				aSession.save(theReconcileFLStatus);
 			}
-			aTransaction.commit();
+			aTransaction.commit();	
 		} catch (Exception e) {
 			itsLogger.error(e.getMessage(),e);
 			BankingException aBankingException = new BankingException(e.getMessage(), e);
-			throw aBankingException;
+			throw aBankingException;	
 		} finally {
 			aSession.flush();
 			aSession.close();

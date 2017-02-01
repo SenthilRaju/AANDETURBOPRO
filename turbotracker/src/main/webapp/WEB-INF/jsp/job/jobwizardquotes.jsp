@@ -873,6 +873,8 @@
 	});
 
 	function setQuoteemailpopupdetails(torxContactId,quoteRevision){
+		
+		debugger;
 		clearemailattachmentForm();
 		var aContactID=torxContactId;
 		var toemailaddress="";
@@ -954,6 +956,7 @@
 	}
 
 	function sendQuotesubmitMailFunction(){
+		debugger;
 		/* var returnvalue=openPDF('QuotePDF'); */
 		var returnvalue=emailwriteQuotespdf();
 		var bidderGrid = $("#quotesBidlist");

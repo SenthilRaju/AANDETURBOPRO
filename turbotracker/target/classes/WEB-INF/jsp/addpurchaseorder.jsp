@@ -2376,6 +2376,7 @@ function cancelLineItemNote(){
 		});
 
 	function submitemailattachment(){
+		debugger;
 		$('#loadingDivForPO').css({"visibility": "visible","z-Index":"1234","display":"block"});
 		sendsubmitMailFunction();
 	}

@@ -3572,6 +3572,8 @@ function viewPDF() {
 }
 
 function sendEmail() {
+	
+	debugger;
 	createtpusage('job-Quote Tab','Email Quote','Info','Job-Quote Tab,Email Quote,Job Number:'+ $('input:text[name=jobHeader_JobNumber_name]').val());
 	var datass=getSysvariableStatusBasedOnVariableName('Musthaveaddendumquotethruandbiddatebeforesave');
 	if(datass!=null && datass[0].valueLong==1){

@@ -362,11 +362,20 @@ public class PDFServiceImpl implements PDFService{
 			String aSelectWithQuoteRev = "";
 			String aSelectWithJomaster = "";
 			if(theQuoteID.equalsIgnoreCase("value")){
-				aSelectAll = "SELECT joQuoteHeaderID FROM joQuoteHeader where jomasterID = '"+theJoMasterID+"' and cumastertypeID = '"+theQuoteTypeID+"' ORDER BY QuoteRev DESC";
-				aSelectWithCuMaster = "SELECT joQuoteHeaderID FROM joQuoteHeader where jomasterID = '"+theJoMasterID+"' and cumastertypeID ='"+theQuoteTypeID+"' ORDER BY QuoteRev DESC";
-				aSelectWithQuoteRev = "SELECT joQuoteHeaderID FROM joQuoteHeader where jomasterID = '"+theJoMasterID+"' ORDER BY QuoteRev DESC";
-				aSelectWithJomaster = "SELECT joQuoteHeaderID FROM joQuoteHeader where jomasterID = '"+theJoMasterID+"' ORDER BY QuoteRev DESC";
+				//aSelectAll = "SELECT joQuoteHeaderID FROM joQuoteHeader where jomasterID = '"+theJoMasterID+"' and cumastertypeID = '"+theQuoteTypeID+"' ORDER BY QuoteRev DESC";
+				//aSelectWithCuMaster = "SELECT joQuoteHeaderID FROM joQuoteHeader where jomasterID = '"+theJoMasterID+"' and cumastertypeID ='"+theQuoteTypeID+"' ORDER BY QuoteRev DESC";
+				//aSelectWithQuoteRev = "SELECT joQuoteHeaderID FROM joQuoteHeader where jomasterID = '"+theJoMasterID+"' ORDER BY QuoteRev DESC";
+			    //aSelectWithJomaster = "SELECT joQuoteHeaderID FROM joQuoteHeader where jomasterID = '"+theJoMasterID+"' ORDER BY QuoteRev DESC";
+				
+				//editted by prasant for BID# #1795
+				aSelectAll = "SELECT joQuoteHeaderID FROM joQuoteHeader where jomasterID = '"+theJoMasterID+"' and cumastertypeID = '"+theQuoteTypeID+"' ORDER BY joQuoteHeaderID DESC";
+				aSelectWithCuMaster = "SELECT joQuoteHeaderID FROM joQuoteHeader where jomasterID = '"+theJoMasterID+"' and cumastertypeID ='"+theQuoteTypeID+"' ORDER BY joQuoteHeaderID DESC";
+				aSelectWithQuoteRev = "SELECT joQuoteHeaderID FROM joQuoteHeader where jomasterID = '"+theJoMasterID+"' ORDER BY joQuoteHeaderID DESC";
+				aSelectWithJomaster = "SELECT joQuoteHeaderID FROM joQuoteHeader where jomasterID = '"+theJoMasterID+"' ORDER BY joQuoteHeaderID DESC";
+			
+			
 			}else{
+				
 				aSelectAll = "SELECT joQuoteHeaderID FROM joQuoteHeader where jomasterID = '"+theJoMasterID+"' and cumastertypeID = '"+theQuoteTypeID+"' ORDER BY joQuoteHeaderID DESC";
 				aSelectWithCuMaster = "SELECT joQuoteHeaderID FROM joQuoteHeader where jomasterID = '"+theJoMasterID+"' and cumastertypeID ='"+theQuoteTypeID+"' ORDER BY joQuoteHeaderID DESC";
 				aSelectWithQuoteRev = "SELECT joQuoteHeaderID FROM joQuoteHeader where jomasterID = '"+theJoMasterID+"' ORDER BY joQuoteHeaderID DESC";
@@ -409,7 +418,10 @@ public class PDFServiceImpl implements PDFService{
 		@Override
 		public Integer getHeaderID(Integer theQuoteTypeID, Integer theJoMasterID) {
 			int  aJoHeaderID = 0;
-			String	aSelectAll = "SELECT joQuoteHeaderID FROM joQuoteHeader where jomasterID = '"+theJoMasterID+"' and cumastertypeID = '"+theQuoteTypeID+"' ORDER BY QuoteRev DESC";
+		//	String	aSelectAll = "SELECT joQuoteHeaderID FROM joQuoteHeader where jomasterID = '"+theJoMasterID+"' and cumastertypeID = '"+theQuoteTypeID+"' ORDER BY QuoteRev DESC";
+			//edited by prasant for BID#1795
+			String	aSelectAll = "SELECT joQuoteHeaderID FROM joQuoteHeader where jomasterID = '"+theJoMasterID+"' and cumastertypeID = '"+theQuoteTypeID+"' ORDER BY joQuoteHeaderID DESC";
+
 			Session aSession = null;
 			try {
 				aSession = itsSessionFactory.openSession();
