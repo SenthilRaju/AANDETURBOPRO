@@ -6794,8 +6794,8 @@ var transaction = "";
 			//var aInvoiceDetailsTotal=$("#custoemrInvoiceFormTotalID").serialize();
 			
 			//added by prasant for 3.0.70 issue fixes
-			var gridRows = $('#customerInvoice_lineitems').getRowData();
-		 	_globaloldcustomerInvoicegrid =  JSON.stringify(gridRows)+$("#customerInvoice_invoiceDateID").val();
+			//var gridRows = $('#customerInvoice_lineitems').getRowData();
+		 //	_globaloldcustomerInvoicegrid =  JSON.stringify(gridRows)+$("#customerInvoice_invoiceDateID").val();
 		
 			
 			if(_globaloldcustomerInvoiceform != generalTabFormval ){
