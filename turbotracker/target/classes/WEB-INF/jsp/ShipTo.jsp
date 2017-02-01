@@ -22,7 +22,7 @@
 		 						<input type="text" id="shipToCity" name="shipToCity" style="width: 100px;" readonly="readonly" onchange="validationMethodSplit();">
 								<img alt="search" src="./../resources/scripts/jquery-autocomplete/search.png" style="display: none;">
 								
-									<input type="text" id="shipToState" name="shipToState" style="width: 30px; text-transform: uppercase" maxlength="2"  disabled="disabled" onchange="validationMethodSplit();">
+									<input type="text" id="shipToState" name="shipToState" style="width: 30px; text-transform: uppercase" maxlength="2" onchange="validationMethodSplit();">
 									<label>Zip: </label><input type="text" id="shipToZip" name="shipToZip" style="width: 75px;" readonly="readonly" onchange="validationMethodSplit();">
 									
 								<span id="frandbw" >

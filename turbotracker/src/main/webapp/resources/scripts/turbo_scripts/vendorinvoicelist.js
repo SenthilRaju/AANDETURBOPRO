@@ -1156,7 +1156,7 @@ var allText = $('#apacct').html();
 
 			function addVendorInvoice(operation)
 			{
-				
+				debugger;
 				if($('#rxMasterID').val() == null || $('#rxMasterID').val() == '')
 				{
 					$('#errorMsg').show();
@@ -1188,6 +1188,7 @@ var allText = $('#apacct').html();
 							},2000);
 						
 						}else{
+							$("textarea#invreasonttextid").val("");
 							editInvoiceDetails(operation);
 						}
 				
@@ -1258,7 +1259,8 @@ var allText = $('#apacct').html();
 //												}else{
 												$("#vendorinvoiceWoPO").html("Saved.");
 												$('#veBillIdJob').val(data);
-												$("#vendorInvoiceGrid").trigger("reloadGrid");
+												preloadVendorInvoiceFromJobData(data);
+//												$("#vendorInvoiceGrid").trigger("reloadGrid");
 												setTimeout(function(){
 													$("#vendorinvoiceWoPO").html("");					
 													},2000);
@@ -1504,7 +1506,7 @@ var allText = $('#apacct').html();
 							var prMasterIDPO = $('#rxMasterIDPO').val();
 							var rxMasterIDPayablePO = $('#rxMasterIDPayablePO').val();
 							var oper = 'add';
-						var reasonVal=	$("textarea#invreasonttextid").val()
+							var reasonVal=	$("textarea#invreasonttextid").val()
 							console.log("veBillId---->"+veBillIdPO);
 							if(veBillIdPO == null || veBillIdPO == '')
 								veBillIdPO = 0;				
@@ -1813,10 +1815,11 @@ var allText = $('#apacct').html();
 										$("#addNewVeInvFmDlgbuttonsaveandclose").removeAttr("disabled");
 										$("#addNewVeInvFmDlgbuttonsave").removeClass("disableButtons");
 										$("#addNewVeInvFmDlgbuttonsaveandclose").removeClass("disableButtons");*/
-										$("#lineItemGrid").jqGrid('GridUnload');
-										loadlineItemGrid();
-										$("#lineItemGrid").trigger("reloadGrid");
+//										$("#lineItemGrid").jqGrid('GridUnload');
+//										loadlineItemGrid();
+//										$("#lineItemGrid").trigger("reloadGrid");
 						        		$("#saveStatus").html("Saved.");
+						        		preloadVendorInvoiceData(data.veBillId);					        		
 										setTimeout(function(){
 											$("#saveStatus").html("");					
 											},2000);	
@@ -3667,7 +3670,7 @@ function loadlineItemGrid()
 										$("#new_row_description").focus();
 										$("#"+aSelectedRowId+"_description").focus();
 										if(!$('#addNewVeInvFmDlgbuttonsave').is('[disabled]')){
-										$("#addNewVeInvFmDlgbuttonsave").prop("disabled",true);
+										$("#addNewVeInvFmDlgbuttonsave").prop("disabled",false);
 										$("#addNewVeInvFmDlgbuttonsave").css("background","rgb(204, 204, 204)");
 										}
 									}							        		

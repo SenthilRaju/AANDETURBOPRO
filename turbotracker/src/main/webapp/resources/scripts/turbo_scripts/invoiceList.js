@@ -8338,6 +8338,7 @@ function setproductWareHouseCostBycuMasterID(prMasterID,rxMasterID){
 }
 //BID1682 Simon
 var updateTaxTerritoryStatusOnChange=0;
+var updateTaxTerritoryStatusWhenChanged=0;
 
 //Issue Fix Added By Simon #3.0.70
 function validateDateAgainstOpenPeriod(dateID){

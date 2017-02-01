@@ -348,7 +348,7 @@
    				<table style="width:700px">
    					<tr align="center">
 			   			<td><label>Subtotal:</label></td><td><input type="text" style="width:85px" id="SOGeneral_subTotalID" name="customerInvoice_subTotalName" disabled="disabled" value="$0.00" onchange="soGeneralformChanges()"></td>
-			       		<td><label>Freight:</label></td><td><input type="text" style="width:85px" id="SOGeneral_frightID" name="customerInvoice_frightname" value="$0.00" onchange="setTaxTotal_SO();soGeneralformChanges();"></td>
+			       		<td><label>Freight:</label></td><td><input type="text" style="width:85px" id="SOGeneral_frightID" name="customerInvoice_frightname" value="$0.00" onchange="soGeneralformChanges();"></td>
 			   			<td><label>Tax:</label></td><td><input type="text" style="width:85px" id="SOGeneral_taxId" name="customerInvoice_taxName" value="${requestScope.taxRate}" disabled="disabled" onchange="soGeneralformChanges()"></td><td>%</td>
 			   			<td><label></label></td><td><input type="text" style="width:85px" id="SOGeneral_taxvalue" name="customerInvoice_taxName" value="$0.00" disabled="disabled" onchange="soGeneralformChanges()"></td>
 			       		<td><label>Total:</label></td><td><input type="text" style="width:85px" id="SOGeneral_totalID" name="customerInvoice_totalName" disabled="disabled" value="$0.00" onchange="soGeneralformChanges()"></td>
@@ -1846,6 +1846,46 @@ function viewPOPDFSave(arxContactid,aEmail, poGeneralKey, cusotmerPONumber, numb
 		
 	return true;
 }
+$("#SOGeneral_frightID").keyup(function(){
+	var cuSoid =  $('#Cuso_ID').text();
+	var totalamount=$("#SOGeneral_subTotalID").val();
+	if(totalamount==undefined ||totalamount=="" ||totalamount==null){
+		totalamount=0.00;
+	}
+	if((totalamount+"").contains("$")){
+		totalamount=totalamount.replace(/[^0-9\.-]+/g,"").replace(".00", "");
+	}
+	 var freight=$("#SOGeneral_frightID").val();
+	 if(freight==undefined ||freight=="" ||freight==null){
+		 freight=0.00;
+		}
+	 if((freight+"").contains("$")){
+		 freight=freight.replace(/[^0-9\.-]+/g,"").replace(".00", "");
+		}
+	 
+	 var taxRate=$("#SOGeneral_taxId").val();
+	 var totalWithTax=getsubtotalwithtax(cuSoid);
+     var taxamount=(Number(totalWithTax)*Number(taxRate))/100;
+     var taxchecked=$("#so_taxfreight").val()==1?true:false;
+	 var taxforfreight=0;
+     if(taxRate>0 && taxchecked && freight!=null && freight>0){
+    	 taxforfreight=taxRate*freight/100;
+		 taxamount=taxamount+taxforfreight;
+     }
+	 if(taxamount<0)
+		 taxamount=-taxamount;
+	 
+	 $("#SOGeneral_taxvalue").val(formatCurrency(taxamount));
+	 $("#customerInvoice_taxvalue").val(formatCurrency(taxamount));
+	 
+	 var overalltotal=Number(totalamount)+Number(floorFigureoverall(freight,2))+Number(floorFigureoverall(taxamount,2));
+	 $("#SOGeneral_totalID").val(formatCurrency(overalltotal));
+	 $("#customerInvoice_taxId").val(formatCurrency(taxamount));	
+	if(updateTaxTerritoryStatusOnChange!=undefined)
+	 {
+		var updateTaxTerritoryStatusOnChange=0;
+	 }
+});
 
 /* $(function(){
 	$("#emailpopup" ).dialog({
